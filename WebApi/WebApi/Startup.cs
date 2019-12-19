@@ -26,6 +26,12 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            //TODO implement dependency injection
+
+            //TODO configure automapper
+            //TODO configure swagger 
+            //TODO configure asp net identity
+            //TODO configure jwt
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

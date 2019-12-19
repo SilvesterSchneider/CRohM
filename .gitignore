@@ -6,3 +6,6 @@
 /WebApi/.vs/WebApi
 /WebApi/WebApi/bin/Debug/netcoreapp3.1
 /WebApi/WebApi/obj
+/WebApi/ModelLayer/bin/Debug/netcoreapp3.1
+/WebApi/ModelLayer/obj
+/WebApi/RepositoryLayer/obj
