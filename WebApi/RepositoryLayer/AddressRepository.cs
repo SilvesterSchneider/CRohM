@@ -1,20 +1,17 @@
-﻿
-using System.Linq;
-using ModelLayer;
+﻿using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer.Base;
 
 namespace RepositoryLayer
 {
-    class AddressRepository:BaseRepository<Address>
+    public interface IAddressRepository : IBaseRepository<Address>
+    {
+    }
+
+    public class AddressRepository : BaseRepository<Address>, IAddressRepository
     {
         public AddressRepository(CrmContext context) : base(context)
         {
-        }
-
-        public Address SpecialFunction()
-        {
-            return Entities.FirstOrDefault();
         }
     }
 }

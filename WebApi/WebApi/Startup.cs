@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using ModelLayer;
+using RepositoryLayer;
+using ServiceLayer;
 
 namespace WebApi
 {
@@ -26,10 +23,11 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            //TODO implement dependency injection
 
-            //TODO configure automapper
-            //TODO configure swagger 
+            AddDependencyInjection(services);
+            StartupExtension.ConfigureServices(services);
+
+            //TODO configure swagger
             //TODO configure asp net identity
             //TODO configure jwt
         }
@@ -52,6 +50,20 @@ namespace WebApi
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void AddDependencyInjection(IServiceCollection services)
+        {
+            services.AddDbContext<CrmContext>(options =>
+                options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+
+            //###########################Services#######################################
+
+            services.AddScoped<IAddressService, AddressService>();
+
+            //###########################Repositories#######################################
+
+            services.AddScoped<IAddressRepository, AddressRepository>();
         }
     }
 }

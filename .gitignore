@@ -9,3 +9,6 @@
 /WebApi/ModelLayer/bin/Debug/netcoreapp3.1
 /WebApi/ModelLayer/obj
 /WebApi/RepositoryLayer/obj
+/WebApi/RepositoryLayer/bin/Debug/netcoreapp3.1
+/WebApi/ServiceLayer/bin/Debug/netcoreapp3.1
+/WebApi/ServiceLayer/obj

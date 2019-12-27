@@ -6,20 +6,19 @@ namespace ModelLayer
 {
     public class CrmContext : DbContext
     {
-        public CrmContext()
+        public CrmContext(DbContextOptions<CrmContext> options) : base(options)
         {
-
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
         }
+
         //entities
-        public DbSet<Address> Addresses{ get; set; }
+        public DbSet<Address> Addresses { get; set; }
     }
 }

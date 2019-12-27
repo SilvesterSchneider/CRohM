@@ -3,7 +3,7 @@ using ModelLayer.DataTransferObjects.Base;
 
 namespace ModelLayer.DataTransferObjects
 {
-    class AddressDto: BaseEntityDto
+    public class AddressDto: BaseEntityDto
     {
         public string City { get; set; }
         public string Street { get; set; }
