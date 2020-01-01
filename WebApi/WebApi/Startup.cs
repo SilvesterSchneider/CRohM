@@ -19,7 +19,6 @@ namespace WebApi
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -27,18 +26,22 @@ namespace WebApi
             AddDependencyInjection(services);
             StartupExtension.ConfigureServices(services);
 
-            //TODO configure swagger
+            services.AddSwaggerDocument();
+
             //TODO configure asp net identity
             //TODO configure jwt
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            //TODO: implement middleware for exceptions
+            //TODO: catch exception - DbUpdateConcurrencyException
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseHttpsRedirection();
 

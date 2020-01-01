@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ModelLayer;
 using ModelLayer.DataTransferObjects;
-using ModelLayer.Models;
+using NSwag.Annotations;
 using ServiceLayer;
 
 namespace WebApi.Controllers
 {
+    //TODO: add role access control
     [Route("api/[controller]")]
     [ApiController]
     public class AddressesController : ControllerBase
@@ -23,105 +21,69 @@ namespace WebApi.Controllers
             _addressService = addressService;
         }
 
-        // GET: api/Addresses
         [HttpGet]
-        public async Task<ActionResult<List<AddressDto>>> GetAddresses()
+        [SwaggerResponse(HttpStatusCode.OK, typeof(List<AddressDto>), Description = "successfully found")]
+        public async Task<IActionResult> Get()
         {
             var addresses = await _addressService.GetAsync();
-            return addresses;
+            return Ok(addresses);
         }
 
-        //// GET: api/Addresses/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Address>> GetAddress(string id)
-        //{
-        //    var address = await _context.Addresses.FindAsync(id);
+        [HttpGet("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AddressDto), Description = "successfully found")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            var address = await _addressService.GetByIdAsync(id);
 
-        //    if (address == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (address == null)
+            {
+                return NotFound();
+            }
 
-        //    return address;
-        //}
+            return Ok(address);
+        }
 
-        //// PUT: api/Addresses/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        //// more details see https://aka.ms/RazorPagesCRUD.
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutAddress(string id, Address address)
-        //{
-        //    if (id != address.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpPut("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(AddressDto), Description = "successfully updated")]
+        [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
+        public async Task<IActionResult> Put(AddressDto address)
+        {
+            address = await _addressService.UpdateAsync(address);
+            if (address == null)
+            {
+                return Conflict();
+            }
 
-        //    _context.Entry(address).State = EntityState.Modified;
+            return Ok(address);
+        }
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!AddressExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+        [HttpPost]
+        [SwaggerResponse(HttpStatusCode.Created, typeof(AddressDto), Description = "successfully created")]
+        public async Task<IActionResult> Post(AddressCreateDto addressToCreate)
+        {
+            AddressDto addressDto = await _addressService.CreateAsync(addressToCreate);
+            if (addressDto == null)
+            {
+                //TODO: implement - maybe NotCreatedException with handler returning code 500 ?!
+                throw new NotImplementedException();
+            }
 
-        //    return NoContent();
-        //}
+            var uri = $"https://{Request.Host}{Request.Path}/{addressDto.Id}";
+            return Created(uri, addressDto);
+        }
 
-        //// POST: api/Addresses
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        //// more details see https://aka.ms/RazorPagesCRUD.
-        //[HttpPost]
-        //public async Task<ActionResult<Address>> PostAddress(Address address)
-        //{
-        //    _context.Addresses.Add(address);
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateException)
-        //    {
-        //        if (AddressExists(address.Id))
-        //        {
-        //            return Conflict();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return CreatedAtAction("GetAddress", new { id = address.Id }, address);
-        //}
-
-        //// DELETE: api/Addresses/5
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<Address>> DeleteAddress(string id)
-        //{
-        //    var address = await _context.Addresses.FindAsync(id);
-        //    if (address == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Addresses.Remove(address);
-        //    await _context.SaveChangesAsync();
-
-        //    return address;
-        //}
-
-        //private bool AddressExists(string id)
-        //{
-        //    return _context.Addresses.Any(e => e.Id == id);
-        //}
+        [HttpDelete("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            bool okResult = await _addressService.DeleteAsync(id);
+            if (!okResult)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
     }
 }
