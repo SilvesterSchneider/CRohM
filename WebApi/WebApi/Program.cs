@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace WebApi
 {
@@ -22,5 +16,17 @@ namespace WebApi
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        // ****************************************** //
+        // IMPORTANT: has to stay for Testing
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) => new WebHostBuilder()
+            .ConfigureAppConfiguration((ctx, builder) =>
+                {
+                }
+            )
+            .UseStartup<Startup>()
+            .ConfigureLogging((hostingContext, logging) => { });
+
+        // ****************************************** //
     }
 }

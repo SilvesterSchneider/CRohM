@@ -26,10 +26,11 @@ namespace WebApi
             AddDependencyInjection(services);
             StartupExtension.ConfigureServices(services);
 
+            //TODO: configure swagger
             services.AddSwaggerDocument();
 
-            //TODO configure asp net identity
-            //TODO configure jwt
+            //TODO: add asp net identity
+            //TODO: add jwt
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

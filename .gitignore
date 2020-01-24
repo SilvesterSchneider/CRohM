@@ -12,3 +12,5 @@
 /WebApi/RepositoryLayer/bin/Debug/netcoreapp3.1
 /WebApi/ServiceLayer/bin/Debug/netcoreapp3.1
 /WebApi/ServiceLayer/obj
+/WebApi/ServiceLayerTests/bin/Debug/netcoreapp3.1
+/WebApi/ServiceLayerTests/obj

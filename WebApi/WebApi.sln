@@ -16,6 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0F8D87F4-E080-4A94-8627-750C6C86B3D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayerTests", "ServiceLayerTests\ServiceLayerTests.csproj", "{422AA803-1A52-4168-8F64-DFDA430F0175}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,9 +42,16 @@ Global
 		{E90B163B-3585-4D30-8C5F-5262F249E546}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E90B163B-3585-4D30-8C5F-5262F249E546}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E90B163B-3585-4D30-8C5F-5262F249E546}.Release|Any CPU.Build.0 = Release|Any CPU
+		{422AA803-1A52-4168-8F64-DFDA430F0175}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{422AA803-1A52-4168-8F64-DFDA430F0175}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{422AA803-1A52-4168-8F64-DFDA430F0175}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{422AA803-1A52-4168-8F64-DFDA430F0175}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{422AA803-1A52-4168-8F64-DFDA430F0175} = {0F8D87F4-E080-4A94-8627-750C6C86B3D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {916CB4E2-F4F0-4FBB-BFB7-E418B8D1C8E9}
