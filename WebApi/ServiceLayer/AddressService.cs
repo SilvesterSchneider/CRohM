@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using ModelLayer;
-using ModelLayer.DataTransferObjects;
-using ModelLayer.Models;
+﻿using ModelLayer;
 using RepositoryLayer;
 
 namespace ServiceLayer

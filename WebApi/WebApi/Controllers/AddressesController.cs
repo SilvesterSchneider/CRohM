@@ -70,14 +70,10 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Post(AddressCreateDto addressToCreate)
         {
             Address address = await _addressService.CreateAsync(_mapper.Map<Address>(addressToCreate));
-            if (address == null)
-            {
-                //TODO: implement - maybe NotCreatedException with handler returning code 500 ?!
-                throw new NotImplementedException();
-            }
 
-            var uri = $"https://{Request.Host}{Request.Path}/{address.Id}";
-            return Created(uri, address);
+            var addressDto = _mapper.Map<AddressDto>(address);
+            var uri = $"https://{Request.Host}{Request.Path}/{addressDto.Id}";
+            return Created(uri, addressDto);
         }
 
         [HttpDelete("{id}")]
