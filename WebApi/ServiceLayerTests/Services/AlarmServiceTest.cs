@@ -21,7 +21,6 @@ namespace ServiceLayerTests.Services
         public async void NameOfTestFunction_WhatWillBeTested_WhatWillBeAsserted()
         {
             //TODO: implement example from https://code-maze.com/integration-testing-asp-net-core-mvc/
-            //TODO: da läuft noch was schief
             //Arrange
             //Act
 
