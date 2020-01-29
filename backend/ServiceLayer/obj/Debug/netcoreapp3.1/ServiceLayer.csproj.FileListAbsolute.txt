@@ -1,0 +1,13 @@
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\bin\Debug\netcoreapp3.1\ServiceLayer.deps.json
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\bin\Debug\netcoreapp3.1\ServiceLayer.dll
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\bin\Debug\netcoreapp3.1\ServiceLayer.pdb
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\bin\Debug\netcoreapp3.1\ModelLayer.dll
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\bin\Debug\netcoreapp3.1\RepositoryLayer.dll
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\bin\Debug\netcoreapp3.1\ModelLayer.pdb
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\bin\Debug\netcoreapp3.1\RepositoryLayer.pdb
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\obj\Debug\netcoreapp3.1\ServiceLayer.csprojAssemblyReference.cache
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\obj\Debug\netcoreapp3.1\ServiceLayer.AssemblyInfoInputs.cache
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\obj\Debug\netcoreapp3.1\ServiceLayer.AssemblyInfo.cs
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\obj\Debug\netcoreapp3.1\ServiceLayer.csproj.CopyComplete
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\obj\Debug\netcoreapp3.1\ServiceLayer.dll
+C:\Users\silve\Repos\CRohM\WebApi\ServiceLayer\obj\Debug\netcoreapp3.1\ServiceLayer.pdb
