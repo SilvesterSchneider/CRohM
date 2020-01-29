@@ -1,0 +1,39 @@
+<div fxLayout="column" fxLayoutGap="100px">
+    <mat-table #table [dataSource]="contacts$">
+        <ng-container matColumnDef="vorname">
+            <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.vorname}}
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="nachname">
+            <mat-header-cell *matHeaderCellDef> Nachname </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.nachname}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="adresse">
+            <mat-header-cell *matHeaderCellDef> Adresse </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.adresse | json}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="action">
+            <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
+            <mat-cell *matCellDef="let element" fxLayoutGap="5px">
+                <a [routerLink]="[element.id]">
+                    <mat-icon color="primary" class="icon">edit</mat-icon>
+                </a>
+                <a (click)="deleteContact(element.id)" type="button">
+                    <mat-icon color="primary" class="icon">delete</mat-icon>
+                </a>
+            </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</div>
+<br>
+
+<div fxLayout="column" fxLayoutAlign="space-around end" class="content">
+    <div class="blocks">
+        <button button="submit" mat-raised-button color="primary" (click)="addContact()">
+            <mat-icon>add</mat-icon> Kontakt hinzufügen
+        </button>
+    </div>
+</div>
