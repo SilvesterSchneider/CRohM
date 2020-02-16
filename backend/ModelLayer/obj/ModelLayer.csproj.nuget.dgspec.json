@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\silve\\Repos\\CRohM\\WebApi\\ModelLayer\\ModelLayer.csproj": {}
+    "C:\\Users\\silve\\Repos\\CRohM\\backend\\ModelLayer\\ModelLayer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\silve\\Repos\\CRohM\\WebApi\\ModelLayer\\ModelLayer.csproj": {
+    "C:\\Users\\silve\\Repos\\CRohM\\backend\\ModelLayer\\ModelLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\silve\\Repos\\CRohM\\WebApi\\ModelLayer\\ModelLayer.csproj",
+        "projectUniqueName": "C:\\Users\\silve\\Repos\\CRohM\\backend\\ModelLayer\\ModelLayer.csproj",
         "projectName": "ModelLayer",
-        "projectPath": "C:\\Users\\silve\\Repos\\CRohM\\WebApi\\ModelLayer\\ModelLayer.csproj",
+        "projectPath": "C:\\Users\\silve\\Repos\\CRohM\\backend\\ModelLayer\\ModelLayer.csproj",
         "packagesPath": "C:\\Users\\silve\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\silve\\Repos\\CRohM\\WebApi\\ModelLayer\\obj\\",
+        "outputPath": "C:\\Users\\silve\\Repos\\CRohM\\backend\\ModelLayer\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\silve\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -38,19 +38,23 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[3.1.1, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[3.1.0, )"
+              "version": "[3.1.1, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[3.1.0, )"
+              "version": "[3.1.1, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[3.1.0, )"
+              "version": "[3.1.1, )"
             }
           },
           "imports": [

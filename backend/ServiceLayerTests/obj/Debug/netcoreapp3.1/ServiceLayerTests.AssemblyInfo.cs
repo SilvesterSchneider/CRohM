@@ -11,10 +11,10 @@
 using System;
 using System.Reflection;
 
-[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("ModelLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "C:\\Users\\silve\\Repos\\CRohM\\WebApi\\ModelLayer", "ModelLayer.csproj", "0")]
-[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("RepositoryLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "C:\\Users\\silve\\Repos\\CRohM\\WebApi\\RepositoryLayer", "RepositoryLayer.csproj", "0")]
-[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("ServiceLayer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "C:\\Users\\silve\\Repos\\CRohM\\WebApi\\ServiceLayer", "ServiceLayer.csproj", "0")]
-[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("WebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "C:\\Users\\silve\\Repos\\CRohM\\WebApi\\WebApi", "WebApi.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("ModelLayer", "C:\\Users\\silve\\Repos\\CRohM\\backend\\ModelLayer", "ModelLayer.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("RepositoryLayer", "C:\\Users\\silve\\Repos\\CRohM\\backend\\RepositoryLayer", "RepositoryLayer.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("ServiceLayer", "C:\\Users\\silve\\Repos\\CRohM\\backend\\ServiceLayer", "ServiceLayer.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("WebApi", "C:\\Users\\silve\\Repos\\CRohM\\backend\\WebApi", "WebApi.csproj", "0")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("ServiceLayerTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
