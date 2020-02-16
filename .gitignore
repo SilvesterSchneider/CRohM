@@ -49,3 +49,6 @@
 /backend/RepositoryLayer/obj/Debug/netcoreapp3.1
 /backend/ServiceLayer/obj/Debug/netcoreapp3.1
 /backend/WebApi/obj/Debug/netcoreapp3.1
+/backend/.vs/WebApi/v16
+/backend/ModelLayer/obj/Debug/netcoreapp3.1
+/backend/ServiceLayerTests/obj/Debug/netcoreapp3.1
