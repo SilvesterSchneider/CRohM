@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(AddressDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> GetById(long id)
         {
             var address = await _addressService.GetByIdAsync(id);
 
@@ -80,7 +80,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(long id)
         {
             Address address = await _addressService.GetByIdAsync(id);
             if (address == null)

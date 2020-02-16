@@ -10,9 +10,9 @@ namespace RepositoryLayer.Base
 {
     public interface IBaseRepository<T> where T : BaseEntity
     {
-        public T GetById(string id);
+        public T GetById(long id);
 
-        public Task<T> GetByIdAsync(string id);
+        public Task<T> GetByIdAsync(long id);
 
         public List<T> Get();
 
@@ -48,12 +48,12 @@ namespace RepositoryLayer.Base
             Entities = _entitySet;
         }
 
-        public T GetById(string id)
+        public T GetById(long id)
         {
             return Entities.FirstOrDefault(e => e.Id == id);
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T> GetByIdAsync(long id)
         {
             return await Entities.FirstOrDefaultAsync(e => e.Id == id);
         }

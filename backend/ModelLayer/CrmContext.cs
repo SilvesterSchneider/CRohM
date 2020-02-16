@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ModelLayer.Models;
-using ModelLayer.Models.Base;
 
 namespace ModelLayer
 {
-    public class CrmContext : DbContext
+    public class CrmContext : IdentityDbContext<User, Role, long>
     {
         public CrmContext(DbContextOptions<CrmContext> options) : base(options)
         {
@@ -17,20 +17,44 @@ namespace ModelLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .Property(user => user.Name)
-                .HasMaxLength(2);
+            base.OnModelCreating(modelBuilder);
+            /**************** Renaming the tables from asp net *******************/
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("Users");
+            });
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("Roles");
+            });
+            modelBuilder.Entity<IdentityUserRole<long>>(entity =>
+            {
+                entity.ToTable("UserRoles");
+            });
+
+            modelBuilder.Entity<IdentityUserClaim<long>>(entity =>
+            {
+                entity.ToTable("UserClaims");
+            });
+
+            modelBuilder.Entity<IdentityUserLogin<long>>(entity =>
+            {
+                entity.ToTable("UserLogins");
+            });
+
+            modelBuilder.Entity<IdentityRoleClaim<long>>(entity =>
+            {
+                entity.ToTable("RoleClaims");
+            });
+
+            modelBuilder.Entity<IdentityUserToken<long>>(entity =>
+            {
+                entity.ToTable("UserTokens");
+            });
+            /**********************************************************************/
         }
 
         //entities
-        public DbSet<Address> Addresses { get; set; }
-
-        public DbSet<User> Users { get; set; }
-    }
-
-    public class User : BaseEntity
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
+        //public DbSet<Address> Addresses { get; set; }
     }
 }

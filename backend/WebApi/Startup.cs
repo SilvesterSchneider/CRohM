@@ -1,10 +1,13 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ModelLayer;
+using ModelLayer.Models;
 using RepositoryLayer;
 using ServiceLayer;
 
@@ -24,12 +27,43 @@ namespace WebApi
             services.AddControllers();
 
             AddDependencyInjection(services);
+
             StartupExtension.ConfigureServices(services);
 
             //TODO: configure swagger
             services.AddSwaggerDocument();
 
-            //TODO: add asp net identity
+            services.AddIdentity<User, Role>(options =>
+                {
+                    //// Password settings.
+                    //options.Password.RequireDigit = true;
+                    //options.Password.RequireLowercase = true;
+                    //options.Password.RequireNonAlphanumeric = true;
+                    //options.Password.RequireUppercase = true;
+                    //options.Password.RequiredLength = 6;
+                    //options.Password.RequiredUniqueChars = 1;
+
+                    options.User.RequireUniqueEmail = true;
+                    options.SignIn.RequireConfirmedAccount = true;
+                })
+                .AddEntityFrameworkStores<CrmContext>();
+
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    // Cookie settings
+            //    options.Cookie.HttpOnly = true;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+            //    options.LoginPath = "/Identity/Account/Login";
+            //    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+            //    options.SlidingExpiration = true;
+            //});
+
+            services.AddDbContext<CrmContext>(config =>
+                {
+                    config.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
+                });
+
             //TODO: add jwt
         }
 
@@ -48,6 +82,7 @@ namespace WebApi
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -58,9 +93,6 @@ namespace WebApi
 
         private void AddDependencyInjection(IServiceCollection services)
         {
-            services.AddDbContext<CrmContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
-
             //###########################Services#######################################
 
             services.AddScoped<IAddressService, AddressService>();
