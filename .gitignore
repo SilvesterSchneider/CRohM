@@ -1,16 +1,3 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
-/.vs
-/WebApi/.vs/WebApi
-/WebApi/WebApi/bin/Debug/netcoreapp3.1
-/WebApi/WebApi/obj
-/WebApi/ModelLayer/bin/Debug/netcoreapp3.1
-/WebApi/ModelLayer/obj
-/WebApi/RepositoryLayer/obj
-/WebApi/RepositoryLayer/bin/Debug/netcoreapp3.1
-/WebApi/ServiceLayer/bin/Debug/netcoreapp3.1
-/WebApi/ServiceLayer/obj
-/WebApi/ServiceLayerTests/bin/Debug/netcoreapp3.1
-/WebApi/ServiceLayerTests/obj
+.DS_Store
+.vs
+.vscode
