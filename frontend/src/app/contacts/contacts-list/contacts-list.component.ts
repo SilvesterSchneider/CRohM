@@ -22,4 +22,8 @@ export class ContactsListComponent implements OnInit {
     console.log('addContact');
   }
 
+  deleteContact(id: number) {
+    // TODO
+  }
+
 }
