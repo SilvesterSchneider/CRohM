@@ -1,4 +1,5 @@
 using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -28,7 +29,7 @@ namespace WebApi
 
             AddDependencyInjection(services);
 
-            StartupExtension.ConfigureServices(services);
+            services.AddAutoMapper(typeof(Startup));
 
             //TODO: configure swagger
             services.AddSwaggerDocument();
@@ -44,27 +45,17 @@ namespace WebApi
                     //options.Password.RequiredUniqueChars = 1;
 
                     options.User.RequireUniqueEmail = true;
-                    options.SignIn.RequireConfirmedAccount = true;
-                })
+                    options.SignIn.RequireConfirmedAccount = false;
+                }).AddSignInManager<SignInService>()
+                .AddUserManager<UserService>()
                 .AddEntityFrameworkStores<CrmContext>();
-
-            //services.ConfigureApplicationCookie(options =>
-            //{
-            //    // Cookie settings
-            //    options.Cookie.HttpOnly = true;
-            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
-            //    options.LoginPath = "/Identity/Account/Login";
-            //    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-            //    options.SlidingExpiration = true;
-            //});
 
             services.AddDbContext<CrmContext>(config =>
                 {
                     config.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
                 });
 
-            //TODO: add jwt
+            //TODO: check database for root user
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

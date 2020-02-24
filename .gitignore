@@ -53,3 +53,4 @@
 /backend/ModelLayer/obj/Debug/netcoreapp3.1
 /backend/ServiceLayerTests/obj/Debug/netcoreapp3.1
 /backend/.vs/WebApi/DesignTimeBuild
+/backend/WebApi/wwwroot
