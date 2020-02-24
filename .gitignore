@@ -14,3 +14,8 @@
 /WebApi/ServiceLayer/obj
 /WebApi/ServiceLayerTests/bin/Debug/netcoreapp3.1
 /WebApi/ServiceLayerTests/obj
+/backend/ServiceLayerTests/bin/Debug/netcoreapp3.1
+/backend/WebApi/bin/Debug/netcoreapp3.1
+/backend/WebApi/wwwroot
+/backend/.vs/WebApi/v16/Server/sqlite3/storage.ide-wal
+/backend/.vs/WebApi/v16/Server/sqlite3/storage.ide-shm
