@@ -56,8 +56,8 @@ namespace ServiceLayerTests
     {
         public static void PopulateTestData(CrmContext appDb)
         {
-            appDb.Addresses.Add(new Address() { City = "Busendorf" });
-            appDb.SaveChanges();
+            //appDb.Addresses.Add(new Address() { City = "Busendorf" });
+            //appDb.SaveChanges();
         }
     }
 }

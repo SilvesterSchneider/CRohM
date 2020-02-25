@@ -1,10 +1,14 @@
+using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ModelLayer;
+using ModelLayer.Models;
 using RepositoryLayer;
 using ServiceLayer;
 
@@ -24,13 +28,34 @@ namespace WebApi
             services.AddControllers();
 
             AddDependencyInjection(services);
-            StartupExtension.ConfigureServices(services);
+
+            services.AddAutoMapper(typeof(Startup));
 
             //TODO: configure swagger
             services.AddSwaggerDocument();
 
-            //TODO: add asp net identity
-            //TODO: add jwt
+            services.AddIdentity<User, Role>(options =>
+                {
+                    //// Password settings.
+                    //options.Password.RequireDigit = true;
+                    //options.Password.RequireLowercase = true;
+                    //options.Password.RequireNonAlphanumeric = true;
+                    //options.Password.RequireUppercase = true;
+                    //options.Password.RequiredLength = 6;
+                    //options.Password.RequiredUniqueChars = 1;
+
+                    options.User.RequireUniqueEmail = true;
+                    options.SignIn.RequireConfirmedAccount = false;
+                }).AddSignInManager<SignInService>()
+                .AddUserManager<UserService>()
+                .AddEntityFrameworkStores<CrmContext>();
+
+            services.AddDbContext<CrmContext>(config =>
+                {
+                    config.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
+                });
+
+            //TODO: check database for root user
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -48,6 +73,7 @@ namespace WebApi
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -58,9 +84,6 @@ namespace WebApi
 
         private void AddDependencyInjection(IServiceCollection services)
         {
-            services.AddDbContext<CrmContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
-
             //###########################Services#######################################
 
             services.AddScoped<IAddressService, AddressService>();

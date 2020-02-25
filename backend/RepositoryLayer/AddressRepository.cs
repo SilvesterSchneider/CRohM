@@ -22,7 +22,7 @@ namespace RepositoryLayer
         public async Task<List<Address>> GetByZipcodeAsync(string zipcode)
         {
             return await Entities
-                .Where(addresses => addresses.Zipcode == zipcode)
+                .Where(addresses => string.Equals(addresses.Zipcode, zipcode))
                 .ToListAsync();
         }
     }
