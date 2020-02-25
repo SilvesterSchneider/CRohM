@@ -1,4 +1,3 @@
-using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -87,10 +86,12 @@ namespace WebApi
             //###########################Services#######################################
 
             services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();
 
             //###########################Repositories#######################################
 
             services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IEducationalOpportunityRepository, EducationalOpportunityRepository>();
         }
     }
 }

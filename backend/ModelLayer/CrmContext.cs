@@ -56,5 +56,7 @@ namespace ModelLayer
 
         //entities
         //public DbSet<Address> Addresses { get; set; }
+
+        public DbSet<EducationalOpportunity> EducationalOpportunities { get; set; }
     }
 }
