@@ -1,0 +1,47 @@
+node {
+  try {
+      stage('Checkout'){
+        git url: 'https://github.com/SilvesterSchneider/CRohM.git/'
+      }
+      stage('Get Dependencies') {
+          dir("frontend") {
+              nodejs("NodeJS") {
+                sh("npm install")
+              }
+          }
+      }
+      stage('Build') {
+          dir("frontend") {
+              nodejs("NodeJS") {
+                  sh("npm run build")
+              }
+          }
+      }
+      stage('Test') {
+          dir("frontend") {
+              nodejs("NodeJS") {
+                  sh("npm run test")
+              }
+          }
+      }
+      stage('E2E') {
+          dir("frontend") {
+              nodejs("NodeJS") {
+                  sh("npm run e2e")
+              }
+          }
+      }
+      stage('Lint') {
+          dir("frontend") {
+              nodejs("NodeJS") {
+                  sh("npm run lint")
+              }
+          }
+      }
+  }
+	catch (err) {
+		currentBuild.result = "FAILURE"
+        throw err
+    }
+}
+
