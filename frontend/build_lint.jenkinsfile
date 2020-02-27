@@ -17,6 +17,13 @@ node {
               }
           }
       }
+      stage('Lint') {
+          dir("frontend") {
+              nodejs("NodeJS") {
+                  sh("npm run lint")
+              }
+          }
+      }
   }
 	catch (err) {
 		currentBuild.result = "FAILURE"
