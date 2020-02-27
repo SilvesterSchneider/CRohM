@@ -1,12 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoginComponent } from './login.component';
-<<<<<<< Updated upstream
-=======
 import { MaterialModule } from '../shared/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { isNgTemplate } from '@angular/compiler';
->>>>>>> Stashed changes
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -14,16 +10,10 @@ describe('LoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-<<<<<<< Updated upstream
-      declarations: [ LoginComponent ]
-    })
-    .compileComponents();
-=======
       declarations: [LoginComponent],
       imports: [MaterialModule, BrowserAnimationsModule]
     })
       .compileComponents();
->>>>>>> Stashed changes
   }));
 
   beforeEach(() => {
