@@ -17,6 +17,13 @@ node {
               }
           }
       }
+      stage('Test') {
+          dir("frontend") {
+              nodejs("NodeJS") {
+                  sh("npm run test")
+              }
+          }
+      }
   }
 	catch (err) {
 		currentBuild.result = "FAILURE"
