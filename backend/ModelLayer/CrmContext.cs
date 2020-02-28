@@ -18,6 +18,22 @@ namespace ModelLayer
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Role>()
+                .HasData(new Role
+                {
+                    Id = 1,
+                    Name = "Admin",
+                    NormalizedName = "Admin".ToUpper()
+                });
+
+            modelBuilder.Entity<Role>()
+                .Property(role => role.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<User>()
+                .Property(user => user.Id)
+                .ValueGeneratedOnAdd();
+
             /**************** Renaming the tables from asp net *******************/
             modelBuilder.Entity<User>(entity =>
             {

@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +12,7 @@ using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer;
 using ServiceLayer;
+using WebApi.Helper;
 
 namespace WebApi
 {
@@ -35,17 +38,19 @@ namespace WebApi
 
             services.AddIdentity<User, Role>(options =>
                 {
+                    //TODO check with Product owner if he still wants to login with admin admin -> therefor i need this password settings
                     //// Password settings.
-                    //options.Password.RequireDigit = true;
-                    //options.Password.RequireLowercase = true;
-                    //options.Password.RequireNonAlphanumeric = true;
-                    //options.Password.RequireUppercase = true;
-                    //options.Password.RequiredLength = 6;
-                    //options.Password.RequiredUniqueChars = 1;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 5;
+                    options.Password.RequiredUniqueChars = 0;
 
                     options.User.RequireUniqueEmail = true;
                     options.SignIn.RequireConfirmedAccount = false;
-                }).AddSignInManager<SignInService>()
+                })
+                .AddSignInManager<SignInService>()
                 .AddUserManager<UserService>()
                 .AddEntityFrameworkStores<CrmContext>();
 
@@ -54,11 +59,15 @@ namespace WebApi
                     config.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
                 });
 
-            //TODO: check database for root user
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "wwwroot";
+            });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserService userService)
         {
+            ApplicationDbInitializer.SeedUsers(userService);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -78,6 +87,11 @@ namespace WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "wwwroot";
             });
         }
 
