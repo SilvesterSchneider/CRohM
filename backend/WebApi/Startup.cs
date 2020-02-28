@@ -38,7 +38,7 @@ namespace WebApi
 
             services.AddIdentity<User, Role>(options =>
                 {
-                    //TODO check with Product owner if he still wants to login with admin admin -> therefor i need this password settings
+                    //TODO: check with Product owner if he still wants to login with admin admin -> therefor i need this password settings
                     //// Password settings.
                     options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = false;
@@ -58,6 +58,8 @@ namespace WebApi
                 {
                     config.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
                 });
+
+            //TODO: configure JWT validation
 
             services.AddSpaStaticFiles(configuration =>
             {
