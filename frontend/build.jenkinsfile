@@ -1,26 +1,31 @@
+#!groovy
+
 node {
+  // Clean workspace
+  cleanWs()
+
   try {
-      stage('Checkout'){
-        git url: 'https://github.com/SilvesterSchneider/CRohM.git/'
-      }
-      stage('Get Dependencies') {
-          dir("frontend") {
-              nodejs("NodeJS") {
-                sh("npm install")
-              }
-          }
-      }
-      stage('Build') {
-          dir("frontend") {
-              nodejs("NodeJS") {
-                  sh("npm run build")
-              }
-          }
-      }
-  }
-	catch (err) {
-		currentBuild.result = "FAILURE"
-        throw err
+    stage('Checkout'){
+      git url: 'https://github.com/SilvesterSchneider/CRohM.git/'
     }
+
+    stage('Build') {
+      dir("frontend") {
+        nodejs("NodeJS") {
+          sh("npm install --no-fund --no-optional")
+          sh("npm run build")
+        }
+      }
+    }
+
+    stage('Archive') {
+      // Archive compiled software for other builds
+      archiveArtifacts artifacts: 'frontend/dist/**/*.*'
+    }
+  }
+  catch (err) {
+    currentBuild.result = "FAILURE"
+    throw err‚
+  }
 }
 
