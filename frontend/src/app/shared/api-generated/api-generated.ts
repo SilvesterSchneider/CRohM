@@ -134,7 +134,7 @@ export class AddressesService {
     /**
      * @return successfully found
      */
-    getById(id: string | null): Observable<AddressDto> {
+    getById(id: number): Observable<AddressDto> {
         let url_ = this.baseUrl + "/api/Addresses/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -252,7 +252,7 @@ export class AddressesService {
     /**
      * @return successfully deleted
      */
-    delete(id: string | null): Observable<void> {
+    delete(id: number): Observable<void> {
         let url_ = this.baseUrl + "/api/Addresses/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -304,6 +304,147 @@ export class AddressesService {
     }
 }
 
+@Injectable({
+    providedIn: 'root'
+})
+export class AuthService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @return successful login
+     */
+    login(credentials: CredentialsDto): Observable<string> {
+        let url_ = this.baseUrl + "/api/auth";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(credentials);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLogin(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLogin(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processLogin(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("not successful login", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class EducationalOpportunityService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param ects (optional) 
+     * @return successfully found
+     */
+    get(ects?: number | undefined): Observable<EducationalOpportunity[]> {
+        let url_ = this.baseUrl + "/api/EducationalOpportunity?";
+        if (ects === null)
+            throw new Error("The parameter 'ects' cannot be null.");
+        else if (ects !== undefined)
+            url_ += "ects=" + encodeURIComponent("" + ects) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<EducationalOpportunity[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EducationalOpportunity[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<EducationalOpportunity[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <EducationalOpportunity[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EducationalOpportunity[]>(<any>null);
+    }
+}
+
 export interface AddressDto {
     id?: string | undefined;
     name?: string | undefined;
@@ -323,6 +464,21 @@ export interface AddressCreateDto {
     streetNumber: number;
     zipcode: string;
     country: string;
+}
+
+export interface CredentialsDto {
+    name: string;
+    password: string;
+}
+
+export interface BaseEntity {
+    id: number;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export interface EducationalOpportunity extends BaseEntity {
+    ects: number;
 }
 
 export class SwaggerException extends Error {
