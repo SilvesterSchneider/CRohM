@@ -23,6 +23,10 @@
     <Compile Remove="Migrations\20200216190409_identity.Designer.cs" />
     <Compile Remove="Migrations\20200216190540_002identity.cs" />
     <Compile Remove="Migrations\20200216190540_002identity.Designer.cs" />
+    <Compile Remove="Migrations\20200228063324_seedRole.cs" />
+    <Compile Remove="Migrations\20200228063324_seedRole.Designer.cs" />
+    <Compile Remove="Migrations\20200228063435_seedRole.cs" />
+    <Compile Remove="Migrations\20200228063435_seedRole.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
