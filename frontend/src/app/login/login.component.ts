@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { AuthService } from '../shared/api-generated/api-generated';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,13 +13,20 @@ export class LoginComponent implements OnInit {
   password = new FormControl('', Validators.required);
   errorText: string;
 
-  constructor() { }
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
   }
 
   login() {
-    console.log('Login');
+    this.authService.login({
+      name: this.username.value,
+      password: this.password.value
+    }).subscribe(result => this.redirect(), error => this.errorText = error);
+  }
+
+  redirect() {
+    this.router.navigate(['/contacts'], { relativeTo: this.route });
   }
 
 }
