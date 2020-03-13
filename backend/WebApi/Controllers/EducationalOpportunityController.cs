@@ -34,7 +34,7 @@ namespace WebApi.Controllers
         {
             List<EducationalOpportunity> educationalOpportunities;
 
-            if (Math.Abs(ects - default(float)) < 0)
+            if (Math.Abs(ects - default(float)) <= 0)
             {
                 educationalOpportunities = await _educationalOpportunityService.GetAsync();
             }
@@ -42,7 +42,7 @@ namespace WebApi.Controllers
             {
                 educationalOpportunities = await _educationalOpportunityService.GetByEctsAsync(ects);
             }
-            //TODO: add automapper
+
             return Ok(_mapper.Map<List<EducationalOpportunityDto>>(educationalOpportunities));
         }
     }

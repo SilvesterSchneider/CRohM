@@ -44,7 +44,7 @@ namespace WebApi
 
             AddDependencyInjection(services);
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(c => c.AddProfile<MappingProfile>(), typeof(Startup));
 
             services.AddSwaggerDocument(settings =>
             {

@@ -19,11 +19,16 @@ namespace ServiceLayer
 
         // had to include dll because fail from microsoft
         // https://www.gitmemory.com/issue/aspnet/AspNetCore/12536/515210764
-        public SignInService(UserManager<User> userManager, IHttpContextAccessor contextAccessor, IUserClaimsPrincipalFactory<User> claimsFactory, IOptions<IdentityOptions> optionsAccessor, ILogger<SignInManager<User>> logger, IAuthenticationSchemeProvider schemes, IUserConfirmation<User> confirmation) : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation)
+        public SignInService(UserManager<User> userManager, IHttpContextAccessor contextAccessor, IUserClaimsPrincipalFactory<User> claimsFactory, IOptions<IdentityOptions> optionsAccessor, ILogger<SignInManager<User>> logger, IAuthenticationSchemeProvider schemes, IUserConfirmation<User> confirmation, IOptions<AppSettings> appSettings) : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation)
         {
+            _appSettings = appSettings.Value;
         }
 
-        public void token()
+        /// <summary>
+        /// Create a jwt for authorize via http header
+        /// </summary>
+        /// <param name="user">Create token for this user</param>
+        public string CreateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
@@ -37,9 +42,8 @@ namespace ServiceLayer
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
 
-            return user.WithoutPassword();
+            return tokenHandler.WriteToken(token);
         }
     }
 }
