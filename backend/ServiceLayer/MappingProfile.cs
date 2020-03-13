@@ -12,6 +12,8 @@ namespace ServiceLayer
             CreateMap<AddressDto, Address>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<AddressCreateDto, Address>();
+
+            CreateMap<EducationalOpportunity, EducationalOpportunityDto>().ReverseMap();
         }
     }
 }
