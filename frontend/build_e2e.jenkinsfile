@@ -14,12 +14,16 @@ node {
     }
 
     stage('E2E') {
+	 wrap([$class: 'Xvfb']) {
       dir("frontend") {
+          
         nodejs("NodeJS") {
+          sh("export DISPLAY=\":0\"")
           sh("npm install --no-fund --no-optional")
           sh("npm run e2e")
         }
       }
+	  }
     }
   }
   catch (err) {
