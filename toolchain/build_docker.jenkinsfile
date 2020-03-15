@@ -1,0 +1,37 @@
+#!groovy
+
+def repo = "crohmcrms"
+def target = "crohm_jenkins"
+def tag = "${env.BUILD_ID}"
+def folder = "toolchain"
+def dockerfile = "crohm_jenkins.Dockerfile"
+
+node {
+  // Clean workspace
+  cleanWs()
+
+    try {
+        stage('Checkout'){
+        git url: 'https://github.com/SilvesterSchneider/CRohM.git/'
+        }
+        dir(folder) {
+            stage('Build'){
+                sh("docker build -f " + dockerfile + " -t " + repo + "/" + target + ":" + tag + " .")
+            }
+            stage('Tag'){
+                sh("docker tag " + repo + "/" + target + ":" + tag + " " +  repo + "/" + target + ":latest")
+            }
+            stage('Push') {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                    sh("docker login --username " + user + " --password " + pass)
+                    sh("docker push " + repo + "/" + target + ":" + tag)
+                    sh("docker push " + repo + "/" + target + ":latest")
+                }
+            }
+        }
+    }
+    catch (err) {
+        currentBuild.result = "FAILURE"
+        throw err‚
+  }
+}
