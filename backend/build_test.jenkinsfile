@@ -1,0 +1,20 @@
+#!groovy
+
+node {
+  try {
+    stage('Checkout'){
+      git url: 'https://github.com/SilvesterSchneider/CRohM.git/'
+    }
+   
+    stage('Test') {
+      dir("backend") {
+          sh("dotnet test ./WebApi/WebApi.csproj")
+        }
+    }
+ }
+  catch (err) {
+    currentBuild.result = "FAILURE"
+    throw err‚
+  }
+}
+
