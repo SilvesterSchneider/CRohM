@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 # Copy package.json into container path (./)
 COPY package.json ./
 # Install fresh dependecies into container
-RUN npm install
+RUN npm install --no-fund --no-optional
 COPY . .
 # Build
 RUN npm run build
