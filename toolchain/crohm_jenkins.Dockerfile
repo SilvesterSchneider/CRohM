@@ -8,6 +8,8 @@ FROM jenkins/jenkins:lts
 
 USER root
 
+ENV TZ Europe/Berlin
+
 # Install xvfb 
 RUN apt-get update
 RUN apt-get install xvfb -y
