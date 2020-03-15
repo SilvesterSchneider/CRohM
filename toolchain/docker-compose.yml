@@ -1,0 +1,51 @@
+# docker-compose -d up
+version: "3.7"
+services: 
+
+  jenkins:
+    # build: ./toolchain/crohm_jenkins.Dockerfile
+    image: crohmcrms/crohm_jenkins:latest
+    environment: 
+      - TZ=Europe/Berlin
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes: 
+      - jenkins_vol:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  portainer:
+    image: portainer/portainer:latest
+    command: --no-analytics
+    ports: 
+      - 8000:8000
+      - 9000:9000
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_vol:/data
+    restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    command: --cleanup --debug
+    environment: 
+      - TZ=Europe/Berlin
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+volumes: 
+  portainer_vol:
+    driver: local
+    driver_opts: 
+      o: bind
+      type: none
+      device: /srv/portainer
+  jenkins_vol:
+    driver: local
+    driver_opts: 
+      o: bind
+      type: none
+      device: /srv/jenkins
+    

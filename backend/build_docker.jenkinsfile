@@ -1,0 +1,34 @@
+#!groovy
+
+def repo = "crohmcrms"
+def target = "crohm_backend"
+def folder = "backend"
+def dockerfile = "Dockerfile"
+
+node {
+  // Clean workspace
+    cleanWs()
+
+    def repo_target = repo + "/" + target + ":latest"
+
+    try {
+        stage('Checkout') {
+            git url: 'https://github.com/SilvesterSchneider/CRohM.git/'
+        }
+        dir(folder) {
+            stage('Build') {
+                sh("docker build " + "-f " + dockerfile + " -t " + repo_target + " .")
+            }
+            stage('Push') {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                    sh("docker login --username " + user + " --password " + pass)
+                    sh("docker push " + repo_target)
+                }
+            }
+        }
+    }
+    catch (err) {
+        currentBuild.result = "FAILURE"
+        throw err
+  }
+}
