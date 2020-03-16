@@ -113,15 +113,16 @@ namespace WebApi
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserService userService)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserService userService, CrmContext dataContext)
         {
+            dataContext.Database.Migrate();
+
             ApplicationDbInitializer.SeedUsers(userService);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            //TODO: catch exception - DbUpdateConcurrencyException
             app.UseOpenApi();
             app.UseSwaggerUi3();
 
