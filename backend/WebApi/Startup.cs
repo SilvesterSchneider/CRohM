@@ -24,9 +24,15 @@ namespace WebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+
+            Configuration["dbName"] = "LiveDb";
+            if (env.IsDevelopment())
+            {
+                Configuration["dbName"] = "LocalDb";
+            }
         }
 
         public IConfiguration Configuration { get; }
@@ -79,11 +85,9 @@ namespace WebApi
                 .AddEntityFrameworkStores<CrmContext>();
 
             services.AddDbContext<CrmContext>(config =>
-                {
-                    config.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
-                });
-
-            //TODO: configure JWT validation
+            {
+                config.UseSqlServer(Configuration.GetConnectionString(Configuration["dbName"]));
+            });
 
             services.AddSpaStaticFiles(configuration =>
             {
@@ -116,7 +120,7 @@ namespace WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-            //TODO: implement middleware for exceptions
+
             //TODO: catch exception - DbUpdateConcurrencyException
             app.UseOpenApi();
             app.UseSwaggerUi3();
@@ -133,6 +137,11 @@ namespace WebApi
                 endpoints.MapControllers();
             });
 
+            app.UseStaticFiles();
+            if (!env.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
+            }
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "wwwroot";
