@@ -2,8 +2,8 @@ version: "3.7"
 services: 
 
   crms:
-    # build: ./backend/
-    image: crohmcrms/crohm_crms:latest
+    build: .
+    #image: crohmcrms/crohm_crms:latest
     ports:
       - "80:80"
       - "443:443"
