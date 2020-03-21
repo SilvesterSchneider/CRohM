@@ -1,7 +1,7 @@
 # Build container
-# docker build -t jenkins_test . 
+# docker build -t crohm_jenkins . 
 # Run container
-# docker run --name jenkins_test -d -p 8080:8081 jenkins_test
+# docker run --name crohm_jenkins -d -p 8080:8081 crohm_jenkins
 
 # base image
 FROM jenkins/jenkins:lts
