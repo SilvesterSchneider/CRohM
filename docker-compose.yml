@@ -9,6 +9,7 @@ services:
       - "443:443"
     depends_on: 
       - db
+    restart: unless-stopped
 
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -22,6 +23,7 @@ services:
       - 1433:1433
     volumes: 
       - database_vol:/var/opt/mssql 
+    restart: unless-stopped
 
 volumes: 
   database_vol:
