@@ -320,7 +320,7 @@ export class AuthService {
     /**
      * @return successful login
      */
-    login(credentials: CredentialsDto): Observable<string> {
+    login(credentials: CredentialsDto): Observable<UserDto> {
         let url_ = this.baseUrl + "/api/auth";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -343,14 +343,14 @@ export class AuthService {
                 try {
                     return this.processLogin(<any>response_);
                 } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
+                    return <Observable<UserDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<string>><any>_observableThrow(response_);
+                return <Observable<UserDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processLogin(response: HttpResponseBase): Observable<string> {
+    protected processLogin(response: HttpResponseBase): Observable<UserDto> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -360,10 +360,10 @@ export class AuthService {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <UserDto>JSON.parse(_responseText, this.jsonParseReviver);
             return _observableOf(result200);
             }));
-        } else if (status === 401) {
+        } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("not successful login", status, _responseText, _headers);
             }));
@@ -372,7 +372,7 @@ export class AuthService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<string>(<any>null);
+        return _observableOf<UserDto>(<any>null);
     }
 }
 
@@ -393,7 +393,7 @@ export class EducationalOpportunityService {
      * @param ects (optional) 
      * @return successfully found
      */
-    get(ects?: number | undefined): Observable<EducationalOpportunity[]> {
+    get(ects?: number | undefined): Observable<EducationalOpportunityDto[]> {
         let url_ = this.baseUrl + "/api/EducationalOpportunity?";
         if (ects === null)
             throw new Error("The parameter 'ects' cannot be null.");
@@ -416,14 +416,14 @@ export class EducationalOpportunityService {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<EducationalOpportunity[]>><any>_observableThrow(e);
+                    return <Observable<EducationalOpportunityDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<EducationalOpportunity[]>><any>_observableThrow(response_);
+                return <Observable<EducationalOpportunityDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<EducationalOpportunity[]> {
+    protected processGet(response: HttpResponseBase): Observable<EducationalOpportunityDto[]> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -433,7 +433,7 @@ export class EducationalOpportunityService {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <EducationalOpportunity[]>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <EducationalOpportunityDto[]>JSON.parse(_responseText, this.jsonParseReviver);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -441,7 +441,7 @@ export class EducationalOpportunityService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<EducationalOpportunity[]>(<any>null);
+        return _observableOf<EducationalOpportunityDto[]>(<any>null);
     }
 }
 
@@ -466,18 +466,24 @@ export interface AddressCreateDto {
     country: string;
 }
 
+export interface UserDto {
+    id: number;
+    userName?: string | undefined;
+    email?: string | undefined;
+    phoneNumber?: string | undefined;
+    twoFactorEnabled: boolean;
+    accessToken?: string | undefined;
+}
+
 export interface CredentialsDto {
     name: string;
     password: string;
 }
 
-export interface BaseEntity {
+export interface EducationalOpportunityDto {
     id: number;
     name?: string | undefined;
     description?: string | undefined;
-}
-
-export interface EducationalOpportunity extends BaseEntity {
     ects: number;
 }
 
