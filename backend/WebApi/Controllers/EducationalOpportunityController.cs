@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
 using NSwag.Annotations;
 using ServiceLayer;
@@ -14,19 +17,24 @@ namespace WebApi.Controllers
     public class EducationalOpportunityController : ControllerBase
     {
         private readonly IEducationalOpportunityService _educationalOpportunityService;
+        private readonly IMapper _mapper;
 
-        public EducationalOpportunityController(IEducationalOpportunityService educationalOpportunityService)
+        public EducationalOpportunityController(
+            IEducationalOpportunityService educationalOpportunityService,
+            IMapper mapper)
         {
             _educationalOpportunityService = educationalOpportunityService;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        //TODO: change return type to dto
-        [SwaggerResponse(HttpStatusCode.OK, typeof(List<EducationalOpportunity>), Description = "successfully found")]
+        [Authorize]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(List<EducationalOpportunityDto>), Description = "successfully found")]
         public async Task<IActionResult> Get([FromQuery]float ects)
         {
             List<EducationalOpportunity> educationalOpportunities;
-            if (Math.Abs(ects - default(float)) < 0)
+
+            if (Math.Abs(ects - default(float)) <= 0)
             {
                 educationalOpportunities = await _educationalOpportunityService.GetAsync();
             }
@@ -34,8 +42,8 @@ namespace WebApi.Controllers
             {
                 educationalOpportunities = await _educationalOpportunityService.GetByEctsAsync(ects);
             }
-            //TODO: add automapper
-            return Ok(educationalOpportunities);
+
+            return Ok(_mapper.Map<List<EducationalOpportunityDto>>(educationalOpportunities));
         }
     }
 }
