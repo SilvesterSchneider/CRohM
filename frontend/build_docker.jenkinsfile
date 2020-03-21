@@ -17,7 +17,7 @@ node {
         }
         dir(folder) {
             stage('Build') {
-                sh("docker build " + "-f " + dockerfile + " -t " + repo_target + " .")
+                sh("docker build --no-cache" + "-f " + dockerfile + " -t " + repo_target + " .")
             }
             stage('Push') {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'pass', usernameVariable: 'user')]) {
