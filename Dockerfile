@@ -1,5 +1,5 @@
 # Build container
-# docker build -f Dockerfile -t crms .
+# docker build -f Dockerfile --no-cache --force-rm -t crohmcrms/crohm_crms .
 # Run container
 # docker run --name crms -d -p 8889:80 crms
 
