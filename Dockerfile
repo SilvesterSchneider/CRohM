@@ -11,15 +11,15 @@ FROM node:12.2.0 as buildFrontend
 WORKDIR /usr/src/frontend
 
 # install and cache app dependencies
-COPY frontend/package.json ./
-RUN npm install --no-fund --no-optional
-RUN npm install -g @angular/cli@latest --no-fund --no-optional
+#COPY frontend/package.json ./
+#RUN npm install --no-fund --no-optional
+#RUN npm install -g @angular/cli@latest --no-fund --no-optional
 
 # Copy frontend src to workdir
-COPY frontend ./
+#COPY frontend ./
 
 # Build frontend
-RUN ng build --output-path=dist
+#RUN ng build --output-path=dist
 
 ### STAGE 2: Build Backend ###
 # Get sdk
@@ -36,13 +36,17 @@ COPY ["backend/ServiceLayer/ServiceLayer.csproj", "./ServiceLayer/"]
 RUN dotnet restore "./WebApi/WebApi.csproj"
 
 # Copy frontend build into backend
-COPY --from=buildFrontend /usr/src/frontend/dist /usr/src/backend/WebApi/wwwroot
+#COPY --from=buildFrontend /usr/src/frontend/dist /usr/src/backend/WebApi/wwwroot
 
 # Copy backend src to workdir
 COPY ./backend .
 
 # Build backend into app folder
 RUN dotnet publish "./WebApi/WebApi.csproj" -c Release -o /app
+
+WORKDIR /app
+RUN ls -la
+RUN cat appsettings.json
 
 ### STAGE 3: Run Webserver ###
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine3.11
