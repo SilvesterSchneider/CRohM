@@ -46,6 +46,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.Extensions.Identity.Stores">
       <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\3.1.0\ref\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll</HintPath>
+      <Private>true</Private>
     </Reference>
   </ItemGroup>
 
