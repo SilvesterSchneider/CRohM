@@ -5,6 +5,8 @@ import { ContactsDetailComponent } from './contacts-detail/contacts-detail.compo
 import { MaterialModule } from '../shared/material.module';
 import { ContactsRoutingModule } from './contacts-routing.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ContactsAddComponent } from './contacts-add/contacts-add.component';
+
 
 @NgModule({
   imports: [
@@ -16,7 +18,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
   ],
   declarations: [
     ContactsListComponent,
-    ContactsDetailComponent
+    ContactsDetailComponent,
+    ContactsAddComponent,
   ],
 })
 export class ContactsModule { }
