@@ -2,11 +2,10 @@ version: "3.7"
 services: 
 
   crms:
-    build: .
-    #image: crohmcrms/crohm_crms:latest
+    #build: .
+    image: crohmcrms/crohm_crms:latest
     ports:
       - "80:80"
-      - "443:443"
     depends_on: 
       - db
     restart: unless-stopped

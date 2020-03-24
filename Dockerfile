@@ -1,5 +1,5 @@
 # Build container
-# docker build -f Dockerfile --no-cache --force-rm -t crohmcrms/crohm_crms .
+# docker build -f Dockerfile --no-cache --force-rm -t crohmcrms/crohm_crms:latest .
 # Run container
 # docker run --name crms -d -p 8889:80 crms
 
@@ -11,20 +11,20 @@ FROM node:12.2.0 as buildFrontend
 WORKDIR /usr/src/frontend
 
 # install and cache app dependencies
-#COPY frontend/package.json ./
-#RUN npm install --no-fund --no-optional
-#RUN npm install -g @angular/cli@latest --no-fund --no-optional
+COPY frontend/package.json ./
+RUN npm install --no-fund --no-optional
+RUN npm install -g @angular/cli@latest --no-fund --no-optional
 
 # Copy frontend src to workdir
-#COPY frontend ./
+COPY frontend ./
 
 # Build frontend
-#RUN ng build --output-path=dist
+RUN ng build --output-path=dist
 
 ### STAGE 2: Build Backend ###
 # Get sdk
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS buildBackend
-WORKDIR /usr/src/backend
+WORKDIR /app
 
 # Copy required files into container
 COPY ["backend/WebApi/WebApi.csproj", "./WebApi/"]
@@ -36,17 +36,14 @@ COPY ["backend/ServiceLayer/ServiceLayer.csproj", "./ServiceLayer/"]
 RUN dotnet restore "./WebApi/WebApi.csproj"
 
 # Copy frontend build into backend
-#COPY --from=buildFrontend /usr/src/frontend/dist /usr/src/backend/WebApi/wwwroot
+COPY --from=buildFrontend /usr/src/frontend/dist /app/WebApi/wwwroot
 
 # Copy backend src to workdir
 COPY ./backend .
 
 # Build backend into app folder
-RUN dotnet publish "./WebApi/WebApi.csproj" -c Release -o /app
-
-WORKDIR /app
-RUN ls -la
-RUN cat appsettings.json
+WORKDIR /app/WebApi
+RUN dotnet publish -c Release -o ./app
 
 ### STAGE 3: Run Webserver ###
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine3.11
@@ -54,5 +51,10 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine3.11
 RUN apk add --no-cache icu-libs
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
+EXPOSE 80
+
 COPY --from=buildBackend /app /app
-ENTRYPOINT ["dotnet", "/app/WebApi.dll"]
+
+WORKDIR /app/WebApi/app
+
+ENTRYPOINT ["dotnet", "WebApi.dll"]
