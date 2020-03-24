@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,12 +18,15 @@
   <ItemGroup>
     <Reference Include="Microsoft.AspNetCore.Authentication.Abstractions">
       <HintPath>packages\Microsoft.AspNetCore.Authentication.Abstractions.dll</HintPath>
+      <Private>true</Private>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
       <HintPath>packages\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+      <Private>true</Private>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Identity">
       <HintPath>packages\Microsoft.AspNetCore.Identity.dll</HintPath>
+      <Private>true</Private>
     </Reference>
   </ItemGroup>
 </Project>

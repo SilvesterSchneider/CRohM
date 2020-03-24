@@ -1,0 +1,33 @@
+version: "3.7"
+services: 
+
+  crms:
+    #build: .
+    image: crohmcrms/crohm_crms:latest
+    ports:
+      - "80:80"
+    depends_on: 
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment: 
+      ACCEPT_EULA: Y
+      # LOGIN: sa
+      SA_PASSWORD: CRohM2020
+      MSSQL_PID: Express
+      TZ: Europe/Berlin
+    ports:
+      - 1433:1433
+    volumes: 
+      - database_vol:/var/opt/mssql 
+    restart: unless-stopped
+
+volumes: 
+  database_vol:
+    driver: local
+    driver_opts: 
+      o: bind
+      type: none
+      device: /srv/crohm/database
