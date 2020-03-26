@@ -9,20 +9,26 @@ node {
   // Clean workspace
     cleanWs()
 
-    def repo_target = repo + "/" + target + ":latest"
+    def image_name = repo + "/" + target
 
     try {
         stage('Checkout') {
             git url: 'https://github.com/SilvesterSchneider/CRohM.git/'
+            shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
         }
         dir(folder) {
             stage('Build') {
-                sh("docker build --force-rm --no-cache " + "-f " + dockerfile + " -t " + repo_target + " .")
+                image = image_name + ":" + shortCommit
+                sh("docker build --force-rm --no-cache " + "-f " + dockerfile + " -t " + image + " .")
             }
             stage('Push') {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'pass', usernameVariable: 'user')]) {
                     sh("docker login --username " + user + " --password " + pass)
-                    sh("docker push " + repo_target)
+                    sh("docker push " + image)
+                    
+                    latest_image = image_name + ":latest"
+                    sh("docker tag " + image + " " + latest_image)
+                    sh("docker push " + latest_image)
                 }
             }
         }
