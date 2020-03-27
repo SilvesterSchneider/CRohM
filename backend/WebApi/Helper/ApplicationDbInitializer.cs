@@ -20,7 +20,7 @@ namespace WebApi.Helper
                     Email = "admin@admin.com"
                 };
 
-                IdentityResult result = userService.CreateAsync(user, "admin").Result;
+                IdentityResult result = userService.CreateAsync(user, "@dm1n1stR4tOr").Result;
 
                 if (result.Succeeded)
                 {
