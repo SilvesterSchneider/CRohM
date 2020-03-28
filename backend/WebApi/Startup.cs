@@ -19,6 +19,7 @@ using ServiceLayer;
 using WebApi.Helper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using ModelLayer.Helper;
 
 namespace WebApi
 {
@@ -151,6 +152,10 @@ namespace WebApi
 
         private void AddDependencyInjection(IServiceCollection services)
         {
+            //###########################Helper#######################################
+
+            services.AddSingleton<IMailProvider, MailProviderTest>();
+
             //###########################Services#######################################
 
             services.AddScoped<IAddressService, AddressService>();
