@@ -1,5 +1,4 @@
 import { Contact } from './contacts.model';
-//import { getMaxListeners } from 'cluster';
 
 export const CONTACTS: Contact[] = [
     {
