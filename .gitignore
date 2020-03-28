@@ -19,6 +19,8 @@
 /backend/WebApi/wwwroot
 /backend/.vs/WebApi/v16/Server/sqlite3/storage.ide-wal
 /backend/.vs/WebApi/v16/Server/sqlite3/storage.ide-shm
+/TestProjects/bin/
+/TestProjects/obj
 .DS_Store
 .vs
 .vscode
