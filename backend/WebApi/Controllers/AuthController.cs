@@ -62,6 +62,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="primKey">the primary key of the user to be changed</param>
         /// <returns></returns>
+        [Route("api/auth/changePassword")]
         [HttpPut]
         [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully updated")]
         public async Task<IActionResult> ChangePassword([FromQuery]int primKey)

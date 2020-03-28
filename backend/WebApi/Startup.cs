@@ -71,12 +71,12 @@ namespace WebApi
                 {
                     //TODO: change password settings in next sprint
                     //// Password settings.
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 5;
-                    options.Password.RequiredUniqueChars = 0;
+                    options.Password.RequireDigit = PasswordGuidelines.RequireDigit;
+                    options.Password.RequireLowercase = PasswordGuidelines.RequireLowercase;
+                    options.Password.RequireNonAlphanumeric = PasswordGuidelines.RequireNonAlphanumeric;
+                    options.Password.RequireUppercase = PasswordGuidelines.RequireUppercase;
+                    options.Password.RequiredLength = PasswordGuidelines.RequiredLength;
+                    options.Password.RequiredUniqueChars = PasswordGuidelines.RequiredUniqueChars;
 
                     options.User.RequireUniqueEmail = true;
                     options.SignIn.RequireConfirmedAccount = false;

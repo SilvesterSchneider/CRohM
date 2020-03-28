@@ -12,12 +12,6 @@ namespace ServiceLayer
 {
     public class UserService : UserManager<User>
     {
-        private readonly int MIN_LENGTH = 6;
-        private readonly int MAX_LENGTH = 10;
-        private readonly int MIN_LOW = 2;
-        private readonly int MIN_UPPER = 2;
-        private readonly int MIN_NUM = 1;
-        private readonly int MIN_SPEC = 1;
         private IMailProvider mailProvider;
 
         public UserService(IUserStore<User> store,
@@ -48,7 +42,9 @@ namespace ServiceLayer
             }
             if (userToBeUpdated != null && !string.IsNullOrEmpty(userToBeUpdated.Email))
             {
-                string newPassword = new PasswordGenerator(MIN_LENGTH, MAX_LENGTH, MIN_LOW, MIN_UPPER, MIN_NUM, MIN_SPEC).Generate();
+                string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredLength, PasswordGuidelines.GetMaximumLength(),
+                    PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
+                    PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
                 await ChangePasswordAsync(userToBeUpdated, userToBeUpdated.PasswordHash, newPassword).ConfigureAwait(false);
                 mailProvider.SendMailContainingNewPasswort(newPassword, userToBeUpdated.Email);
             }
