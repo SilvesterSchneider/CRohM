@@ -16,13 +16,13 @@ namespace WebApi.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly SignInService _signInService;
-        private readonly UserService _userService;
+        private readonly ISignInService _signInService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
         public AuthController(
-            SignInService signInService,
-            UserService userService,
+            ISignInService signInService,
+            IUserService userService,
             IMapper mapper)
         {
             _signInService = signInService;

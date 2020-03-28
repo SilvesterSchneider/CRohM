@@ -15,4 +15,9 @@ namespace ModelLayer.DataTransferObjects
         //TODO: implement endpoint for login with refresh token
         //public string RefreshToken { get; set; }
     }
+
+    public class UserCreateDto
+    {
+        public string Email { get; set; }
+    }
 }

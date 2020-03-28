@@ -68,7 +68,6 @@ namespace WebApi
 
             services.AddIdentity<User, Role>(options =>
                 {
-                    //TODO: change password settings in next sprint
                     //// Password settings.
                     options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = false;
@@ -80,8 +79,6 @@ namespace WebApi
                     options.User.RequireUniqueEmail = true;
                     options.SignIn.RequireConfirmedAccount = false;
                 })
-                .AddSignInManager<SignInService>()
-                .AddUserManager<UserService>()
                 .AddEntityFrameworkStores<CrmContext>();
 
             services.AddDbContext<CrmContext>(config =>
@@ -113,7 +110,7 @@ namespace WebApi
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserService userService, CrmContext dataContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IUserService userService, CrmContext dataContext)
         {
             dataContext.Database.Migrate();
 
@@ -153,6 +150,8 @@ namespace WebApi
         {
             //###########################Services#######################################
 
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISignInService, SignInService>();
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();
 

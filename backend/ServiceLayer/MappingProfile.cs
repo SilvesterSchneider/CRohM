@@ -15,6 +15,7 @@ namespace ServiceLayer
 
             CreateMap<EducationalOpportunity, EducationalOpportunityDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<UserCreateDto, User>();
         }
     }
 }
