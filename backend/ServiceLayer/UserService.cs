@@ -227,9 +227,9 @@ namespace ServiceLayer
         {
             PasswordGenerator pwGenerator = new PasswordGenerator();
             var password = pwGenerator.Generate();
-            //var username = generate
-            //TODO:username specail machen
-            user.UserName = user.Email;
+
+            user.UserName = GetUniqueUserName(user.FirstName, user.LastName);
+
             var result = await base.CreateAsync(user, password);
 
             if (result.Succeeded)
