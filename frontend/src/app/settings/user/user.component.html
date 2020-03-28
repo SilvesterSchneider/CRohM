@@ -1,25 +1,65 @@
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<mat-toolbar>
+    <mat-toolbar-row>
+        <span>Einstellungen</span>
+    </mat-toolbar-row>
+
+    <mat-toolbar-row>
+        <span>Benutzer</span>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <ng-container matColumnDef="username">
-        <th mat-header-cell *matHeaderCellDef> Username </th>
-        <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
+        <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.userName}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="mail">
-        <th mat-header-cell *matHeaderCellDef> E-Mail </th>
-        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+        <mat-header-cell *matHeaderCellDef> E-Mail </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="firstname">
-        <th mat-header-cell *matHeaderCellDef> Vorname </th>
-        <td mat-cell *matCellDef="let element"> {{element.vorname}} </td>
+        <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.vorname}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="lastname">
-        <th mat-header-cell *matHeaderCellDef> Nachname </th>
-        <td mat-cell *matCellDef="let element"> {{element.nachname}} </td>
+        <mat-header-cell *matHeaderCellDef> Nachname </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.nachname}} </mat-cell>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
+<mat-toolbar>
+    <span>Neuer Benutzer</span>
+</mat-toolbar>
+
+<form [formGroup]="userForm">
+    <div class="row">
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="E-Mail" formControlName="mail">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Vorname" formControlName="vorname">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Nachname" formControlName="nachname">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid" (click)="addUser()">
+                Anlegen
+            </button>
+
+        </div>
+    </div>
+</form>

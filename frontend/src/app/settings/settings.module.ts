@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { UserComponent } from './user/user.component';
 import { SettingsRoutingModule } from './settings-routing.module';
 import { MaterialModule } from '../shared/material.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -11,7 +12,8 @@ import { MaterialModule } from '../shared/material.module';
   imports: [
     CommonModule,
     SettingsRoutingModule,
-    MaterialModule
+    MaterialModule,
+    ReactiveFormsModule,
   ]
 })
 export class SettingsModule { }
