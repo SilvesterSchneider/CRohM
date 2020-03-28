@@ -160,6 +160,7 @@ namespace WebApi
 
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IEducationalOpportunityRepository, EducationalOpportunityRepository>();
+            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         }
     }
 }
