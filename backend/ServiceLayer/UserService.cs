@@ -30,12 +30,17 @@ namespace ServiceLayer
             this.mailProvider = mailProvider;
         }
 
-        public async Task ChangePasswordForUser(int id)
+        /// <summary>
+        /// Change the password service.
+        /// </summary>
+        /// <param name="primKey">the primary key of the user to be changed</param>
+        /// <returns></returns>
+        public async Task ChangePasswordForUser(int primKey)
         {
             User userToBeUpdated = null;
             foreach (User us in Users)
             {
-                if (us.Id == id)
+                if (us.Id == primKey)
                 {
                     userToBeUpdated = us;
                     break;

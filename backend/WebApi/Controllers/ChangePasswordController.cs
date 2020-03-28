@@ -23,11 +23,16 @@ namespace WebApi.Controllers
             this._mapper = mapper;
         }
 
+        /// <summary>
+        /// The password change controler request.
+        /// </summary>
+        /// <param name="primKey">the primary key of the user to be changed</param>
+        /// <returns></returns>
         [HttpPut]
         [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully updated")]
-        public async Task<IActionResult> Change([FromQuery]int id)
+        public async Task<IActionResult> Change([FromQuery]int primKey)
         {
-            await _users.ChangePasswordForUser(id).ConfigureAwait(false);
+            await _users.ChangePasswordForUser(primKey).ConfigureAwait(false);
             return Ok(true);
         }
     }
