@@ -1,6 +1,7 @@
 ﻿using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ModelLayer.Helper
@@ -16,12 +17,7 @@ namespace ModelLayer.Helper
         /// <returns>the unique string containing the username</returns>
         public static string CreateUniqueName(string firstName, string lastName, CrmContext context)
         {
-            int index = 1;
-            foreach (User us in context.Users)
-            {
-                index++;
-            }
-            return lastName + firstName.Substring(0, 2) + index;
+            return lastName + firstName.Substring(0, 2) + context.Users.Count() + 1;
         }
     }
 }
