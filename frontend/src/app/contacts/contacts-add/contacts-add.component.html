@@ -27,21 +27,13 @@
     <div class="row" formGroupName="adresse">
         <div class="col-md-12">
             <mat-form-field>
-                <mat-label>Land</mat-label>
-                <!-- Mit mat-select konnte ich ddas Dropdown-Auswahlfeld nicht realisieren. Deshalb native html select -->
-                <select matNativeControl formControlName="land" name="country">
-                    <option value="" selected></option>
-                    <option *ngFor="let country of countries" [value]="country.value">
-                        {{country.viewValue}}
-                    </option>
-                </select>
-                <!--
+                <mat-label>Land</mat-label>               
                 <mat-select formControlName="land" name="country">
                     <mat-option *ngFor="let country of countries" [value]="country.value">
                         {{country.viewValue}}
                     </mat-option>
                 </mat-select>
-                -->
+                
             </mat-form-field>
         </div>
     </div>
