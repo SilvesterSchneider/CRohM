@@ -10,7 +10,7 @@ namespace WebApi.Helper
         /// Seeding database with admin user and password admin. Also add role 'Admin'
         /// </summary>
         /// <param name="userService">Service to include user</param>
-        public static void SeedUsers(UserService userService)
+        public static void SeedUsers(IUserService userService)
         {
             if (userService.FindByEmailAsync("admin@admin.com").Result == null)
             {
@@ -20,7 +20,11 @@ namespace WebApi.Helper
                     Email = "admin@admin.com"
                 };
 
+
+#pragma warning disable CS0618 // Type or member is obsolete
                 IdentityResult result = userService.CreateAsync(user, "@dm1n1stR4tOr").Result;
+#pragma warning restore CS0618 // Type or member is obsolete
+
 
                 if (result.Succeeded)
                 {
