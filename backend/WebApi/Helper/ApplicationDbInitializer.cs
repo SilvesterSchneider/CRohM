@@ -20,9 +20,11 @@ namespace WebApi.Helper
                     Email = "admin@admin.com"
                 };
 
+
 #pragma warning disable CS0618 // Type or member is obsolete
-                IdentityResult result = userService.CreateAsync(user, "admin").Result;
+                IdentityResult result = userService.CreateAsync(user, "@dm1n1stR4tOr").Result;
 #pragma warning restore CS0618 // Type or member is obsolete
+
 
                 if (result.Succeeded)
                 {

@@ -6,8 +6,6 @@ import { MaterialModule } from '../shared/material.module';
 import { ContactsRoutingModule } from './contacts-routing.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ContactsAddComponent } from './contacts-add/contacts-add.component';
-import { MatSelectModule } from '@angular/material/select';
-
 
 @NgModule({
   imports: [
@@ -16,7 +14,6 @@ import { MatSelectModule } from '@angular/material/select';
     FormsModule,
     MaterialModule,
     ContactsRoutingModule,
-    MatSelectModule
   ],
   declarations: [
     ContactsListComponent,
