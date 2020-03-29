@@ -9,7 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  username = new FormControl('', Validators.required);
+  userNameOrEmail = new FormControl('', Validators.required);
   password = new FormControl('', Validators.required);
   errorText: string;
 
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.authService.login({
-      name: this.username.value,
+      userNameOrEmail: this.userNameOrEmail.value,
       password: this.password.value
     }).subscribe(result => this.redirect(), error => this.errorText = error);
   }

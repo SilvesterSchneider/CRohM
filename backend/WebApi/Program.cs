@@ -25,17 +25,5 @@ namespace WebApi
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-        // ****************************************** //
-        // IMPORTANT: has to stay for testing purpose
-        //public static IWebHostBuilder CreateWebHostBuilder(string[] args) => new WebHostBuilder()
-        //    .ConfigureAppConfiguration((ctx, builder) =>
-        //        {
-        //        }
-        //    )
-        //    .UseStartup<Startup>()
-        //    .ConfigureLogging((hostingContext, logging) => { });
-
-        // ****************************************** //
     }
 }
