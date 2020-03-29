@@ -57,6 +57,20 @@ namespace WebApi.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// The password change controler request.
+        /// </summary>
+        /// <param name="primKey">the primary key of the user to be changed</param>
+        /// <returns></returns>
+        [Route("api/auth/changePassword")]
+        [HttpPut]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully updated")]
+        public async Task<IActionResult> ChangePassword([FromQuery]int primKey)
+        {
+            await _userService.ChangePasswordForUser(primKey).ConfigureAwait(false);
+            return Ok(true);
+        }
+
         //TODO: implement endpoint for login with refresh token
         /*    [HttpPost("refreshLogin")]
                 [AllowAnonymous]
