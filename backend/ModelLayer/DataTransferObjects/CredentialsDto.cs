@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ModelLayer.DataTransferObjects
 {
     public class CredentialsDto
     {
         [Required(AllowEmptyStrings = false)]
-        public string Name { get; set; }
+        public string UserNameOrEmail { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         public string Password { get; set; }
