@@ -26,7 +26,10 @@ namespace ServiceLayer
     public class UserService : IUserService
     {
         private readonly IUserManager _userManager;
+
+        //TODO: fix it with di
         private readonly IMailProvider mailProvider;
+
         public IQueryable<User> Users => _userManager.Users;
 
         public UserService(IUserManager userManager)
