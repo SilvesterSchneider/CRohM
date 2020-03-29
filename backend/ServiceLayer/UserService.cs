@@ -19,11 +19,14 @@ namespace ServiceLayer
         Task<IdentityResult> CreateAsync(User user, string password);
 
         Task<IdentityResult> AddToRoleAsync(User user, string role);
+
+        Task ChangePasswordForUser(int primKey);
     }
 
     public class UserService : IUserService
     {
         private readonly IUserManager _userManager;
+        private readonly IMailProvider mailProvider;
         public IQueryable<User> Users => _userManager.Users;
 
         public UserService(IUserManager userManager)
@@ -48,6 +51,34 @@ namespace ServiceLayer
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Change the password service.
+        /// </summary>
+        /// <param name="primKey">the primary key of the user to be changed</param>
+        /// <returns></returns>
+        public async Task ChangePasswordForUser(int primKey)
+        {
+            //TODO: refactor -> make unit test, return result
+            User userToBeUpdated = null;
+            foreach (User us in Users)
+            {
+                if (us.Id == primKey)
+                {
+                    userToBeUpdated = us;
+                    break;
+                }
+            }
+            if (userToBeUpdated != null && !string.IsNullOrEmpty(userToBeUpdated.Email))
+            {
+                string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredLength, PasswordGuidelines.GetMaximumLength(),
+                    PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
+                    PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
+                //TODO: does this work with password hash?
+                await _userManager.ChangePasswordAsync(userToBeUpdated, userToBeUpdated.PasswordHash, newPassword).ConfigureAwait(false);
+                mailProvider.SendMailContainingNewPasswort(newPassword, userToBeUpdated.Email);
+            }
         }
 
         public async Task<User> FindByEmailAsync(string email)
@@ -107,43 +138,18 @@ namespace ServiceLayer
 
         Task<IdentityResult> AddToRoleAsync(User user, string role);
 
+        Task<IdentityResult> ChangePasswordAsync(User user, string newPassword, string currentPassword);
+
         IQueryable<User> Users { get; }
     }
 
     public class DefaultUserManager : IUserManager
     {
         private readonly UserManager<User> _manager;
-        private readonly IMailProvider mailProvider;
 
         public DefaultUserManager(UserManager<User> manager)
         {
             _manager = manager;
-        }
-
-        /// <summary>
-        /// Change the password service.
-        /// </summary>
-        /// <param name="primKey">the primary key of the user to be changed</param>
-        /// <returns></returns>
-        public async Task ChangePasswordForUser(int primKey)
-        {
-            User userToBeUpdated = null;
-            foreach (User us in Users)
-            {
-                if (us.Id == primKey)
-                {
-                    userToBeUpdated = us;
-                    break;
-                }
-            }
-            if (userToBeUpdated != null && !string.IsNullOrEmpty(userToBeUpdated.Email))
-            {
-                string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredLength, PasswordGuidelines.GetMaximumLength(),
-                    PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
-                    PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
-                await ChangePasswordAsync(userToBeUpdated, userToBeUpdated.PasswordHash, newPassword).ConfigureAwait(false);
-                mailProvider.SendMailContainingNewPasswort(newPassword, userToBeUpdated.Email);
-            }
         }
 
         public async Task<IdentityResult> CreateAsync(User user)
@@ -169,6 +175,11 @@ namespace ServiceLayer
         public async Task<IdentityResult> AddToRoleAsync(User user, string role)
         {
             return await _manager.AddToRoleAsync(user, role);
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string newPassword, string currentPassword)
+        {
+            return await _manager.ChangePasswordAsync(user, currentPassword, newPassword);
         }
 
         public IQueryable<User> Users => _manager.Users;
