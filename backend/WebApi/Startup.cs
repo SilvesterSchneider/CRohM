@@ -19,6 +19,7 @@ using ServiceLayer;
 using WebApi.Helper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using ModelLayer.Helper;
 
 namespace WebApi
 {
@@ -69,13 +70,12 @@ namespace WebApi
             services.AddIdentity<User, Role>(options =>
                 {
                     //// Password settings.
-                    options.Password.RequireDigit = true;
-                    options.Password.RequireLowercase = true;
-                    options.Password.RequireNonAlphanumeric = true;
-                    options.Password.RequireUppercase = true;
-                    options.Password.RequiredLength = 8;
-                    options.Password.RequiredUniqueChars = 1;
-
+                    options.Password.RequireDigit = PasswordGuidelines.RequireDigit;
+                    options.Password.RequireLowercase = PasswordGuidelines.RequireLowercase;
+                    options.Password.RequireNonAlphanumeric = PasswordGuidelines.RequireNonAlphanumeric;
+                    options.Password.RequireUppercase = PasswordGuidelines.RequireUppercase;
+                    options.Password.RequiredLength = PasswordGuidelines.RequiredLength;
+                    options.Password.RequiredUniqueChars = PasswordGuidelines.RequiredUniqueChars;
                     options.User.RequireUniqueEmail = true;
                     options.SignIn.RequireConfirmedAccount = false;
                 })
@@ -148,6 +148,10 @@ namespace WebApi
 
         private void AddDependencyInjection(IServiceCollection services)
         {
+            //###########################Helper#######################################
+
+            services.AddSingleton<IMailProvider, MailProviderTest>();
+
             //###########################Services#######################################
 
             services.AddScoped<IUserService, UserService>();
