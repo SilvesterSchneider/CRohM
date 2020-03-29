@@ -74,5 +74,7 @@ namespace ModelLayer
         //public DbSet<Address> Addresses { get; set; }
 
         public DbSet<EducationalOpportunity> EducationalOpportunities { get; set; }
+
+        public DbSet<Organization> Organizations { get; set; }
     }
 }
