@@ -61,7 +61,9 @@ namespace ServiceLayer
         public async Task ChangePasswordForUser(int primKey)
         {
             //TODO: refactor -> make unit test, return result
+            //TODO: generate client class for frontend
             User userToBeUpdated = null;
+            //why iterate over user?
             foreach (User us in Users)
             {
                 if (us.Id == primKey)
