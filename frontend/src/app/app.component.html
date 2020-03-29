@@ -47,7 +47,26 @@
           </li>
         </ul>
       </div>
+      <button mat-icon-button id="user-menu" [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>account_circle</mat-icon>
+          Profil
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item routerLink="/settings">
+          <mat-icon>settings</mat-icon>
+          Einstellungen
+        </button>
+        <button mat-menu-item>
+          <mat-icon>exit_to_app</mat-icon>
+          Logout
+        </button>
+      </mat-menu>
     </mat-toolbar>
+
     <main>
       <router-outlet></router-outlet>
     </main>
