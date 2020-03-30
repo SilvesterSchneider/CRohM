@@ -157,12 +157,14 @@ namespace WebApi
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISignInService, SignInService>();
             services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();
 
             //###########################Repositories#######################################
 
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IEducationalOpportunityRepository, EducationalOpportunityRepository>();
+            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         }
     }
 }
