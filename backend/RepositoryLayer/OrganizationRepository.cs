@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryLayer
 {
-    public interface IOrganizationRepository
+    public interface IOrganizationRepository : IBaseRepository<Organization>
     {
         /// <summary>
         /// Get the organizations just in dependency on the user who should be an employee in that company.
