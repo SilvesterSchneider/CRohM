@@ -210,6 +210,8 @@ namespace ServiceLayer
         bool SupportsUserLockout { get; }
         bool SupportsQueryableUsers { get; }
         IQueryable<User> Users { get; }
+
+        Task ChangePasswordForUser(int primKey);
     }
 
     public class UserService : UserManager<User>, IUserService
