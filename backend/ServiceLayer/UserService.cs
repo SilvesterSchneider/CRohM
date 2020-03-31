@@ -32,9 +32,12 @@ namespace ServiceLayer
 
         public IQueryable<User> Users => _userManager.Users;
 
-        public UserService(IUserManager userManager)
+
+        public UserService(IUserManager userManager, IMailProvider mailProvider)
         {
             _userManager = userManager;
+            this.mailProvider = mailProvider;
+
         }
 
         public async Task<IdentityResult> CreateCRohMUserAsync(User user)
@@ -48,9 +51,9 @@ namespace ServiceLayer
 
             if (result.Succeeded)
             {
-                //TODO: send mail to created user
                 Console.WriteLine("Mail send to user");
                 Console.WriteLine($"password is : {password}");
+                mailProvider.PasswordReset(password, user.Email);
             }
 
             return result;
