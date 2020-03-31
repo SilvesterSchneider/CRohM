@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ServiceLayer
 {
-    public interface IOrganizationService
+    public interface IOrganizationService : IOrganizationRepository
     {
 
     }
