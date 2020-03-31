@@ -79,7 +79,9 @@ namespace WebApi
                     options.User.RequireUniqueEmail = true;
                     options.SignIn.RequireConfirmedAccount = false;
                 })
-                .AddEntityFrameworkStores<CrmContext>();
+                .AddEntityFrameworkStores<CrmContext>()
+                .AddUserManager<UserManager<User>>()
+                .AddSignInManager<SignInManager<User>>();
 
             services.AddDbContext<CrmContext>(config =>
             {
@@ -155,7 +157,9 @@ namespace WebApi
             //###########################Services#######################################
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserManager, DefaultUserManager>();
             services.AddScoped<ISignInService, SignInService>();
+            services.AddScoped<ISignInManager, DefaultSignInManager>();
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();

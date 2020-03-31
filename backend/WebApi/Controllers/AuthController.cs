@@ -2,13 +2,10 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
-using ModelLayer.Models;
 using NSwag.Annotations;
 using ServiceLayer;
-using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace WebApi.Controllers
 {
@@ -36,16 +33,17 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "not successful login")]
         public async Task<IActionResult> Login([FromBody] CredentialsDto credentials)
         {
-            var user = await _userService.FindByNameAsync(credentials.Name);
+            var user = await _userService.FindByNameAsync(credentials.UserNameOrEmail);
             if (user == null)
             {
-                return BadRequest();
+                user = await _userService.FindByEmailAsync(credentials.UserNameOrEmail);
+                if (user == null)
+                {
+                    return BadRequest();
+                }
             }
 
-            // TODO: clarify if lockoutOnFailure should be enabled
-            // isPersistent = false because we use jwt, no sessions
-            SignInResult signInAsync =
-                await _signInService.PasswordSignInAsync(credentials.Name, credentials.Password, false, false);
+            var signInAsync = await _signInService.PasswordSignInAsync(user, credentials.Password);
 
             if (signInAsync.Succeeded)
             {
