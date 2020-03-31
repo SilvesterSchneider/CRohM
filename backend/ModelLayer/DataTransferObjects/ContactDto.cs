@@ -9,16 +9,20 @@ namespace ModelLayer.DataTransferObjects
         public string Name { get; set; }
         public string Description { get; set; }
         public string PreName { get; set; }
-        public Address Address { get; set; }
-        public ContactPossibilities ContactPossibilities { get; set; }
+        public AddressDto Address { get; set; }
+        public ContactPossibilitiesDto ContactPossibilities { get; set; }
     }
 
     public class ContactCreateDto
     {
+        [Required]
         public string Name { get; set; }
         public string Description { get; set; }
-
-
-        // TODO
+        [Required]
+        public string PreName { get; set; }
+        [Required]
+        public AddressCreateDto Address { get; set; }
+        [Required]
+        public ContactPossibilitiesCreateDto ContactPossibilities { get; set; }
     }
 }
