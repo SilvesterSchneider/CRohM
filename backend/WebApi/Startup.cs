@@ -152,7 +152,7 @@ namespace WebApi
         {
             //###########################Helper#######################################
 
-            services.AddSingleton<IMailProvider, MailProviderTest>();
+            services.AddSingleton<IMailProvider, MailService>();
 
             //###########################Services#######################################
 

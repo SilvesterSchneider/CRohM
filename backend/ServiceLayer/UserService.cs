@@ -53,7 +53,6 @@ namespace ServiceLayer
                 Console.WriteLine($"password is : {password}");
             }
 
-
             return result;
         }
 
@@ -81,9 +80,8 @@ namespace ServiceLayer
                 string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredLength, PasswordGuidelines.GetMaximumLength(),
                     PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
                     PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
-                //TODO: does this work with password hash?
-                await _userManager.ChangePasswordAsync(userToBeUpdated, userToBeUpdated.PasswordHash, newPassword).ConfigureAwait(false);
-                mailProvider.SendMailContainingNewPasswort(newPassword, userToBeUpdated.Email);
+                await ChangePasswordAsync(userToBeUpdated, userToBeUpdated.PasswordHash, newPassword).ConfigureAwait(false);
+                mailProvider.PasswordReset(newPassword, userToBeUpdated.Email);
             }
         }
 
