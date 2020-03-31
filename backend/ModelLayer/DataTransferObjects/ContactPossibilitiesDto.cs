@@ -8,16 +8,16 @@ namespace ModelLayer.DataTransferObjects
     public class ContactPossibilitiesDto
     {
         public string PhoneNumber { get; set; }
-        public string Faxnumber { get; set; }
-        public string Email { get; set; }
+        public string Fax { get; set; }
+        public string Mail { get; set; }
     }
 
     public class ContactPossibilitiesCreateDto
     {
         public string PhoneNumber { get; set; }
-        public string Faxnumber { get; set; }
+        public string Fax { get; set; }
 
         [Required(AllowEmptyStrings = false)]
-        public string Email { get; set; }
+        public string Mail { get; set; }
     }
 }

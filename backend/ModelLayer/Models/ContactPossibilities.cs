@@ -8,7 +8,7 @@ namespace ModelLayer.Models
     public class ContactPossibilities : BaseEntity
     {
         public string PhoneNumber { get; set; }
-        public string Faxnumber { get; set; }
-        public string Email { get; set; }
+        public string Fax { get; set; }
+        public string Mail { get; set; }
     }
 }

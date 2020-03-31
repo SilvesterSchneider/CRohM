@@ -11,7 +11,7 @@ namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
     [Migration("20200328180110_organizaiontLayers")]
-    partial class organizaiontLayers
+    partial class organizationtLayers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
