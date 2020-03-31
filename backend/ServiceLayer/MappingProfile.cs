@@ -19,6 +19,9 @@ namespace ServiceLayer
             CreateMap<Organization, OrganizationDto>();
             CreateMap<OrganizationDto, Organization>();
             CreateMap<OrganizationCreateDto, Organization>();
+            CreateMap<ContactPossibilitiesDto, ContactPossibilities>();
+            CreateMap<ContactPossibilities, ContactPossibilitiesDto>();
+            CreateMap<ContactPossibilitiesCreateDto, ContactPossibilities>();
         }
     }
 }

@@ -13,6 +13,8 @@ namespace ModelLayer.DataTransferObjects
 
         public AddressDto Address { get; set; }
 
+        public ContactPossibilitiesDto Contact { get; set; }
+
         public List<UserDto> Employees { get; set; }
     }
 
@@ -20,5 +22,11 @@ namespace ModelLayer.DataTransferObjects
     {
         [Required(AllowEmptyStrings = false)]
         public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public AddressCreateDto Address { get; set; }
+
+        public ContactPossibilitiesCreateDto Contact { get; set; }
     }
 }

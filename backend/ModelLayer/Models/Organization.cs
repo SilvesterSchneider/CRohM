@@ -8,6 +8,7 @@ namespace ModelLayer.Models
     public class Organization : BaseEntity
     {
         public Address Address { get; set; }
+        public ContactPossibilities Contact { get; set; }
 
         public List<User> Employees { get; set; }
     }
