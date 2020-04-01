@@ -51,9 +51,7 @@ namespace ServiceLayer
 
             if (result.Succeeded)
             {
-                Console.WriteLine("Mail send to user");
-                Console.WriteLine($"password is : {password}");
-                mailProvider.PasswordReset(password, user.Email);
+                mailProvider.Registration(user.UserName ,password, user.Email);
             }
 
             return result;

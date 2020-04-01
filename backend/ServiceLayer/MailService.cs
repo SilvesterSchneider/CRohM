@@ -14,6 +14,7 @@ namespace ServiceLayer
         /// <param name="newPassword">the new password</param>
         /// <param name="mailAddress">the mail address to be sended to</param>
         public bool PasswordReset(string newPassword, string mailAddress);
+        public bool Registration(string benutzer, string passwort, string email);
     }
 
     public class MailService : IMailProvider

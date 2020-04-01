@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using NSwag.Annotations;
 using ServiceLayer;
 using System;
@@ -14,6 +15,7 @@ namespace WebApi.Controllers
 {
     [Route("api/organization")]
     [ApiController]
+    [Authorize]
     public class OrganizationController : ControllerBase
     {
         private readonly IMapper _mapper;

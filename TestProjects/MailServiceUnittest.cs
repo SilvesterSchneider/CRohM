@@ -8,13 +8,66 @@ namespace TestProjects
 {
     public class MailServiceUnittest
     {
-        private readonly string PASSWORD_TEST = "password";
-        private readonly string EMAIL_TEST = "hans@maier.de";
-
         [Fact]
         public void Registration_CorrectData_AssertPassed()
         {
-            Assert.True(new MailService().PasswordReset(PASSWORD_TEST, EMAIL_TEST));
+            //Arrage
+            string user = "Test";
+            string password = "password";
+            string correctemailaddress = "crohm_nuernberg@hotmail.com";
+            MailService ms = new MailService();
+
+            //Act
+            bool erg = ms.Registration(user, password, correctemailaddress);
+
+            //Assert
+            Assert.True(erg);
+        }
+
+        [Fact]
+        public void Registration_FalseData_AssertFailed()
+        {
+            // Arrage
+            string user = "Test";
+            string password = "password";
+            string falsemailaddress = "bla bla";
+            MailService ms = new MailService();
+
+            //Act
+            bool erg = ms.Registration(user, password, falsemailaddress);
+
+            //Assert
+            Assert.False(erg);
+        }
+
+        [Fact]
+        public void Passwordreset_FalseData_AssertPassed()
+        {
+            // Arrage
+            string password = "password";
+            string falsemailaddress = "crohm_nuernberg@hotmail.com";
+            MailService ms = new MailService();
+
+            //Act
+            bool erg = ms.PasswordReset(password, falsemailaddress);
+
+            //Assert
+            Assert.True(erg);
+        }
+
+        [Fact]
+        public void Passwordreset_FalseData_AssertFailed()
+        {
+            // Arrage
+            string password = "password";
+            string falsemailaddress = "blabla";
+            MailService ms = new MailService();
+
+            //Act
+            bool erg = ms.PasswordReset(password, falsemailaddress);
+
+            //Assert
+            Assert.False(erg);
         }
     }
 }
