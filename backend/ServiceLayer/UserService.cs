@@ -32,9 +32,12 @@ namespace ServiceLayer
 
         public IQueryable<User> Users => _userManager.Users;
 
-        public UserService(IUserManager userManager)
+
+        public UserService(IUserManager userManager, IMailProvider mailProvider)
         {
             _userManager = userManager;
+            this.mailProvider = mailProvider;
+
         }
 
         public async Task<IdentityResult> CreateCRohMUserAsync(User user)
@@ -48,11 +51,8 @@ namespace ServiceLayer
 
             if (result.Succeeded)
             {
-                //TODO: send mail to created user
-                Console.WriteLine("Mail send to user");
-                Console.WriteLine($"password is : {password}");
+                mailProvider.Registration(user.UserName ,password, user.Email);
             }
-
 
             return result;
         }
@@ -81,9 +81,8 @@ namespace ServiceLayer
                 string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredLength, PasswordGuidelines.GetMaximumLength(),
                     PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
                     PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
-                //TODO: does this work with password hash?
                 await _userManager.ChangePasswordAsync(userToBeUpdated, userToBeUpdated.PasswordHash, newPassword).ConfigureAwait(false);
-                mailProvider.SendMailContainingNewPasswort(newPassword, userToBeUpdated.Email);
+                mailProvider.PasswordReset(newPassword, userToBeUpdated.Email);
             }
         }
 

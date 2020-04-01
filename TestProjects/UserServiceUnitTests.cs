@@ -36,7 +36,8 @@ namespace TestProjects
         {
             // Arrange
             var mockUserManager = new Mock<IUserManager>();
-            var sut = new UserService(mockUserManager.Object);
+            var mockMailProvider = new Mock<IMailProvider>();
+            var sut = new UserService(mockUserManager.Object, mockMailProvider.Object);
 
             var users = new List<User>()
             {
