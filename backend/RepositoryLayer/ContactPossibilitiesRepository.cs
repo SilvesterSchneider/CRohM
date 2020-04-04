@@ -30,7 +30,7 @@ namespace RepositoryLayer
             ContactPossibilities contact = Entities.Where(contact => contact.Id == id).ToList<ContactPossibilities>()[0];
             if (contact != null)
             {
-                return IsMailFormatValid(id) && IsNumberFormatCorrect(contact.Faxnumber) && IsNumberFormatCorrect(contact.PhoneNumber);
+                return IsMailFormatValid(id) && IsNumberFormatCorrect(contact.Fax) && IsNumberFormatCorrect(contact.PhoneNumber);
             }
             else
             {
@@ -43,7 +43,7 @@ namespace RepositoryLayer
             ContactPossibilities contact = Entities.Where(contact => contact.Id == id).ToList<ContactPossibilities>()[0];
             if (contact != null)
             {
-                return IsNumberFormatCorrect(contact.Faxnumber);
+                return IsNumberFormatCorrect(contact.Fax);
             }
             else
             {
@@ -56,7 +56,7 @@ namespace RepositoryLayer
             ContactPossibilities contact = Entities.Where(contact => contact.Id == id).ToList<ContactPossibilities>()[0];
             if (contact != null)
             {
-                return contact.Email.Contains("@") && contact.Email.LastIndexOf(".") > contact.Email.LastIndexOf("@");
+                return contact.Mail.Contains("@") && contact.Mail.LastIndexOf(".") > contact.Mail.LastIndexOf("@");
             }
             else
             {
