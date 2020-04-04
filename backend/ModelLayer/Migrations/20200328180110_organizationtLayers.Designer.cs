@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ModelLayer;
 
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    partial class CrmContextModelSnapshot : ModelSnapshot
+    [Migration("20200328180110_organizaiontLayers")]
+    partial class organizationtLayers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,31 +122,37 @@ namespace ModelLayer.Migrations
                     b.ToTable("UserTokens");
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.Contact", b =>
+            modelBuilder.Entity("ModelLayer.Models.Address", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description")
+                    b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Mail")
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PreName")
+                    b.Property<int>("StreetNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Zipcode")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contacts");
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.EducationalOpportunity", b =>
@@ -166,6 +174,29 @@ namespace ModelLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EducationalOpportunities");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.Organization", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("AddressId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.ToTable("Organizations");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Role", b =>
@@ -200,7 +231,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "e34949ce-f0f7-46e1-a0f2-5995e7cd0ed9",
+                            ConcurrencyStamp = "aedbf3bf-6104-4ffa-97b6-e7fad2ccc65b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -241,6 +272,9 @@ namespace ModelLayer.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<long?>("OrganizationId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -269,6 +303,8 @@ namespace ModelLayer.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("Users");
                 });
@@ -322,6 +358,20 @@ namespace ModelLayer.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.Organization", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.User", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Organization", null)
+                        .WithMany("Employees")
+                        .HasForeignKey("OrganizationId");
                 });
 #pragma warning restore 612, 618
         }

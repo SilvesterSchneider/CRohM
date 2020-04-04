@@ -13,21 +13,21 @@ namespace RepositoryLayer
     public interface IOrganizationRepository : IBaseRepository<Organization>
     {
         /// <summary>
-        /// Get the organizations just in dependency on the user who should be an employee in that company.
+        /// Get the organizations just in dependency on the contact who should be an employee in that company.
         /// </summary>
-        /// <param name="user">the user to be searched for</param>
+        /// <param name="contact">the contact to be searched for</param>
         /// <returns>a list containing all organizations</returns>
-        Task<List<Organization>> GetOrganizationsByUserAsync(User user);
+        Task<List<Organization>> GetOrganizationsByContactAsync(Contact contact);
     }
 
     public class OrganizationRepository : BaseRepository<Organization>, IOrganizationRepository
     {
         public OrganizationRepository(CrmContext context) : base(context) { }
 
-        public async Task<List<Organization>> GetOrganizationsByUserAsync(User user)
+        public async Task<List<Organization>> GetOrganizationsByContactAsync(Contact contact)
         {
             return await Entities
-                .Where(x => x.Employees.Contains(user))
+                .Where(x => x.Employees.Contains(contact))
                 .ToListAsync();
         }
     }

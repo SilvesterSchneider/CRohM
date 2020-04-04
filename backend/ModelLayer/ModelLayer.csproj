@@ -27,6 +27,8 @@
     <Compile Remove="Migrations\20200228063324_seedRole.Designer.cs" />
     <Compile Remove="Migrations\20200228063435_seedRole.cs" />
     <Compile Remove="Migrations\20200228063435_seedRole.Designer.cs" />
+    <Compile Remove="Migrations\20200325204902_004contacts.cs" />
+    <Compile Remove="Migrations\20200325204902_004contacts.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
