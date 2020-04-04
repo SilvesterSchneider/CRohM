@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +24,15 @@ namespace WebApi.Controllers
         {
             _userService = userService;
             _mapper = mapper;
+        }
+
+        [HttpGet]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(List<UserDto>), Description = "successfully found")]
+        public async Task<IActionResult> Get()
+        {
+            List<User> users = await _userService.GetAsync();
+
+            return Ok(_mapper.Map<List<UserDto>>(users));
         }
 
         [HttpPost]
