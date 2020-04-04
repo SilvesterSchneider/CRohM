@@ -163,12 +163,14 @@ namespace WebApi
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();
+            services.AddScoped<IContactPossibilitiesService, ContactPossibilitiesService>();
 
             //###########################Repositories#######################################
 
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IEducationalOpportunityRepository, EducationalOpportunityRepository>();
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            services.AddScoped<IContactPossibilitiesRepository, ContactPossibilitiesRepository>();
         }
     }
 }

@@ -2,8 +2,8 @@
     "/api": {
         "target": {
             "host": "localhost",
-            "protocol": "https:",
-            "port": 5001
+            "protocol": "http:",
+            "port": 5000
           },
         "secure": false,
         "changeOrigin": true,

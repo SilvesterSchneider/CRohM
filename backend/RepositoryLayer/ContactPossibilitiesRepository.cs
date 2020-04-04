@@ -23,7 +23,6 @@ namespace RepositoryLayer
     {
         public ContactPossibilitiesRepository(CrmContext context) : base(context)
         {
-
         }
 
         public bool AreAllFormatsValid(long id)
