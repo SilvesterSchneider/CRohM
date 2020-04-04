@@ -1,0 +1,65 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <span>Einstellungen</span>
+    </mat-toolbar-row>
+
+    <mat-toolbar-row>
+        <span>Benutzer</span>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="username">
+        <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.userName}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="mail">
+        <mat-header-cell *matHeaderCellDef> E-Mail </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="firstname">
+        <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.vorname}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="lastname">
+        <mat-header-cell *matHeaderCellDef> Nachname </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.nachname}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
+<mat-toolbar>
+    <span>Neuer Benutzer</span>
+</mat-toolbar>
+
+<form [formGroup]="userForm">
+    <div class="row">
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="E-Mail" formControlName="email">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Vorname" formControlName="firstName">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Nachname" formControlName="lastName">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid" (click)="addUser()">
+                Anlegen
+            </button>
+
+        </div>
+    </div>
+</form>

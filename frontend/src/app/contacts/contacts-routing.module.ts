@@ -22,7 +22,7 @@ const contactsRoutes: Routes = [
         resolve: {
             contact: ContactsDetailResolverService
         }
-    }    
+    }
 ];
 
 @NgModule({
@@ -32,8 +32,8 @@ const contactsRoutes: Routes = [
     exports: [
         RouterModule
     ],
-     providers: [
-         ContactsDetailResolverService
-     ]
+    providers: [
+        ContactsDetailResolverService
+    ]
 })
 export class ContactsRoutingModule { }

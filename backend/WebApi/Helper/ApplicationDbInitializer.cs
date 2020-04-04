@@ -10,7 +10,7 @@ namespace WebApi.Helper
         /// Seeding database with admin user and password admin. Also add role 'Admin'
         /// </summary>
         /// <param name="userService">Service to include user</param>
-        public static void SeedUsers(UserService userService)
+        public static void SeedUsers(IUserService userService)
         {
             if (userService.FindByEmailAsync("admin@admin.com").Result == null)
             {
@@ -20,7 +20,7 @@ namespace WebApi.Helper
                     Email = "admin@admin.com"
                 };
 
-                IdentityResult result = userService.CreateAsync(user, "admin").Result;
+                IdentityResult result = userService.CreateAsync(user, "@dm1n1stR4tOr").Result;
 
                 if (result.Succeeded)
                 {

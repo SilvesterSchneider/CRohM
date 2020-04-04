@@ -7,14 +7,13 @@ import { ContactsRoutingModule } from './contacts-routing.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ContactsAddComponent } from './contacts-add/contacts-add.component';
 
-
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
     MaterialModule,
-    ContactsRoutingModule
+    ContactsRoutingModule,
   ],
   declarations: [
     ContactsListComponent,

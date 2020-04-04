@@ -10,6 +10,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   imports: [
@@ -22,8 +24,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatFormFieldModule,
     MatAutocompleteModule,
     MatInputModule,
-    MatCardModule
-
+    MatCardModule,
+    MatMenuModule,
+    MatTableModule,
+    MatSelectModule
   ],
   exports: [
     MatSidenavModule,
@@ -35,7 +39,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatFormFieldModule,
     MatAutocompleteModule,
     MatInputModule,
-    MatCardModule
+    MatCardModule,
+    MatMenuModule,
+    MatTableModule,
+    MatSelectModule
   ]
 })
 export class MaterialModule { }

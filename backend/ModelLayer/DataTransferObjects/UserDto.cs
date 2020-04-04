@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace ModelLayer.DataTransferObjects
@@ -14,5 +15,17 @@ namespace ModelLayer.DataTransferObjects
         public string AccessToken { get; set; }
         //TODO: implement endpoint for login with refresh token
         //public string RefreshToken { get; set; }
+    }
+
+    public class UserCreateDto
+    {
+        [Required(AllowEmptyStrings = false)]
+        public string FirstName { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        public string LastName { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        public string Email { get; set; }
     }
 }

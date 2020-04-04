@@ -19,6 +19,7 @@ using ServiceLayer;
 using WebApi.Helper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using ModelLayer.Helper;
 
 namespace WebApi
 {
@@ -68,21 +69,19 @@ namespace WebApi
 
             services.AddIdentity<User, Role>(options =>
                 {
-                    //TODO: change password settings in next sprint
                     //// Password settings.
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 5;
-                    options.Password.RequiredUniqueChars = 0;
-
+                    options.Password.RequireDigit = PasswordGuidelines.RequireDigit;
+                    options.Password.RequireLowercase = PasswordGuidelines.RequireLowercase;
+                    options.Password.RequireNonAlphanumeric = PasswordGuidelines.RequireNonAlphanumeric;
+                    options.Password.RequireUppercase = PasswordGuidelines.RequireUppercase;
+                    options.Password.RequiredLength = PasswordGuidelines.RequiredLength;
+                    options.Password.RequiredUniqueChars = PasswordGuidelines.RequiredUniqueChars;
                     options.User.RequireUniqueEmail = true;
                     options.SignIn.RequireConfirmedAccount = false;
                 })
-                .AddSignInManager<SignInService>()
-                .AddUserManager<UserService>()
-                .AddEntityFrameworkStores<CrmContext>();
+                .AddEntityFrameworkStores<CrmContext>()
+                .AddUserManager<UserManager<User>>()
+                .AddSignInManager<SignInManager<User>>();
 
             services.AddDbContext<CrmContext>(config =>
             {
@@ -113,7 +112,7 @@ namespace WebApi
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserService userService, CrmContext dataContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IUserService userService, CrmContext dataContext)
         {
             dataContext.Database.Migrate();
 
@@ -151,15 +150,25 @@ namespace WebApi
 
         private void AddDependencyInjection(IServiceCollection services)
         {
+            //###########################Helper#######################################
+
+            services.AddSingleton<IMailProvider, MailService>();
+
             //###########################Services#######################################
 
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserManager, DefaultUserManager>();
+            services.AddScoped<ISignInService, SignInService>();
+            services.AddScoped<ISignInManager, DefaultSignInManager>();
             services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();
 
             //###########################Repositories#######################################
 
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IEducationalOpportunityRepository, EducationalOpportunityRepository>();
+            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         }
     }
 }

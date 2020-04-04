@@ -2,10 +2,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ModelLayer.Models;
@@ -13,14 +11,28 @@ using WebApi.Helper;
 
 namespace ServiceLayer
 {
-    public class SignInService : SignInManager<User>
+    public interface ISignInService
+    {
+        /// <summary>
+        /// Create a jwt for authorize via http header
+        /// </summary>
+        /// <param name="user">Create token for this user</param>
+        string CreateToken(User user);
+
+        Task<SignInResult> PasswordSignInAsync(User user, string password);
+    }
+
+    public class SignInService : ISignInService
     {
         private readonly AppSettings _appSettings;
+        private readonly ISignInManager _signInManager;
 
         // had to include dll because fail from microsoft
         // https://www.gitmemory.com/issue/aspnet/AspNetCore/12536/515210764
-        public SignInService(UserManager<User> userManager, IHttpContextAccessor contextAccessor, IUserClaimsPrincipalFactory<User> claimsFactory, IOptions<IdentityOptions> optionsAccessor, ILogger<SignInManager<User>> logger, IAuthenticationSchemeProvider schemes, IUserConfirmation<User> confirmation, IOptions<AppSettings> appSettings) : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation)
+        public SignInService(IOptions<AppSettings> appSettings, ISignInManager signInManager)
+
         {
+            _signInManager = signInManager;
             _appSettings = appSettings.Value;
         }
 
@@ -45,5 +57,34 @@ namespace ServiceLayer
 
             return tokenHandler.WriteToken(token);
         }
+
+        public async Task<SignInResult> PasswordSignInAsync(User user, string password)
+        {
+            return await _signInManager.PasswordSignInAsync(user, password);
+        }
     }
+
+    #region DefaultSignInManager
+
+    public interface ISignInManager
+    {
+        Task<SignInResult> PasswordSignInAsync(User user, string password);
+    }
+
+    public class DefaultSignInManager : ISignInManager
+    {
+        private readonly SignInManager<User> _manager;
+
+        public DefaultSignInManager(SignInManager<User> manager)
+        {
+            _manager = manager;
+        }
+
+        public async Task<SignInResult> PasswordSignInAsync(User user, string password)
+        {
+            return await _manager.PasswordSignInAsync(user, password, false, false);
+        }
+    }
+
+    #endregion DefaultSignInManager
 }
