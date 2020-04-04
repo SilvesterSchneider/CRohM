@@ -29,7 +29,7 @@ describe('LoginComponent', () => {
   });
 
   it('should disable login on invalid fields', () => {
-    component.username.setValue('');
+    component.userNameOrEmail.setValue('');
     component.password.setValue('');
 
     const form: HTMLElement = fixture.nativeElement;
@@ -38,14 +38,14 @@ describe('LoginComponent', () => {
 
 
   it('should validate fields correctly', () => {
-    component.username.setValue('Username');
+    component.userNameOrEmail.setValue('userNameOrEmail');
     component.password.setValue('Password');
-    expect(component.username.valid).toBeTruthy();
+    expect(component.userNameOrEmail.valid).toBeTruthy();
     expect(component.password.valid).toBeTruthy();
   });
 
   it('should enable login on valid fields', () => {
-    component.username.setValue('Username');
+    component.userNameOrEmail.setValue('userNameOrEmail');
     component.password.setValue('Password');
 
     fixture.detectChanges();

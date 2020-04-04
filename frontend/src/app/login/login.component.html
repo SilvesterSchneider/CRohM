@@ -2,7 +2,7 @@
     <mat-card-title>Login</mat-card-title>
     <mat-card-content fxLayout="column">
         <mat-form-field>
-            <input matInput type="text" [formControl]="username" placeholder="Benutzername">
+            <input matInput type="text" [formControl]="userNameOrEmail" placeholder="Benutzername oder Email">
         </mat-form-field>
         <mat-form-field>
             <input matInput type="password" [formControl]="password" placeholder="Passwort">
@@ -10,7 +10,7 @@
         <mat-error *ngIf="errorText">{{ errorText }}</mat-error>
     </mat-card-content>
     <mat-card-actions>
-        <button [disabled]="username.invalid || password.invalid" (click)="login()" mat-flat-button color="primary">
+        <button [disabled]="userNameOrEmail.invalid || password.invalid" (click)="login()" mat-flat-button color="primary">
             Login </button>
     </mat-card-actions>
 </mat-card>
