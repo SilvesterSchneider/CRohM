@@ -28,5 +28,7 @@ namespace ModelLayer.DataTransferObjects
         public AddressCreateDto Address { get; set; }
 
         public ContactPossibilitiesCreateDto Contact { get; set; }
+
+        public List<ContactCreateDto> Employees { get; set; }
     }
 }
