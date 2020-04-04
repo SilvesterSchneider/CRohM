@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20200328180110_organizaiontLayers")]
-    partial class organizaiontLayers
+    [Migration("20200325204902_004contacts")]
+    partial class _004contacts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -122,37 +122,31 @@ namespace ModelLayer.Migrations
                     b.ToTable("UserTokens");
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.Address", b =>
+            modelBuilder.Entity("ModelLayer.Models.Contact", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Mail")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Street")
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StreetNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Zipcode")
+                    b.Property<string>("PreName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.EducationalOpportunity", b =>
@@ -174,29 +168,6 @@ namespace ModelLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EducationalOpportunities");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.Organization", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long?>("AddressId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("Organizations");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Role", b =>
@@ -231,7 +202,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "aedbf3bf-6104-4ffa-97b6-e7fad2ccc65b",
+                            ConcurrencyStamp = "e34949ce-f0f7-46e1-a0f2-5995e7cd0ed9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -272,9 +243,6 @@ namespace ModelLayer.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<long?>("OrganizationId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -303,8 +271,6 @@ namespace ModelLayer.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("OrganizationId");
 
                     b.ToTable("Users");
                 });
@@ -358,20 +324,6 @@ namespace ModelLayer.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.Organization", b =>
-                {
-                    b.HasOne("ModelLayer.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.User", b =>
-                {
-                    b.HasOne("ModelLayer.Models.Organization", null)
-                        .WithMany("Employees")
-                        .HasForeignKey("OrganizationId");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,7 +9,6 @@ namespace ModelLayer.Models
     {
         public Address Address { get; set; }
         public ContactPossibilities Contact { get; set; }
-
-        public List<User> Employees { get; set; }
+        public List<Contact> Employees { get; set; }
     }
 }

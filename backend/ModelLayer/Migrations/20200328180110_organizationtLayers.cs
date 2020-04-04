@@ -2,7 +2,7 @@
 
 namespace ModelLayer.Migrations
 {
-    public partial class organizaiontLayers : Migration
+    public partial class organizationtLayers : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
