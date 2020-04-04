@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { USERS } from './mock-user';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { UserDto } from '../../shared/api-generated/api-generated';
+import { UserDto, UsersService } from '../../shared/api-generated/api-generated';
 
 @Component({
   selector: 'app-user',
@@ -14,17 +14,17 @@ export class UserComponent {
   displayedColumns: string[] = ['username', 'mail', 'firstname', 'lastname'];
 
   userForm = this.fb.group({
-    mail: ['', [Validators.email, Validators.required]],
-    vorname: ['', Validators.required],
-    nachname: ['', Validators.required]
+    email: ['', [Validators.email, Validators.required]],
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private usersService: UsersService) { }
+
 
   public addUser() {
-    // TODO: Replace Mock logic with backend call
-    USERS.push(this.userForm.value);
-    this.dataSource.next(USERS);
+    // TODO: Update list after successful call, not yet implemented in backend
+    this.usersService.post(this.userForm.value).subscribe();
   }
 
 }
