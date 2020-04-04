@@ -1,28 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { AuthService } from '../shared/api-generated/api-generated';
 import { Router, ActivatedRoute } from '@angular/router';
+import { JwtService } from '../shared/jwt.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   userNameOrEmail = new FormControl('', Validators.required);
   password = new FormControl('', Validators.required);
   errorText: string;
 
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) { }
-
-  ngOnInit() {
-  }
+  constructor(private jwtService: JwtService, private router: Router, private route: ActivatedRoute) { }
 
   login() {
-    this.authService.login({
+    this.jwtService.login({
       userNameOrEmail: this.userNameOrEmail.value,
       password: this.password.value
-    }).subscribe(result => this.redirect(), error => this.errorText = error);
+    }).subscribe(() => this.redirect(), error => this.errorText = error);
   }
 
   redirect() {

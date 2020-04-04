@@ -10,12 +10,18 @@ import { MaterialModule } from './shared/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ContactsModule } from './contacts/contacts.module';
 import { LoginComponent } from './login/login.component';
+import { JwtModule } from '@auth0/angular-jwt';
+import { JwtService } from './shared/jwt.service';
+import { UserMenuComponent } from './shared/navigation/user-menu/user-menu.component';
+import { SidenavComponent } from './shared/navigation/sidenav/sidenav.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
+    UserMenuComponent,
+    SidenavComponent
   ],
   imports: [
     BrowserModule,
@@ -27,6 +33,11 @@ import { LoginComponent } from './login/login.component';
     MaterialModule,
     FlexLayoutModule,
     ContactsModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => localStorage.getItem(JwtService.LS_KEY)
+      }
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
