@@ -22,12 +22,12 @@
 
     <ng-container matColumnDef="firstname">
         <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.vorname}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.firstName}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="lastname">
         <mat-header-cell *matHeaderCellDef> Nachname </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.nachname}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.lastName}} </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

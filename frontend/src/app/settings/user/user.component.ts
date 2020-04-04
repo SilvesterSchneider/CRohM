@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { USERS } from './mock-user';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
@@ -9,8 +9,8 @@ import { UserDto, UsersService } from '../../shared/api-generated/api-generated'
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss']
 })
-export class UserComponent {
-  dataSource = new BehaviorSubject<UserDto[]>(USERS);
+export class UserComponent implements OnInit {
+  dataSource = new BehaviorSubject<UserDto[]>([]);
   displayedColumns: string[] = ['username', 'mail', 'firstname', 'lastname'];
 
   userForm = this.fb.group({
@@ -19,12 +19,26 @@ export class UserComponent {
     lastName: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder, private usersService: UsersService) { }
+  constructor(private readonly fb: FormBuilder,
+              private readonly usersService: UsersService) { }
+  public ngOnInit(): void {
+   this.GetData();
+  }
+
+
+private GetData() {
+  this.usersService.get().subscribe(users => {
+    this.dataSource.next(users);
+});
+}
+
 
 
   public addUser() {
-    // TODO: Update list after successful call, not yet implemented in backend
-    this.usersService.post(this.userForm.value).subscribe();
+    this.usersService.post(this.userForm.value).subscribe(user => {
+      console.log(user);
+      this.GetData();
+    });
   }
 
 }
