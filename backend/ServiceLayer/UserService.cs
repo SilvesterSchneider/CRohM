@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +22,8 @@ namespace ServiceLayer
         Task<IdentityResult> AddToRoleAsync(User user, string role);
 
         Task ChangePasswordForUser(int primKey);
+
+        Task<List<User>> GetAsync();
     }
 
     public class UserService : IUserService
@@ -32,12 +35,10 @@ namespace ServiceLayer
 
         public IQueryable<User> Users => _userManager.Users;
 
-
         public UserService(IUserManager userManager, IMailProvider mailProvider)
         {
             _userManager = userManager;
             this.mailProvider = mailProvider;
-
         }
 
         public async Task<IdentityResult> CreateCRohMUserAsync(User user)
@@ -51,7 +52,7 @@ namespace ServiceLayer
 
             if (result.Succeeded)
             {
-                mailProvider.Registration(user.UserName ,password, user.Email);
+                mailProvider.Registration(user.UserName, password, user.Email);
             }
 
             return result;
@@ -84,6 +85,11 @@ namespace ServiceLayer
                 await _userManager.ChangePasswordAsync(userToBeUpdated, userToBeUpdated.PasswordHash, newPassword).ConfigureAwait(false);
                 mailProvider.PasswordReset(newPassword, userToBeUpdated.Email);
             }
+        }
+
+        public async Task<List<User>> GetAsync()
+        {
+            return await _userManager.Users.ToListAsync();
         }
 
         public async Task<User> FindByEmailAsync(string email)
