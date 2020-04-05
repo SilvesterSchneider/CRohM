@@ -35,7 +35,7 @@ describe('UserComponent', () => {
     component.userForm.get('lastName').setValue('');
 
     const form: HTMLElement = fixture.nativeElement;
-    expect(form.getElementsByTagName('button').item(1).getAttribute('disabled')).toBeTruthy();
+    expect(form.getElementsByTagName('button').item(0).getAttribute('disabled')).toBeTruthy();
   });
 
 
@@ -52,6 +52,6 @@ describe('UserComponent', () => {
     fixture.detectChanges();
 
     const form: HTMLElement = fixture.nativeElement;
-    expect(form.getElementsByTagName('button').item(1).getAttribute('disabled')).toBeFalsy();
+    expect(form.getElementsByTagName('button').item(0).getAttribute('disabled')).toBeFalsy();
   });
 });
