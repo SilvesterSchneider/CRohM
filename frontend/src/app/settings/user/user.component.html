@@ -29,6 +29,14 @@
         <mat-header-cell *matHeaderCellDef> Nachname </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.lastName}} </mat-cell>
     </ng-container>
+    
+  <ng-container  matColumnDef="option">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let element"> 
+        <!-- <button mat-icon-button (click)="OnDelete(element.id)"> <mat-icon>delete</mat-icon></button> -->
+        <button mat-icon-button (click)="OnPasswordReset(element.id)"> <mat-icon>lock</mat-icon></button>
+         </mat-cell>
+  </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
