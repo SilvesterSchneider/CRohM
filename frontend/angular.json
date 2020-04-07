@@ -71,7 +71,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "crms-frontend:build"
+            "browserTarget": "crms-frontend:build",
+            "proxyConfig": "./proxy.conf.json"
           },
           "configurations": {
             "production": {
