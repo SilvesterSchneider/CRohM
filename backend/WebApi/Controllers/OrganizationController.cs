@@ -31,7 +31,7 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<OrganizationDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
         {
-            var organizations = await organizationService.GetAsync();
+            var organizations = await organizationService.GetAllOrganizationsWithIncludes();
             var organizationsDto = _mapper.Map<List<OrganizationDto>>(organizations);
 
             return Ok(organizationsDto);

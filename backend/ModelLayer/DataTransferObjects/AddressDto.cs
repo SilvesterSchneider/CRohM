@@ -16,8 +16,6 @@ namespace ModelLayer.DataTransferObjects
 
     public class AddressCreateDto
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         public string City { get; set; }
