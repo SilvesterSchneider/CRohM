@@ -429,7 +429,6 @@ export class AuthService {
         }
         return _observableOf<boolean>(<any>null);
     }
-
 }
 
 @Injectable({
@@ -605,7 +604,7 @@ export class ContactService {
     /**
      * @return successfully updated
      */
-    put(contact: ContactDto, id: string): Observable<ContactDto> {
+    put(contact: ContactDto, id: number): Observable<ContactDto> {
         let url_ = this.baseUrl + "/api/contact/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -785,7 +784,6 @@ export class EducationalOpportunityService {
         }
         return _observableOf<EducationalOpportunityDto[]>(<any>null);
     }
-
 }
 
 @Injectable({
@@ -1078,7 +1076,6 @@ export class OrganizationService {
     }
 }
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -1207,7 +1204,7 @@ export interface AddressDto {
     description?: string | undefined;
     city?: string | undefined;
     street?: string | undefined;
-    streetNumber: number;
+    streetNumber?: string | undefined;
     zipcode?: string | undefined;
     country?: string | undefined;
 }
@@ -1217,7 +1214,7 @@ export interface AddressCreateDto {
     description?: string | undefined;
     city: string;
     street: string;
-    streetNumber: number;
+    streetNumber: string;
     zipcode: string;
     country: string;
 }
@@ -1225,6 +1222,8 @@ export interface AddressCreateDto {
 export interface UserDto {
     id: number;
     userName?: string | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
     email?: string | undefined;
     phoneNumber?: string | undefined;
     twoFactorEnabled: boolean;
@@ -1237,7 +1236,7 @@ export interface CredentialsDto {
 }
 
 export interface ContactDto {
-    id?: string | undefined;
+    id: number;
     name?: string | undefined;
     description?: string | undefined;
     preName?: string | undefined;
@@ -1262,7 +1261,7 @@ export interface ContactCreateDto {
 export interface ContactPossibilitiesCreateDto {
     phoneNumber?: string | undefined;
     fax?: string | undefined;
-    mail: string;
+    mail?: string | undefined;
 }
 
 export interface EducationalOpportunityDto {
@@ -1281,33 +1280,12 @@ export interface OrganizationDto {
     employees?: UserDto[] | undefined;
 }
 
-
-export interface ContactPossibilitiesDto {
-    phoneNumber?: string | undefined;
-    faxnumber?: string | undefined;
-    email?: string | undefined;
-}
-
 export interface OrganizationCreateDto {
     name: string;
     description?: string | undefined;
     address?: AddressCreateDto | undefined;
     contact?: ContactPossibilitiesCreateDto | undefined;
-
-}
-
-export interface ContactPossibilitiesCreateDto {
-    phoneNumber?: string | undefined;
-    faxnumber?: string | undefined;
-    email: string;
     employees?: ContactCreateDto[] | undefined;
-
-}
-
-export interface ContactPossibilitiesCreateDto {
-    phoneNumber?: string | undefined;
-    faxnumber?: string | undefined;
-    email: string;
 }
 
 export interface UserCreateDto {

@@ -22,6 +22,9 @@ namespace ServiceLayer
             CreateMap<ContactPossibilitiesDto, ContactPossibilities>();
             CreateMap<ContactPossibilities, ContactPossibilitiesDto>();
             CreateMap<ContactPossibilitiesCreateDto, ContactPossibilities>();
+            CreateMap<Contact, ContactDto>();
+            CreateMap<ContactDto, Contact>();
+            CreateMap<ContactCreateDto, Contact>();
         }
     }
 }

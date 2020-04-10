@@ -29,7 +29,7 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
         {
-            var contacts = await contactService.GetAsync();
+            var contacts = await contactService.GetAllContactsWithAllIncludes();
             var contactsDto = _mapper.Map<List<ContactDto>>(contacts);
 
             return Ok(contactsDto);
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
-        public async Task<IActionResult> Put(ContactDto contact)
+        public async Task<IActionResult> Put(ContactDto contact, long id)
         {
             var mappedContact = _mapper.Map<Contact>(contact);
             await contactService.UpdateAsync(mappedContact);

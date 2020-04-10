@@ -7,17 +7,17 @@ import {
 } from '@angular/router';
 import { Observable, of, EMPTY } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
-import { Contact } from './contacts.model';
-import { ContactsService } from './contacts.service';
+import { ContactDto } from '../shared/api-generated/api-generated'
+import { ContactsServiceMock } from './contacts.service-mock';
 
 
 @Injectable({
     providedIn: 'root',
 })
-export class ContactsDetailResolverService implements Resolve<Contact> {
-    constructor(private cs: ContactsService, private router: Router) { }
+export class ContactsDetailResolverService implements Resolve<ContactDto> {
+    constructor(private cs: ContactsServiceMock, private router: Router) { }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Contact> | Observable<never> {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ContactDto> | Observable<never> {
         const id = route.paramMap.get('id');
 
         return this.cs.getContact(id).pipe(
