@@ -9,18 +9,18 @@ import { Observable, of, EMPTY } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
 import { ContactDto } from '../shared/api-generated/api-generated'
 import { ContactsServiceMock } from './contacts.service-mock';
-
+import { ContactService } from '../shared/api-generated/api-generated'
 
 @Injectable({
     providedIn: 'root',
 })
 export class ContactsDetailResolverService implements Resolve<ContactDto> {
-    constructor(private cs: ContactsServiceMock, private router: Router) { }
+    constructor(private cs: ContactService, private router: Router) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ContactDto> | Observable<never> {
-        const id = route.paramMap.get('id');
+        const id = +route.paramMap.get('id');
 
-        return this.cs.getContact(id).pipe(
+        return this.cs.getById(id).pipe(
             take(1),
             mergeMap(contact => {
                 if (contact) {

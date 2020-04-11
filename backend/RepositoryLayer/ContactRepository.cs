@@ -24,6 +24,8 @@ namespace RepositoryLayer
         /// </summary>
         /// <returns></returns>
         Task<List<Contact>> GetAllContactsWithAllIncludes();
+
+        Task<Contact> GetContactByIdWithIncludesAsync(long id);
     }
 
     public class ContactRepository : BaseRepository<Contact>, IContactRepository
@@ -33,6 +35,11 @@ namespace RepositoryLayer
         public async Task<List<Contact>> GetAllContactsWithAllIncludes()
         {
             return await Entities.Include(x => x.Address).Include(y => y.ContactPossibilities).ToListAsync();
+        }
+
+        public async Task<Contact> GetContactByIdWithIncludesAsync(long id)
+        {
+            return await Entities.Include(a => a.Address).Include(b => b.ContactPossibilities).FirstAsync(x => x.Id == id);
         }
 
         public async Task<List<Contact>> GetContactsByPartStringAsync(string name)

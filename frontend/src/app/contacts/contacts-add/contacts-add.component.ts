@@ -16,11 +16,11 @@ export class ContactsAddComponent implements OnInit {
     name: ['', Validators.required],
     preName: ['', Validators.required],
     address: this.fb.group({
-      country: [''],
-      street: [''],
-      streetNumber: [''],
+      country: ['', Validators.required],
+      street: ['', Validators.required],
+      streetNumber: ['', Validators.required],
       zipcode: ['', Validators.pattern('^[0-9]{5}$')],
-      city: [''],
+      city: ['', Validators.required],
     }),
     contactPossibilities: this.fb.group({
 // Validiert auf korrektes E-Mail-Format

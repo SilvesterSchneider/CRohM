@@ -549,13 +549,13 @@ export class ContactService {
     }
 
     /**
-     * @param name (optional) 
      * @return successfully found
      */
-    get(name?: string | null | undefined): Observable<ContactDto[]> {
-        let url_ = this.baseUrl + "/api/contact/PartName?";
-        if (name !== undefined)
-            url_ += "name=" + encodeURIComponent("" + name) + "&"; 
+    getById(id: number): Observable<ContactDto> {
+        let url_ = this.baseUrl + "/api/contact/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -567,20 +567,20 @@ export class ContactService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
+            return this.processGetById(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGet(<any>response_);
+                    return this.processGetById(<any>response_);
                 } catch (e) {
-                    return <Observable<ContactDto[]>><any>_observableThrow(e);
+                    return <Observable<ContactDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ContactDto[]>><any>_observableThrow(response_);
+                return <Observable<ContactDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<ContactDto[]> {
+    protected processGetById(response: HttpResponseBase): Observable<ContactDto> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -590,15 +590,19 @@ export class ContactService {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <ContactDto[]>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <ContactDto>JSON.parse(_responseText, this.jsonParseReviver);
             return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("address not found", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ContactDto[]>(<any>null);
+        return _observableOf<ContactDto>(<any>null);
     }
 
     /**
@@ -714,6 +718,59 @@ export class ContactService {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param name (optional) 
+     * @return successfully found
+     */
+    get(name?: string | null | undefined): Observable<ContactDto[]> {
+        let url_ = this.baseUrl + "/api/contact/PartName?";
+        if (name !== undefined)
+            url_ += "name=" + encodeURIComponent("" + name) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ContactDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ContactDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ContactDto[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <ContactDto[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ContactDto[]>(<any>null);
     }
 }
 
@@ -1254,8 +1311,8 @@ export interface ContactCreateDto {
     name: string;
     description?: string | undefined;
     preName: string;
-    address: AddressCreateDto;
-    contactPossibilities: ContactPossibilitiesCreateDto;
+    address?: AddressCreateDto | undefined;
+    contactPossibilities?: ContactPossibilitiesCreateDto | undefined;
 }
 
 export interface ContactPossibilitiesCreateDto {

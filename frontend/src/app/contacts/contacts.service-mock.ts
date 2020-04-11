@@ -19,7 +19,7 @@ export class ContactsServiceMock {
         return this.contacts$.asObservable();
     }
 
-    getContact(id: number | string) {
+    getById(id: number | string) {
         return this.getContacts().pipe(
             map(contacts => contacts.find(contact => contact.id === +id))
         );

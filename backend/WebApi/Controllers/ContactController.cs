@@ -35,6 +35,22 @@ namespace WebApi.Controllers
             return Ok(contactsDto);
         }
 
+        [HttpGet("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully found")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
+        public async Task<IActionResult> GetById(long id)
+        {
+            var contact = await contactService.GetContactByIdWithIncludesAsync(id);
+
+            if (contact == null)
+            {
+                return NotFound();
+            }
+
+            var contactDto = _mapper.Map<ContactDto>(contact);
+            return Ok(contactDto);
+        }
+
 
         [HttpGet("PartName")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
