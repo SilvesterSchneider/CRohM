@@ -42,7 +42,7 @@
                 <mat-form-field>
                     <mat-label>Zugehörige</mat-label>
                     <mat-select [(ngModel)]="element.employees">
-                        <mat-option *ngFor="let employee of element.employees" [value]="employee">
+                        <mat-option disabled *ngFor="let employee of element.employees" [value]="employee">
                             {{employee.firstName + ' ' + employee.lastName}}
                         </mat-option>
                     </mat-select>
