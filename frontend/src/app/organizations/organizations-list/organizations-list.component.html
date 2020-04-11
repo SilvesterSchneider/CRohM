@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutGap="100px">
-    <mat-table #table [dataSource]="organizations">
+    <mat-table #table [dataSource]="organizationMock">
         <ng-container matColumnDef="Name">
             <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
@@ -42,7 +42,7 @@
                 <mat-form-field>
                     <mat-label>Zugehörige</mat-label>
                     <mat-select [(ngModel)]="element.employees">
-                        <mat-option disabled *ngFor="let employee of element.employees" [value]="employee">
+                        <mat-option disabled *ngFor="let employee of element.employees">
                             {{employee.firstName + ' ' + employee.lastName}}
                         </mat-option>
                     </mat-select>
