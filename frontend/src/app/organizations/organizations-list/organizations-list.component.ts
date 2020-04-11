@@ -33,6 +33,7 @@ export class OrganizationsComponent implements OnInit {
 
   deleteOrganization(id: number) {
     this.orga.delete(id).subscribe();
+    this.orgaMock.delete(id);
     this.loadData();
   }
 }

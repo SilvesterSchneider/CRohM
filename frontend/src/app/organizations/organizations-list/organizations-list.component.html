@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutGap="100px">
-    <mat-table #table [dataSource]="organizationMock">
+    <mat-table #table [dataSource]="organizations">
         <ng-container matColumnDef="Name">
             <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>

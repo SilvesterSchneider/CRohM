@@ -21,7 +21,7 @@ export class OrganizationsMockService {
         const index: number = this.orgas.findIndex(x => x.id == id);
         if (index !== -1) {
             this.orgas.splice(index, 1);
-            this.organizations = new BehaviorSubject<OrganizationDto[]>(this.orgas);
+            this.organizations.next(this.orgas);
         }   
     }
 }
