@@ -56,7 +56,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
-        public async Task<IActionResult> Put(OrganizationDto organization)
+        public async Task<IActionResult> Put([FromBody]OrganizationDto organization)
         {
             var mappedOrganization = _mapper.Map<Organization>(organization);
             await organizationService.UpdateAsync(mappedOrganization);
@@ -70,7 +70,7 @@ namespace WebApi.Controllers
 
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(OrganizationDto), Description = "successfully created")]
-        public async Task<IActionResult> Post(OrganizationCreateDto organizationToCreate)
+        public async Task<IActionResult> Post([FromBody]OrganizationCreateDto organizationToCreate)
         {
             Organization organization = await organizationService.CreateAsync(_mapper.Map<Organization>(organizationToCreate));
 
