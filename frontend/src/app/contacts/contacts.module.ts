@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ContactsListComponent } from './contacts-list/contacts-list.component';
 import { ContactsDetailComponent } from './contacts-detail/contacts-detail.component';
-import { MaterialModule } from '../shared/material.module';
 import { ContactsRoutingModule } from './contacts-routing.module';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ContactsAddComponent } from './contacts-add/contacts-add.component';
+import { SharedModule } from '../shared/shared.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from '../shared/material.module';
 
 @NgModule({
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MaterialModule,
+    SharedModule,
     ContactsRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaterialModule
   ],
   declarations: [
     ContactsListComponent,

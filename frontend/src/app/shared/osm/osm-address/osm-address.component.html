@@ -1,0 +1,14 @@
+<div fxLayout="column">
+    <div fxFlex="100">
+        <mat-label>Adresssuche</mat-label>
+        <input type="text" [matAutocomplete]="auto" ngDefaultControl (change)="changed($event)">
+
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of addressSuggestions" [value]="option">
+                {{ option.street + option.streetNumber + option.zipcode + option.city + option.country }}
+            </mat-option>
+        </mat-autocomplete>
+        <mat-icon color="primary" matSuffix>search</mat-icon>
+    </div>
+</div>
+
