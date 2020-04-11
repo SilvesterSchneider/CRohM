@@ -40,6 +40,6 @@ export class ContactsAddComponent implements OnInit {
     this.contact = this.contactsForm.value;
     // And add a new Contact with the service
     this.serviceMock.addContact(this.contact);
-    this.service.post(this.contact);
+    this.service.post(this.contact).subscribe();
   }
 }

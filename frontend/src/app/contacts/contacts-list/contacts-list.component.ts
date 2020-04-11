@@ -25,7 +25,7 @@ export class ContactsListComponent implements OnInit {
   }
 
   private init() {
-    this.contacts = this.service.get();
+    this.contacts = this.service.getAll();
     this.contacts.subscribe();
    // this.contacts = this.serviceMock.getContacts();
   }
