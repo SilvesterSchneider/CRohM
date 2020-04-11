@@ -21,9 +21,7 @@ namespace ModelLayer.DataTransferObjects
         public string Description { get; set; }
         [Required]
         public string PreName { get; set; }
-        [Required]
         public AddressCreateDto Address { get; set; }
-        [Required]
-        public ContactPossibilitiesCreateDto ContactPossibilities { get; set; }
+        public ContactPossibilitiesCreateDto ContactPossibilities { get; set; } 
     }
 }

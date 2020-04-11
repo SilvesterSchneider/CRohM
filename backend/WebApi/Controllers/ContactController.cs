@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
-        public async Task<IActionResult> Put(ContactDto contact, long id)
+        public async Task<IActionResult> Put([FromBody]ContactDto contact, long id)
         {
             var mappedContact = _mapper.Map<Contact>(contact);
             await contactService.UpdateAsync(mappedContact);
@@ -65,8 +65,9 @@ namespace WebApi.Controllers
         // creates new contact in db via frontend
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(ContactDto), Description = "successfully created")]
-        public async Task<IActionResult> Post(ContactCreateDto contactToCreate)
+        public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate)
         {
+
             Contact contact = await contactService.CreateAsync(_mapper.Map<Contact>(contactToCreate));
 
             var contactDto = _mapper.Map<ContactDto>(contact);
