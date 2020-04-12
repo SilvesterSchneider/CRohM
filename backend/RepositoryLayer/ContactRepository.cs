@@ -23,7 +23,7 @@ namespace RepositoryLayer
         /// Returns a full list of all contacts and its all dependencies.
         /// </summary>
         /// <returns></returns>
-        Task<List<Contact>> GetAllContactsWithAllIncludes();
+        Task<List<Contact>> GetAllContactsWithAllIncludesAsync();
 
         Task<Contact> GetContactByIdWithIncludesAsync(long id);
 
@@ -34,7 +34,7 @@ namespace RepositoryLayer
     {
         public ContactRepository(CrmContext context) : base(context) { }
 
-        public async Task<List<Contact>> GetAllContactsWithAllIncludes()
+        public async Task<List<Contact>> GetAllContactsWithAllIncludesAsync()
         {
             return await Entities.Include(x => x.Address).Include(y => y.ContactPossibilities).ToListAsync();
         }

@@ -29,7 +29,7 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
         {
-            var contacts = await contactService.GetAllContactsWithAllIncludes();
+            var contacts = await contactService.GetAllContactsWithAllIncludesAsync();
             var contactsDto = _mapper.Map<List<ContactDto>>(contacts);
 
             return Ok(contactsDto);
