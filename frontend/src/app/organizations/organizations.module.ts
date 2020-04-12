@@ -4,12 +4,13 @@ import { OrganizationsAddComponent } from './organizations-add/organizations-add
 import { OrganizationsRoutingModule } from './organizations-routing.module';
 import { MaterialModule } from '../shared/material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { OrganizationsListComponent } from './organizations-list/organizations-list.component';
 
 
 
 
 @NgModule({
-  declarations: [OrganizationsAddComponent],
+  declarations: [OrganizationsAddComponent, OrganizationsListComponent],
   imports: [
     CommonModule, OrganizationsRoutingModule, MaterialModule, ReactiveFormsModule, FormsModule
   ]
