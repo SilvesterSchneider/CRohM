@@ -68,14 +68,19 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
         public async Task<IActionResult> Put([FromBody]ContactDto contact, long id)
         {
-            var mappedContact = _mapper.Map<Contact>(contact);
-            await contactService.UpdateAsync(mappedContact);
             if (contact == null)
             {
                 return Conflict();
             }
-            var contactDto = _mapper.Map<ContactDto>(mappedContact);
-            return Ok(contactDto);
+            var mappedContact = _mapper.Map<Contact>(contact);
+            if (await contactService.UpdateAsync(mappedContact, id))
+            {
+                return Ok(contact);
+            }
+            else
+            {
+                return Conflict();
+            }
         }
 
         // creates new contact in db via frontend
