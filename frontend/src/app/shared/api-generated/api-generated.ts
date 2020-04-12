@@ -429,7 +429,6 @@ export class AuthService {
         }
         return _observableOf<boolean>(<any>null);
     }
-
 }
 
 @Injectable({
@@ -785,7 +784,6 @@ export class EducationalOpportunityService {
         }
         return _observableOf<EducationalOpportunityDto[]>(<any>null);
     }
-
 }
 
 @Injectable({

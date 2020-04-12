@@ -1,1 +1,83 @@
-<p>organizations-add works!</p>
+<div class="organizationDetails" [formGroup]="organizationForm">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                Neue Organisation
+            </h3>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Name" formControlName="name">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Beschreibung" formControlName="description">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <!-- <div class="row">
+        <div class="col-md-12">
+            <h3>
+                Adresse
+            </h3>
+        </div>
+    </div>
+    <div class="row" formGroupName="adresse">
+        <div class="col-md-12">
+            <mat-form-field>
+                <mat-label>Land</mat-label>               
+                <mat-select formControlName="land" name="country">
+                    <mat-option *ngFor="let country of countries" [value]="country.value">
+                        {{country.viewValue}}
+                    </mat-option>
+                </mat-select>
+                
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row" formGroupName="adresse">
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Strasse" formControlName="strasse">
+            </mat-form-field>
+        </div>    
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="PLZ" formControlName="plz">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Ort" formControlName="ort">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                Kontaktmöglichkeit
+            </h3>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="E-Mail" formControlName="mail">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Telefonnummer" formControlName="phone">
+            </mat-form-field>
+        </div>
+    </div> -->
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="!organizationForm.valid" (click)="onAddOrganization()"
+        routerLink="/organizations">
+        Speichern
+    </button>
+    <button mat-raised-button color="primary" routerLink="/organizations">
+        Verwerfen
+    </button>
+</div>
