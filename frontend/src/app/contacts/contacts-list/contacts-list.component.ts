@@ -35,7 +35,7 @@ export class ContactsListComponent implements OnInit {
   }
 
   deleteContact(id: number) {
-    this.service.delete(id);
+    this.service.delete(id).subscribe();
     this.serviceMock.delete(id);
     this.init();
   }

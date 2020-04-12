@@ -23,9 +23,9 @@ export class ContactsAddComponent implements OnInit {
       city: ['', Validators.required],
     }),
     contactPossibilities: this.fb.group({
-// Validiert auf korrektes E-Mail-Format
+      // Validiert auf korrektes E-Mail-Format
       mail: ['', Validators.email],
-// Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
+      // Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
       phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
       fax: ['', Validators.pattern('^0[0-9\- ]*$')]
     })
