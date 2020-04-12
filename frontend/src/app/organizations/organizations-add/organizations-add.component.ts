@@ -9,12 +9,20 @@ import { OrganizationService } from 'src/app/shared/api-generated/api-generated'
 })
 export class OrganizationsAddComponent implements OnInit {
   public organizationForm: FormGroup;
+
+    // TODO: sollten die möglichen Länder aus dem Backend laden
+    // Liste der im Dropdown angezeigten Laender
+    public countries: Country[] = [
+      {value: 'Deutschland', viewValue: 'Deutschland'},
+      {value: 'Schweiz', viewValue: 'Schweiz'},
+      {value: 'Österreich', viewValue: 'Österreich'}
+    ];
+
   constructor(private readonly fb: FormBuilder,
-              private readonly organizationsService: OrganizationService
-              ) { }
+              private readonly organizationsService: OrganizationService) { }
 
   public ngOnInit(): void {
-    this.createForm();
+    this.organizationForm = this.createOrganizationForm();
   }
 
   public onAddOrganization(): void {
@@ -23,11 +31,27 @@ export class OrganizationsAddComponent implements OnInit {
     });
   }
 
-  private createForm() {
-    this.organizationForm = this.fb.group({
+  private createOrganizationForm(): FormGroup {
+    return this.fb.group({
       name: ['', Validators.required],
-      description: ['']
+      description: [''],
+      address: this.createAddressForm()
     });
   }
 
+  private createAddressForm(): FormGroup {
+    return this.fb.group({
+      country: [''],
+      street: [''],
+      zipcode: ['', Validators.pattern('^[0-9]{5}$')],
+      streetNumber: [''],
+      city: ['']
+    });
+  }
+
+}
+
+interface Country {
+  value: string;
+  viewValue: string;
 }
