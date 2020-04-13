@@ -40,22 +40,22 @@ describe('ContactsDetailComponent', () => {
   });
 
   it('should show vorname', () => {
-    expect(component.contactsForm.get('vorname').value).toEqual('Max');
+    expect(component.contactsForm.get('preName').value).toEqual('silvester');
   });
 
   it('should show nachname', () => {
-    expect(component.contactsForm.get('nachname').value).toEqual('Mustermann');
+    expect(component.contactsForm.get('name').value).toEqual('kracher');
   });
 
   it('should show adress', () => {
-    expect(component.contactsForm.get('adresse.strasse').value).toEqual('Teststrasse 1');
+    expect(component.contactsForm.get('address.street').value).toEqual('Teststrasse 1');
   });
 
   it('should show plz', () => {
-    expect(component.contactsForm.get('adresse.plz').value).toEqual('12345');
+    expect(component.contactsForm.get('address.zipcode').value).toEqual('12345');
   });
 
   it('should show ort', () => {
-    expect(component.contactsForm.get('adresse.ort').value).toEqual('Nürnberg');
+    expect(component.contactsForm.get('address.city').value).toEqual('Nürnberg');
   });
 });
