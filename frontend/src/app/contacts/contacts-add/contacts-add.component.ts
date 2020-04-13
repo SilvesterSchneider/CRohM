@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
-import { Contact, Country } from '../contacts.model';
-import { ContactsService } from '../contacts.service';
-
-
-
+import { ContactsServiceMock } from '../contacts.service-mock';
+import { ContactCreateDto } from '../../shared/api-generated/api-generated';
+import { ContactService } from '../../shared/api-generated/api-generated';
 
 @Component({
   selector: 'app-contacts-add',
@@ -12,31 +10,27 @@ import { ContactsService } from '../contacts.service';
   styleUrls: ['./contacts-add.component.scss']
 })
 export class ContactsAddComponent implements OnInit {
-  contact: Contact;
-
-  // Liste der im Dropdown angezeigten Laender
-  countries: Country[] = [
-    {value: 'Deutschland', viewValue: 'Deutschland'},
-    {value: 'Schweiz', viewValue: 'Schweiz'},
-    {value: 'Österreich', viewValue: 'Österreich'}
-  ];
+  contact: ContactCreateDto;
 
   contactsForm = this.fb.group({
-    vorname: ['', Validators.required],
-    nachname: [''],
-    adresse: this.fb.group({
-      land: [''],
-      strasse: [''],
-      plz: ['', Validators.pattern('^[0-9]{5}$')],
-      ort: [''],
+    name: ['', Validators.required],
+    preName: ['', Validators.required],
+    address: this.fb.group({
+      country: ['', Validators.required],
+      street: ['', Validators.required],
+      streetNumber: ['', Validators.required],
+      zipcode: ['', Validators.pattern('^[0-9]{5}$')],
+      city: ['', Validators.required],
     }),
-    // Validiert auf korrektes E-Mail-Format
-    mail: ['', Validators.email],
-    // Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
-    phone: ['', Validators.pattern('^0[0-9\- ]*$')]
-    });
-
-  constructor(private fb: FormBuilder, private service: ContactsService) { }
+    contactPossibilities: this.fb.group({
+      // Validiert auf korrektes E-Mail-Format
+      mail: ['', Validators.email],
+      // Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
+      phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
+      fax: ['', Validators.pattern('^0[0-9\- ]*$')]
+    })
+  });
+  constructor(private fb: FormBuilder, private serviceMock: ContactsServiceMock, private service: ContactService) { }
 
   ngOnInit(): void {
   }
@@ -45,7 +39,7 @@ export class ContactsAddComponent implements OnInit {
     // Take values from Input-Form
     this.contact = this.contactsForm.value;
     // And add a new Contact with the service
-    this.service.addContact(this.contact);
+   // this.serviceMock.addContact(this.contact);
+    this.service.post(this.contact).subscribe();
   }
-
 }

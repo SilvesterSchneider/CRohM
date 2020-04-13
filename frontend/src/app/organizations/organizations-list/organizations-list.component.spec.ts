@@ -1,20 +1,26 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OrganizationsListComponent } from './organizations-list.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AppRoutingModule } from '../../app-routing.module';
+import { MaterialModule } from '../../shared/material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { OrganizationsComponent } from './organizations-list.component';
+import { HttpClientModule } from '@angular/common/http';
 
-describe('OrganizationsListComponent', () => {
-  let component: OrganizationsListComponent;
-  let fixture: ComponentFixture<OrganizationsListComponent>;
+describe('OrganizationsComponent', () => {
+  let component: OrganizationsComponent;
+  let fixture: ComponentFixture<OrganizationsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrganizationsListComponent ]
+      declarations: [ OrganizationsComponent ],
+      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule, HttpClientModule]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OrganizationsListComponent);
+    fixture = TestBed.createComponent(OrganizationsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

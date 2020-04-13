@@ -10,6 +10,10 @@ namespace ModelLayer.Helper
     {
         public override bool IsValid(object value)
         {
+            if (value is string text && text.Length == 0)
+            {
+                return true;
+            }
             if (value is string valueString && !valueString.StartsWith("-"))
             {
                 long valueLong;

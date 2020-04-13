@@ -1,4 +1,5 @@
 ﻿using ModelLayer.Models.Base;
+using System.Collections.Generic;
 
 namespace ModelLayer.Models
 {

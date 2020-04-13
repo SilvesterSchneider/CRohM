@@ -18,17 +18,58 @@ namespace RepositoryLayer
         /// <param name="name">the name to be searched for</param>
         /// <returns>a list containing all Contacts</returns>
         Task<List<Contact>> GetContactsByPartStringAsync(string name);
+
+        /// <summary>
+        /// Returns a full list of all contacts and its all dependencies.
+        /// </summary>
+        /// <returns></returns>
+        Task<List<Contact>> GetAllContactsWithAllIncludesAsync();
+
+        Task<Contact> GetContactByIdWithIncludesAsync(long id);
+
+        Task<bool> UpdateAsync(Contact contact, long id);
     }
 
     public class ContactRepository : BaseRepository<Contact>, IContactRepository
     {
         public ContactRepository(CrmContext context) : base(context) { }
 
+        public async Task<List<Contact>> GetAllContactsWithAllIncludesAsync()
+        {
+            return await Entities.Include(x => x.Address).Include(y => y.ContactPossibilities).ToListAsync();
+        }
+
+        public async Task<Contact> GetContactByIdWithIncludesAsync(long id)
+        {
+            return await Entities.Include(a => a.Address).Include(b => b.ContactPossibilities).FirstAsync(x => x.Id == id);
+        }
+
         public async Task<List<Contact>> GetContactsByPartStringAsync(string name)
         {
             return await Entities
                 .Where(x => x.PreName.StartsWith(name) | x.Name.StartsWith(name))
+                .Include(x => x.Address)
+                .Include(y => y.ContactPossibilities)
                 .ToListAsync();
+        }
+
+        public async Task<bool> UpdateAsync(Contact contact, long id)
+        {
+            Contact originalContact = await Entities.Include(x => x.Address).Include(y => y.ContactPossibilities).FirstAsync(x => x.Id == id);
+            if (originalContact != null)
+            {
+                originalContact.Address = contact.Address;
+                originalContact.ContactPossibilities = contact.ContactPossibilities;
+                originalContact.Description = contact.Description;
+                originalContact.Name = contact.Name;
+                originalContact.PreName = contact.PreName;
+                await UpdateAsync(originalContact);
+                return true;
+            } 
+            else
+            {
+                return false;
+            }
         }
     }
 }
