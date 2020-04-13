@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { OrganizationService } from '../../shared/api-generated/api-generated'
+import { OrganizationService } from '../../shared/api-generated/api-generated';
 import { Observable } from 'rxjs';
-import { OrganizationDto } from '../../shared/api-generated/api-generated'
-import { OrganizationsMockService } from '../organizations-mock-service'
+import { OrganizationDto } from '../../shared/api-generated/api-generated';
+import { OrganizationsMockService } from '../organizations-mock-service';
 
 @Component({
   selector: 'app-organizations-list',
@@ -14,11 +14,12 @@ export class OrganizationsComponent implements OnInit {
   orgaMock: OrganizationsMockService;
   organizations: Observable<OrganizationDto[]>;
   organizationMock: Observable<OrganizationDto[]>;
-  displayedColumns = ['Name', 'Beschreibung', 'Strasse', 'Hausnummer', 'PLZ', 'Stadt', 'Telefonnummer', 'E-Mail', 'Faxnummer', 'Zugehörige', 'Action'];
+  displayedColumns = ['Name', 'Beschreibung', 'Strasse', 'Hausnummer', 'PLZ', 'Stadt', 'Telefonnummer',
+   'E-Mail', 'Faxnummer', 'Zugehörige', 'Action'];
 
-  constructor(_organizationServive: OrganizationService, _mock: OrganizationsMockService) { 
-    this.orga = _organizationServive;
-    this.orgaMock = _mock;
+  constructor(organizationServive: OrganizationService, mock: OrganizationsMockService) {
+    this.orga = organizationServive;
+    this.orgaMock = mock;
   }
 
   ngOnInit(): void {
@@ -28,12 +29,12 @@ export class OrganizationsComponent implements OnInit {
   private loadData() {
     this.organizations = this.orga.get();
     this.organizations.subscribe();
-    this.organizationMock = this.orgaMock.getOrganizationsMock();
+   // this.organizationMock = this.orgaMock.getOrganizationsMock();
   }
 
   deleteOrganization(id: number) {
     this.orga.delete(id).subscribe();
-    this.orgaMock.delete(id);
+   // this.orgaMock.delete(id);
     this.loadData();
   }
 }

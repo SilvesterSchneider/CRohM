@@ -1,4 +1,4 @@
-import { OrganizationDto } from '../shared/api-generated/api-generated'
+import { OrganizationDto } from '../shared/api-generated/api-generated';
 
 export const ORGANIZATIONS: OrganizationDto[] = [
     {
@@ -8,12 +8,11 @@ export const ORGANIZATIONS: OrganizationDto[] = [
         address: {
             street: 'teststreet1',
             city: 'nuremberg',
-            streetNumber: 10,
+            streetNumber: '10',
             zipcode: '90449',
             country: 'germanay'
         },
         contact: {
-            id: 0,
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'
@@ -40,12 +39,11 @@ export const ORGANIZATIONS: OrganizationDto[] = [
         address: {
             street: 'teststreet2',
             city: 'nuremberg2',
-            streetNumber: 10,
+            streetNumber: '10',
             zipcode: '90443',
             country: 'germanay2'
         },
         contact: {
-            id: 0,
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'
@@ -58,12 +56,11 @@ export const ORGANIZATIONS: OrganizationDto[] = [
         address: {
             street: 'teststreet3',
             city: 'nuremberg',
-            streetNumber: 10,
+            streetNumber: '10',
             zipcode: '90444',
             country: 'germanay'
         },
         contact: {
-            id: 0,
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'
@@ -77,11 +74,10 @@ export const ORGANIZATIONS: OrganizationDto[] = [
             street: 'teststreet4',
             city: 'nuremberg',
             zipcode: '90445',
-            streetNumber: 10,
+            streetNumber: '10',
             country: 'germanay'
         },
         contact: {
-            id: 0,
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'
@@ -95,11 +91,10 @@ export const ORGANIZATIONS: OrganizationDto[] = [
             street: 'teststreet5',
             city: 'nuremberg',
             zipcode: '90446',
-            streetNumber: 10,
+            streetNumber: '10',
             country: 'germanay'
         },
         contact: {
-            id: 0,
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'
@@ -119,4 +114,4 @@ export const ORGANIZATIONS: OrganizationDto[] = [
             }
         ]
     }
-]
+];
