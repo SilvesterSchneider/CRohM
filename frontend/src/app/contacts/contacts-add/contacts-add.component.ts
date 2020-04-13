@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { ContactsServiceMock } from '../contacts.service-mock';
-import { ContactCreateDto } from '../../shared/api-generated/api-generated'
-import { ContactService } from '../../shared/api-generated/api-generated'
+import { ContactCreateDto } from '../../shared/api-generated/api-generated';
+import { ContactService } from '../../shared/api-generated/api-generated';
 
 @Component({
   selector: 'app-contacts-add',
@@ -39,7 +39,7 @@ export class ContactsAddComponent implements OnInit {
     // Take values from Input-Form
     this.contact = this.contactsForm.value;
     // And add a new Contact with the service
-    this.serviceMock.addContact(this.contact);
+   // this.serviceMock.addContact(this.contact);
     this.service.post(this.contact).subscribe();
   }
 }

@@ -1,4 +1,4 @@
-import { ContactDto } from '../shared/api-generated/api-generated'
+import { ContactDto } from '../shared/api-generated/api-generated';
 
 export const CONTACTS: ContactDto[] = [
     {

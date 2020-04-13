@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ContactsServiceMock } from '../contacts.service-mock';
-import { ContactService } from '../../shared/api-generated/api-generated'
-import { ContactDto } from '../../shared/api-generated/api-generated'
+import { ContactService } from '../../shared/api-generated/api-generated';
+import { ContactDto } from '../../shared/api-generated/api-generated';
 
 @Component({
   selector: 'app-contacts-list',
@@ -36,7 +36,7 @@ export class ContactsListComponent implements OnInit {
 
   deleteContact(id: number) {
     this.service.delete(id).subscribe();
-    this.serviceMock.delete(id);
+   // this.serviceMock.delete(id);
     this.init();
   }
 }
