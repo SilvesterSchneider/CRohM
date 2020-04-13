@@ -14,7 +14,7 @@ export class OsmService {
     const address: AddressDto = {
       country: placeResult.properties.country,
       city: placeResult.properties.city,
-      zipcode: placeResult.properties.zipcode,
+      zipcode: placeResult.properties.postcode,
       street: placeResult.properties.name,
       streetNumber: placeResult.properties.number,
     };

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { Contact, Country } from '../contacts.model';
 import { ContactsService } from '../contacts.service';
 
@@ -18,12 +18,7 @@ export class ContactsAddComponent implements OnInit {
   contactsForm = this.fb.group({
     vorname: ['', Validators.required],
     nachname: [''],
-    adresse: this.fb.group({
-      land: [''],
-      strasse: [''],
-      plz: ['', Validators.pattern('^[0-9]{5}$')],
-      ort: [''],
-    }),
+    adresse: this.fb.control(''),
     // Validiert auf korrektes E-Mail-Format
     mail: ['', Validators.email],
     // Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen

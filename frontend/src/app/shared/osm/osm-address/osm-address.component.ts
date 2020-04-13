@@ -1,22 +1,35 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, forwardRef } from '@angular/core';
 import { OsmService } from '../osm.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AddressDto } from '../../api-generated/api-generated';
 import { Country } from '../../../contacts/contacts.model';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {
+  FormBuilder, Validators, NG_VALUE_ACCESSOR, NG_VALIDATORS,
+  ControlValueAccessor, Validator, AbstractControl, ValidationErrors
+} from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-osm-address',
   templateUrl: './osm-address.component.html',
-  styleUrls: ['./osm-address.component.scss']
+  styleUrls: ['./osm-address.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => OsmAddressComponent),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => OsmAddressComponent),
+      multi: true
+    }
+  ]
 })
-export class OsmAddressComponent implements OnInit {
-  @Input() parentForm: FormGroup;
-
+export class OsmAddressComponent implements OnInit, ControlValueAccessor, Validator {
   addressSuggestions: AddressDto[] = [];
-  modelChanged: Subject<string> = new Subject<string>();
+  addressSearchString: Subject<string> = new Subject<string>();
 
   // Liste der im Dropdown angezeigten Laender
   countries: Country[] = [
@@ -25,17 +38,48 @@ export class OsmAddressComponent implements OnInit {
     { value: 'Österreich', viewValue: 'Österreich' }
   ];
 
+  addressForm = this.fb.group({
+    country: ['', Validators.required],
+    street: ['', Validators.required],
+    streetNumber: ['', Validators.required],
+    zipcode: ['', Validators.pattern('^[0-9]{5}$')],
+    city: ['', Validators.required],
+  });
+
+
   constructor(private fb: FormBuilder, private osmService: OsmService) { }
 
+  validate(control: AbstractControl): ValidationErrors | null {
+    return this.addressForm.valid ? null : this.addressForm.errors;
+  }
+
+  public onTouched: () => void = () => { };
+
+  writeValue(val: any): void {
+    if (val) {
+      this.addressForm.setValue(val, { emitEvent: false });
+    }
+  }
+  registerOnChange(fn: any): void {
+    this.addressForm.valueChanges.subscribe(fn);
+  }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+
+  }
+  setDisabledState?(isDisabled: boolean): void {
+    isDisabled ? this.addressForm.disable() : this.addressForm.enable();
+  }
+
   ngOnInit(): void {
-    this.modelChanged.pipe(
-      debounceTime(200),
+    this.addressSearchString.pipe(
+      debounceTime(400),
       distinctUntilChanged()
     ).subscribe(value => this.onSearch(value));
   }
 
   onChange($event: any) {
-    this.modelChanged.next($event.target.value);
+    this.addressSearchString.next($event.target.value);
   }
 
   onSearch(term) {
@@ -49,28 +93,24 @@ export class OsmAddressComponent implements OnInit {
   }
 
   onSelection(selected: MatAutocompleteSelectedEvent) {
-    // const address: AddressDto = OsmService.parseAddress(selected.option.value);
     const address: AddressDto = selected.option.value;
-    const adressControl = this.parentForm.get('adresse');
 
-    console.log(adressControl);
-
-    adressControl.reset();
+    this.addressForm.reset();
 
     if (address.street) {
-      adressControl.get('street').patchValue(address.street);
+      this.addressForm.get('street').patchValue(address.street);
     }
     if (address.streetNumber) {
-      adressControl.get('streetNumber').patchValue(address.streetNumber.toString());
+      this.addressForm.get('streetNumber').patchValue(address.streetNumber.toString());
     }
     if (address.zipcode) {
-      adressControl.get('zipcode').patchValue(address.zipcode);
+      this.addressForm.get('zipcode').patchValue(address.zipcode);
     }
     if (address.city) {
-      adressControl.get('city').patchValue(address.city);
+      this.addressForm.get('city').patchValue(address.city);
     }
     if (address.country) {
-      adressControl.get('country').patchValue(address.country);
+      this.addressForm.get('country').patchValue(address.country);
     }
   }
 
