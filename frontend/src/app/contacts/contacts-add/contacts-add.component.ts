@@ -14,12 +14,6 @@ import { ContactsService } from '../contacts.service';
 export class ContactsAddComponent implements OnInit {
   contact: Contact;
 
-  // Liste der im Dropdown angezeigten Laender
-  countries: Country[] = [
-    {value: 'Deutschland', viewValue: 'Deutschland'},
-    {value: 'Schweiz', viewValue: 'Schweiz'},
-    {value: 'Österreich', viewValue: 'Österreich'}
-  ];
 
   contactsForm = this.fb.group({
     vorname: ['', Validators.required],
