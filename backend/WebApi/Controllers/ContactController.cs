@@ -37,7 +37,7 @@ namespace WebApi.Controllers
 
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully found")]
-        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
         public async Task<IActionResult> GetById(long id)
         {
             var contact = await contactService.GetContactByIdWithIncludesAsync(id);
@@ -99,7 +99,7 @@ namespace WebApi.Controllers
         // deletes with id {id} contact via frontend
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
-        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
         public async Task<IActionResult> Delete(long id)
         {
             Contact contact = await contactService.GetByIdAsync(id);
