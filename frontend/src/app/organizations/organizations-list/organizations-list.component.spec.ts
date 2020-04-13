@@ -4,23 +4,23 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../../app-routing.module';
 import { MaterialModule } from '../../shared/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { OrganizationsComponent } from './organizations-list.component';
+import { OrganizationsListComponent } from './organizations-list.component';
 import { HttpClientModule } from '@angular/common/http';
 
 describe('OrganizationsComponent', () => {
-  let component: OrganizationsComponent;
-  let fixture: ComponentFixture<OrganizationsComponent>;
+  let component: OrganizationsListComponent;
+  let fixture: ComponentFixture<OrganizationsListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrganizationsComponent ],
+      declarations: [ OrganizationsListComponent ],
       imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule, HttpClientModule]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OrganizationsComponent);
+    fixture = TestBed.createComponent(OrganizationsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

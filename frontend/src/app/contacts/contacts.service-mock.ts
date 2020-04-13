@@ -38,6 +38,7 @@ export class ContactsServiceMock {
                 zipcode: contact.address.zipcode
             },
             contactPossibilities: {
+                id: 0,
                 fax: contact.contactPossibilities.fax,
                 mail: contact.contactPossibilities.mail,
                 phoneNumber: contact.contactPossibilities.phoneNumber

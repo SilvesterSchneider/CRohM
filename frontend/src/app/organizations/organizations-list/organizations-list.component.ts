@@ -9,7 +9,7 @@ import { OrganizationsMockService } from '../organizations-mock-service';
   templateUrl: './organizations-list.component.html',
   styleUrls: ['./organizations-list.component.scss']
 })
-export class OrganizationsComponent implements OnInit {
+export class OrganizationsListComponent implements OnInit {
   orga: OrganizationService;
   orgaMock: OrganizationsMockService;
   organizations: Observable<OrganizationDto[]>;

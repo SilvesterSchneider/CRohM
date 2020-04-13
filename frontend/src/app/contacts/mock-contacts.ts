@@ -13,6 +13,7 @@ export const CONTACTS: ContactDto[] = [
             streetNumber: '10'
         },
         contactPossibilities: {
+            id: 0,
             mail: 'maxmustermann@getMaxListeners.com',
             phoneNumber: '0157 0011223344',
             fax: '0157-00231223344'
@@ -30,6 +31,7 @@ export const CONTACTS: ContactDto[] = [
             streetNumber: '10'
         },
         contactPossibilities: {
+            id: 1,
             mail: 'maxmustermann@getMaxListeners.com',
             phoneNumber: '0157 0011223344',
             fax: '0157-00231223344'
@@ -47,6 +49,7 @@ export const CONTACTS: ContactDto[] = [
             streetNumber: '10'
         },
         contactPossibilities: {
+            id: 2,
             mail: 'maxmustermann@getMaxListeners.com',
             phoneNumber: '0157 0011223344',
             fax: '0157-00231223344'
@@ -64,6 +67,7 @@ export const CONTACTS: ContactDto[] = [
             streetNumber: '10'
         },
         contactPossibilities: {
+            id: 3,
             mail: 'maxmustermann@getMaxListeners.com',
             phoneNumber: '0157 0011223344',
             fax: '0157-00231223344'
