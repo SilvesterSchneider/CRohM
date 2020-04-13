@@ -3,7 +3,6 @@ import { Validators, FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
-import { ContactsServiceMock } from '../contacts.service-mock';
 
 @Component({
   selector: 'app-contacts-detail',
@@ -36,8 +35,7 @@ export class ContactsDetailComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private service: ContactService,
-    private serviceMock: ContactsServiceMock) { }
+    private service: ContactService) { }
 
   ngOnInit(): void {
     this.contact = this.route.snapshot.data.contact;
@@ -47,6 +45,5 @@ export class ContactsDetailComponent implements OnInit {
   updateContact() {
     this.contact = this.contactsForm.value;
     this.service.put(this.contact, this.contact.id).subscribe();
-   // this.serviceMock.update(this.contact, this.contact.id);
   }
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
-import { ContactsServiceMock } from '../contacts.service-mock';
 import { ContactCreateDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 
@@ -30,7 +29,7 @@ export class ContactsAddComponent implements OnInit {
       fax: ['', Validators.pattern('^0[0-9\- ]*$')]
     })
   });
-  constructor(private fb: FormBuilder, private serviceMock: ContactsServiceMock, private service: ContactService) { }
+  constructor(private fb: FormBuilder, private service: ContactService) { }
 
   ngOnInit(): void {
   }
@@ -39,7 +38,6 @@ export class ContactsAddComponent implements OnInit {
     // Take values from Input-Form
     this.contact = this.contactsForm.value;
     // And add a new Contact with the service
-   // this.serviceMock.addContact(this.contact);
     this.service.post(this.contact).subscribe();
   }
 }
