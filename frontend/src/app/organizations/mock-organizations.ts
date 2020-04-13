@@ -13,6 +13,7 @@ export const ORGANIZATIONS: OrganizationDto[] = [
             country: 'germanay'
         },
         contact: {
+            id: 0,
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'
@@ -44,6 +45,7 @@ export const ORGANIZATIONS: OrganizationDto[] = [
             country: 'germanay2'
         },
         contact: {
+            id: 1,
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'
@@ -61,6 +63,7 @@ export const ORGANIZATIONS: OrganizationDto[] = [
             country: 'germanay'
         },
         contact: {
+            id: 2,
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'
@@ -78,6 +81,7 @@ export const ORGANIZATIONS: OrganizationDto[] = [
             country: 'germanay'
         },
         contact: {
+            id: 3,
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'
@@ -95,6 +99,7 @@ export const ORGANIZATIONS: OrganizationDto[] = [
             country: 'germanay'
         },
         contact: {
+            id: 4,
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'

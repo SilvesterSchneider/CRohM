@@ -1204,7 +1204,7 @@ export interface AddressDto {
     description?: string | undefined;
     city?: string | undefined;
     street?: string | undefined;
-    streetNumber: number;
+    streetNumber?: string | undefined;
     zipcode?: string | undefined;
     country?: string | undefined;
 }
@@ -1212,7 +1212,7 @@ export interface AddressDto {
 export interface AddressCreateDto {
     city: string;
     street: string;
-    streetNumber: number;
+    streetNumber: string;
     zipcode: string;
     country: string;
 }
