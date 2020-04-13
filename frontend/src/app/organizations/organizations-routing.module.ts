@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { OrganizationsAddComponent } from './organizations-add/organizations-add.component';
-import { OrganizationsComponent } from './organizations-list/organizations-list.component';
+import { OrganizationsListComponent } from './organizations-list/organizations-list.component';
 
 
 
 const organizationsRoutes: Routes = [
     {
         path: '',
-        component: OrganizationsComponent
+        component: OrganizationsListComponent
     },
     // 'add' needs to be before ':id' to be recognized
     {
