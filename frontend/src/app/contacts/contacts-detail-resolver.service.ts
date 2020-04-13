@@ -8,7 +8,6 @@ import {
 import { Observable, of, EMPTY } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
 import { ContactDto } from '../shared/api-generated/api-generated';
-import { ContactsServiceMock } from './contacts.service-mock';
 import { ContactService } from '../shared/api-generated/api-generated';
 
 @Injectable({
