@@ -4,7 +4,6 @@ import { ContactsDetailComponent } from './contacts-detail.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../../app-routing.module';
 import { ActivatedRoute } from '@angular/router';
-import { CONTACTS } from '../mock-contacts';
 import { HttpClientModule } from '@angular/common/http';
 
 describe('ContactsDetailComponent', () => {
@@ -21,7 +20,23 @@ describe('ContactsDetailComponent', () => {
           useValue: {
             snapshot: {
               data: {
-                contact: CONTACTS[0]
+                contact: {
+                  id: 0,
+                  preName: 'silvester',
+                  name: 'kracher',
+                  address: {
+                    country: 'Deutschland',
+                    street: 'Teststrasse 1',
+                    city: 'Nürnberg',
+                    zipcode: '12345',
+                    streetNumber: '10'
+                  },
+                  contactPossibilities: {
+                    mail: 'maxmustermann@getMaxListeners.com',
+                    phoneNumber: '0157 0011223344',
+                    fax: '0157-00231223344'
+                  }
+                },
               },
             }
           },
