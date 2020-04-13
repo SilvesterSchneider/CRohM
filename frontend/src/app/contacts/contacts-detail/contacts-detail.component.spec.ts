@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../../app-routing.module';
 import { ActivatedRoute } from '@angular/router';
 import { CONTACTS } from '../mock-contacts';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ContactsDetailComponent', () => {
   let component: ContactsDetailComponent;
@@ -13,7 +14,7 @@ describe('ContactsDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ContactsDetailComponent],
-      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule],
+      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule],
       providers: [
         {
           provide: ActivatedRoute,
