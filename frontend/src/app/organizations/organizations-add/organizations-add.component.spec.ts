@@ -1,6 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrganizationsAddComponent } from './organizations-add.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from '../../shared/material.module';
+import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from '../../app-routing.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 describe('OrganizationsAddComponent', () => {
   let component: OrganizationsAddComponent;
@@ -8,7 +14,8 @@ describe('OrganizationsAddComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrganizationsAddComponent ]
+      declarations: [ OrganizationsAddComponent ],
+      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule, HttpClientModule]
     })
     .compileComponents();
   }));
