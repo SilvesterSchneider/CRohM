@@ -150,7 +150,7 @@ namespace ModelLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Contact", b =>
@@ -297,7 +297,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "2f97aa17-24eb-41e6-882d-b89fa7996ff1",
+                            ConcurrencyStamp = "6783c552-abc1-41d7-a693-02ecddfef8e3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

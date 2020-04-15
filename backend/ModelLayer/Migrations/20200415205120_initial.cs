@@ -8,7 +8,7 @@ namespace ModelLayer.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Address",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
@@ -23,7 +23,7 @@ namespace ModelLayer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Address", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,9 +116,9 @@ namespace ModelLayer.Migrations
                 {
                     table.PrimaryKey("PK_Organizations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Organizations_Address_AddressId",
+                        name: "FK_Organizations_Addresses_AddressId",
                         column: x => x.AddressId,
-                        principalTable: "Address",
+                        principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -252,9 +252,9 @@ namespace ModelLayer.Migrations
                 {
                     table.PrimaryKey("PK_Contacts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Contacts_Address_AddressId",
+                        name: "FK_Contacts_Addresses_AddressId",
                         column: x => x.AddressId,
-                        principalTable: "Address",
+                        principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -274,7 +274,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "2f97aa17-24eb-41e6-882d-b89fa7996ff1", "Admin", "ADMIN" });
+                values: new object[] { 1L, "6783c552-abc1-41d7-a693-02ecddfef8e3", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contacts_AddressId",
@@ -374,7 +374,7 @@ namespace ModelLayer.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "ContactPossibilities");
