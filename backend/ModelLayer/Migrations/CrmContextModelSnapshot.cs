@@ -142,8 +142,8 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StreetNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("StreetNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Zipcode")
                         .HasColumnType("nvarchar(max)");
@@ -297,7 +297,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "1ced8a69-38aa-4aca-9c80-ebbbc228af3a",
+                            ConcurrencyStamp = "2f97aa17-24eb-41e6-882d-b89fa7996ff1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
