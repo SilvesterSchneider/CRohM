@@ -16,11 +16,9 @@ namespace ServiceLayer
             CreateMap<EducationalOpportunity, EducationalOpportunityDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<UserCreateDto, User>();
-            CreateMap<Organization, OrganizationDto>();
-            CreateMap<OrganizationDto, Organization>();
+            CreateMap<Organization, OrganizationDto>().ReverseMap();
             CreateMap<OrganizationCreateDto, Organization>();
-            CreateMap<ContactPossibilitiesDto, ContactPossibilities>();
-            CreateMap<ContactPossibilities, ContactPossibilitiesDto>();
+            CreateMap<ContactPossibilitiesDto, ContactPossibilities>().ReverseMap();
             CreateMap<ContactPossibilitiesCreateDto, ContactPossibilities>();
             CreateMap<Contact, ContactDto>().ReverseMap();
             CreateMap<ContactCreateDto, Contact>();
