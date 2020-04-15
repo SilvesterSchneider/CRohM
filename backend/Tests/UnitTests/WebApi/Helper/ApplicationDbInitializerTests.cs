@@ -7,9 +7,10 @@ namespace UnitTests.WebApi.Helper
 {
     public class ApplicationDbInitializerTests
     {
-        [Fact]
-        public void Test1()
-        {
-        }
+        //[Fact]
+        //public void Test1()
+        //{
+        //    //TODO implement
+        //}
     }
 }

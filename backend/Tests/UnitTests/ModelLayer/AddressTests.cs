@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ModelLayer.Models;
 using Xunit;
 
 namespace UnitTests.ModelLayer
@@ -8,8 +6,16 @@ namespace UnitTests.ModelLayer
     public class AddressTests
     {
         [Fact]
-        public void Test1()
+        public void Address_Create()
         {
+            //Arrange
+            Address sut;
+
+            //Act
+            sut = new Address();
+
+            //Assert
+            Assert.Null(sut.City);// assume that rest of strings have same behavior
         }
     }
 }
