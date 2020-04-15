@@ -14,6 +14,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { JwtService } from './shared/jwt.service';
 import { UserMenuComponent } from './shared/navigation/user-menu/user-menu.component';
 import { SidenavComponent } from './shared/navigation/sidenav/sidenav.component';
+import { OrganizationsModule } from './organizations/organizations.module';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { SidenavComponent } from './shared/navigation/sidenav/sidenav.component'
     MaterialModule,
     FlexLayoutModule,
     ContactsModule,
+    OrganizationsModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: () => localStorage.getItem(JwtService.LS_KEY)

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
-import { Contact } from '../contacts.model';
 import { ActivatedRoute } from '@angular/router';
+import { ContactDto } from '../../shared/api-generated/api-generated';
+import { ContactService } from '../../shared/api-generated/api-generated';
 
 @Component({
   selector: 'app-contacts-detail',
@@ -9,30 +10,40 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./contacts-detail.component.scss']
 })
 export class ContactsDetailComponent implements OnInit {
-  contact: Contact;
+  contact: ContactDto;
 
   contactsForm = this.fb.group({
-    vorname: ['', Validators.required],
-    nachname: [''],
-    adresse: this.fb.group({
-      strasse: [''],
-      plz: ['', Validators.pattern('^[0-9]{5}$')],
-      ort: [''],
+    id: ['', Validators.required],
+    name: ['', Validators.required],
+    preName: ['', Validators.required],
+    address: this.fb.group({
+      country: [''],
+      street: [''],
+      streetNumber: [''],
+      zipcode: ['', Validators.pattern('^[0-9]{5}$')],
+      city: [''],
+    }),
+    contactPossibilities: this.fb.group({
+// Validiert auf korrektes E-Mail-Format
+      mail: ['', Validators.email],
+// Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
+      phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
+      fax: ['', Validators.pattern('^0[0-9\- ]*$')]
     })
   });
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute) { }
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private service: ContactService) { }
 
   ngOnInit(): void {
     this.contact = this.route.snapshot.data.contact;
     this.contactsForm.patchValue(this.contact);
   }
 
-
-
-  onSubmit() {
-    // TODO: Use EventEmitter with form value
-    console.warn(this.contactsForm.value);
+  updateContact() {
+    this.contact = this.contactsForm.value;
+    this.service.put(this.contact, this.contact.id).subscribe();
   }
-
 }

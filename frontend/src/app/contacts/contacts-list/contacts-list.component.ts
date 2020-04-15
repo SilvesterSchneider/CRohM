@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Contact } from '../contacts.model';
 import { Observable } from 'rxjs';
-import { ContactsService } from '../contacts.service';
-import { ROUTES } from '@angular/router';
+import { ContactService } from '../../shared/api-generated/api-generated';
+import { ContactDto } from '../../shared/api-generated/api-generated';
 
 @Component({
   selector: 'app-contacts-list',
@@ -10,13 +9,22 @@ import { ROUTES } from '@angular/router';
   styleUrls: ['./contacts-list.component.scss']
 })
 export class ContactsListComponent implements OnInit {
-  contacts$: Observable<Contact[]>;
-  displayedColumns = ['vorname', 'nachname', 'adresse', 'action'];
+  contacts: Observable<ContactDto[]>;
+  displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
+  service: ContactService;
 
-  constructor(private service: ContactsService) { }
+  constructor(service: ContactService) {
+    this.service = service;
+   }
 
   ngOnInit() {
-    this.contacts$ = this.service.getContacts();
+    this.init();
+  }
+
+  private init() {
+    this.contacts = this.service.getAll();
+    this.contacts.subscribe();
+   // this.contacts = this.serviceMock.getContacts();
   }
 
   addContact() {
@@ -24,7 +32,7 @@ export class ContactsListComponent implements OnInit {
   }
 
   deleteContact(id: number) {
-    // TODO
+    this.service.delete(id).subscribe();
+    this.init();
   }
-
 }
