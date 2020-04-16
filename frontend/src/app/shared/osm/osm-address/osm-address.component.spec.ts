@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OsmAddressComponent } from './osm-address.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { MaterialModule } from '../../material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('OsmAddressComponent', () => {
   let component: OsmAddressComponent;
@@ -8,7 +12,8 @@ describe('OsmAddressComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OsmAddressComponent ]
+      declarations: [ OsmAddressComponent ],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientModule, MaterialModule, BrowserAnimationsModule]
     })
     .compileComponents();
   }));
