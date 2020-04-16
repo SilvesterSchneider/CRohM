@@ -3,7 +3,6 @@ import { OsmService } from '../osm.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AddressDto } from '../../api-generated/api-generated';
-import { Country } from '../../../contacts/contacts.model';
 import {
   FormBuilder, Validators, NG_VALUE_ACCESSOR, NG_VALIDATORS,
   ControlValueAccessor, Validator, AbstractControl, ValidationErrors
@@ -30,13 +29,6 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 export class OsmAddressComponent implements OnInit, ControlValueAccessor, Validator {
   addressSuggestions: AddressDto[] = [];
   addressSearchString: Subject<string> = new Subject<string>();
-
-  // Liste der im Dropdown angezeigten Laender
-  countries: Country[] = [
-    { value: 'Deutschland', viewValue: 'Deutschland' },
-    { value: 'Schweiz', viewValue: 'Schweiz' },
-    { value: 'Österreich', viewValue: 'Österreich' }
-  ];
 
   addressForm = this.fb.group({
     country: ['', Validators.required],
@@ -113,5 +105,11 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
       this.addressForm.get('country').patchValue(address.country);
     }
   }
+
+  displayFn(selected: AddressDto) {
+    return `${selected.street ?? ''} ${selected.streetNumber ?? ''} ` +
+      `${selected.zipcode ?? ''} ${selected.city ?? ''} ${selected.country ?? ''}`;
+  }
+
 
 }

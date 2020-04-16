@@ -4,49 +4,36 @@
             Adresse
         </h3>
     </div>
-</div>
 
-<div class="row">
-    <mat-form-field class="col-md-9">
-        <input matInput type="text" [matAutocomplete]="auto" (input)="onChange($event)">
+    <mat-form-field class="col-md-12">
+        <input matInput type="text" [matAutocomplete]="auto" (input)="onChange($event)" placeholder="Addresssuche..." >
+        <mat-icon color="primary" matSuffix>search</mat-icon>
     </mat-form-field>
 
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelection($event)">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelection($event)" [displayWith]="displayFn">
         <mat-option *ngFor="let option of addressSuggestions" [value]="option">
             <mat-icon color="primary" class="icon">place</mat-icon>
-
-            {{option.street}}{{option.streetNumber}}
+            {{option.street}} {{option.streetNumber}}
             {{option.zipcode}} {{option.city}}
             {{option.country}}
         </mat-option>
     </mat-autocomplete>
-    <mat-icon color="primary" matSuffix>search</mat-icon>
-</div>
 
-<ng-container [formGroup]="addressForm">
-    <div class="col-md-3">
-        <mat-form-field>
+    <ng-container [formGroup]="addressForm">
+        <mat-form-field class="col-md-9">
             <input matInput placeholder="Strasse" formControlName="street">
         </mat-form-field>
-    </div>    
-    <div class="col-md-3">
-        <mat-form-field>
+        <mat-form-field class="col-md-3">
             <input matInput placeholder="Hausnummer" formControlName="streetNumber">
         </mat-form-field>
-    </div>
-    <div class="col-md-3">
-        <mat-form-field>
+        <mat-form-field class="col-md-6">
             <input matInput placeholder="PLZ" formControlName="zipcode">
         </mat-form-field>
-    </div>
-    <div class="col-md-3">
-        <mat-form-field>
+        <mat-form-field class="col-md-6">
             <input matInput placeholder="Ort" formControlName="city">
         </mat-form-field>
-    </div>
-    <div class="col-md-3">
-        <mat-form-field>
+        <mat-form-field class="col-md-6">
             <input matInput placeholder="Land" formControlName="country">
         </mat-form-field>
-    </div>
-</ng-container>
+    </ng-container>
+</div>
