@@ -24,25 +24,29 @@
 </div>
 
 <ng-container [formGroup]="addressForm">
-    <div class="row">
-        <mat-form-field class="col-md-3">
-            <mat-label>Land</mat-label>
-            <mat-select formControlName="country" name="country">
-                <mat-option *ngFor="let country of countries" [value]="country.value">
-                    {{country.viewValue}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div class="row">
-        <mat-form-field class="col-md-3">
+    <div class="col-md-3">
+        <mat-form-field>
             <input matInput placeholder="Strasse" formControlName="street">
         </mat-form-field>
-        <mat-form-field class="col-md-3">
+    </div>    
+    <div class="col-md-3">
+        <mat-form-field>
+            <input matInput placeholder="Hausnummer" formControlName="streetNumber">
+        </mat-form-field>
+    </div>
+    <div class="col-md-3">
+        <mat-form-field>
             <input matInput placeholder="PLZ" formControlName="zipcode">
         </mat-form-field>
-        <mat-form-field class="col-md-3">
+    </div>
+    <div class="col-md-3">
+        <mat-form-field>
             <input matInput placeholder="Ort" formControlName="city">
+        </mat-form-field>
+    </div>
+    <div class="col-md-3">
+        <mat-form-field>
+            <input matInput placeholder="Land" formControlName="country">
         </mat-form-field>
     </div>
 </ng-container>

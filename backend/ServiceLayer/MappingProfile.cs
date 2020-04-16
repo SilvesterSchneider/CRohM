@@ -22,6 +22,8 @@ namespace ServiceLayer
             CreateMap<ContactPossibilitiesDto, ContactPossibilities>();
             CreateMap<ContactPossibilities, ContactPossibilitiesDto>();
             CreateMap<ContactPossibilitiesCreateDto, ContactPossibilities>();
+            CreateMap<Contact, ContactDto>().ReverseMap();
+            CreateMap<ContactCreateDto, Contact>();
         }
     }
 }

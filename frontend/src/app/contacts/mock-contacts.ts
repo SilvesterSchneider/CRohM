@@ -1,56 +1,76 @@
-import { Contact } from './contacts.model';
+import { ContactDto } from '../shared/api-generated/api-generated';
 
-export const CONTACTS: Contact[] = [
+export const CONTACTS: ContactDto[] = [
     {
         id: 0,
-        vorname: 'Max',
-        nachname: 'Mustermann',
-        adresse: {
-            land: 'Deutschland',
-            strasse: 'Teststrasse 1',
-            ort: 'Nürnberg',
-            plz: '12345'
+        preName: 'silvester',
+        name: 'kracher',
+        address: {
+            country: 'Deutschland',
+            street: 'Teststrasse 1',
+            city: 'Nürnberg',
+            zipcode: '12345',
+            streetNumber: '10'
         },
-        mail: 'maxmustermann@getMaxListeners.com',
-        phone: '0157 0011223344'
+        contactPossibilities: {
+            id: 0,
+            mail: 'maxmustermann@getMaxListeners.com',
+            phoneNumber: '0157 0011223344',
+            fax: '0157-00231223344'
+        }
     },
     {
         id: 1,
-        vorname: 'Judith',
-        nachname: 'Androthe',
-        adresse: {
-            land: 'Deutschland',
-            strasse: 'Teststrasse 2',
-            ort: 'Nürnberg',
-            plz: '12345'
+        preName: 'michelle',
+        name: 'martin',
+        address: {
+            country: 'Deutschland',
+            street: 'Teststrasse 1',
+            city: 'Nürnberg',
+            zipcode: '12345',
+            streetNumber: '10'
         },
-        mail: 'judithandrothe@getMaxListeners.com',
-        phone: '0157 0011223355'
+        contactPossibilities: {
+            id: 1,
+            mail: 'maxmustermann@getMaxListeners.com',
+            phoneNumber: '0157 0011223344',
+            fax: '0157-00231223344'
+        }
     },
     {
         id: 2,
-        vorname: 'Julia',
-        nachname: 'Stoh',
-        adresse: {
-            land: 'Deutschland',
-            strasse: 'Teststrasse 3',
-            ort: 'Nürnberg',
-            plz: '12345'
+        preName: 'raz',
+        name: 'matis',
+        address: {
+            country: 'Deutschland',
+            street: 'Teststrasse 1',
+            city: 'Nürnberg',
+            zipcode: '12345',
+            streetNumber: '10'
         },
-        mail: 'juliastoh@getMaxListeners.com',
-        phone: '0157 0011223366'
+        contactPossibilities: {
+            id: 2,
+            mail: 'maxmustermann@getMaxListeners.com',
+            phoneNumber: '0157 0011223344',
+            fax: '0157-00231223344'
+        }
     },
     {
         id: 3,
-        vorname: 'Andreas',
-        nachname: 'Meier',
-        adresse: {
-            land: 'Deutschland',
-            strasse: 'Teststrasse 15',
-            ort: 'Nürnberg',
-            plz: '12345'
+        preName: 'markus',
+        name: 'dietl',
+        address: {
+            country: 'Deutschland',
+            street: 'Teststrasse 1',
+            city: 'Nürnberg',
+            zipcode: '12345',
+            streetNumber: '10'
         },
-        mail: 'andreasmeier@getMaxListeners.com',
-        phone: '0157 0011223377'
+        contactPossibilities: {
+            id: 3,
+            mail: 'maxmustermann@getMaxListeners.com',
+            phoneNumber: '0157 0011223344',
+            fax: '0157-00231223344'
+        }
     }
 ];

@@ -7,20 +7,19 @@ import {
 } from '@angular/router';
 import { Observable, of, EMPTY } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
-import { Contact } from './contacts.model';
-import { ContactsService } from './contacts.service';
-
+import { ContactDto } from '../shared/api-generated/api-generated';
+import { ContactService } from '../shared/api-generated/api-generated';
 
 @Injectable({
     providedIn: 'root',
 })
-export class ContactsDetailResolverService implements Resolve<Contact> {
-    constructor(private cs: ContactsService, private router: Router) { }
+export class ContactsDetailResolverService implements Resolve<ContactDto> {
+    constructor(private cs: ContactService, private router: Router) { }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Contact> | Observable<never> {
-        const id = route.paramMap.get('id');
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ContactDto> | Observable<never> {
+        const id = +route.paramMap.get('id');
 
-        return this.cs.getContact(id).pipe(
+        return this.cs.getById(id).pipe(
             take(1),
             mergeMap(contact => {
                 if (contact) {

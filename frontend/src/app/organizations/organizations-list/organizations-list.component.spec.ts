@@ -1,25 +1,26 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ContactsAddComponent } from './contacts-add.component';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../../app-routing.module';
 import { MaterialModule } from '../../shared/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { OrganizationsListComponent } from './organizations-list.component';
 import { HttpClientModule } from '@angular/common/http';
 
-describe('ContactsAddComponent', () => {
-  let component: ContactsAddComponent;
-  let fixture: ComponentFixture<ContactsAddComponent>;
+describe('OrganizationsComponent', () => {
+  let component: OrganizationsListComponent;
+  let fixture: ComponentFixture<OrganizationsListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ContactsAddComponent],
+      declarations: [ OrganizationsListComponent ],
       imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule, HttpClientModule]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ContactsAddComponent);
+    fixture = TestBed.createComponent(OrganizationsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
