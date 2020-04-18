@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
-import { ContactCreateDto } from '../../shared/api-generated/api-generated';
+import { ContactCreateDto, AddressCreateDto, ContactPossibilitiesCreateDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 
 @Component({
@@ -9,7 +9,18 @@ import { ContactService } from '../../shared/api-generated/api-generated';
   styleUrls: ['./contacts-add.component.scss']
 })
 export class ContactsAddComponent implements OnInit {
-  contact: ContactCreateDto;
+  contactCreateDto: ContactCreateDto = {name: 'n', preName: 'n'};
+  adressCreateDto: AddressCreateDto = {country: '', street: '', streetNumber: '', zipcode: '', city: ''};
+  contactPossibilitiesCreateDto: ContactPossibilitiesCreateDto = {mail: '', phoneNumber: '', fax: ''};
+
+
+  // TODO: sollten die möglichen Länder aus dem Backend laden
+  // Liste der im Dropdown angezeigten Laender
+  public countries: Country[] = [
+    { value: 'Deutschland', viewValue: 'Deutschland' },
+    { value: 'Schweiz', viewValue: 'Schweiz' },
+    { value: 'Österreich', viewValue: 'Österreich' }
+  ];
 
   contactsForm = this.fb.group({
     name: ['', Validators.required],
@@ -36,22 +47,30 @@ export class ContactsAddComponent implements OnInit {
 
   addContact() {
     // Take values from Input-Form and fits them into api-dto's.
-    this.contactCreateDto.name = this.contactsForm.value.nachname;
-    this.contactCreateDto.preName = this.contactsForm.value.name;
-    
-    this.adressCreateDto.country = this.contactsForm.value.adresse.value.land;
-    this.adressCreateDto.city = this.contactsForm.value.adresse.value.city;
-    this.adressCreateDto.zipcode = this.contactsForm.value.adresse.value.plz;
-    this.adressCreateDto.street = this.contactsForm.value.adresse.value.strasse;
-    this.adressCreateDto.streetNumber = this.contactsForm.value.adresse.value.hausnr;
+    this.contactCreateDto.name = this.contactsForm.value.name;
+    this.contactCreateDto.preName = this.contactsForm.value.preName;
 
-    this.contactPossibilitiesCreateDto.email = this.contactsForm.value.mail;
-    this.contactPossibilitiesCreateDto.phoneNumber = this.contactsForm.value.phone;
+    this.adressCreateDto.country = this.contactsForm.value.address.country;
+    this.adressCreateDto.city = this.contactsForm.value.address.city;
+    this.adressCreateDto.zipcode = this.contactsForm.value.address.zipcode;
+    this.adressCreateDto.street = this.contactsForm.value.address.street;
+    this.adressCreateDto.streetNumber = this.contactsForm.value.address.streetNumber;
+
+    this.contactPossibilitiesCreateDto.mail = this.contactsForm.value.contactPossibilities.mail;
+    this.contactPossibilitiesCreateDto.phoneNumber = this.contactsForm.value.contactPossibilities.phoneNumber;
+    this.contactPossibilitiesCreateDto.fax = this.contactsForm.value.contactPossibilities.fax;
 
     this.contactCreateDto.address = this.adressCreateDto;
     this.contactCreateDto.contactPossibilities = this.contactPossibilitiesCreateDto;
 
     // And add a new Contact with the service
-    this.service.post(this.contact).subscribe();
+    this.service.post(this.contactCreateDto).subscribe();
   }
+}
+
+
+
+interface Country {
+  value: string;
+  viewValue: string;
 }
