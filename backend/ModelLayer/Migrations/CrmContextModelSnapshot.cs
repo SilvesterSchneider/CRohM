@@ -142,15 +142,15 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StreetNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("StreetNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Zipcode")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Contact", b =>
@@ -297,7 +297,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "1ced8a69-38aa-4aca-9c80-ebbbc228af3a",
+                            ConcurrencyStamp = "6783c552-abc1-41d7-a693-02ecddfef8e3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
