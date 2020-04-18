@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace ModelLayer.Models
 {
@@ -9,6 +10,6 @@ namespace ModelLayer.Models
     {
         public Address Address { get; set; }
         public ContactPossibilities Contact { get; set; }
-        public List<Contact> Employees { get; set; }
+        public List<OrganizationContact> OrganizationContacts { get; set; }
     }
 }

@@ -18,6 +18,7 @@ using RepositoryLayer;
 using ServiceLayer;
 using WebApi.Helper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using ModelLayer.Helper;
 
@@ -40,7 +41,8 @@ namespace WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -128,7 +130,6 @@ namespace WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -171,6 +172,7 @@ namespace WebApi
             services.AddScoped<IEducationalOpportunityRepository, EducationalOpportunityRepository>();
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IContactRepository, ContactRepository>();
+            services.AddScoped<IOrganizationContactRepository, OrganizationContactRepository>();
         }
     }
 }
