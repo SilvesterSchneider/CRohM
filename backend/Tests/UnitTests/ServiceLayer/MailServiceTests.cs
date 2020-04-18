@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace TestProjects
+namespace UnitTests.ServiceLayer
 {
-    public class MailServiceUnittest
+    public class MailServiceTests
     {
         [Fact]
         public void Registration_CorrectData_AssertPassed()

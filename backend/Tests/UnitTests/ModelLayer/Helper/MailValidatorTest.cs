@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace TestProjects
+namespace UnitTests.ModelLayer.Helper
 {
     public class MailValidatorTest
     {

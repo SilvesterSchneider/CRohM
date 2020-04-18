@@ -7,19 +7,20 @@ using Moq;
 using ServiceLayer;
 using Xunit;
 
-namespace TestProjects
+namespace UnitTests.ServiceLayer
 {
-    public class UserServiceUnitTests
+    public class UserServiceTests
     {
         [Fact]
         public void CreateCRohMUserAsync_WorksCorrectly()
         {
             // Arrange
+            var mockMailProvider = new Mock<IMailProvider>();
             var mockUserManager = new Mock<IUserManager>();
             mockUserManager.Setup(manager => manager.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
 
-            var sut = new Mock<UserService>(mockUserManager.Object);
+            var sut = new Mock<UserService>(mockUserManager.Object, mockMailProvider.Object);
             sut.Setup(service => service.GetUniqueUserNameAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync("wurstha12");
 

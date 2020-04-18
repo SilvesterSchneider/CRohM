@@ -2,7 +2,7 @@ using ModelLayer.Helper;
 using System;
 using Xunit;
 
-namespace TestProjects
+namespace UnitTests.ModelLayer.Helper
 {
     public class PasswordGeneratorTest
     {
