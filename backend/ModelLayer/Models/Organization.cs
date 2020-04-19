@@ -10,6 +10,6 @@ namespace ModelLayer.Models
     {
         public Address Address { get; set; }
         public ContactPossibilities Contact { get; set; }
-        public List<OrganizationContact> OrganizationContacts { get; set; }
+        public List<OrganizationContact> OrganizationContacts { get; set; } = new List<OrganizationContact>();
     }
 }

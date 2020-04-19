@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { OrganizationService } from 'src/app/shared/api-generated/api-generated';
+import { OrganizationService, OrganizationCreateDto, ContactService, ContactDto } from 'src/app/shared/api-generated/api-generated';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-organizations-add',
@@ -9,6 +10,7 @@ import { OrganizationService } from 'src/app/shared/api-generated/api-generated'
 })
 export class OrganizationsAddComponent implements OnInit {
   public organizationForm: FormGroup;
+  private organization: OrganizationCreateDto;
 
     // TODO: sollten die möglichen Länder aus dem Backend laden
     // Liste der im Dropdown angezeigten Laender
@@ -19,14 +21,16 @@ export class OrganizationsAddComponent implements OnInit {
     ];
 
   constructor(private readonly fb: FormBuilder,
-              private readonly organizationsService: OrganizationService) { }
+              private readonly organizationsService: OrganizationService,
+              private readonly contactService: ContactService) { }
 
   public ngOnInit(): void {
     this.organizationForm = this.createOrganizationForm();
   }
 
   public onAddOrganization(): void {
-    this.organizationsService.post(this.organizationForm.value).subscribe(oragnization => {
+    this.organization = this.organizationForm.value;
+    this.organizationsService.post(this.organization).subscribe(oragnization => {
       console.log(oragnization);
     });
   }
@@ -35,7 +39,16 @@ export class OrganizationsAddComponent implements OnInit {
     return this.fb.group({
       name: ['', Validators.required],
       description: [''],
-      address: this.createAddressForm()
+      address: this.createAddressForm(),
+      contact: this.createContactForm()
+    });
+  }
+
+  private createContactForm(): FormGroup {
+    return this.fb.group({
+      phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
+      fax: ['', Validators.pattern('^0[0-9\- ]*$')],
+      mail: ['', Validators.email]
     });
   }
 

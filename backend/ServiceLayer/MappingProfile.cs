@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
@@ -20,9 +21,19 @@ namespace ServiceLayer
 
             CreateMap<Organization, OrganizationDto>()
                 .ForMember(dto => dto.Employees,
-                    expression => expression.MapFrom((organization, dto) => organization.OrganizationContacts
-                    .Select(contact => contact.Contact)
-                    .ToList()));
+                    expression => expression.MapFrom((organization, dto) =>
+                    {
+                        if (organization.OrganizationContacts.Any())
+                        {
+                            return organization.OrganizationContacts
+                                .Select(contact => contact.Contact)
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<Contact>();
+                        }
+                    }));
 
             CreateMap<OrganizationDto, Organization>(); //TODO: check-> do we need this?
 
@@ -33,11 +44,21 @@ namespace ServiceLayer
 
             CreateMap<Contact, ContactDto>()
                 .ForMember(dto => dto.Organizations,
-                    expression => expression.MapFrom((organization, dto) => organization.OrganizationContacts
-                        .Select(contact => contact.Organization)
-                        .ToList()));
-            CreateMap<ContactDto, Contact>();
+                    expression => expression.MapFrom((organization, dto) =>
+                    {
+                        if (organization.OrganizationContacts.Any())
+                        {
+                            return organization.OrganizationContacts
+                                .Select(contact => contact.Organization)
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<Organization>();
+                        }
+                    }));
 
+            CreateMap<ContactDto, Contact>();
             CreateMap<ContactCreateDto, Contact>();
         }
     }

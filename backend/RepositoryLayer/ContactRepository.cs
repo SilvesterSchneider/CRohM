@@ -25,8 +25,6 @@ namespace RepositoryLayer
         /// <returns></returns>
         Task<List<Contact>> GetAllContactsWithAllIncludesAsync();
 
-        Task<Contact> GetContactByIdWithIncludesAsync(long id);
-
         Task<bool> UpdateAsync(Contact contact, long id);
     }
 
@@ -36,10 +34,15 @@ namespace RepositoryLayer
 
         public async Task<List<Contact>> GetAllContactsWithAllIncludesAsync()
         {
-            return await Entities.Include(x => x.Address).Include(y => y.ContactPossibilities).ToListAsync();
+            return await Entities
+                .Include(x => x.Address)
+                .Include(y => y.ContactPossibilities)
+                .Include(x => x.OrganizationContacts)
+                .ThenInclude(a => a.Organization)
+                .ToListAsync();
         }
 
-        public async Task<Contact> GetContactByIdWithIncludesAsync(long id)
+        public override async Task<Contact> GetByIdAsync(long id)
         {
             return await Entities.Include(a => a.Address).Include(b => b.ContactPossibilities).FirstAsync(x => x.Id == id);
         }

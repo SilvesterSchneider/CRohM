@@ -39,9 +39,19 @@ namespace RepositoryLayer
             return new List<Contact>();
         }
 
+        public override async Task<Organization> GetByIdAsync(long id)
+        {
+            return await Entities
+                .Include(x => x.Address)
+                .Include(y => y.Contact)
+                .Include(z => z.OrganizationContacts)
+                .ThenInclude(a => a.Contact)
+                .FirstOrDefaultAsync(a => a.Id == id);
+        }
+
         public Task<List<Organization>> GetAllOrganizationsWithIncludesAsync()
         {
-            return Entities.Include(x => x.Address).Include(y => y.Contact).ToListAsync();
+            return Entities.Include(x => x.Address).Include(y => y.Contact).Include(z => z.OrganizationContacts).ThenInclude(a => a.Contact).ToListAsync();
         }
     }
 }

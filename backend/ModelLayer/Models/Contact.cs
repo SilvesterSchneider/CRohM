@@ -8,6 +8,6 @@ namespace ModelLayer.Models
         public string PreName { get; set; }
         public Address Address { get; set; }
         public ContactPossibilities ContactPossibilities { get; set; }
-        public List<OrganizationContact> OrganizationContacts { get; set; }
+        public List<OrganizationContact> OrganizationContacts { get; set; } = new List<OrganizationContact>();
     }
 }

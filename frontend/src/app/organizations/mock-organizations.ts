@@ -6,6 +6,7 @@ export const ORGANIZATIONS: OrganizationDto[] = [
         name: 'testCompany1',
         description: 'testDesc1',
         address: {
+            id: 5,
             street: 'teststreet1',
             city: 'nuremberg',
             streetNumber: '10',
@@ -17,27 +18,14 @@ export const ORGANIZATIONS: OrganizationDto[] = [
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'
-        },
-        employees: [
-        {
-            firstName: 'raz',
-            id: 0,
-            lastName: 'matis',
-            twoFactorEnabled: true
-        },
-        {
-            firstName: 'domi',
-            id: 1,
-            lastName: 'müller',
-            twoFactorEnabled: true
         }
-    ]
     },
     {
         id: 1,
         name: 'testCompany2',
         description: 'testDesc2',
         address: {
+            id: 4,
             street: 'teststreet2',
             city: 'nuremberg2',
             streetNumber: '10',
@@ -56,6 +44,7 @@ export const ORGANIZATIONS: OrganizationDto[] = [
         name: 'testCompany3',
         description: 'testDesc3',
         address: {
+            id: 3,
             street: 'teststreet3',
             city: 'nuremberg',
             streetNumber: '10',
@@ -74,6 +63,7 @@ export const ORGANIZATIONS: OrganizationDto[] = [
         name: 'testCompany4',
         description: 'testDesc4',
         address: {
+            id: 2,
             street: 'teststreet4',
             city: 'nuremberg',
             zipcode: '90445',
@@ -92,6 +82,7 @@ export const ORGANIZATIONS: OrganizationDto[] = [
         name: 'testCompany5',
         description: 'testDesc5',
         address: {
+            id: 1,
             street: 'teststreet5',
             city: 'nuremberg',
             zipcode: '90446',
@@ -103,20 +94,6 @@ export const ORGANIZATIONS: OrganizationDto[] = [
             mail: 'inog@foff.de',
             phoneNumber: '0232-2323',
             fax: '43434-34344'
-        },
-        employees: [
-            {
-                firstName: 'paul',
-                id: 2,
-                lastName: 'matis',
-                twoFactorEnabled: true
-            },
-            {
-                firstName: 'heidi',
-                id: 3,
-                lastName: 'müller',
-                twoFactorEnabled: true
-            }
-        ]
+        }
     }
 ];

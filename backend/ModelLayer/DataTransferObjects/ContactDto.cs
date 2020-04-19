@@ -12,7 +12,7 @@ namespace ModelLayer.DataTransferObjects
         public string PreName { get; set; }
         public AddressDto Address { get; set; }
         public ContactPossibilitiesDto ContactPossibilities { get; set; }
-        public List<OrganizationDto> Organizations { get; set; }
+        public List<OrganizationDto> Organizations { get; set; } = new List<OrganizationDto>();
     }
 
     public class ContactCreateDto
