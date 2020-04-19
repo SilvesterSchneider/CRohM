@@ -53,7 +53,7 @@ namespace RepositoryLayer.Base
             return Entities.FirstOrDefault(e => e.Id == id);
         }
 
-        public async Task<T> GetByIdAsync(long id)
+        public virtual async Task<T> GetByIdAsync(long id)
         {
             return await Entities.FirstOrDefaultAsync(e => e.Id == id);
         }

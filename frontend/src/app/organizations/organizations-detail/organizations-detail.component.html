@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <h3>
-                Neue Organisation
+            	 Organisation bearbeiten
             </h3>
         </div>
         <div class="col-md-3">
@@ -25,19 +25,6 @@
         </div>
     </div>
     <div class="row" formGroupName="address">
-        <div class="col-md-12">
-            <mat-form-field>
-                <mat-label>Land</mat-label>               
-                <mat-select formControlName="country" name="country">
-                    <mat-option *ngFor="let country of countries" [value]="country.value">
-                        {{country.viewValue}}
-                    </mat-option>
-                </mat-select>
-                
-            </mat-form-field>
-        </div>
-    </div>
-    <div class="row" formGroupName="address">
         <div class="col-md">
             <mat-form-field>
                 <input matInput placeholder="Strasse" formControlName="street">
@@ -57,7 +44,12 @@
             <mat-form-field>
                 <input matInput placeholder="Ort" formControlName="city">
             </mat-form-field>
-        </div>
+		</div>
+		<div class="col-md">
+            <mat-form-field>
+                <input matInput placeholder="Land" formControlName="country">
+            </mat-form-field>
+        </div>  
     </div>
     <div class="row" formGroupName="contact">
         <div class="col-md">
@@ -75,12 +67,34 @@
                 <input matInput placeholder="E-Mail" formControlName="mail">
             </mat-form-field>
         </div>
-    </div>
-    <button mat-raised-button color="primary" type="submit" [disabled]="!organizationForm.valid" (click)="onAddOrganization()"
-        routerLink="/organizations">
-        Speichern
-    </button>
-    <button mat-raised-button color="primary" routerLink="/organizations">
-        Verwerfen
-    </button>
+	</div>
 </div>
+<mat-chip-list #chipList>
+    <mat-chip *ngFor="let item of selectedItems" [selectable]="selectable">
+        {{ item.preName + ' ' + item.name }}
+    </mat-chip>
+    <input type="text" #inputTrigger placeholder="Mitarbeiter auswählen" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
+    [matChipInputFor]="chipList">
+</mat-chip-list>
+
+<mat-autocomplete #autoComplete="matAutocomplete">
+    <mat-option>
+        <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
+                Alle selektieren
+        </mat-checkbox>
+  </mat-option>
+    <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
+        <div (click)="optionClicked($event, item);">
+            <mat-checkbox [checked]="item.selected" (change)="toggleSelection(item)" (click)="$event.stopPropagation()">
+                {{ item.preName + ' ' + item.name }}
+            </mat-checkbox>
+        </div>
+    </mat-option>
+</mat-autocomplete>
+<button mat-raised-button color="primary" type="submit" [disabled]="!organizationForm.valid" (click)="saveValues()"
+    routerLink="/organizations">
+    Speichern
+</button>
+<button mat-raised-button color="primary" routerLink="/organizations">
+    Verwerfen
+</button>

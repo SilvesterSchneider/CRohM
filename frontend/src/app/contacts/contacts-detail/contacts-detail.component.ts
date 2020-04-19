@@ -43,7 +43,13 @@ export class ContactsDetailComponent implements OnInit {
   }
 
   updateContact() {
+    const idAddress = this.contact.address.id;
+    const idContactPossibilities = this.contact.contactPossibilities.id;
+    const idContact = this.contact.id;
     this.contact = this.contactsForm.value;
+    this.contact.id = idContact;
+    this.contact.address.id = idAddress;
+    this.contact.contactPossibilities.id = idContactPossibilities;
     this.service.put(this.contact, this.contact.id).subscribe();
   }
 }

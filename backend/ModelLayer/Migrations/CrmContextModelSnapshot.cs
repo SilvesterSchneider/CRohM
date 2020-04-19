@@ -172,9 +172,6 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("OrganizationId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("PreName")
                         .HasColumnType("nvarchar(max)");
 
@@ -183,8 +180,6 @@ namespace ModelLayer.Migrations
                     b.HasIndex("AddressId");
 
                     b.HasIndex("ContactPossibilitiesId");
-
-                    b.HasIndex("OrganizationId");
 
                     b.ToTable("Contacts");
                 });
@@ -265,6 +260,21 @@ namespace ModelLayer.Migrations
                     b.ToTable("Organizations");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.OrganizationContact", b =>
+                {
+                    b.Property<long>("OrganizationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ContactId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("OrganizationId", "ContactId");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("OrganizationContacts");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.Role", b =>
                 {
                     b.Property<long>("Id")
@@ -297,7 +307,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "6783c552-abc1-41d7-a693-02ecddfef8e3",
+                            ConcurrencyStamp = "4a39d83a-c849-4b76-ab39-172b7a657a65",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -436,10 +446,6 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.Models.ContactPossibilities", "ContactPossibilities")
                         .WithMany()
                         .HasForeignKey("ContactPossibilitiesId");
-
-                    b.HasOne("ModelLayer.Models.Organization", null)
-                        .WithMany("Employees")
-                        .HasForeignKey("OrganizationId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>
@@ -451,6 +457,21 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.Models.ContactPossibilities", "Contact")
                         .WithMany()
                         .HasForeignKey("ContactId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.OrganizationContact", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Contact", "Contact")
+                        .WithMany("OrganizationContacts")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelLayer.Models.Organization", "Organization")
+                        .WithMany("OrganizationContacts")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

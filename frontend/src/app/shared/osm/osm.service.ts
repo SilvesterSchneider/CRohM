@@ -12,6 +12,7 @@ export class OsmService {
 
   public static parseAddress(placeResult: any): AddressDto {
     const address: AddressDto = {
+      id: placeResult.properties.id,
       country: placeResult.properties.country,
       city: placeResult.properties.city,
       zipcode: placeResult.properties.postcode,

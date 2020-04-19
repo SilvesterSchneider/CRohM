@@ -68,11 +68,23 @@ namespace ModelLayer
                 entity.ToTable("UserTokens");
             });
             /**********************************************************************/
+
+            modelBuilder.Entity<OrganizationContact>().HasKey(sc => new { sc.OrganizationId, sc.ContactId });
+            modelBuilder.Entity<OrganizationContact>()
+                .HasOne(sc => sc.Contact)
+                .WithMany(s => s.OrganizationContacts)
+                .HasForeignKey(sc => sc.ContactId);
+
+            modelBuilder.Entity<OrganizationContact>()
+                .HasOne(sc => sc.Organization)
+                .WithMany(s => s.OrganizationContacts)
+                .HasForeignKey(sc => sc.OrganizationId);
         }
 
         //entities
-        public DbSet<Address> Addresses { get; set; }
 
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<OrganizationContact> OrganizationContacts { get; set; }
         public DbSet<EducationalOpportunity> EducationalOpportunities { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Organization> Organizations { get; set; }
