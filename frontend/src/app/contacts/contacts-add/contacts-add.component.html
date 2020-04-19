@@ -21,18 +21,25 @@
                 Kontaktmöglichkeiten
             </h3>
         </div>
-        <div formGroupName="contactPossibilities">
-            <mat-form-field class="col-md-3">
+    </div>
+    <div class="row" formGroupName="contactPossibilities">
+        <div class="col-md-3">
+            <mat-form-field>
                 <input matInput placeholder="E-Mail" formControlName="mail">
             </mat-form-field>
-            <mat-form-field class="col-md-3">
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
                 <input matInput placeholder="Telefonnummer" formControlName="phoneNumber">
             </mat-form-field>
-            <mat-form-field class="col-md-3">
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
                 <input matInput placeholder="Faxnummer" formControlName="fax">
             </mat-form-field>
         </div>
     </div>
+
 
     <button mat-raised-button color="primary" type="submit" [disabled]="!contactsForm.valid" (click)="addContact()"
         routerLink="/contacts">
@@ -42,4 +49,3 @@
         Verwerfen
     </button>
 </div>
-<hr>

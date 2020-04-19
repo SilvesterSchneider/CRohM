@@ -30,6 +30,15 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
   addressSuggestions: AddressDto[] = [];
   addressSearchString: Subject<string> = new Subject<string>();
 
+  // TODO: sollten die möglichen Länder aus dem Backend laden
+  // Liste der im Dropdown angezeigten Laender
+  public countries: Country[] = [
+    { value: 'Deutschland', viewValue: 'Deutschland' },
+    { value: 'Schweiz', viewValue: 'Schweiz' },
+    { value: 'Österreich', viewValue: 'Österreich' }
+  ];
+
+
   addressForm = this.fb.group({
     country: ['', Validators.required],
     street: ['', Validators.required],
@@ -113,3 +122,10 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
 
 
 }
+
+
+interface Country {
+  value: string;
+  viewValue: string;
+}
+

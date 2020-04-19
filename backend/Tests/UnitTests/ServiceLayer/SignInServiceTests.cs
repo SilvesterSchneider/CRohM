@@ -5,9 +5,9 @@ using ServiceLayer;
 using WebApi.Helper;
 using Xunit;
 
-namespace TestProjects
+namespace UnitTests.ServiceLayer
 {
-    public class SignInServiceUnitTests
+    public class SignInServiceTests
     {
         [Fact]
         public void CreateToken_WorksCorrectly()
