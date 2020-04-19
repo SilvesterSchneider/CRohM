@@ -14,24 +14,10 @@ export class ContactsAddComponent implements OnInit {
   contactPossibilitiesCreateDto: ContactPossibilitiesCreateDto = {mail: '', phoneNumber: '', fax: ''};
 
 
-  // TODO: sollten die möglichen Länder aus dem Backend laden
-  // Liste der im Dropdown angezeigten Laender
-  public countries: Country[] = [
-    { value: 'Deutschland', viewValue: 'Deutschland' },
-    { value: 'Schweiz', viewValue: 'Schweiz' },
-    { value: 'Österreich', viewValue: 'Österreich' }
-  ];
-
   contactsForm = this.fb.group({
     name: ['', Validators.required],
     preName: ['', Validators.required],
-    address: this.fb.group({
-      country: ['', Validators.required],
-      street: ['', Validators.required],
-      streetNumber: ['', Validators.required],
-      zipcode: ['', Validators.pattern('^[0-9]{5}$')],
-      city: ['', Validators.required],
-    }),
+    address: this.fb.control(''),
     contactPossibilities: this.fb.group({
       // Validiert auf korrektes E-Mail-Format
       mail: ['', Validators.email],
@@ -70,7 +56,3 @@ export class ContactsAddComponent implements OnInit {
 
 
 
-interface Country {
-  value: string;
-  viewValue: string;
-}
