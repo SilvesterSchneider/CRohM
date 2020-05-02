@@ -30,7 +30,7 @@ namespace WebApi.Controllers
         [HttpPost]
         [AllowAnonymous]
         [SwaggerResponse(HttpStatusCode.OK, typeof(UserDto), Description = "successful login")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "not successful login")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string))]
         public async Task<IActionResult> Login([FromBody] CredentialsDto credentials)
         {
             var user = await _userService.FindByNameAsync(credentials.UserNameOrEmail);
@@ -39,8 +39,13 @@ namespace WebApi.Controllers
                 user = await _userService.FindByEmailAsync(credentials.UserNameOrEmail);
                 if (user == null)
                 {
-                    return BadRequest();
+                    return BadRequest("not successful login");
                 }
+            }
+
+            if (!user.LockoutEnabled)
+            {
+                return BadRequest("User is locked! Please contact the administrator");
             }
 
             var signInAsync = await _signInService.PasswordSignInAsync(user, credentials.Password);
@@ -52,7 +57,7 @@ namespace WebApi.Controllers
                 return Ok(userDto);
             }
 
-            return BadRequest();
+            return BadRequest("not successful login");
         }
 
         /// <summary>

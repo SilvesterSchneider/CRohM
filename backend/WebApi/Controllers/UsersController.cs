@@ -53,5 +53,29 @@ namespace WebApi.Controllers
 
             return BadRequest();
         }
+
+        // put updates user with id {id} via frontend
+        [HttpPut("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
+        [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
+        public async Task<IActionResult> UpdateLockoutState(long id)
+        {
+            if (id != 1)
+            {
+                var result = await _userService.SetLockoutEnabledAsync(id);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return Conflict();
+                }
+            }
+            else
+            {
+                return Ok();
+            }
+        }
     }
 }

@@ -12,7 +12,7 @@ import { UserDto, UsersService, AuthService } from '../../shared/api-generated/a
 
 export class UserComponent implements OnInit {
   dataSource = new BehaviorSubject<UserDto[]>([]);
-  displayedColumns: string[] = ['username', 'mail', 'firstname', 'lastname', 'option'];
+  displayedColumns: string[] = ['username', 'mail', 'firstname', 'lastname', 'password', 'lock'];
 
 
   userForm = this.fb.group({
@@ -56,4 +56,8 @@ private GetData() {
     });
   }
 
+  public SetLockoutState(userId: number) {
+    this.usersService.updateLockoutState(userId).subscribe();
+    this.GetData();
+  }
 }
