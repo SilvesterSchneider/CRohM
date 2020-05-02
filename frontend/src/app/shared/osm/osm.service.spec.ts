@@ -30,6 +30,7 @@ describe('OsmService', () => {
     const address: AddressDto = OsmService.parseAddress(testOSM);
 
     const expected: AddressDto = {
+      id: 0,
       country: 'Deutschland',
       city: 'Berlin',
       zipcode: '10715',
