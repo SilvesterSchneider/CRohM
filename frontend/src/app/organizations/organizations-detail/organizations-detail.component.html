@@ -17,40 +17,9 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <h3>
-                Adresse
-            </h3>
-        </div>
-    </div>
-    <div class="row" formGroupName="address">
-        <div class="col-md">
-            <mat-form-field>
-                <input matInput placeholder="Strasse" formControlName="street">
-            </mat-form-field>
-        </div>    
-        <div class="col-md">
-            <mat-form-field>
-                <input matInput placeholder="Hausnummer" formControlName="streetNumber">
-            </mat-form-field>
-        </div>    
-        <div class="col-md">
-            <mat-form-field>
-                <input matInput placeholder="PLZ" formControlName="zipcode">
-            </mat-form-field>
-        </div>
-        <div class="col-md">
-            <mat-form-field>
-                <input matInput placeholder="Ort" formControlName="city">
-            </mat-form-field>
-		</div>
-		<div class="col-md">
-            <mat-form-field>
-                <input matInput placeholder="Land" formControlName="country">
-            </mat-form-field>
-        </div>  
-    </div>
+    <app-osm-address formControlName="address"></app-osm-address>
+
+
     <div class="row" formGroupName="contact">
         <div class="col-md">
             <mat-form-field>
