@@ -5,6 +5,13 @@
 
     <mat-toolbar-row>
         <span>Benutzer</span>
+        <span class="spacer"></span>
+        <mat-form-field>
+            <input matInput placeholder="Suche">
+        </mat-form-field>
+        <button button="submit" mat-mini-fab color="primary" (click)="openDialog()">
+            <mat-icon>add</mat-icon> 
+        </button>
     </mat-toolbar-row>
 </mat-toolbar>
 
@@ -42,7 +49,7 @@
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
 
-<mat-toolbar>
+<!-- <mat-toolbar>
     <span>Neuer Benutzer</span>
 </mat-toolbar>
 
@@ -70,4 +77,4 @@
 
         </div>
     </div>
-</form>
+</form> -->
