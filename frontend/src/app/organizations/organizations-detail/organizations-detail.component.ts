@@ -92,27 +92,18 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     this.contactService.getAll().subscribe(y => 
       {
         y.forEach(x => this.filteredItems.push(
-        {
-          contactId: x.id,
-          selected: false,
-          name: x.name,
-          preName: x.preName
-        }));
-        this.items = this.filteredItems;
-        this.finishInit();
-      });
-    }
-
-  finishInit() {
-    this.contactService.getAll().subscribe(y => y.forEach(x => this.filteredItems.push(
       {
         contactId: x.id,
         selected: false,
         name: x.name,
         preName: x.preName
-      }
-    )));
-    this.items = this.filteredItems;
+      }));
+      this.items = this.filteredItems;
+      this.finishInit();
+    });
+  }
+
+  finishInit() {
     this.itemControl.valueChanges.pipe(
       startWith<string | OrganizationContactConnection[]>(''),
       map(value => typeof value === 'string' ? value : this.lastFilter),
@@ -122,39 +113,14 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     this.organizationForm.patchValue(this.organization);
     if (this.organization.employees.length > 0) {
       this.organization.employees.forEach(x => {
-          const cont = this.filteredItems.find(y => y.contactId === x.id);
-          if (cont != null) {
-            this.toggleSelection(cont);
-          }
-        });
-      }
+        const cont = this.filteredItems.find(y => y.contactId === x.id);
+        if (cont != null) {
+          this.toggleSelection(cont);
+        }
+      });
+    }
   }
 
-    private createOrganizationForm(): FormGroup {
-      return this.fb.group({
-        name: ['', Validators.required],
-        description: [''],
-        address: this.createAddressForm(),
-        contact: this.createContactForm()
-      });
-    }
-    private createContactForm(): FormGroup {
-      return this.fb.group({
-        phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
-        fax: ['', Validators.pattern('^0[0-9\- ]*$')],
-        mail: ['', Validators.email]
-      });
-    }
-    private createAddressForm(): FormGroup {
-      return this.fb.group({
-        country: [''],
-        street: [''],
-        zipcode: ['', Validators.pattern('^[0-9]{5}$')],
-        streetNumber: [''],
-        city: ['']
-      });
-    }
-  }
   private createOrganizationForm(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
