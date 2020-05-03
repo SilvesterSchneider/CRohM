@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { OrganizationService } from '../../shared/api-generated/api-generated';
 import { Observable } from 'rxjs';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
@@ -17,7 +17,7 @@ export class OrganizationsListComponent implements OnInit {
   displayedColumns = ['Name', 'Beschreibung', 'Strasse', 'Hausnummer', 'PLZ', 'Stadt', 'Telefonnummer',
    'E-Mail', 'Faxnummer', 'Zugehörige', 'Action'];
 
-  constructor(organizationServive: OrganizationService, mock: OrganizationsMockService) {
+  constructor(organizationServive: OrganizationService, mock: OrganizationsMockService, private changeDetectorRefs: ChangeDetectorRef) {
     this.orga = organizationServive;
     this.orgaMock = mock;
   }
@@ -29,6 +29,7 @@ export class OrganizationsListComponent implements OnInit {
   private loadData() {
     this.organizations = this.orga.get();
     this.organizations.subscribe();
+    this.changeDetectorRefs.detectChanges();
    // this.organizationMock = this.orgaMock.getOrganizationsMock();
   }
 

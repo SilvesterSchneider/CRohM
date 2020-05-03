@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
@@ -8,12 +8,13 @@ import { ContactDto } from '../../shared/api-generated/api-generated';
   templateUrl: './contacts-list.component.html',
   styleUrls: ['./contacts-list.component.scss']
 })
+
 export class ContactsListComponent implements OnInit {
   contacts: Observable<ContactDto[]>;
   displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
   service: ContactService;
 
-  constructor(service: ContactService) {
+  constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef) {
     this.service = service;
    }
 
@@ -24,6 +25,7 @@ export class ContactsListComponent implements OnInit {
   private init() {
     this.contacts = this.service.getAll();
     this.contacts.subscribe();
+    this.changeDetectorRefs.detectChanges();
    // this.contacts = this.serviceMock.getContacts();
   }
 
