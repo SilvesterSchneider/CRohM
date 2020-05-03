@@ -5,6 +5,7 @@ import { AppRoutingModule } from '../../app-routing.module';
 import { MaterialModule } from '../../shared/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { SharedModule } from '../../shared/shared.module';
 
 describe('OrganizationsAddComponent', () => {
   let component: OrganizationsAddComponent;
@@ -13,7 +14,7 @@ describe('OrganizationsAddComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ OrganizationsAddComponent ],
-      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule, HttpClientModule]
+      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule, HttpClientModule, SharedModule]
     })
     .compileComponents();
   }));
