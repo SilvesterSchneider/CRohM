@@ -2,10 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrganizationsDetailComponent } from './organizations-detail.component';
 import { AppRoutingModule } from '../../app-routing.module';
-import { MaterialModule } from '../../shared/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { SharedModule } from '../../shared/shared.module';
 
 describe('OrganizationsAddComponent', () => {
   let component: OrganizationsDetailComponent;
@@ -14,7 +14,7 @@ describe('OrganizationsAddComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ OrganizationsDetailComponent ],
-      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule, HttpClientModule],
+      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, BrowserAnimationsModule, HttpClientModule, SharedModule],
       providers: [
         {
           provide: ActivatedRoute,

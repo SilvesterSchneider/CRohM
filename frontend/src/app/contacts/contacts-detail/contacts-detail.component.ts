@@ -16,17 +16,11 @@ export class ContactsDetailComponent implements OnInit {
     id: ['', Validators.required],
     name: ['', Validators.required],
     preName: ['', Validators.required],
-    address: this.fb.group({
-      country: [''],
-      street: [''],
-      streetNumber: [''],
-      zipcode: ['', Validators.pattern('^[0-9]{5}$')],
-      city: [''],
-    }),
+    address: this.fb.control(''),
     contactPossibilities: this.fb.group({
-// Validiert auf korrektes E-Mail-Format
+      // Validiert auf korrektes E-Mail-Format
       mail: ['', Validators.email],
-// Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
+      // Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
       phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
       fax: ['', Validators.pattern('^0[0-9\- ]*$')]
     })

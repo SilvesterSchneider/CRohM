@@ -1,14 +1,18 @@
-import { ElementRef, HostBinding, Component, OnInit, ViewChild, forwardRef, Input, Optional, Self,
-  ChangeDetectorRef, OnDestroy } from '@angular/core';
+import {
+  ElementRef, HostBinding, Component, OnInit, ViewChild, forwardRef, Input, Optional, Self,
+  ChangeDetectorRef, OnDestroy
+} from '@angular/core';
 import { NgControl, FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Subject, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import {MatChipsModule} from '@angular/material/chips';
-import { MatAutocompleteTrigger, MatAutocompleteModule, MatAutocompleteSelectedEvent,
-  MatAutocomplete } from '@angular/material/autocomplete';
-import {MatFormFieldModule, MatFormFieldControl} from '@angular/material/form-field';
-import {MatCheckboxModule, MatCheckbox} from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import {
+  MatAutocompleteTrigger, MatAutocompleteModule, MatAutocompleteSelectedEvent,
+  MatAutocomplete
+} from '@angular/material/autocomplete';
+import { MatFormFieldModule, MatFormFieldControl } from '@angular/material/form-field';
+import { MatCheckboxModule, MatCheckbox } from '@angular/material/checkbox';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
 import { OrganizationService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
@@ -100,6 +104,15 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     }
 
   finishInit() {
+    this.contactService.getAll().subscribe(y => y.forEach(x => this.filteredItems.push(
+      {
+        contactId: x.id,
+        selected: false,
+        name: x.name,
+        preName: x.preName
+      }
+    )));
+    this.items = this.filteredItems;
     this.itemControl.valueChanges.pipe(
       startWith<string | OrganizationContactConnection[]>(''),
       map(value => typeof value === 'string' ? value : this.lastFilter),
@@ -141,13 +154,29 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
         city: ['']
       });
     }
+  }
+  private createOrganizationForm(): FormGroup {
+    return this.fb.group({
+      name: ['', Validators.required],
+      description: [''],
+      address: this.fb.control(''),
+      contact: this.createContactForm()
+    });
+  }
+  private createContactForm(): FormGroup {
+    return this.fb.group({
+      phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
+      fax: ['', Validators.pattern('^0[0-9\- ]*$')],
+      mail: ['', Validators.email]
+    });
+  }
 
   setDescribedByIds(ids: string[]) {
     this.describedBy = ids.join(' ');
   }
 
   @Input() set value(value: any) {
-    if ( value ) {
+    if (value) {
       this.selectedItems = value;
     }
     this.stateChanges.next();
@@ -199,17 +228,17 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
   toggleSelectAll() {
     this.isAllSelected = !this.isAllSelected;
     const len = this.filteredItems.length;
-    if ( this.isAllSelected ) {
-      for ( let i = 0; i++; i < len ) {
+    if (this.isAllSelected) {
+      for (let i = 0; i++; i < len) {
         this.filteredItems[i].selected = true;
       }
       this.selectedItems = this.filteredItems;
-      this.changeCallback( this.selectedItems );
+      this.changeCallback(this.selectedItems);
       this.cd.markForCheck();
     } else {
       this.selectedItems = [];
     }
-    this.changeCallback( this.selectedItems );
+    this.changeCallback(this.selectedItems);
   }
 
   toggleSelection(item: OrganizationContactConnection) {
@@ -217,11 +246,11 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     if (item.selected) {
       this.selectedItems.push(item);
     } else {
-      const i = this.selectedItems.findIndex(value => value.contactId === item.contactId );
+      const i = this.selectedItems.findIndex(value => value.contactId === item.contactId);
       this.selectedItems.splice(i, 1);
     }
     if (this.changeCallback) {
-      this.changeCallback( this.selectedItems );
+      this.changeCallback(this.selectedItems);
     }
   }
 
@@ -235,30 +264,30 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     const idContact = this.organization.contact.id;
     const idAddress = this.organization.address.id;
     this.organization.employees.forEach(x => {
-        const findObj = this.selectedItems.find(y => y.contactId === x.id);
-        if (findObj == null) {
-          this.itemsToDelete.push({
-            contactId: x.id,
+      const findObj = this.selectedItems.find(y => y.contactId === x.id);
+      if (findObj == null) {
+        this.itemsToDelete.push({
+          contactId: x.id,
+          name: x.name,
+          preName: x.preName,
+          selected: false
+        });
+      }
+    });
+    this.selectedItems.forEach(x => {
+      const contact = this.organization.employees.find(y => y.id === x.contactId);
+      if (contact == null) {
+        this.itemsToInsert.push(
+          {
+            contactId: x.contactId,
             name: x.name,
             preName: x.preName,
             selected: false
-          });
-        }
-       });
-    this.selectedItems.forEach(x => {
-        const contact = this.organization.employees.find(y => y.id === x.contactId);
-        if (contact == null) {
-          this.itemsToInsert.push(
-            {
-              contactId: x.contactId,
-              name: x.name,
-              preName: x.preName,
-              selected: false
-            }
-          );
-        }
+          }
+        );
       }
-      );
+    }
+    );
     this.organization = this.organizationForm.value;
     this.organization.id = idOrganization;
     this.organization.contact.id = idContact;
