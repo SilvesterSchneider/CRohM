@@ -1,16 +1,20 @@
 version: "3.7"
 services: 
 
-  crms:
+  crms_prod:
     #build: .
     image: crohmcrms/crohm_crms:latest
     ports:
       - "80:80"
+      - "443:443"
     depends_on: 
       - db
-    restart: unless-stopped
+    environment:
+      - DB_URL=crohm_db #wie geht das?
+      - DB_PORT=1433  #wie geht das?
+    restart: unless-stopped  
 
-  db:
+  db_prod:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment: 
       ACCEPT_EULA: Y
