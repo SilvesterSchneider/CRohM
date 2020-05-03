@@ -85,23 +85,28 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
   }
 
   ngOnInit() {
-    this.contactService.getAll().subscribe(y => y.forEach(x => this.filteredItems.push(
+    this.contactService.getAll().subscribe(y => 
+      {
+        y.forEach(x => this.filteredItems.push(
         {
           contactId: x.id,
           selected: false,
           name: x.name,
           preName: x.preName
-        }
-      )));
-    this.items = this.filteredItems;
+        }));
+        this.items = this.filteredItems;
+        this.finishInit();
+      });
+    }
+
+  finishInit() {
     this.itemControl.valueChanges.pipe(
       startWith<string | OrganizationContactConnection[]>(''),
       map(value => typeof value === 'string' ? value : this.lastFilter),
       map(filter => this.filter(filter))
     ).subscribe();
-    this.organization = this.route.snapshot.data.contact;
+    this.organization = this.route.snapshot.data.organization;
     this.organizationForm.patchValue(this.organization);
-    alert(this.organization.employees.length);
     if (this.organization.employees.length > 0) {
       this.organization.employees.forEach(x => {
           const cont = this.filteredItems.find(y => y.contactId === x.id);
@@ -110,7 +115,8 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
           }
         });
       }
-    }
+  }
+
     private createOrganizationForm(): FormGroup {
       return this.fb.group({
         name: ['', Validators.required],

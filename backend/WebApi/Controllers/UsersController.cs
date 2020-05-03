@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 using NSwag.Annotations;
 using ServiceLayer;
@@ -62,10 +63,17 @@ namespace WebApi.Controllers
         {
             if (id != 1)
             {
-                var result = await _userService.SetLockoutEnabledAsync(id);
-                if (result.Succeeded)
+                if (LoggedInUser.GetLoggedInUser() != null && LoggedInUser.GetLoggedInUser().Id != id)
                 {
-                    return Ok();
+                    var result = await _userService.SetLockoutEnabledAsync(id);
+                    if (result.Succeeded)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return Conflict();
+                    }
                 }
                 else
                 {
