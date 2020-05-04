@@ -24,24 +24,23 @@ export class UserComponent implements OnInit {
 
 
   constructor(private readonly fb: FormBuilder,
-              private readonly usersService: UsersService,
-              private readonly authService: AuthService) { }
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService) { }
   public ngOnInit(): void {
-   this.GetData();
+    this.GetData();
   }
 
 
-private GetData() {
-  this.usersService.get().subscribe(x => 
-    {
+  private GetData() {
+    this.usersService.get().subscribe(x => {
       this.dataSource.next(x);
       this.table.renderRows();
     });
-}
+  }
 
-    public OnDelete(userId: number) {
-      // TODO: call backend delete function
-    }
+  public OnDelete(userId: number) {
+    // TODO: call backend delete function
+  }
 
 
   public OnPasswordReset(userId: number) {

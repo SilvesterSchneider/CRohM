@@ -89,15 +89,14 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
   }
 
   ngOnInit() {
-    this.contactService.getAll().subscribe(y => 
-      {
-        y.forEach(x => this.filteredItems.push(
-      {
-        contactId: x.id,
-        selected: false,
-        name: x.name,
-        preName: x.preName
-      }));
+    this.contactService.getAll().subscribe(y => {
+      y.forEach(x => this.filteredItems.push(
+        {
+          contactId: x.id,
+          selected: false,
+          name: x.name,
+          preName: x.preName
+        }));
       this.items = this.filteredItems;
       this.finishInit();
     });
