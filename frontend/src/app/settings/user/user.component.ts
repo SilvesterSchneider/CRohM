@@ -23,7 +23,8 @@ export class UserComponent implements OnInit {
   });
 
 
-  constructor(private readonly fb: FormBuilder,
+  constructor(
+    private readonly fb: FormBuilder,
     private readonly usersService: UsersService,
     private readonly authService: AuthService) { }
   public ngOnInit(): void {
