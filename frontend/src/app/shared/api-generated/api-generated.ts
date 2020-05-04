@@ -318,7 +318,7 @@ export class AuthService {
     }
 
     /**
-     * @return successful login
+     * @return Login erfolgreich
      */
     login(credentials: CredentialsDto): Observable<UserDto> {
         let url_ = this.baseUrl + "/api/auth";
@@ -365,7 +365,9 @@ export class AuthService {
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("not successful login", status, _responseText, _headers);
+            let result400: any = null;
+            result400 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
