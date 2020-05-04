@@ -56,7 +56,6 @@ namespace ServiceLayer
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            LoggedInUser.SetLoggedInUser(user);
             return tokenHandler.WriteToken(token);
         }
 
