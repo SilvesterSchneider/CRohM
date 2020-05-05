@@ -78,5 +78,5 @@ describe('ContactsDetailComponent', () => {
 
   it('should show ort', () => {
     expect(component.contactsForm.value.address.city).toEqual('Nürnberg');
-  }); 
+  });
 });
