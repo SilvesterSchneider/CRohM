@@ -19,7 +19,7 @@ const organizationsRoutes: Routes = [
         path: ':id',
         component: OrganizationsDetailComponent,
         resolve: {
-            contact: OrganizationsDetailResolverService
+            organization: OrganizationsDetailResolverService
         }
     }
 ];

@@ -5,6 +5,7 @@ export const USERS: UserDto[] = [
         id: 1,
         userName: 'admin',
         email: 'admin@mail.com',
-        twoFactorEnabled: false
+        twoFactorEnabled: false,
+        lockoutEnabled: false
     }
 ];

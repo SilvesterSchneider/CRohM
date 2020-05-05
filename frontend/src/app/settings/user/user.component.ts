@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { USERS } from './mock-user';
 import { FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UserDto, UsersService, AuthService } from '../../shared/api-generated/api-generated';
+import { MatTable } from '@angular/material/table';
 
 @Component({
   selector: 'app-user',
@@ -11,9 +12,9 @@ import { UserDto, UsersService, AuthService } from '../../shared/api-generated/a
 })
 
 export class UserComponent implements OnInit {
+  @ViewChild(MatTable) table: MatTable<any>;
   dataSource = new BehaviorSubject<UserDto[]>([]);
-  displayedColumns: string[] = ['username', 'mail', 'firstname', 'lastname', 'option'];
-
+  displayedColumns: string[] = ['username', 'mail', 'firstname', 'lastname', 'options'];
 
   userForm = this.fb.group({
     email: ['', [Validators.email, Validators.required]],
@@ -22,25 +23,25 @@ export class UserComponent implements OnInit {
   });
 
 
-  constructor(private readonly fb: FormBuilder,
-              private readonly usersService: UsersService,
-              private readonly authService: AuthService) { }
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService) { }
   public ngOnInit(): void {
-   this.GetData();
+    this.GetData();
   }
 
 
-private GetData() {
-  this.usersService.get().subscribe(users => {
-    this.dataSource.next(users);
-});
-}
+  private GetData() {
+    this.usersService.get().subscribe(x => {
+      this.dataSource.next(x);
+      this.table.renderRows();
+    });
+  }
 
-
-
-    public OnDelete(userId: number) {
-      // TODO: call backend delete function
-    }
+  public OnDelete(userId: number) {
+    // TODO: call backend delete function
+  }
 
 
   public OnPasswordReset(userId: number) {
@@ -56,4 +57,7 @@ private GetData() {
     });
   }
 
+  public SetLockoutState(userId: number) {
+    this.usersService.updateLockoutState(userId).subscribe(x => this.GetData());
+  }
 }

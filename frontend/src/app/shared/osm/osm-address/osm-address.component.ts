@@ -40,6 +40,9 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
 
 
   addressForm = this.fb.group({
+    id: [''],
+    name: [''],
+    description: [''],
     country: ['', Validators.required],
     street: ['', Validators.required],
     streetNumber: ['', Validators.required],

@@ -27,6 +27,9 @@ describe('ContactsDetailComponent', () => {
                   preName: 'silvester',
                   name: 'kracher',
                   address: {
+                    id: '',
+                    name: '',
+                    description: '',
                     country: 'Deutschland',
                     street: 'Teststrasse 1',
                     city: 'Nürnberg',
