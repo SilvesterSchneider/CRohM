@@ -15,6 +15,8 @@ namespace RepositoryLayer
         Task<List<Organization>> GetAllOrganizationsWithIncludesAsync();
 
         Task<List<Contact>> GetAllContactsOfAnOrganizationAsync(long id);
+
+        Task<bool> UpdateAsyncWithAlleDependencies(Organization newOrganization);
     }
 
     public class OrganizationRepository : BaseRepository<Organization>, IOrganizationRepository
@@ -60,6 +62,35 @@ namespace RepositoryLayer
                 .ThenInclude(b => b.ContactEntries)
                 .Include(z => z.OrganizationContacts)
                 .ThenInclude(a => a.Contact).ToListAsync();
+        }
+
+        public async Task<bool> UpdateAsyncWithAlleDependencies(Organization newOrganization)
+        {
+            Organization organization = await Entities
+                .Include(x => x.Address)
+                .Include(y => y.OrganizationContacts)
+                .Include(z => z.Contact)
+                .ThenInclude(a => a.ContactEntries)
+                .FirstOrDefaultAsync(b => b.Id == newOrganization.Id);
+            if (organization != null)
+            {
+                organization.Name = newOrganization.Name;
+                organization.Description = newOrganization.Description;
+                organization.Address.City = newOrganization.Address.City;
+                organization.Address.Country = newOrganization.Address.Country;
+                organization.Address.Street = newOrganization.Address.Street;
+                organization.Address.StreetNumber = newOrganization.Address.StreetNumber;
+                organization.Address.Zipcode = newOrganization.Address.Zipcode;
+                organization.Contact.Fax = newOrganization.Contact.Fax;
+                organization.Contact.PhoneNumber = newOrganization.Contact.PhoneNumber;
+                organization.Contact.Mail = newOrganization.Contact.Mail;
+                await UpdateAsync(organization);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

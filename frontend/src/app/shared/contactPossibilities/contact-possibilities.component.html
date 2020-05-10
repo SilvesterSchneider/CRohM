@@ -3,34 +3,34 @@
     <div formArrayName="contactPossibilitiesEntries" *ngFor="let contactEntry of getControls(); let i=index">
         <!-- address header, show remove button when more than one address available -->
         <div>
-            <span>Kontaktmöglichkeit {{i + 1}}</span>
+            <span class="margin10">Kontaktmöglichkeit {{i + 1}}</span>
         </div>
 
         <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
             <!--contactEntryName-->
         <div [formGroup]="contactEntry">
             <div>
-                <label>Name of contact entry</label>
+                <label class="minWidth300AndMargin10">Name des Kontakteintrags</label>
                 <input type="text" formControlName="contactEntryName">
                 <!--display error message if contactEntryName is not valid-->
                 <small [hidden]="getForm(i).get('contactEntryName').valid">
-                    Name of contact entry is required
+                    Name des Kontakteintrags erforderlich!
                 </small>
             </div>
             <!--contactEntryValue-->
             <div>
-                <label>Phone number or E-Mail address</label>
+                <label class="minWidth300AndMargin10">Telefonnummer oder E-Mail Adresse</label>
                 <input type="text" formControlName="contactEntryValue">
                 <!--display error message if contactEntryValue is not valid-->
                 <small [hidden]="getForm(i).get('contactEntryValue').valid">
-                    Phone number or E-Mail address is required
+                    Telefonnummer oder E-Mail Adresse erforderlich!
                 </small>
             </div>
-            <button (click)="removeEntry(i)">Kontaktmöglichkeit entfernen</button>
+            <button class="minWidth300AndMargin10" (click)="removeEntry(i)">Kontaktmöglichkeit entfernen</button>
         </div>
     </div>
     <div>
-        <button (click)="addEntry()">Kontaktmöglichkeit hinzufügen</button>
+        <button class="minWidth300AndMargin10" (click)="addEntry()">Kontaktmöglichkeit hinzufügen</button>
     </div>
 </form>
 

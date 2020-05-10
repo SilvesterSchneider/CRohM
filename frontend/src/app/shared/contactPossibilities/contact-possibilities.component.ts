@@ -1,4 +1,4 @@
-import { Component, OnInit, forwardRef } from '@angular/core';
+import { Component, OnInit, forwardRef, ViewChild } from '@angular/core';
 import { Validators, FormGroup, FormArray, FormBuilder,
   ControlValueAccessor, Validator, NG_VALUE_ACCESSOR, NG_VALIDATORS, AbstractControl } from '@angular/forms';
 import { ContactPossibilitiesEntryCreateDto, ContactPossibilitiesEntryDto } from '../api-generated/api-generated';
@@ -6,6 +6,7 @@ import { ContactPossibilitiesEntryCreateDto, ContactPossibilitiesEntryDto } from
 @Component({
     selector: 'app-contact-possibilities',
     templateUrl: './contact-possibilities.component.html',
+    styleUrls: ['./contact-possibilities.component.scss'],
     providers: [
         {
           provide: NG_VALUE_ACCESSOR,
@@ -19,9 +20,14 @@ import { ContactPossibilitiesEntryCreateDto, ContactPossibilitiesEntryDto } from
         }
       ]
 })
+
 export class ContactPossibilitiesComponent implements OnInit, ControlValueAccessor, Validator {
-    public myForm: FormGroup; // our form model
+  public myForm: FormGroup = this.fb.group(
+    {
+      contactPossibilitiesEntries: this.fb.array([])
+    });
   oldEntries: ContactPossibilitiesEntryDto[] = new Array();
+  entriesToBeRemoved: number[] = new Array();
 
     // we will use form builder to simplify our syntax
     constructor(private fb: FormBuilder) { }
@@ -50,12 +56,7 @@ export class ContactPossibilitiesComponent implements OnInit, ControlValueAccess
   }
 
     ngOnInit() {
-        // we will initialize our form here
-        this.myForm = this.fb.group(
-          {
-            contactPossibilitiesEntries: this.fb.array([])
-          });
-        }
+    }
 
     createEntry() {
             // initialize our address
@@ -67,28 +68,33 @@ export class ContactPossibilitiesComponent implements OnInit, ControlValueAccess
 
     addEntry() {
         // add address to the list
-        (this.myForm.get('contactPossibilitiesEntries') as FormArray).push(this.createEntry());
+        (this.myForm.get(FORMGROUPNAME) as FormArray).push(this.createEntry());
     }
 
     removeEntry(i: number) {
         // remove address from the list
-        (this.myForm.get('contactPossibilitiesEntries') as FormArray).removeAt(i);
+        (this.myForm.get(FORMGROUPNAME) as FormArray).removeAt(i);
         if (this.oldEntries.length > i) {
+          this.entriesToBeRemoved.push(this.oldEntries[i].id);
           this.oldEntries.splice(i, 1);
         }
     }
 
     getControls(): AbstractControl[] {
-        return (this.myForm.get('contactPossibilitiesEntries') as FormArray).controls;
+        return (this.myForm.get(FORMGROUPNAME) as FormArray).controls;
       }
 
     getForm(index: number): FormGroup {
-        return this.getControls()[index] as FormGroup;
+      return this.getControls()[index] as FormGroup;
     }
 
     save(model: any) {
         // call API to save customer
         console.log(model);
+    }
+
+    getFormGroup(): FormGroup {
+      return this.myForm;
     }
 
     getContactPossibilitiesEntriesAsCreateDto(): ContactPossibilitiesEntryCreateDto[] {
@@ -130,18 +136,26 @@ export class ContactPossibilitiesComponent implements OnInit, ControlValueAccess
 
     patchExistingValuesToForm(entries: ContactPossibilitiesEntryDto[]) {
       this.oldEntries = entries;
-      this.myForm.get('contactPossibilitiesEntries').reset();
-      if (entries.length === 0) {
-        this.removeEntry(0);
-      } else {
+      this.myForm.get(FORMGROUPNAME).reset();
+      if (entries.length > 0) {
         let index = 0;
         entries.forEach(x => {
+          this.addEntry();
           this.getControls()[index].get('contactEntryName').patchValue(x.contactEntryName);
           this.getControls()[index].get('contactEntryValue').patchValue(x.contactEntryValue);
-          this.addEntry();
           index++;
         });
         this.removeEntry(index);
       }
     }
+
+    getEntriesToBeRemoved(): number[] {
+      return this.entriesToBeRemoved;
+    }
+
+    public isFormValid(): boolean {
+      return this.myForm.valid;
+    }
 }
+
+export const FORMGROUPNAME = 'contactPossibilitiesEntries';

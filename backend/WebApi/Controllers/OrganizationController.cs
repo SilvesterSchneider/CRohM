@@ -69,7 +69,7 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
             var mappedOrganization = _mapper.Map<Organization>(organization);
-            await _organizationService.UpdateAsync(mappedOrganization);
+            await _organizationService.UpdateAsyncWithAlleDependencies(mappedOrganization);
 
             var organizationDto = _mapper.Map<OrganizationDto>(mappedOrganization);
             return Ok(organizationDto);

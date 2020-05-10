@@ -30,7 +30,13 @@ namespace RepositoryLayer
 
     public class ContactRepository : BaseRepository<Contact>, IContactRepository
     {
-        public ContactRepository(CrmContext context) : base(context) { }
+        private IAddressRepository addressRepository;
+        private IContactPossibilitiesRepository contactPossibilitiesRepository;
+
+        public ContactRepository(CrmContext context, IAddressRepository addressRepository, IContactPossibilitiesRepository contactPossibilitiesRepository) : base(context) {
+            this.addressRepository = addressRepository;
+            this.contactPossibilitiesRepository = contactPossibilitiesRepository;
+        }
 
         public async Task<List<Contact>> GetAllContactsWithAllIncludesAsync()
         {
@@ -62,9 +68,9 @@ namespace RepositoryLayer
         {
             Contact originalContact = await Entities.Include(x => x.Address).Include(y => y.ContactPossibilities).ThenInclude(b => b.ContactEntries).FirstAsync(x => x.Id == id);
             if (originalContact != null)
-            {
-                originalContact.Address = contact.Address;
-                originalContact.ContactPossibilities = contact.ContactPossibilities;
+            {                
+                originalContact.Address = await getAddress(contact.Address);
+                originalContact.ContactPossibilities = await getContactPossibilities(contact.ContactPossibilities);
                 originalContact.Description = contact.Description;
                 originalContact.Name = contact.Name;
                 originalContact.PreName = contact.PreName;
@@ -75,6 +81,26 @@ namespace RepositoryLayer
             {
                 return false;
             }
+        }
+
+        private async Task<ContactPossibilities> getContactPossibilities(ContactPossibilities contactPossibilities)
+        {
+            ContactPossibilities possibilities = await contactPossibilitiesRepository.GetContactPossibilityByIdAsync(contactPossibilities.Id);
+            possibilities.Fax = contactPossibilities.Fax;
+            possibilities.Mail = contactPossibilities.Mail;
+            possibilities.PhoneNumber = contactPossibilities.PhoneNumber;
+            return possibilities;
+        }
+
+        private async Task<Address> getAddress(Address addressUpdated)
+        {
+            Address address = await addressRepository.GetByIdAsync(addressUpdated.Id);
+            address.Street = addressUpdated.Street;
+            address.StreetNumber = addressUpdated.StreetNumber;
+            address.City = addressUpdated.City;
+            address.Country = addressUpdated.Country;
+            address.Zipcode = addressUpdated.Zipcode;
+            return address;
         }
     }
 }

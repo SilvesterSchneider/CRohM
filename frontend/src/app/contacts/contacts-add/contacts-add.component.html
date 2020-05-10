@@ -38,10 +38,10 @@
                 <input matInput placeholder="Faxnummer" formControlName="fax">
             </mat-form-field>
         </div>
-        <app-contact-possibilities formControlName="contactEntries"></app-contact-possibilities>
+        <app-contact-possibilities></app-contact-possibilities>
     </div>
     
-    <button mat-raised-button color="primary" type="submit" [disabled]="!contactsForm.valid" (click)="addContact()"
+    <button mat-raised-button color="primary" type="submit" [disabled]="!contactsForm.valid || !contactPossibilitiesEntries.isFormValid()" (click)="addContact()"
         routerLink="/contacts">
         Speichern
     </button>

@@ -58,6 +58,24 @@ namespace WebApi.Controllers
         }
 
         // put updates contact with id {id} via frontend
+        [HttpPut()]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated / inserted")]
+        [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in updation / insertion process")]
+        public async Task<IActionResult> ChangeOrInsertEntry([FromBody]ContactPossibilitiesEntryDto entry, long id)
+        {
+            ContactPossibilitiesEntry entryMapped = _mapper.Map<ContactPossibilitiesEntry>(entry);
+            bool status = await this.contactPossibilitiesService.AddContactPossibilityEntryAsync(entryMapped, id);
+            if (status)
+            {
+                return Ok();
+            }
+            else
+            {
+                return Conflict();
+            }
+        }
+
+        // put updates contact with id {id} via frontend
         [HttpPut("{idEntry}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully removed")]
         public async Task<IActionResult> RemoveEntry([FromBody]long contactPossibilityId, long idEntry)

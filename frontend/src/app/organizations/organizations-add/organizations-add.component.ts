@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OrganizationService, OrganizationCreateDto, ContactService } from 'src/app/shared/api-generated/api-generated';
+import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 
 @Component({
   selector: 'app-organizations-add',
@@ -8,6 +9,9 @@ import { OrganizationService, OrganizationCreateDto, ContactService } from 'src/
   styleUrls: ['./organizations-add.component.scss']
 })
 export class OrganizationsAddComponent implements OnInit {
+  @ViewChild(ContactPossibilitiesComponent, {static: true})
+  contactPossibilitiesEntries: ContactPossibilitiesComponent;
+  contactPossibilitiesEntriesFormGroup: FormGroup;
   public organizationForm: FormGroup;
   private organization: OrganizationCreateDto;
 
@@ -16,11 +20,13 @@ export class OrganizationsAddComponent implements OnInit {
               private readonly contactService: ContactService) { }
 
   public ngOnInit(): void {
+    this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
     this.organizationForm = this.createOrganizationForm();
   }
 
   public onAddOrganization(): void {
     this.organization = this.organizationForm.value;
+    this.organization.contact.contactEntries = this.contactPossibilitiesEntries.getContactPossibilitiesEntriesAsCreateDto();
     this.organizationsService.post(this.organization).subscribe(oragnization => {
       console.log(oragnization);
     });
@@ -39,7 +45,8 @@ export class OrganizationsAddComponent implements OnInit {
     return this.fb.group({
       phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
       fax: ['', Validators.pattern('^0[0-9\- ]*$')],
-      mail: ['', Validators.email]
+      mail: ['', Validators.email],
+      contactEntries: this.contactPossibilitiesEntriesFormGroup
     });
   }
 }
