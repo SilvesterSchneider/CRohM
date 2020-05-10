@@ -13,7 +13,7 @@ namespace ServiceLayer
 
     public class ContactService : ContactRepository, IContactService
     {
-        public ContactService(CrmContext context, IAddressRepository addressRepository, IContactPossibilitiesRepository contactPossibilitiesRepository) : base(context, addressRepository, contactPossibilitiesRepository)
+        public ContactService(CrmContext context) : base(context)
         {
         }
     }
