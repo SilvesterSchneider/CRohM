@@ -8,8 +8,6 @@ import { MaterialModule } from '../shared/material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 
-
-
 @NgModule({
   declarations: [
     OrganizationsAddComponent,

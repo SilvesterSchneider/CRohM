@@ -27,9 +27,7 @@ export class OrganizationsAddComponent implements OnInit {
   public onAddOrganization(): void {
     this.organization = this.organizationForm.value;
     this.organization.contact.contactEntries = this.contactPossibilitiesEntries.getContactPossibilitiesEntriesAsCreateDto();
-    this.organizationsService.post(this.organization).subscribe(oragnization => {
-      console.log(oragnization);
-    });
+    this.organizationsService.post(this.organization).subscribe();
   }
 
   private createOrganizationForm(): FormGroup {

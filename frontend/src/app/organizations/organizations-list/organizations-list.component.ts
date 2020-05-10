@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Injectable } from '@angular/core';
 import { OrganizationService } from '../../shared/api-generated/api-generated';
 import { Observable } from 'rxjs';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
@@ -9,6 +9,7 @@ import { OrganizationsMockService } from '../organizations-mock-service';
   templateUrl: './organizations-list.component.html',
   styleUrls: ['./organizations-list.component.scss']
 })
+
 export class OrganizationsListComponent implements OnInit {
   orga: OrganizationService;
   orgaMock: OrganizationsMockService;
@@ -34,8 +35,6 @@ export class OrganizationsListComponent implements OnInit {
   }
 
   deleteOrganization(id: number) {
-    this.orga.delete(id).subscribe();
-   // this.orgaMock.delete(id);
-    this.loadData();
+    this.orga.delete(id).subscribe(x => this.loadData());
   }
 }
