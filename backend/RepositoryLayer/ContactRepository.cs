@@ -37,6 +37,7 @@ namespace RepositoryLayer
             return await Entities
                 .Include(x => x.Address)
                 .Include(y => y.ContactPossibilities)
+                .ThenInclude(b => b.ContactEntries)
                 .Include(x => x.OrganizationContacts)
                 .ThenInclude(a => a.Organization)
                 .ToListAsync();
@@ -44,7 +45,7 @@ namespace RepositoryLayer
 
         public override async Task<Contact> GetByIdAsync(long id)
         {
-            return await Entities.Include(a => a.Address).Include(b => b.ContactPossibilities).FirstAsync(x => x.Id == id);
+            return await Entities.Include(a => a.Address).Include(b => b.ContactPossibilities).ThenInclude(b => b.ContactEntries).FirstAsync(x => x.Id == id);
         }
 
         public async Task<List<Contact>> GetContactsByPartStringAsync(string name)
@@ -53,12 +54,13 @@ namespace RepositoryLayer
                 .Where(x => x.PreName.StartsWith(name) | x.Name.StartsWith(name))
                 .Include(x => x.Address)
                 .Include(y => y.ContactPossibilities)
+                .ThenInclude(b => b.ContactEntries)
                 .ToListAsync();
         }
 
         public async Task<bool> UpdateAsync(Contact contact, long id)
         {
-            Contact originalContact = await Entities.Include(x => x.Address).Include(y => y.ContactPossibilities).FirstAsync(x => x.Id == id);
+            Contact originalContact = await Entities.Include(x => x.Address).Include(y => y.ContactPossibilities).ThenInclude(b => b.ContactEntries).FirstAsync(x => x.Id == id);
             if (originalContact != null)
             {
                 originalContact.Address = contact.Address;

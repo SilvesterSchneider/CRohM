@@ -10,5 +10,6 @@ namespace ModelLayer.Models
         public string PhoneNumber { get; set; }
         public string Fax { get; set; }
         public string Mail { get; set; }
+        public List<ContactPossibilitiesEntry> ContactEntries { get; set; } = new List<ContactPossibilitiesEntry>();
     }
 }

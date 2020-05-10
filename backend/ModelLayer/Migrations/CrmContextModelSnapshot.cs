@@ -211,6 +211,35 @@ namespace ModelLayer.Migrations
                     b.ToTable("ContactPossibilities");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.ContactPossibilitiesEntry", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ContactEntryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactEntryValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("ContactPossibilitiesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactPossibilitiesId");
+
+                    b.ToTable("ContactPossibilitiesEntry");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.EducationalOpportunity", b =>
                 {
                     b.Property<long>("Id")
@@ -307,7 +336,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "bf59f99a-cf19-4163-9350-3b9f63b0058a",
+                            ConcurrencyStamp = "fb913802-bc9d-468f-ab9d-6d3e24722cce",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -445,6 +474,13 @@ namespace ModelLayer.Migrations
 
                     b.HasOne("ModelLayer.Models.ContactPossibilities", "ContactPossibilities")
                         .WithMany()
+                        .HasForeignKey("ContactPossibilitiesId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.ContactPossibilitiesEntry", b =>
+                {
+                    b.HasOne("ModelLayer.Models.ContactPossibilities", null)
+                        .WithMany("ContactEntries")
                         .HasForeignKey("ContactPossibilitiesId");
                 });
 

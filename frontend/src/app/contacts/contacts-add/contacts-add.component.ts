@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { ContactCreateDto, AddressCreateDto, ContactPossibilitiesCreateDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 
@@ -13,7 +13,6 @@ export class ContactsAddComponent implements OnInit {
   adressCreateDto: AddressCreateDto = {country: '', street: '', streetNumber: '', zipcode: '', city: ''};
   contactPossibilitiesCreateDto: ContactPossibilitiesCreateDto = {mail: '', phoneNumber: '', fax: ''};
 
-
   contactsForm = this.fb.group({
     name: ['', Validators.required],
     preName: ['', Validators.required],
@@ -23,7 +22,8 @@ export class ContactsAddComponent implements OnInit {
       mail: ['', Validators.email],
       // Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
       phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
-      fax: ['', Validators.pattern('^0[0-9\- ]*$')]
+      fax: ['', Validators.pattern('^0[0-9\- ]*$')],
+      contactEntries: this.fb.control('')
     })
   });
   constructor(private fb: FormBuilder, private service: ContactService) { }
@@ -45,6 +45,7 @@ export class ContactsAddComponent implements OnInit {
     this.contactPossibilitiesCreateDto.mail = this.contactsForm.value.contactPossibilities.mail;
     this.contactPossibilitiesCreateDto.phoneNumber = this.contactsForm.value.contactPossibilities.phoneNumber;
     this.contactPossibilitiesCreateDto.fax = this.contactsForm.value.contactPossibilities.fax;
+    this.contactPossibilitiesCreateDto.contactEntries = this.contactsForm.value.contactPossibilities.contactEntries;
 
     this.contactCreateDto.address = this.adressCreateDto;
     this.contactCreateDto.contactPossibilities = this.contactPossibilitiesCreateDto;
