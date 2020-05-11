@@ -1,9 +1,16 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { USERS } from './mock-user';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { UserDto, UsersService, AuthService } from '../../shared/api-generated/api-generated';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+
+
+interface permission {
+  value: string;
+  viewValue: string;
+}
 
 
 
@@ -92,19 +99,44 @@ export class UserComponent implements OnInit {
 
 /**
  * Komponente fuer den Modal-Dialog zum Hinzufuegen eines Nutzers
- */ 
+ */
 @Component({
   selector: 'user.component_dialog_add',
   templateUrl: 'user.component_dialog_add.html',
 })
 export class DialogAdd {
 
-  
+
   userForm = this.fb.group({
     email: ['', [Validators.email, Validators.required]],
     firstName: ['', Validators.required],
     lastName: ['', Validators.required]
   });
+
+  // Gruppenberechtigungen
+  // TODO: Liste aus Backend laden
+  groupPermissionList: permission[] = [
+    { value: 'group_adm', viewValue: 'Administrator' },
+    { value: 'group_dat', viewValue: 'Datenschutzbeauftragter' },
+    { value: 'group_hig', viewValue: 'Hoch' },
+    { value: 'group_med', viewValue: 'Normal' },
+    { value: 'group_low', viewValue: 'Eingeschränkt' }
+  ];
+  groupPermissionDefault = ['group_low'];
+  groupPermission = new FormControl(this.groupPermissionDefault);
+
+  // Einzelberechtigungen
+  // TODO: Liste aus Backend laden
+  singlePermissionList: permission[] = [
+    { value: 'contact_0', viewValue: 'Anlegen neuer Kontakte' },
+    { value: 'contact_1', viewValue: 'Einsehen aller Kontakte' },
+    { value: 'contact_2', viewValue: 'Bearbeiten aller Kontakte' },
+    { value: 'organization_0', viewValue: 'Anlegen neuer Organisationen' },
+    { value: 'organization_1', viewValue: 'Einsehen aller Organisationen' },
+    { value: 'organization_2', viewValue: 'Bearbeiten aller Organisationen' }
+  ];
+  singlePermissionDefault = ['contact_0', 'organization_0'];
+  singlePermission = new FormControl(this.singlePermissionDefault);
 
 
   constructor(
@@ -112,12 +144,12 @@ export class DialogAdd {
     private readonly usersService: UsersService,
     public dialogRef: MatDialogRef<DialogAdd>,
     //@Inject(MAT_DIALOG_DATA) public data: DialogData
-    ) { }
+  ) { }
 
 
   /** 
    * Funktion zum Schliessen des Dialogs
-   */ 
+   */
   abortDialog(): void {
     // Schliessen des Dialogs
     this.dialogRef.close();
@@ -126,12 +158,21 @@ export class DialogAdd {
 
   /**
    * Funktion zum Speichen des neuesn Users und Schliessen des Dialogs
-   */ 
+   */
   public addUser() {
     this.usersService.post(this.userForm.value).subscribe(user => {
       // Ausgabe der Daten auf der Konsole zum Debuggen
       //console.log(user);    
     });
+
+    // TODO: Speichern/Uebermitteln der Gruppenbrerchtigungen
+    // Ausgabe der Daten auf der Konsole zum Debuggen
+    console.log(this.groupPermission.value);
+
+    // TODO: Speichern/Uebermitteln der Einzelbrerchtigungen
+    // Ausgabe der Daten auf der Konsole zum Debuggen
+    console.log(this.singlePermission.value);
+
     // Schliessen des Dialogs
     this.dialogRef.close();
   }
