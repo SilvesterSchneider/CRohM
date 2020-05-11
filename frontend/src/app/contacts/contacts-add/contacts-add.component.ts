@@ -61,6 +61,15 @@ export class ContactsAddComponent implements OnInit {
 
     // And add a new Contact with the service
     this.service.post(this.contactCreateDto).subscribe();
+    this.sleep(500);
+  }
+
+  sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
   }
 }
 

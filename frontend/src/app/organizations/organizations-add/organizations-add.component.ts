@@ -28,6 +28,15 @@ export class OrganizationsAddComponent implements OnInit {
     this.organization = this.organizationForm.value;
     this.organization.contact.contactEntries = this.contactPossibilitiesEntries.getContactPossibilitiesEntriesAsCreateDto();
     this.organizationsService.post(this.organization).subscribe();
+    this.sleep(500);
+  }
+
+   sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
   }
 
   private createOrganizationForm(): FormGroup {

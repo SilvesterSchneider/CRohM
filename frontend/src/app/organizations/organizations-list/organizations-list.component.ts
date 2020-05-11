@@ -10,6 +10,9 @@ import { OrganizationsMockService } from '../organizations-mock-service';
   styleUrls: ['./organizations-list.component.scss']
 })
 
+@Injectable({
+  providedIn: 'root',
+})
 export class OrganizationsListComponent implements OnInit {
   orga: OrganizationService;
   orgaMock: OrganizationsMockService;
@@ -38,3 +41,4 @@ export class OrganizationsListComponent implements OnInit {
     this.orga.delete(id).subscribe(x => this.loadData());
   }
 }
+
