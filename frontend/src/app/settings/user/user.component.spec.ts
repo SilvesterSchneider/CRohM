@@ -29,7 +29,7 @@ describe('UserComponent', () => {
   });
 
 
-  it('should disable addUser on invalid fields', () => {
+/*   it('should disable addUser on invalid fields', () => {
     component.userForm.get('email').setValue('');
     component.userForm.get('firstName').setValue('');
     component.userForm.get('lastName').setValue('');
@@ -53,5 +53,5 @@ describe('UserComponent', () => {
 
     const form: HTMLElement = fixture.nativeElement;
     expect(form.getElementsByTagName('button').item(0).getAttribute('disabled')).toBeFalsy();
-  });
+  }); */
 });

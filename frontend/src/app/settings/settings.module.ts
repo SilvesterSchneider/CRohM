@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserComponent, DialogAdd } from './user/user.component';
+import { UserComponent, UserDialogAddComponent } from './user/user.component';
 import { SettingsRoutingModule } from './settings-routing.module';
 import { MaterialModule } from '../shared/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -8,7 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
-  declarations: [UserComponent, DialogAdd],
+  declarations: [UserComponent, UserDialogAddComponent],
   imports: [
     CommonModule,
     SettingsRoutingModule,

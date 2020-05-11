@@ -7,7 +7,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 
 
 
-interface permission {
+interface Permission {
   value: string;
   viewValue: string;
 }
@@ -39,7 +39,7 @@ export class UserComponent implements OnInit {
   // });
 
 
-  constructor(//private readonly fb: FormBuilder,
+  constructor(// private readonly fb: FormBuilder,
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
     public addDialog: MatDialog) { }
@@ -51,13 +51,13 @@ export class UserComponent implements OnInit {
    * Oeffnen des Dialogs zum Hinzufuegen eines neuen Nutzers
    */
   openDialog(): void {
-    const dialogRef = this.addDialog.open(DialogAdd, {
+    const dialogRef = this.addDialog.open(UserDialogAddComponent, {
       width: '500px',
     });
 
     dialogRef.afterClosed().subscribe(result => {
       // Ausgabe auf der Konsole zum Debuggen
-      //console.log('The dialog was closed');
+      // console.log('The dialog was closed');
       // Update der angezeigten User-Liste
       this.GetData();
     });
@@ -101,10 +101,10 @@ export class UserComponent implements OnInit {
  * Komponente fuer den Modal-Dialog zum Hinzufuegen eines Nutzers
  */
 @Component({
-  selector: 'user.component_dialog_add',
+  // selector: 'user.component_dialog_add',
   templateUrl: 'user.component_dialog_add.html',
 })
-export class DialogAdd {
+export class UserDialogAddComponent {
 
 
   userForm = this.fb.group({
@@ -115,7 +115,7 @@ export class DialogAdd {
 
   // Gruppenberechtigungen
   // TODO: Liste aus Backend laden
-  groupPermissionList: permission[] = [
+  groupPermissionList: Permission[] = [
     { value: 'group_adm', viewValue: 'Administrator' },
     { value: 'group_dat', viewValue: 'Datenschutzbeauftragter' },
     { value: 'group_hig', viewValue: 'Hoch' },
@@ -127,7 +127,7 @@ export class DialogAdd {
 
   // Einzelberechtigungen
   // TODO: Liste aus Backend laden
-  singlePermissionList: permission[] = [
+  singlePermissionList: Permission[] = [
     { value: 'contact_0', viewValue: 'Anlegen neuer Kontakte' },
     { value: 'contact_1', viewValue: 'Einsehen aller Kontakte' },
     { value: 'contact_2', viewValue: 'Bearbeiten aller Kontakte' },
@@ -142,12 +142,12 @@ export class DialogAdd {
   constructor(
     private readonly fb: FormBuilder,
     private readonly usersService: UsersService,
-    public dialogRef: MatDialogRef<DialogAdd>,
-    //@Inject(MAT_DIALOG_DATA) public data: DialogData
+    public dialogRef: MatDialogRef<UserDialogAddComponent>,
+    // @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) { }
 
 
-  /** 
+  /**
    * Funktion zum Schliessen des Dialogs
    */
   abortDialog(): void {
@@ -162,7 +162,7 @@ export class DialogAdd {
   public addUser() {
     this.usersService.post(this.userForm.value).subscribe(user => {
       // Ausgabe der Daten auf der Konsole zum Debuggen
-      //console.log(user);    
+      // console.log(user);
     });
 
     // TODO: Speichern/Uebermitteln der Gruppenbrerchtigungen
