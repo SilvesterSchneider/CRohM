@@ -34,4 +34,4 @@ volumes:
     driver_opts: 
       o: bind
       type: none
-      device: /srv/crohm/database/staging
+      device: /srv/crohm/staging/database
