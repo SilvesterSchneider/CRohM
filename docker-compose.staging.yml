@@ -29,7 +29,7 @@ services:
     restart: unless-stopped
 
 volumes: 
-  database_vol:
+  database_vol_stag:
     driver: local
     driver_opts: 
       o: bind
