@@ -25,7 +25,7 @@ services:
     ports:
       - 1434:1433
     volumes: 
-      - database_vol:/var/opt/mssql
+      - database_vol_stag:/var/opt/mssql
     restart: unless-stopped
 
 volumes: 
