@@ -23,7 +23,7 @@ services:
       MSSQL_PID: Express
       TZ: Europe/Berlin
     ports:
-      - 1433:1434
+      - 1434:1433
     volumes: 
       - database_vol:/var/opt/mssql 
     restart: unless-stopped
