@@ -5,8 +5,8 @@ services:
     #build: .
     image: crohmcrms/crohm_crms:latest
     ports:
-      - "80:81"
-      - "443:444"
+      - "81:80"
+      - "444:443"
     depends_on: 
       - db
     environment:
