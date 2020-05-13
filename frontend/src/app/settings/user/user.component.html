@@ -34,10 +34,10 @@
     <mat-header-cell *matHeaderCellDef> Optionen </mat-header-cell>
     <mat-cell *matCellDef="let element"> 
         <!-- <button mat-icon-button (click)="OnDelete(element.id)"> <mat-icon>delete</mat-icon></button> -->
-        <button mat-icon-button (click)="OnPasswordReset(element.id)"> <mat-icon>lock</mat-icon></button>
+        <button mat-icon-button (click)="OnPasswordReset(element.id)" title="Passwort zurücksetzen"> <mat-icon>lock</mat-icon></button>
         <button mat-icon-button (click)="SetLockoutState(element.id)"> 
-            <mat-icon *ngIf=!element.lockoutEnabled>done</mat-icon>
-            <mat-icon *ngIf=element.lockoutEnabled>clear</mat-icon>
+            <mat-icon *ngIf=!element.lockoutEnabled title="Benutzer sperren">done</mat-icon>
+            <mat-icon *ngIf=element.lockoutEnabled title="Sperre aufheben">clear</mat-icon>
         </button>
     </mat-cell>
   </ng-container>

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { USERS } from './mock-user';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserDto, UsersService, AuthService } from '../../shared/api-generated/api-generated';
