@@ -5,8 +5,8 @@ services:
     #build: .
     image: crohmcrms/crohm_crms:latest
     ports:
-      - "80:82"      
-      - "443:445"
+      - "82:80"      
+      - "445:443"
     depends_on: 
       - db
     environment:
@@ -23,15 +23,15 @@ services:
       MSSQL_PID: Express
       TZ: Europe/Berlin
     ports:
-      - 1433:1433
+      - 1435:1433
     volumes: 
       - database_vol:/var/opt/mssql 
     restart: unless-stopped
 
 volumes: 
-  database_vol:
+  database_vol_test:
     driver: local
     driver_opts: 
       o: bind
       type: none
-      device: /srv/crohm/database
+      device: /srv/crohm/testing/database
