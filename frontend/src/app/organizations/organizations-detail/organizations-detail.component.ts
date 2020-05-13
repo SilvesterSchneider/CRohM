@@ -115,7 +115,7 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
       map(filter => this.filter(filter))
     ).subscribe();
     this.organization = this.route.snapshot.data.organization;
-    
+
     if (this.organization.employees.length > 0) {
       this.organization.employees.forEach(x => {
         const cont = this.filteredItems.find(y => y.contactId === x.id);
