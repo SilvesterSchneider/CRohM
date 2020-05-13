@@ -10,6 +10,8 @@ namespace ModelLayer.DataTransferObjects
     {
         public long Id { get; set; }
         public string ContactEntryName { get; set; }
+
+        [MailAndPhoneValidator]
         public string ContactEntryValue { get; set; }
     }
 
