@@ -1,16 +1,19 @@
-<mat-card class="centered">
-    <mat-card-title>Login</mat-card-title>
-    <mat-card-content fxLayout="column">
-        <mat-form-field>
-            <input matInput type="text" [formControl]="userNameOrEmail" placeholder="Benutzername oder Email">
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput type="password" [formControl]="password" placeholder="Passwort">
-        </mat-form-field>
-        <mat-error *ngIf="errorText">{{ errorText }}</mat-error>
-    </mat-card-content>
-    <mat-card-actions>
-        <button [disabled]="userNameOrEmail.invalid || password.invalid" (click)="login()" mat-flat-button color="primary">
-            Login </button>
-    </mat-card-actions>
-</mat-card>
+<div fxLayout="row" fxLayoutAlign="center none">
+    <mat-card fxFlex="40%" fxFlex.lt-lg="90%" class="centered">
+        <mat-card-title>Login</mat-card-title>
+        <mat-card-content fxLayout="column">
+            <mat-form-field>
+                <input matInput type="text" [formControl]="userNameOrEmail" placeholder="Benutzername oder Email">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput type="password" [formControl]="password" placeholder="Passwort">
+            </mat-form-field>
+            <mat-error *ngIf="errorText">{{ errorText }}</mat-error>
+        </mat-card-content>
+        <mat-card-actions>
+            <button [disabled]="userNameOrEmail.invalid || password.invalid" (click)="login()" mat-flat-button
+                color="primary">
+                Login </button>
+        </mat-card-actions>
+    </mat-card>
+</div>
