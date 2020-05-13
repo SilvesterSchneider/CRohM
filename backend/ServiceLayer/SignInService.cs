@@ -83,7 +83,7 @@ namespace ServiceLayer
 
         public async Task<SignInResult> PasswordSignInAsync(User user, string password)
         {
-            return await _manager.PasswordSignInAsync(user, password, false, false);
+            return await _manager.PasswordSignInAsync(user, password, false, true);
         }
     }
 
