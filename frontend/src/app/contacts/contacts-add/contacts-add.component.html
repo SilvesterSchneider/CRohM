@@ -41,8 +41,7 @@
         <app-contact-possibilities></app-contact-possibilities>
     </div>
     
-    <button mat-raised-button color="primary" type="submit" [disabled]="!contactsForm.valid || !contactPossibilitiesEntries.isFormValid()" (click)="addContact()"
-        routerLink="/contacts">
+    <button mat-raised-button color="primary" type="submit" [disabled]="!contactsForm.valid" (click)="addContact()">
         Speichern
     </button>
     <button mat-raised-button color="primary" routerLink="/contacts">

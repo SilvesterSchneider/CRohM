@@ -60,7 +60,7 @@
         </div>
     </mat-option>
 </mat-autocomplete>
-<button mat-raised-button color="primary" type="submit" [disabled]="!organizationForm.valid || !contactPossibilitiesEntries.isFormValid()" (click)="saveValues()"
+<button mat-raised-button color="primary" type="submit" [disabled]="!organizationForm.valid" (click)="saveValues()"
     routerLink="/organizations">
     Speichern
 </button>

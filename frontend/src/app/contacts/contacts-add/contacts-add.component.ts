@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild, createPlatformFactory } from '@angular/core';
 import { Validators, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ContactCreateDto, AddressCreateDto, ContactPossibilitiesCreateDto } from '../../shared/api-generated/api-generated';
+import { ContactCreateDto, AddressCreateDto, ContactPossibilitiesCreateDto, ContactDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contacts-add',
@@ -18,7 +20,7 @@ export class ContactsAddComponent implements OnInit {
   contactPossibilitiesEntriesFormGroup: FormGroup;
   contactsForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private service: ContactService) { }
+  constructor(private fb: FormBuilder, private service: ContactService, private router: Router) { }
 
   ngOnInit(): void {
     this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
@@ -54,22 +56,13 @@ export class ContactsAddComponent implements OnInit {
     this.contactPossibilitiesCreateDto.mail = this.contactsForm.value.contactPossibilities.mail;
     this.contactPossibilitiesCreateDto.phoneNumber = this.contactsForm.value.contactPossibilities.phoneNumber;
     this.contactPossibilitiesCreateDto.fax = this.contactsForm.value.contactPossibilities.fax;
-    this.contactPossibilitiesCreateDto.contactEntries = this.contactPossibilitiesEntries.getContactPossibilitiesEntriesAsCreateDto();
+    this.contactPossibilitiesCreateDto.contactEntries = this.contactsForm.value.contactPossibilities.contactEntries;
 
     this.contactCreateDto.address = this.adressCreateDto;
     this.contactCreateDto.contactPossibilities = this.contactPossibilitiesCreateDto;
 
     // And add a new Contact with the service
-    this.service.post(this.contactCreateDto).subscribe();
-    this.sleep(500);
-  }
-
-  sleep(milliseconds) {
-    const date = Date.now();
-    let currentDate = null;
-    do {
-      currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
+    this.service.post(this.contactCreateDto).subscribe(x => this.router.navigate(['/contacts']));
   }
 }
 

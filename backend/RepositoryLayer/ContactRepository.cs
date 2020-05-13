@@ -71,6 +71,36 @@ namespace RepositoryLayer
                 originalContact.ContactPossibilities.Fax = contact.ContactPossibilities.Fax;
                 originalContact.ContactPossibilities.Mail = contact.ContactPossibilities.Mail;
                 originalContact.ContactPossibilities.PhoneNumber = contact.ContactPossibilities.PhoneNumber;
+                List<ContactPossibilitiesEntry> toBeDeleted = new List<ContactPossibilitiesEntry>();
+                foreach (ContactPossibilitiesEntry entry in originalContact.ContactPossibilities.ContactEntries)
+                {
+                    if (contact.ContactPossibilities.ContactEntries.FirstOrDefault(x => x.Id == entry.Id) == null)
+                    {
+                        toBeDeleted.Add(entry);
+                    }
+                }
+
+                foreach (ContactPossibilitiesEntry entry in toBeDeleted)
+                {
+                    originalContact.ContactPossibilities.ContactEntries.Remove(entry);
+                }
+                
+                foreach (ContactPossibilitiesEntry entry in contact.ContactPossibilities.ContactEntries)
+                {
+                    if (entry.Id != 0)
+                    {
+                        ContactPossibilitiesEntry existentEntry = originalContact.ContactPossibilities.ContactEntries.FirstOrDefault(x => x.Id == entry.Id);
+                        if (existentEntry != null)
+                        {
+                            existentEntry.ContactEntryValue = entry.ContactEntryValue;
+                            existentEntry.ContactEntryName = entry.ContactEntryName;
+                        }
+                    }
+                    else
+                    {
+                        originalContact.ContactPossibilities.ContactEntries.Add(entry);
+                    }                    
+                }
                 originalContact.Description = contact.Description;
                 originalContact.Name = contact.Name;
                 originalContact.PreName = contact.PreName;

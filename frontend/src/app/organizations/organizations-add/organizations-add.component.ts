@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OrganizationService, OrganizationCreateDto, ContactService } from 'src/app/shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-organizations-add',
@@ -17,7 +18,8 @@ export class OrganizationsAddComponent implements OnInit {
 
   constructor(private readonly fb: FormBuilder,
               private readonly organizationsService: OrganizationService,
-              private readonly contactService: ContactService) { }
+              private readonly contactService: ContactService,
+              private readonly router: Router) { }
 
   public ngOnInit(): void {
     this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
@@ -26,17 +28,7 @@ export class OrganizationsAddComponent implements OnInit {
 
   public onAddOrganization(): void {
     this.organization = this.organizationForm.value;
-    this.organization.contact.contactEntries = this.contactPossibilitiesEntries.getContactPossibilitiesEntriesAsCreateDto();
-    this.organizationsService.post(this.organization).subscribe();
-    this.sleep(500);
-  }
-
-   sleep(milliseconds) {
-    const date = Date.now();
-    let currentDate = null;
-    do {
-      currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
+    this.organizationsService.post(this.organization).subscribe(x => this.router.navigate(['/organizations']));
   }
 
   private createOrganizationForm(): FormGroup {

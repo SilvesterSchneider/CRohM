@@ -84,6 +84,36 @@ namespace RepositoryLayer
                 organization.Contact.Fax = newOrganization.Contact.Fax;
                 organization.Contact.PhoneNumber = newOrganization.Contact.PhoneNumber;
                 organization.Contact.Mail = newOrganization.Contact.Mail;
+                List<ContactPossibilitiesEntry> toBeDeleted = new List<ContactPossibilitiesEntry>();
+                foreach (ContactPossibilitiesEntry entry in organization.Contact.ContactEntries)
+                {
+                    if (newOrganization.Contact.ContactEntries.FirstOrDefault(x => x.Id == entry.Id) == null)
+                    {
+                        toBeDeleted.Add(entry);
+                    }
+                }
+
+                foreach (ContactPossibilitiesEntry entry in toBeDeleted)
+                {
+                    organization.Contact.ContactEntries.Remove(entry);
+                }
+
+                foreach (ContactPossibilitiesEntry entry in newOrganization.Contact.ContactEntries)
+                {
+                    if (entry.Id != 0)
+                    {
+                        ContactPossibilitiesEntry existentEntry = organization.Contact.ContactEntries.FirstOrDefault(x => x.Id == entry.Id);
+                        if (existentEntry != null)
+                        {
+                            existentEntry.ContactEntryValue = entry.ContactEntryValue;
+                            existentEntry.ContactEntryName = entry.ContactEntryName;
+                        }
+                    }
+                    else
+                    {
+                        organization.Contact.ContactEntries.Add(entry);
+                    }
+                }
                 await UpdateAsync(organization);
                 return true;
             }

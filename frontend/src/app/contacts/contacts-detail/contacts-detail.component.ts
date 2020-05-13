@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ContactDto, ContactPossibilitiesService, ContactPossibilitiesEntryDto } from '../../shared/api-generated/api-generated';
+import { ContactDto, ContactPossibilitiesEntryDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 
@@ -20,8 +20,7 @@ export class ContactsDetailComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private service: ContactService,
-    private contactPossibilitesService: ContactPossibilitiesService) { }
+    private service: ContactService) { }
 
   ngOnInit(): void {
     this.contact = this.route.snapshot.data.contact;
@@ -42,7 +41,8 @@ export class ContactsDetailComponent implements OnInit {
         mail: ['', Validators.email],
         // Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
         phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
-        fax: ['', Validators.pattern('^0[0-9\- ]*$')]
+        fax: ['', Validators.pattern('^0[0-9\- ]*$')],
+        contactEntries: this.contactPossibilitiesEntriesFormGroup
       })
     });
   }
@@ -51,12 +51,6 @@ export class ContactsDetailComponent implements OnInit {
     const idAddress = this.contact.address.id;
     const idContactPossibilities = this.contact.contactPossibilities.id;
     const idContact = this.contact.id;
-    this.contactPossibilitiesEntries.getEntriesToBeRemoved().forEach(x => this.contactPossibilitesService
-      .removeEntry(idContactPossibilities, x).subscribe());
-    this.contactPossibilitiesEntries.getContactPossibilitiesEntriesAsDto().forEach(x => {
-      this.contactPossibilitesService
-          .changeOrInsertEntry(x, idContactPossibilities).subscribe();
-    });
     this.contact = this.contactsForm.value;
     this.contact.id = idContact;
     this.contact.address.id = idAddress;
