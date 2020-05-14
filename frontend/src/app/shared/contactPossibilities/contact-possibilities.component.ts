@@ -1,6 +1,6 @@
 import { Component, OnInit, forwardRef } from '@angular/core';
 import { Validators, FormGroup, FormArray, FormBuilder,
-     AbstractControl, 
+     AbstractControl,
      ValidatorFn} from '@angular/forms';
 import { ContactPossibilitiesEntryDto } from '../api-generated/api-generated';
 
@@ -81,16 +81,16 @@ function mailAndPhoneValidator(control: AbstractControl): { [key: string]: boole
   if (control.value !== undefined && ((control.value) as string).length > 0 && (isNumber(control.value) || isMailAddress(control.value))) {
     return null;
   }
-  return { 'mailAndPhone': true };
+  return {'': true };
 }
 
 function isNumber(x: string): boolean {
-  var re = new RegExp(/^0[0-9\- ]*$/);
+  const re = new RegExp(/^0[0-9\- ]*$/);
   return re.test(x);
 }
 
 function isMailAddress(x: string): boolean {
-  var re = new RegExp(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/);
+  const re = new RegExp(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/);
   return re.test(x);
 }
 
