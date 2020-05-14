@@ -46,7 +46,7 @@ namespace WebApi.Controllers
                 }
             }
 
-            if (user.LockoutEnd.HasValue && user.LockoutEnd.Value.LocalDateTime > DateTime.Today)
+            if (user.UserLockEnabled)
             {
                 return BadRequest("Benutzer ist gesperrt! Bitte den Administrator kontaktieren");
             }
