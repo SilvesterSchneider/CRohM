@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using ModelLayer.Helper;
 using ModelLayer.Models;
 
@@ -24,7 +25,7 @@ namespace ServiceLayer
         Task ChangePasswordForUser(int primKey);
 
         Task<List<User>> GetAsync();
-        Task<IdentityResult> SetLockoutEnabledAsync(long id);
+        Task<IdentityResult> SetUserLockedAsync(long id);
     }
 
     public class UserService : IUserService
@@ -135,12 +136,12 @@ namespace ServiceLayer
             return await _userManager.FindByNameAsync(credentialsName);
         }
 
-        public async Task<IdentityResult> SetLockoutEnabledAsync(long id)
+        public async Task<IdentityResult> SetUserLockedAsync(long id)
         {
             User user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
             if (user != null)
             {
-                return await _userManager.SetLockoutEnabledAsync(user, !user.LockoutEnabled);
+                return await _userManager.SetUserLockedAsync(user, !user.UserLockEnabled);
             } 
             else
             {
@@ -165,13 +166,15 @@ namespace ServiceLayer
 
         Task<IdentityResult> ChangePasswordAsync(User user, string newPassword);
 
-        Task<IdentityResult> SetLockoutEnabledAsync(User user, bool lockoutEnabled);
+        Task<IdentityResult> SetUserLockedAsync(User user, bool lockoutEnabled);
 
         IQueryable<User> Users { get; }
     }
 
     public class DefaultUserManager : IUserManager
     {
+        private const int YESTERDAY = -1;
+        private const int FUTURE_YEARS = 100;
         private readonly UserManager<User> _manager;
 
         public DefaultUserManager(UserManager<User> manager)
@@ -189,9 +192,14 @@ namespace ServiceLayer
             return await _manager.CreateAsync(user, password);
         }
 
-        public async Task<IdentityResult> SetLockoutEnabledAsync(User user, bool lockoutEnabled)
+        public async Task<IdentityResult> SetUserLockedAsync(User user, bool lockEnabled)
         {
-            return await _manager.SetLockoutEnabledAsync(user, lockoutEnabled);
+            DateTime date = DateTime.Today.AddDays(YESTERDAY);
+            if (lockEnabled)
+            {
+                date = date.AddYears(FUTURE_YEARS);
+            }
+            return await _manager.SetLockoutEndDateAsync(user, date);
         }
 
         public async Task<User> FindByNameAsync(string name)
