@@ -46,7 +46,7 @@ namespace WebApi.Controllers
                 }
             }
 
-            if (user.UserLockEnabled)
+            if (user.UserLockEnabled.HasValue && user.UserLockEnabled.Value.CompareTo(DateTimeOffset.Now) > 0 )
             {
                 return BadRequest("Benutzer ist gesperrt! Bitte den Administrator kontaktieren");
             }
