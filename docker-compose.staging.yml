@@ -3,7 +3,7 @@ services:
 
   crms_stag:
     #build: .
-    image: crohmcrms/crohm_staging_crms:test
+    image: crohmcrms/crohm_crms:latest
     ports:
       - "81:80"
       - "444:443"
@@ -14,7 +14,7 @@ services:
       - DBPort=1434
       - DBUser=SA
       - DBPassword=CRohM2020
-      - DBName=CRMDB2
+      - DBName=CRMDB
     restart: unless-stopped
 
   db_stag:

@@ -41,6 +41,8 @@ namespace WebApi
             var password = Configuration["DBPassword"] ?? "CRohM2020";
             var database = Configuration["DBName"] ?? "CRMDB";
 
+            var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
+
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -88,7 +90,7 @@ namespace WebApi
 
             services.AddDbContext<CrmContext>(config =>
             {
-                config.UseSqlServer($"Server={server},{port};Database={database};User Id={user};Password={password}");
+                config.UseSqlServer(connectionString);
             });
 
             services.AddSpaStaticFiles(configuration =>

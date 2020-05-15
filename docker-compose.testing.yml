@@ -8,10 +8,13 @@ services:
       - "82:80"      
       - "445:443"
     depends_on: 
-      - db
+      - db_test
     environment:
-      - DB_URL=crohm_db
-      - DB_PORT=1435
+      - DBServer=ops085010.cs.ohmhs.de
+      - DBPort=1435      
+      - DBUser=SA
+      - DBPassword=CRohM2020
+      - DBName=CRMDB
     restart: unless-stopped
 
   db_test:
@@ -25,7 +28,7 @@ services:
     ports:
       - 1435:1433
     volumes: 
-      - database_vol:/var/opt/mssql 
+      - database_vol_test:/var/opt/mssql 
     restart: unless-stopped
 
 volumes: 
