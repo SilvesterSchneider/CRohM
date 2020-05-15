@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20200325204902_004contacts")]
-    partial class _004contacts
+    [Migration("20200515202720_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -122,6 +122,39 @@ namespace ModelLayer.Migrations
                     b.ToTable("UserTokens");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.Address", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StreetNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Zipcode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.Contact", b =>
                 {
                     b.Property<long>("Id")
@@ -129,7 +162,41 @@ namespace ModelLayer.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<long?>("AddressId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("ContactPossibilitiesId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("ContactPossibilitiesId");
+
+                    b.ToTable("Contacts");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.ContactPossibilities", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Fax")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Mail")
@@ -141,12 +208,9 @@ namespace ModelLayer.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PreName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Contacts");
+                    b.ToTable("ContactPossibilities");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.EducationalOpportunity", b =>
@@ -168,6 +232,49 @@ namespace ModelLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EducationalOpportunities");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.Organization", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("AddressId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("ContactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("Organizations");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.OrganizationContact", b =>
+                {
+                    b.Property<long>("OrganizationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ContactId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("OrganizationId", "ContactId");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("OrganizationContacts");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Role", b =>
@@ -202,7 +309,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "e34949ce-f0f7-46e1-a0f2-5995e7cd0ed9",
+                            ConcurrencyStamp = "ac4489ee-13a3-4e45-abc5-50307cbb033d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -228,6 +335,12 @@ namespace ModelLayer.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -322,6 +435,43 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.Contact", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("ModelLayer.Models.ContactPossibilities", "ContactPossibilities")
+                        .WithMany()
+                        .HasForeignKey("ContactPossibilitiesId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.Organization", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("ModelLayer.Models.ContactPossibilities", "Contact")
+                        .WithMany()
+                        .HasForeignKey("ContactId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.OrganizationContact", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Contact", "Contact")
+                        .WithMany("OrganizationContacts")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelLayer.Models.Organization", "Organization")
+                        .WithMany("OrganizationContacts")
+                        .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
