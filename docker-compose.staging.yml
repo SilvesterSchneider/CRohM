@@ -3,7 +3,7 @@ services:
 
   crms_stag:
     #build: .
-    image: crohmcrms/crohm_crms:latest
+    image: crohmcrms/crohm_staging_crms:test
     ports:
       - "81:80"
       - "444:443"
