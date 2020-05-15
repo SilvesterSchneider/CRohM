@@ -65,7 +65,7 @@ namespace WebApi.Controllers
             {
                 if (LoggedInUser.GetLoggedInUser() != null && LoggedInUser.GetLoggedInUser().Id != id)
                 {
-                    var result = await _userService.SetLockoutEnabledAsync(id);
+                    var result = await _userService.SetUserLockedAsync(id);
                     if (result.Succeeded)
                     {
                         return Ok();
