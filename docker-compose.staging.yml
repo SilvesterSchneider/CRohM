@@ -14,7 +14,7 @@ services:
       - DBPort=1434
       - DBUser=SA
       - DBPassword=CRohM2020
-      - DBName=CRMDB
+      - DBName=CRMDB2
     restart: unless-stopped
 
   db_stag:
