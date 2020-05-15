@@ -10,8 +10,11 @@ services:
     depends_on: 
       - db
     environment:
-      - DB_URL=crohm_db #wie geht das?
-      - DB_PORT=1433  #wie geht das?
+      - DBServer=ops085010.cs.ohmhs.de
+      - DBPort=1433
+      - DBUser=SA
+      - DBPassword=CRohM2020
+      - DBName=CRMDB
     restart: unless-stopped  
 
   db_prod:
