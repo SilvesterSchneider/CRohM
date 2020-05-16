@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -45,7 +46,7 @@ namespace WebApi.Controllers
                 }
             }
 
-            if (!user.LockoutEnabled)
+            if (user.UserLockEnabled.HasValue && user.UserLockEnabled.Value.CompareTo(DateTimeOffset.Now) > 0 )
             {
                 return BadRequest("Benutzer ist gesperrt! Bitte den Administrator kontaktieren");
             }

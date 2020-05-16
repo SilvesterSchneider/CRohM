@@ -35,9 +35,9 @@
                 <input matInput placeholder="E-Mail" formControlName="mail">
             </mat-form-field>
         </div>
+        <app-contact-possibilities></app-contact-possibilities>
     </div>
-    <button mat-raised-button color="primary" type="submit" [disabled]="!organizationForm.valid" (click)="onAddOrganization()"
-        routerLink="/organizations">
+    <button mat-raised-button color="primary" type="submit" [disabled]="!organizationForm.valid" (click)="onAddOrganization()">
         Speichern
     </button>
     <button mat-raised-button color="primary" routerLink="/organizations">

@@ -80,6 +80,9 @@ namespace WebApi
                     options.Password.RequiredUniqueChars = PasswordGuidelines.RequiredUniqueChars;
                     options.User.RequireUniqueEmail = true;
                     options.SignIn.RequireConfirmedAccount = false;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                    options.Lockout.MaxFailedAccessAttempts = 3;
+                    options.Lockout.AllowedForNewUsers = true;
                 })
                 .AddEntityFrameworkStores<CrmContext>()
                 .AddUserManager<UserManager<User>>()

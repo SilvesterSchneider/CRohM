@@ -9,5 +9,18 @@ namespace ModelLayer.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public bool UserLockEnabled { get
+            {
+                if (LockoutEnd.HasValue && LockoutEnd.Value.LocalDateTime > DateTime.Today)
+                {
+                    return true;
+                } 
+                else
+                {
+                    return false;
+                }
+            } 
+        }
     }
 }
