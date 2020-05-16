@@ -1483,6 +1483,13 @@ export interface ContactPossibilitiesDto {
     phoneNumber?: string | undefined;
     fax?: string | undefined;
     mail?: string | undefined;
+    contactEntries?: ContactPossibilitiesEntryDto[] | undefined;
+}
+
+export interface ContactPossibilitiesEntryDto {
+    id: number;
+    contactEntryName?: string | undefined;
+    contactEntryValue?: string | undefined;
 }
 
 export interface OrganizationDto {
@@ -1506,6 +1513,12 @@ export interface ContactPossibilitiesCreateDto {
     phoneNumber?: string | undefined;
     fax?: string | undefined;
     mail?: string | undefined;
+    contactEntries?: ContactPossibilitiesEntryCreateDto[] | undefined;
+}
+
+export interface ContactPossibilitiesEntryCreateDto {
+    contactEntryName: string;
+    contactEntryValue?: string | undefined;
 }
 
 export interface EducationalOpportunityDto {

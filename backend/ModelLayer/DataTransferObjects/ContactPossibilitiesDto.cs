@@ -17,6 +17,7 @@ namespace ModelLayer.DataTransferObjects
         public string PhoneNumber { get; set; }
         public string Fax { get; set; }
         public string Mail { get; set; }
+        public List<ContactPossibilitiesEntryDto> ContactEntries { get; set; }
     }
 
     public class ContactPossibilitiesCreateDto
@@ -30,5 +31,7 @@ namespace ModelLayer.DataTransferObjects
 
         [MailValidator]
         public string Mail { get; set; }
+
+        public List<ContactPossibilitiesEntryCreateDto> ContactEntries { get; set; }
     }
 }

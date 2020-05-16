@@ -13,7 +13,7 @@
         </mat-form-field>
     </div>
 
-    <app-osm-address formControlName="address"></app-osm-address>
+  <app-osm-address formControlName="address"></app-osm-address>
 
     <div class="row">
         <div class="col-md-12">
@@ -38,11 +38,10 @@
                 <input matInput placeholder="Faxnummer" formControlName="fax">
             </mat-form-field>
         </div>
+        <app-contact-possibilities></app-contact-possibilities>
     </div>
-
-
-    <button mat-raised-button color="primary" type="submit" [disabled]="!contactsForm.valid" (click)="addContact()"
-        routerLink="/contacts">
+    
+    <button mat-raised-button color="primary" type="submit" [disabled]="!contactsForm.valid" (click)="addContact()">
         Speichern
     </button>
     <button mat-raised-button color="primary" routerLink="/contacts">
