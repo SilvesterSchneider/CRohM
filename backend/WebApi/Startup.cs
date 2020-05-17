@@ -74,7 +74,7 @@ namespace WebApi
 
             services.AddIdentity<User, Role>(options =>
                 {
-                    //// Password settings.
+                    //// Password settings
                     options.Password.RequireDigit = PasswordGuidelines.RequireDigit;
                     options.Password.RequireLowercase = PasswordGuidelines.RequireLowercase;
                     options.Password.RequireNonAlphanumeric = PasswordGuidelines.RequireNonAlphanumeric;
