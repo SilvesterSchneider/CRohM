@@ -5,6 +5,35 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20191227225736_003IdProblem.cs" />
+    <Compile Remove="Migrations\20191227225736_003IdProblem.Designer.cs" />
+    <Compile Remove="Migrations\20191227230329_003IdProblem.cs" />
+    <Compile Remove="Migrations\20191227230329_003IdProblem.Designer.cs" />
+    <Compile Remove="Migrations\20191227230644_004IdProblem.cs" />
+    <Compile Remove="Migrations\20191227230644_004IdProblem.Designer.cs" />
+    <Compile Remove="Migrations\20200129210605_addUsers.cs" />
+    <Compile Remove="Migrations\20200129210605_addUsers.Designer.cs" />
+    <Compile Remove="Migrations\20200216185030_identity.cs" />
+    <Compile Remove="Migrations\20200216185030_identity.Designer.cs" />
+    <Compile Remove="Migrations\20200216185740_identity.cs" />
+    <Compile Remove="Migrations\20200216185740_identity.Designer.cs" />
+    <Compile Remove="Migrations\20200216190149_identity.cs" />
+    <Compile Remove="Migrations\20200216190149_identity.Designer.cs" />
+    <Compile Remove="Migrations\20200216190409_identity.cs" />
+    <Compile Remove="Migrations\20200216190409_identity.Designer.cs" />
+    <Compile Remove="Migrations\20200216190540_002identity.cs" />
+    <Compile Remove="Migrations\20200216190540_002identity.Designer.cs" />
+    <Compile Remove="Migrations\20200228063324_seedRole.cs" />
+    <Compile Remove="Migrations\20200228063324_seedRole.Designer.cs" />
+    <Compile Remove="Migrations\20200228063435_seedRole.cs" />
+    <Compile Remove="Migrations\20200228063435_seedRole.Designer.cs" />
+    <Compile Remove="Migrations\20200325204902_004contacts.cs" />
+    <Compile Remove="Migrations\20200325204902_004contacts.Designer.cs" />
+    <Compile Remove="Migrations\20200411101142_updatedDueToMissingReferences.cs" />
+    <Compile Remove="Migrations\20200411101142_updatedDueToMissingReferences.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.1">
@@ -16,6 +45,7 @@
 
   <ItemGroup>
     <Folder Include="DataTransferObjects\Base\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
