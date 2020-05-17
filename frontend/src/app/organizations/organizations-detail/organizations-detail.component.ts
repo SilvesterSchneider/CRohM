@@ -18,6 +18,7 @@ import { OrganizationService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -46,13 +47,16 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
   @ViewChild('inputTrigger', { read: MatAutocompleteTrigger }) inputTrigger: MatAutocompleteTrigger;
   @HostBinding() id = `input-ac-${OrganizationsDetailComponent.nextId++}`;
   @HostBinding('attr.aria-describedby') describedBy = '';
+  @ViewChild(ContactPossibilitiesComponent, {static: true})
+  contactPossibilitiesEntries: ContactPossibilitiesComponent;
+  contactPossibilitiesEntriesFormGroup: FormGroup;
   public selectable = true;
   items: OrganizationContactConnection[];
   selectedItems: OrganizationContactConnection[] = new Array<OrganizationContactConnection>();
   filteredItems: OrganizationContactConnection[] = new Array<OrganizationContactConnection>();
   itemsToDelete: OrganizationContactConnection[] = new Array<OrganizationContactConnection>();
   itemsToInsert: OrganizationContactConnection[] = new Array<OrganizationContactConnection>();
-  public organizationForm = this.createOrganizationForm();
+  public organizationForm: FormGroup;
   private organization: OrganizationDto;
   private changeCallback: (input: OrganizationContactConnection[]) => void;
   itemControl = new FormControl();
@@ -89,6 +93,8 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
   }
 
   ngOnInit() {
+    this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
+    this.organizationForm = this.createOrganizationForm();
     this.contactService.getAll().subscribe(y => {
       y.forEach(x => this.filteredItems.push(
         {
@@ -109,7 +115,7 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
       map(filter => this.filter(filter))
     ).subscribe();
     this.organization = this.route.snapshot.data.organization;
-    this.organizationForm.patchValue(this.organization);
+
     if (this.organization.employees.length > 0) {
       this.organization.employees.forEach(x => {
         const cont = this.filteredItems.find(y => y.contactId === x.id);
@@ -118,6 +124,8 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
         }
       });
     }
+    this.contactPossibilitiesEntries.patchExistingValuesToForm(this.organization.contact.contactEntries);
+    this.organizationForm.patchValue(this.organization);
   }
 
   private createOrganizationForm(): FormGroup {
@@ -132,7 +140,8 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     return this.fb.group({
       phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
       fax: ['', Validators.pattern('^0[0-9\- ]*$')],
-      mail: ['', Validators.email]
+      mail: ['', Validators.email],
+      contactEntries: this.contactPossibilitiesEntriesFormGroup
     });
   }
 
@@ -226,8 +235,8 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
 
   saveValues() {
     const idOrganization = this.organization.id;
-    const idContact = this.organization.contact.id;
     const idAddress = this.organization.address.id;
+    const idContactPossibilities = this.organization.contact.id;
     this.organization.employees.forEach(x => {
       const findObj = this.selectedItems.find(y => y.contactId === x.id);
       if (findObj == null) {
@@ -255,8 +264,8 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     );
     this.organization = this.organizationForm.value;
     this.organization.id = idOrganization;
-    this.organization.contact.id = idContact;
     this.organization.address.id = idAddress;
+    this.organization.contact.id = idContactPossibilities;
     this.organizationService.put(this.organization, this.organization.id).subscribe();
     this.itemsToDelete.forEach(x => this.organizationService.removeContact(idOrganization, x.contactId).subscribe());
     this.itemsToInsert.forEach(x => this.organizationService.addContact(idOrganization, x.contactId).subscribe());

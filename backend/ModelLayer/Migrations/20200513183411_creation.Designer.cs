@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ModelLayer;
 
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    partial class CrmContextModelSnapshot : ModelSnapshot
+    [Migration("20200513183411_creation")]
+    partial class creation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -336,9 +338,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-
-                            ConcurrencyStamp = "ac4489ee-13a3-4e45-abc5-50307cbb033d",
-
+                            ConcurrencyStamp = "4d48f67a-ff9f-4d1f-9ddb-0c733f6c7159",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

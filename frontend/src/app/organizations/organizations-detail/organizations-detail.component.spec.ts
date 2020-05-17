@@ -35,7 +35,8 @@ describe('OrganizationsAddComponent', () => {
                   contactPossibilities: {
                     mail: 'maxmustermann@getMaxListeners.com',
                     phoneNumber: '0157 0011223344',
-                    fax: '0157-00231223344'
+                    fax: '0157-00231223344',
+                    contactEntries: []
                   },
                   employees: []
                 },

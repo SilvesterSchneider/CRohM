@@ -38,9 +38,9 @@ namespace ServiceLayer
             CreateMap<OrganizationDto, Organization>(); //TODO: check-> do we need this?
 
             CreateMap<OrganizationCreateDto, Organization>();
-            CreateMap<ContactPossibilitiesDto, ContactPossibilities>();
+            CreateMap<ContactPossibilitiesDto, ContactPossibilities>().ReverseMap();
             CreateMap<ContactPossibilities, ContactPossibilitiesDto>();
-            CreateMap<ContactPossibilitiesCreateDto, ContactPossibilities>();
+            CreateMap<ContactPossibilitiesCreateDto, ContactPossibilities>().ReverseMap();
 
             CreateMap<Contact, ContactDto>()
                 .ForMember(dto => dto.Organizations,
@@ -60,6 +60,8 @@ namespace ServiceLayer
 
             CreateMap<ContactDto, Contact>();
             CreateMap<ContactCreateDto, Contact>();
+            CreateMap<ContactPossibilitiesEntryCreateDto, ContactPossibilitiesEntry>().ReverseMap();
+            CreateMap<ContactPossibilitiesEntryDto, ContactPossibilitiesEntry>().ReverseMap();
         }
     }
 }

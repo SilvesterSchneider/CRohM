@@ -1,0 +1,36 @@
+<!-- list of addresses -->
+<form [formGroup]="myForm" novalidate>
+    <div formArrayName="contactPossibilitiesEntries" *ngFor="let contactEntry of getControls(); let i=index">
+        <!-- address header, show remove button when more than one address available -->
+        <div>
+            <span class="margin10">Kontaktmöglichkeit {{i + 1}}</span>
+        </div>
+
+        <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
+            <!--contactEntryName-->
+        <div [formGroup]="contactEntry">
+            <div>
+                <label class="minWidth300AndMargin10">Name des Kontakteintrags</label>
+                <input type="text" formControlName="contactEntryName">
+                <!--display error message if contactEntryName is not valid-->
+                <small [hidden]="getForm(i).get('contactEntryName').valid">
+                    Name des Kontakteintrags erforderlich!
+                </small>
+            </div>
+            <!--contactEntryValue-->
+            <div>
+                <label class="minWidth300AndMargin10">Telefonnummer oder E-Mail Adresse</label>
+                <input type="text" formControlName="contactEntryValue">
+                <!--display error message if contactEntryValue is not valid-->
+                <small [hidden]="getForm(i).get('contactEntryValue').valid">
+                    Telefonnummer oder E-Mail Adresse erforderlich!
+                </small>
+            </div>
+            <button mat-raised-button color="primary" class="minWidth300AndMargin10" (click)="removeEntry(i)">Kontaktmöglichkeit entfernen</button>
+        </div>
+    </div>
+    <div>
+        <button mat-raised-button color="primary" class="minWidth300AndMargin10" (click)="addEntry()">Kontaktmöglichkeit hinzufügen</button>
+    </div>
+</form>
+
