@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.1">
@@ -16,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="DataTransferObjects\Base\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
