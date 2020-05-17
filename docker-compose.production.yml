@@ -3,7 +3,7 @@ services:
 
   crms_prod:
     #build: .
-    image: crohmcrms/crohm_crms:latest
+    image: crohmcrms/crohm_crms_production:latest
     ports:
       - "80:80"
       - "443:443"
