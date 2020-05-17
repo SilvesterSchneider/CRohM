@@ -29,19 +29,22 @@ namespace WebApi
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
-
-            Configuration["dbName"] = "LiveDb";
-            if (env.IsDevelopment())
-            {
-                Configuration["dbName"] = "LocalDb";
-            }
         }
 
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson(options =>
+            var server = Configuration["DBServer"] ?? "localhost";
+            var port = Configuration["DBPort"] ?? "1433";
+            var user = Configuration["DBUser"] ?? "SA";
+            var password = Configuration["DBPassword"] ?? "CRohM2020";
+            var database = Configuration["DBName"] ?? "CRMDB";
+
+            var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
+
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -71,7 +74,7 @@ namespace WebApi
 
             services.AddIdentity<User, Role>(options =>
                 {
-                    //// Password settings.
+                    //// Password settings
                     options.Password.RequireDigit = PasswordGuidelines.RequireDigit;
                     options.Password.RequireLowercase = PasswordGuidelines.RequireLowercase;
                     options.Password.RequireNonAlphanumeric = PasswordGuidelines.RequireNonAlphanumeric;
@@ -90,7 +93,7 @@ namespace WebApi
 
             services.AddDbContext<CrmContext>(config =>
             {
-                config.UseSqlServer(Configuration.GetConnectionString(Configuration["dbName"]));
+                config.UseSqlServer(connectionString);
             });
 
             services.AddSpaStaticFiles(configuration =>
