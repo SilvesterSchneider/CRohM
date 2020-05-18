@@ -15,6 +15,7 @@ import { JwtService } from './shared/jwt.service';
 import { UserMenuComponent } from './shared/navigation/user-menu/user-menu.component';
 import { SidenavComponent } from './shared/navigation/sidenav/sidenav.component';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { ConfirmDialogComponent } from './confirmdialog/confirmdialog.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { OrganizationsModule } from './organizations/organizations.module';
     HomeComponent,
     LoginComponent,
     UserMenuComponent,
-    SidenavComponent
+    SidenavComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,

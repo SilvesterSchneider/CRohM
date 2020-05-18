@@ -4,6 +4,7 @@ import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { UserDto, UsersService, AuthService } from '../../shared/api-generated/api-generated';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ConfirmDialogModel, ConfirmDialogComponent } from '../../confirmdialog/confirmdialog.component';
 
 
 
@@ -97,6 +98,9 @@ export class UserComponent implements OnInit {
 
 
 
+
+
+
 /**
  * Komponente fuer den Modal-Dialog zum Hinzufuegen eines Nutzers
  */
@@ -105,7 +109,6 @@ export class UserComponent implements OnInit {
   templateUrl: 'user.component_dialog_add.html',
 })
 export class UserDialogAddComponent {
-
 
   userForm = this.fb.group({
     email: ['', [Validators.email, Validators.required]],
@@ -125,24 +128,12 @@ export class UserDialogAddComponent {
   groupPermissionDefault = ['group_low'];
   groupPermission = new FormControl(this.groupPermissionDefault);
 
-  // Einzelberechtigungen
-  // TODO: Liste aus Backend laden
-  singlePermissionList: Permission[] = [
-    { value: 'contact_0', viewValue: 'Anlegen neuer Kontakte' },
-    { value: 'contact_1', viewValue: 'Einsehen aller Kontakte' },
-    { value: 'contact_2', viewValue: 'Bearbeiten aller Kontakte' },
-    { value: 'organization_0', viewValue: 'Anlegen neuer Organisationen' },
-    { value: 'organization_1', viewValue: 'Einsehen aller Organisationen' },
-    { value: 'organization_2', viewValue: 'Bearbeiten aller Organisationen' }
-  ];
-  singlePermissionDefault = ['contact_0', 'organization_0'];
-  singlePermission = new FormControl(this.singlePermissionDefault);
-
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly usersService: UsersService,
     public dialogRef: MatDialogRef<UserDialogAddComponent>,
+    public dialog: MatDialog,
     // @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) { }
 
@@ -157,7 +148,7 @@ export class UserDialogAddComponent {
 
 
   /**
-   * Funktion zum Speichen des neuesn Users und Schliessen des Dialogs
+   * Funktion zum Speichen des neuen Users und Schliessen des Dialogs
    */
   public addUser() {
     this.usersService.post(this.userForm.value).subscribe(user => {
@@ -169,12 +160,35 @@ export class UserDialogAddComponent {
     // Ausgabe der Daten auf der Konsole zum Debuggen
     console.log(this.groupPermission.value);
 
-    // TODO: Speichern/Uebermitteln der Einzelbrerchtigungen
-    // Ausgabe der Daten auf der Konsole zum Debuggen
-    console.log(this.singlePermission.value);
-
     // Schliessen des Dialogs
     this.dialogRef.close();
+  }
+
+
+  /**
+   * Funktion zum Aufruf des Confirm-Dialogs
+   */
+  confirmDialog(): void {
+    // Angezeigte Ueberschrift bzw. Nachricht im Confirm-Dialog
+    const message = `Wollen Sie den Vorgang wirklich abbrechen?`;
+    const dialogData = new ConfirmDialogModel('Warnung', message);
+
+    // Oeffnet den Confirm-Dialog mit definierter Ueberschrift bzw. Nachricht
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: '400px',
+      data: dialogData
+    });
+
+    // Schliesst den Confirm-Dialog
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      // Wenn Nein angeklickt wurde passiert nichts.
+      // Wenn 'Ja' angeklickt wurde, dann wird die abortDialog-Funktion
+      // des drunterliegenden Dialogs (hier also Dialog zum Hinzufuegen
+      // eines Nutzers) geschlossen.
+      if (dialogResult === true) {
+        this.abortDialog();
+      }
+    });
   }
 
 }
