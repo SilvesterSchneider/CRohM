@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-md-12">
+        <h3>
+            Adresse
+        </h3>
+    </div>
+
+    <mat-form-field class="col-md-12">
+        <input matInput type="text" [matAutocomplete]="auto" (input)="onChange($event)" placeholder="Addresssuche..." >
+        <mat-icon color="primary" matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelection($event)" [displayWith]="displayFn">
+        <mat-option *ngFor="let option of addressSuggestions" [value]="option">
+            <mat-icon color="primary" class="icon">place</mat-icon>
+            {{option.street}} {{option.streetNumber}}
+            {{option.zipcode}} {{option.city}}
+            {{option.country}}
+        </mat-option>
+    </mat-autocomplete>
+
+    <ng-container [formGroup]="addressForm">
+        <mat-form-field class="col-md-9">
+            <input matInput placeholder="Strasse" formControlName="street">
+        </mat-form-field>
+        <mat-form-field class="col-md-3">
+            <input matInput placeholder="Hausnummer" formControlName="streetNumber">
+        </mat-form-field>
+        <mat-form-field class="col-md-6">
+            <input matInput placeholder="PLZ" formControlName="zipcode">
+        </mat-form-field>
+        <mat-form-field class="col-md-6">
+            <input matInput placeholder="Ort" formControlName="city">
+        </mat-form-field>
+
+        <mat-form-field class="col-md-6">
+            <mat-label>Land</mat-label>
+            <mat-select formControlName="country" name="country">
+                <mat-option *ngFor="let country of countries" [value]="country.value">
+                    {{country.viewValue}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+        <!--mat-form-field class="col-md-6">
+            <input matInput placeholder="Land" formControlName="country">
+        </mat-form-field-->
+    </ng-container>
+</div>

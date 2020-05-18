@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 using WebApi.Helper;
 
@@ -26,6 +27,7 @@ namespace ServiceLayer
     {
         private readonly AppSettings _appSettings;
         private readonly ISignInManager _signInManager;
+        private User loggedInUser;
 
         // had to include dll because fail from microsoft
         // https://www.gitmemory.com/issue/aspnet/AspNetCore/12536/515210764
@@ -54,7 +56,6 @@ namespace ServiceLayer
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-
             return tokenHandler.WriteToken(token);
         }
 
@@ -82,7 +83,7 @@ namespace ServiceLayer
 
         public async Task<SignInResult> PasswordSignInAsync(User user, string password)
         {
-            return await _manager.PasswordSignInAsync(user, password, false, false);
+            return await _manager.PasswordSignInAsync(user, password, false, true);
         }
     }
 

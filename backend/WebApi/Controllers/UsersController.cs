@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 using NSwag.Annotations;
 using ServiceLayer;
@@ -52,6 +53,37 @@ namespace WebApi.Controllers
             }
 
             return BadRequest();
+        }
+
+        // put updates user with id {id} via frontend
+        [HttpPut("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
+        [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
+        public async Task<IActionResult> UpdateLockoutState(long id)
+        {
+            if (id != 1)
+            {
+                if (LoggedInUser.GetLoggedInUser() != null && LoggedInUser.GetLoggedInUser().Id != id)
+                {
+                    var result = await _userService.SetUserLockedAsync(id);
+                    if (result.Succeeded)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return Conflict();
+                    }
+                }
+                else
+                {
+                    return Conflict();
+                }
+            }
+            else
+            {
+                return Ok();
+            }
         }
     }
 }

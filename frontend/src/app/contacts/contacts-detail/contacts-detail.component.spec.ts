@@ -5,6 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../../app-routing.module';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { SharedModule } from '../../shared/shared.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ContactsDetailComponent', () => {
   let component: ContactsDetailComponent;
@@ -13,7 +15,7 @@ describe('ContactsDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ContactsDetailComponent],
-      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule],
+      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule, SharedModule, BrowserAnimationsModule],
       providers: [
         {
           provide: ActivatedRoute,
@@ -25,6 +27,9 @@ describe('ContactsDetailComponent', () => {
                   preName: 'silvester',
                   name: 'kracher',
                   address: {
+                    id: '',
+                    name: '',
+                    description: '',
                     country: 'Deutschland',
                     street: 'Teststrasse 1',
                     city: 'Nürnberg',
@@ -34,7 +39,8 @@ describe('ContactsDetailComponent', () => {
                   contactPossibilities: {
                     mail: 'maxmustermann@getMaxListeners.com',
                     phoneNumber: '0157 0011223344',
-                    fax: '0157-00231223344'
+                    fax: '0157-00231223344',
+                    contactEntries: []
                   }
                 },
               },
@@ -56,22 +62,22 @@ describe('ContactsDetailComponent', () => {
   });
 
   it('should show vorname', () => {
-    expect(component.contactsForm.get('preName').value).toEqual('silvester');
+    expect(component.contactsForm.value.preName).toEqual('silvester');
   });
 
   it('should show nachname', () => {
-    expect(component.contactsForm.get('name').value).toEqual('kracher');
+    expect(component.contactsForm.value.name).toEqual('kracher');
   });
 
   it('should show adress', () => {
-    expect(component.contactsForm.get('address.street').value).toEqual('Teststrasse 1');
+    expect(component.contactsForm.value.address.street).toEqual('Teststrasse 1');
   });
 
   it('should show plz', () => {
-    expect(component.contactsForm.get('address.zipcode').value).toEqual('12345');
+    expect(component.contactsForm.value.address.zipcode).toEqual('12345');
   });
 
   it('should show ort', () => {
-    expect(component.contactsForm.get('address.city').value).toEqual('Nürnberg');
+    expect(component.contactsForm.value.address.city).toEqual('Nürnberg');
   });
 });

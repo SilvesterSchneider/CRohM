@@ -26,4 +26,9 @@ export class LoginComponent {
     this.router.navigate(['/contacts'], { relativeTo: this.route });
   }
 
+  loginWithProof() {
+    if (this.userNameOrEmail.valid && this.password.valid) {
+      this.login();
+    }
+  }
 }

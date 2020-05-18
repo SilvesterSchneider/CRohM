@@ -1,9 +1,11 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Helper;
 using NSwag.Annotations;
 using ServiceLayer;
 
@@ -29,18 +31,24 @@ namespace WebApi.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(UserDto), Description = "successful login")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "not successful login")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(UserDto), Description = "Login erfolgreich")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string))]
         public async Task<IActionResult> Login([FromBody] CredentialsDto credentials)
         {
+            LoggedInUser.SetLoggedInUser(null);
             var user = await _userService.FindByNameAsync(credentials.UserNameOrEmail);
             if (user == null)
             {
                 user = await _userService.FindByEmailAsync(credentials.UserNameOrEmail);
                 if (user == null)
                 {
-                    return BadRequest();
+                    return BadRequest("Login fehlgeschlagen!");
                 }
+            }
+
+            if (user.UserLockEnabled)
+            {
+                return BadRequest("Benutzer ist gesperrt! Bitte den Administrator kontaktieren");
             }
 
             var signInAsync = await _signInService.PasswordSignInAsync(user, credentials.Password);
@@ -49,10 +57,11 @@ namespace WebApi.Controllers
             {
                 var userDto = _mapper.Map<UserDto>(user);
                 userDto.AccessToken = _signInService.CreateToken(user);
+                LoggedInUser.SetLoggedInUser(user);
                 return Ok(userDto);
             }
 
-            return BadRequest();
+            return BadRequest("Login fehlgeschlagen!");
         }
 
         /// <summary>

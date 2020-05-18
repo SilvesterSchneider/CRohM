@@ -35,7 +35,7 @@
         <ng-container matColumnDef="Faxnummer">
             <mat-header-cell *matHeaderCellDef> Faxnummer </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.contact.fax}} </mat-cell>
-        </ng-container> -->
+        </ng-container> 
         <ng-container matColumnDef="Zugehörige">
             <mat-header-cell *matHeaderCellDef> Zugehörige </mat-header-cell>
             <mat-cell *matCellDef="let element"> 
@@ -43,22 +43,32 @@
                     <mat-label>Zugehörige</mat-label>
                     <mat-select [(ngModel)]="element.employees">
                         <mat-option disabled *ngFor="let employee of element.employees">
-                            {{employee.firstName + ' ' + employee.lastName}}
+                            {{employee.preName + ' ' + employee.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-cell>
-        </ng-container>
+        </ng-container> 
         <ng-container matColumnDef="Action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
+                <a [routerLink]="[element.id]">
+                    <mat-icon color="primary" class="icon">edit</mat-icon>
+                </a>
                 <a (click)="deleteOrganization(element.id)" type="button">
                     <mat-icon color="primary" class="icon">delete</mat-icon>
                 </a>
             </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
     </mat-table>
 </div>
 <br>
+<div fxLayout="column" fxLayoutAlign="space-around end" class="content">
+    <div class="blocks">
+        <button button="submit" mat-raised-button color="primary" routerLink="add"> 
+            <mat-icon>add</mat-icon> Organisation hinzufügen
+        </button>
+    </div>
+</div>

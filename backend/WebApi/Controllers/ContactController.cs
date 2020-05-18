@@ -40,7 +40,7 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
         public async Task<IActionResult> GetById(long id)
         {
-            var contact = await contactService.GetContactByIdWithIncludesAsync(id);
+            var contact = await contactService.GetByIdAsync(id);
 
             if (contact == null)
             {

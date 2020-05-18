@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using ModelLayer.Helper;
 using ModelLayer.Models;
 
@@ -24,6 +25,7 @@ namespace ServiceLayer
         Task ChangePasswordForUser(int primKey);
 
         Task<List<User>> GetAsync();
+        Task<IdentityResult> SetUserLockedAsync(long id);
     }
 
     public class UserService : IUserService
@@ -82,7 +84,7 @@ namespace ServiceLayer
                 string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredLength, PasswordGuidelines.GetMaximumLength(),
                     PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
                     PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
-                await _userManager.ChangePasswordAsync(userToBeUpdated, userToBeUpdated.PasswordHash, newPassword).ConfigureAwait(false);
+                await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
                 mailProvider.PasswordReset(newPassword, userToBeUpdated.Email);
             }
         }
@@ -133,6 +135,19 @@ namespace ServiceLayer
         {
             return await _userManager.FindByNameAsync(credentialsName);
         }
+
+        public async Task<IdentityResult> SetUserLockedAsync(long id)
+        {
+            User user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user != null)
+            {
+                return await _userManager.SetUserLockedAsync(user, !user.UserLockEnabled);
+            } 
+            else
+            {
+                return IdentityResult.Failed(new IdentityError());
+            }
+        }
     }
 
     #region DefaultUserManager
@@ -149,13 +164,17 @@ namespace ServiceLayer
 
         Task<IdentityResult> AddToRoleAsync(User user, string role);
 
-        Task<IdentityResult> ChangePasswordAsync(User user, string newPassword, string currentPassword);
+        Task<IdentityResult> ChangePasswordAsync(User user, string newPassword);
+
+        Task<IdentityResult> SetUserLockedAsync(User user, bool lockoutEnabled);
 
         IQueryable<User> Users { get; }
     }
 
     public class DefaultUserManager : IUserManager
     {
+        private const int YESTERDAY = -1;
+        private const int FUTURE_YEARS = 100;
         private readonly UserManager<User> _manager;
 
         public DefaultUserManager(UserManager<User> manager)
@@ -173,6 +192,16 @@ namespace ServiceLayer
             return await _manager.CreateAsync(user, password);
         }
 
+        public async Task<IdentityResult> SetUserLockedAsync(User user, bool lockEnabled)
+        {
+            DateTime date = DateTime.Today.AddDays(YESTERDAY);
+            if (lockEnabled)
+            {
+                date = date.AddYears(FUTURE_YEARS);
+            }
+            return await _manager.SetLockoutEndDateAsync(user, date);
+        }
+
         public async Task<User> FindByNameAsync(string name)
         {
             return await _manager.FindByNameAsync(name);
@@ -188,9 +217,10 @@ namespace ServiceLayer
             return await _manager.AddToRoleAsync(user, role);
         }
 
-        public async Task<IdentityResult> ChangePasswordAsync(User user, string newPassword, string currentPassword)
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string newPassword)
         {
-            return await _manager.ChangePasswordAsync(user, currentPassword, newPassword);
+            await _manager.RemovePasswordAsync(user);
+            return await _manager.AddPasswordAsync(user, newPassword);
         }
 
         public IQueryable<User> Users => _manager.Users;

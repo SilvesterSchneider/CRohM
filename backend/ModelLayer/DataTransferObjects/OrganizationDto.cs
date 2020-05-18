@@ -15,7 +15,7 @@ namespace ModelLayer.DataTransferObjects
 
         public ContactPossibilitiesDto Contact { get; set; }
 
-        public List<UserDto> Employees { get; set; }
+        public List<ContactDto> Employees { get; set; } = new List<ContactDto>();
     }
 
     public class OrganizationCreateDto

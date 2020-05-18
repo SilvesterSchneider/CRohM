@@ -18,6 +18,7 @@ using RepositoryLayer;
 using ServiceLayer;
 using WebApi.Helper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using ModelLayer.Helper;
 
@@ -28,19 +29,23 @@ namespace WebApi
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
-
-            Configuration["dbName"] = "LiveDb";
-            if (env.IsDevelopment())
-            {
-                Configuration["dbName"] = "LocalDb";
-            }
         }
 
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            var server = Configuration["DBServer"] ?? "localhost";
+            var port = Configuration["DBPort"] ?? "1433";
+            var user = Configuration["DBUser"] ?? "SA";
+            var password = Configuration["DBPassword"] ?? "CRohM2020";
+            var database = Configuration["DBName"] ?? "CRMDB";
+
+            var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
+
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -69,7 +74,7 @@ namespace WebApi
 
             services.AddIdentity<User, Role>(options =>
                 {
-                    //// Password settings.
+                    //// Password settings
                     options.Password.RequireDigit = PasswordGuidelines.RequireDigit;
                     options.Password.RequireLowercase = PasswordGuidelines.RequireLowercase;
                     options.Password.RequireNonAlphanumeric = PasswordGuidelines.RequireNonAlphanumeric;
@@ -78,6 +83,9 @@ namespace WebApi
                     options.Password.RequiredUniqueChars = PasswordGuidelines.RequiredUniqueChars;
                     options.User.RequireUniqueEmail = true;
                     options.SignIn.RequireConfirmedAccount = false;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                    options.Lockout.MaxFailedAccessAttempts = 3;
+                    options.Lockout.AllowedForNewUsers = true;
                 })
                 .AddEntityFrameworkStores<CrmContext>()
                 .AddUserManager<UserManager<User>>()
@@ -85,7 +93,7 @@ namespace WebApi
 
             services.AddDbContext<CrmContext>(config =>
             {
-                config.UseSqlServer(Configuration.GetConnectionString(Configuration["dbName"]));
+                config.UseSqlServer(connectionString);
             });
 
             services.AddSpaStaticFiles(configuration =>
@@ -128,7 +136,6 @@ namespace WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -171,6 +178,7 @@ namespace WebApi
             services.AddScoped<IEducationalOpportunityRepository, EducationalOpportunityRepository>();
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IContactRepository, ContactRepository>();
+            services.AddScoped<IOrganizationContactRepository, OrganizationContactRepository>();
         }
     }
 }

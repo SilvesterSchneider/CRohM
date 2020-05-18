@@ -13,6 +13,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   imports: [
@@ -29,7 +31,9 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatMenuModule,
     MatTableModule,
     MatSelectModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCheckboxModule,
+    MatChipsModule
   ],
   exports: [
     MatSidenavModule,
@@ -45,7 +49,9 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatMenuModule,
     MatTableModule,
     MatSelectModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCheckboxModule,
+    MatChipsModule
   ]
 })
 export class MaterialModule { }
