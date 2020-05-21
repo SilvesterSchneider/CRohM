@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {ROLES, PERMISSIONS, IRoleTemp} from './mock-roles';
+import {ROLES, PERMISSIONS, IRoleTemp, IPermissionTemp} from './mock-roles';
+import {MatDialog} from '@angular/material/dialog';
+import { CreateRoleDialogComponent } from './create-role/create-role.component';
 
 interface LooseTableObject {
   [key: string]: any;
@@ -17,13 +19,31 @@ export class RolesComponent implements OnInit {
   public displayedColumns: string[] = ['permission'];
 
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
   public ngOnInit(): void {
     // load data
     this.createDynamicColums();
     this.createTableData();
 
+  }
+
+  public openDialog(): void {
+    // const dialogRef = this.dialog.open<CreateRoleDialogComponent, IPermissionTemp[], IRoleTemp>(CreateRoleDialogComponent, {
+    //   data: PERMISSIONS
+    // });
+
+    const dialogRef = this.dialog.open(CreateRoleDialogComponent, {
+      data: PERMISSIONS
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+      // add automatic to table
+      // call backend to add role
+        console.log(result);
+      }
+    });
   }
 
 

@@ -1,0 +1,27 @@
+
+
+
+  <h1 mat-dialog-title>Rolle erstellen</h1>
+<div mat-dialog-content>
+    <form [formGroup]="roleForm">
+
+    <mat-form-field class="full-width">
+        <mat-label>Name</mat-label>
+            <input matInput placeholder="Name" formControlName="name" >
+    </mat-form-field> 
+
+
+  <mat-form-field class="full-width">
+    <mat-label>Berechtigungen</mat-label>
+    <mat-select formControlName="permissions" multiple>
+        <mat-option *ngFor="let permission of permissions" [value]="permission.name" >{{permission.name}}</mat-option>
+      </mat-select>
+  </mat-form-field>
+
+  </form>    
+  </div>
+<div mat-dialog-actions>    
+<span class="fill-remaining-space"></span>
+  <button mat-raised-button (click)="onCancle()" color="warn">Abbrechen</button>
+  <button mat-raised-button [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid" color="primary">Speichern</button>
+</div>

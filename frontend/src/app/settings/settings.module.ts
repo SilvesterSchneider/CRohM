@@ -7,18 +7,21 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { OverviewComponent } from './overview/overview.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { RolesComponent } from './roles/roles.component';
+import { CreateRoleDialogComponent } from './roles/create-role/create-role.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
 @NgModule({
-  declarations: [UserComponent, OverviewComponent, RolesComponent],
+  declarations: [UserComponent, OverviewComponent, RolesComponent, CreateRoleDialogComponent],
   imports: [
     CommonModule,
     MatTabsModule,
     SettingsRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
+    MatDialogModule,
     FormsModule,
-  ]
+  ], entryComponents: [CreateRoleDialogComponent]
 })
 export class SettingsModule { }

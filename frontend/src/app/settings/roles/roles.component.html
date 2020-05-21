@@ -11,7 +11,7 @@
           </form>
         </div>
         <div>
-            <button mat-fab color="primary">
+            <button mat-fab color="accent" (click)="openDialog()">
                 <mat-icon>add</mat-icon>
               </button>
         </div>
@@ -20,22 +20,25 @@
 
 <mat-table [dataSource]="tableData" class="mat-elevation-z8">
 
+    <ng-container *ngFor="let col of displayedColumns" >
+    <ng-container matColumnDef="{{col}}">        
 
-    <!-- TODO permission müssen als strings stehen -->
-
-<ng-container *ngFor="let col of displayedColumns" >
-    <ng-container matColumnDef="{{col}}">
-        <mat-header-cell *matHeaderCellDef>  {{col}} </mat-header-cell>
-        <ng-container *ngIf="col == 'permission'">            
+        <!-- column for permissions -->
+        <ng-container *ngIf="col == 'permission'"> 
+            <mat-header-cell *matHeaderCellDef>  Berechtigung </mat-header-cell>           
             <mat-cell *matCellDef="let element "> 
                 {{element[col]}}
             </mat-cell>
         </ng-container>
+
+        <!-- remaining columnes -->
         <ng-container *ngIf="col != 'permission'">
-        <mat-cell *matCellDef="let element "> 
-            <mat-icon *ngIf=element[col] >clear</mat-icon>
-        </mat-cell>
-    </ng-container>
+            <mat-header-cell *matHeaderCellDef>  {{col}} </mat-header-cell>
+            <mat-cell *matCellDef="let element "> 
+                <mat-icon *ngIf=element[col] >clear</mat-icon>
+            </mat-cell>
+        </ng-container>
+
     </ng-container>
 </ng-container>
 
