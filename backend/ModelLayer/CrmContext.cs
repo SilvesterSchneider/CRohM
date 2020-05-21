@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 
 namespace ModelLayer
@@ -88,5 +89,8 @@ namespace ModelLayer
         public DbSet<EducationalOpportunity> EducationalOpportunities { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Organization> Organizations { get; set; }
+        public DbSet<PermissionGroup> PermissionGroups { get; set; }
+
+        public DbSet<Permission> Permissions { get; set; }
     }
 }

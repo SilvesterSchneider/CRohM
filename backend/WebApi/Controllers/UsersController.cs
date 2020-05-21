@@ -11,10 +11,9 @@ using ServiceLayer;
 
 namespace WebApi.Controllers
 {
-    //TODO: add role access control
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UsersController : ControllerBase
     {
         private static IUserService _userService;
@@ -52,6 +51,18 @@ namespace WebApi.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpPut("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully request")]
+        public async Task<IActionResult> SetPermissionsByUserIdAsync(List<int> permissionGroups, long id)
+        {
+            if (await _userService.SetPermissionIdsByUserIdAsync(permissionGroups, id)) {
+                return Ok();
+            }
+            
+            return Ok("Es muss mindestens ein Admin vorhanden sein.");
+           
         }
     }
 }

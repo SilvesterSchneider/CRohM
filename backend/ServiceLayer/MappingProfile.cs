@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using ModelLayer;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
 
@@ -60,6 +61,9 @@ namespace ServiceLayer
 
             CreateMap<ContactDto, Contact>();
             CreateMap<ContactCreateDto, Contact>();
+            CreateMap<PermissionGroupDto, PermissionGroup>().ReverseMap();
+            CreateMap<PermissionDto, Permission>().ReverseMap();
+            CreateMap<PermissionGroupCreateDto, PermissionGroup>(); 
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ModelLayer;
 using ModelLayer.Helper;
 using ModelLayer.Models;
 
@@ -11,6 +12,8 @@ namespace ServiceLayer
 {
     public interface IUserService
     {
+        Task<bool> SetPermissionIdsByUserIdAsync(List<int> permissionGroups, long id);
+
         Task<User> FindByNameAsync(string credentialsName);
 
         Task<IdentityResult> CreateCRohMUserAsync(User user);
@@ -24,6 +27,8 @@ namespace ServiceLayer
         Task ChangePasswordForUser(int primKey);
 
         Task<List<User>> GetAsync();
+
+        Task<User> GetByIdAsync(long id);
     }
 
     public class UserService : IUserService
@@ -33,7 +38,15 @@ namespace ServiceLayer
         //TODO: fix it with di
         private readonly IMailProvider mailProvider;
 
+        private readonly IPermissionGroupService permissionsService;
         public IQueryable<User> Users => _userManager.Users;
+
+        public UserService(IUserManager userManager, IMailProvider mailProvider, IPermissionGroupService permissionsService)
+        {
+            this.permissionsService = permissionsService;
+            _userManager = userManager;
+            this.mailProvider = mailProvider;
+        }
 
         public UserService(IUserManager userManager, IMailProvider mailProvider)
         {
@@ -89,7 +102,17 @@ namespace ServiceLayer
 
         public async Task<List<User>> GetAsync()
         {
-            return await _userManager.Users.ToListAsync();
+            List<User> users = await _userManager.Users.ToListAsync();
+            foreach (User usr in users)
+            {
+                foreach (PermissionGroup groups in usr.Permission)
+                {               
+                    PermissionGroup permissions = await permissionsService.GetPermissionGroupByIdAsync(groups.Id);
+                    //groups.Permissions.AddRange(permissions.Permissions); //TODO Silvester fragen
+                }
+            }
+            return users;
+            
         }
 
         public async Task<User> FindByEmailAsync(string email)
@@ -133,6 +156,85 @@ namespace ServiceLayer
         {
             return await _userManager.FindByNameAsync(credentialsName);
         }
+
+        public async Task<User> GetByIdAsync(long id)
+        {
+            return await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+
+        public async Task<bool> SetPermissionIdsByUserIdAsync(List<int> permissionGroups, long id)
+        {
+            List<User> users = await GetAsync();
+            List<PermissionGroup> allpermissiongroups = await permissionsService.GetAllPermissionGroupAsync();
+            User user = await GetByIdAsync(id);
+            bool adminsleft = false;
+            if (user != null)
+            {
+                if (!permissionGroups.Contains(1))
+                {
+                    foreach (User u in users)
+                    {
+                        if (user != u)
+                        {
+                            foreach (PermissionGroup group in u.Permission)
+                            {
+                                if (group.Id == 1)
+                                {
+                                    adminsleft = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (adminsleft)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else {
+                    adminsleft = true;
+                }
+
+
+                if (adminsleft == true)
+                {
+                    List<PermissionGroup> groupstodelete = new List<PermissionGroup>();
+
+                    user.Permission.ForEach(x =>
+                    {
+                        if (!permissionGroups.Contains(int.Parse(x.Id.ToString())))
+                        {
+                            groupstodelete.Add(x);
+                        }
+                    });
+
+                    groupstodelete.ForEach(x => {
+                        user.Permission.Remove(x);
+                    });
+
+
+                    permissionGroups.ForEach(x => {
+                        allpermissiongroups.ForEach(y => {
+                            if (y.Id == x)
+                            {
+                                user.Permission.Add(y);
+
+                            }
+                        });
+                    });
+
+                    
+
+                    
+                    await _userManager.UpdateAsync(user);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
     }
 
     #region DefaultUserManager
@@ -150,6 +252,9 @@ namespace ServiceLayer
         Task<IdentityResult> AddToRoleAsync(User user, string role);
 
         Task<IdentityResult> ChangePasswordAsync(User user, string newPassword, string currentPassword);
+
+        Task<IdentityResult> UpdateAsync(User user);
+
 
         IQueryable<User> Users { get; }
     }
@@ -173,6 +278,11 @@ namespace ServiceLayer
             return await _manager.CreateAsync(user, password);
         }
 
+        public async Task<IdentityResult> UpdateAsync(User user)
+        {
+            return await _manager.UpdateAsync(user);
+        }
+
         public async Task<User> FindByNameAsync(string name)
         {
             return await _manager.FindByNameAsync(name);
@@ -193,7 +303,7 @@ namespace ServiceLayer
             return await _manager.ChangePasswordAsync(user, currentPassword, newPassword);
         }
 
-        public IQueryable<User> Users => _manager.Users;
+        public IQueryable<User> Users => _manager.Users.Include(x => x.Permission);
     }
 
     #endregion DefaultUserManager

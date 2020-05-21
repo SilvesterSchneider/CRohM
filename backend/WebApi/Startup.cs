@@ -114,11 +114,12 @@ namespace WebApi
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IUserService userService, CrmContext dataContext)
+        public void Configure(IPermissionGroupService permissionGroupService, IMapper mapper, IApplicationBuilder app, IWebHostEnvironment env, IUserService userService, CrmContext dataContext)
         {
             dataContext.Database.Migrate();
-
-            ApplicationDbInitializer.SeedUsers(userService);
+            ApplicationDbInitializer.SeedPermissions(permissionGroupService, mapper);
+            ApplicationDbInitializer.SeedUsers(userService, permissionGroupService);
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -165,6 +166,7 @@ namespace WebApi
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();
             services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<IPermissionGroupService, PermissionGroupService>();
 
             //###########################Repositories#######################################
 
@@ -173,6 +175,7 @@ namespace WebApi
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<IOrganizationContactRepository, OrganizationContactRepository>();
+            services.AddScoped<IPermissionGroupRepositiory, PermissionGroupRepositiory>();
         }
     }
 }
