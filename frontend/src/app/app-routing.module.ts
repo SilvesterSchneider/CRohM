@@ -28,8 +28,9 @@ const routes: Routes = [
     loadChildren: () => import('./settings/settings.module').then(mod => mod.SettingsModule)
   },
   {
-    path: 'organizations',
-    component: OrganizationsListComponent
+    path: 'events',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./events/events.module').then(mod => mod.EventsModule)
   }
 ];
 

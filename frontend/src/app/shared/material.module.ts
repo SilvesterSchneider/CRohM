@@ -14,6 +14,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   imports: [
@@ -25,7 +27,10 @@ import {MatChipsModule} from '@angular/material/chips';
     MatButtonModule,
     MatFormFieldModule,
     MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatInputModule,
+    MatDatepickerModule,
     MatCardModule,
     MatMenuModule,
     MatTableModule,
@@ -42,6 +47,9 @@ import {MatChipsModule} from '@angular/material/chips';
     MatButtonModule,
     MatFormFieldModule,
     MatAutocompleteModule,
+    MatDatepickerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatInputModule,
     MatCardModule,
     MatMenuModule,
