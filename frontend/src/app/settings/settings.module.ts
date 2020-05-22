@@ -9,11 +9,12 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { RolesComponent } from './roles/roles.component';
 import { CreateRoleDialogComponent } from './roles/create-role/create-role.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { UpdateRoleDialogComponent } from './roles/update-role/update-role.component';
 
 
 
 @NgModule({
-  declarations: [UserComponent, OverviewComponent, RolesComponent, CreateRoleDialogComponent],
+  declarations: [UserComponent, OverviewComponent, RolesComponent, CreateRoleDialogComponent, UpdateRoleDialogComponent],
   imports: [
     CommonModule,
     MatTabsModule,
@@ -22,6 +23,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     ReactiveFormsModule,
     MatDialogModule,
     FormsModule,
-  ], entryComponents: [CreateRoleDialogComponent]
+  ], entryComponents: [CreateRoleDialogComponent, UpdateRoleDialogComponent]
 })
 export class SettingsModule { }

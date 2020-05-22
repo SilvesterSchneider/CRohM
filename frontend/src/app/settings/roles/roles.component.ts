@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ROLES, PERMISSIONS, IRoleTemp, IPermissionTemp} from './mock-roles';
 import {MatDialog} from '@angular/material/dialog';
 import { CreateRoleDialogComponent } from './create-role/create-role.component';
+import { UpdateRoleDialogComponent } from './update-role/update-role.component';
 
 interface LooseTableObject {
   [key: string]: any;
@@ -28,24 +29,40 @@ export class RolesComponent implements OnInit {
 
   }
 
-  public openDialog(): void {
-    // const dialogRef = this.dialog.open<CreateRoleDialogComponent, IPermissionTemp[], IRoleTemp>(CreateRoleDialogComponent, {
-    //   data: PERMISSIONS
-    // });
-
+  public openCreateDialog(): void {
     const dialogRef = this.dialog.open(CreateRoleDialogComponent, {
       data: PERMISSIONS
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-      // add automatic to table
       // call backend to add role
+      // call backend for all roles
         console.log(result);
       }
     });
   }
 
+  public openUpdateDialog(columnName: string) {
+    const dialogRef = this.dialog.open(UpdateRoleDialogComponent, {
+      data: {
+        role: ROLES.find(x => x.name === columnName),
+        permissions: PERMISSIONS
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (result.delete) {
+
+        console.log(result);
+        }
+      // call backend to update role
+      // call backend for all roles
+        console.log(result);
+      }
+    });
+  }
 
   private createTableData() {
     PERMISSIONS.forEach(perm => {
