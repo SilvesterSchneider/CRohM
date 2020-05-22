@@ -3,6 +3,7 @@ import {ROLES, PERMISSIONS, IRoleTemp, IPermissionTemp} from './mock-roles';
 import {MatDialog} from '@angular/material/dialog';
 import { CreateRoleDialogComponent } from './create-role/create-role.component';
 import { UpdateRoleDialogComponent } from './update-role/update-role.component';
+import { DeleteEntryDialogComponent } from 'src/app/shared/delete-entry-dialog/delete-entry-dialog.component';
 
 interface LooseTableObject {
   [key: string]: any;
@@ -23,6 +24,7 @@ export class RolesComponent implements OnInit {
   constructor(public dialog: MatDialog) { }
 
   public ngOnInit(): void {
+    // TODO:
     // load data
     this.createDynamicColums();
     this.createTableData();
@@ -36,8 +38,9 @@ export class RolesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-      // call backend to add role
-      // call backend for all roles
+        // TODO:
+        // call backend to add role
+        // call backend for all roles
         console.log(result);
       }
     });
@@ -54,14 +57,25 @@ export class RolesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.delete) {
+          const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
+            data: columnName
+          });
 
-        console.log(result);
+          deleteDialogRef.afterClosed().subscribe(deleteResult => {
+            if (deleteResult.delete) {
+              // TODO:
+              // call backend to delete role
+            }
+          });
+        } else {
+          // TODO:
+          // call backend to update role
+          // call backend for all roles
         }
-      // call backend to update role
-      // call backend for all roles
-        console.log(result);
       }
     });
+
+
   }
 
   private createTableData() {
