@@ -21,8 +21,8 @@ export class EventsListComponent implements OnInit {
   events: Observable<EventDto[]>;
   displayedColumns = ['bezeichnung', 'datum', 'uhrzeit', 'action'];
   public dataSource: EventDto[];
-  checkboxSelected: boolean = false;
-  
+  checkboxSelected = false;
+
   constructor(
     private service: EventService,
     private changeDetectorRefs: ChangeDetectorRef,
@@ -71,7 +71,7 @@ export class EventsListComponent implements OnInit {
   callEdit(id: number) {
     this.service.getById(id).subscribe(x => {
       const dialogRef = this.dialog.open(EventsDetailComponent, { data: x });
-      dialogRef.afterClosed().subscribe(x => this.init());
+      dialogRef.afterClosed().subscribe(y => this.init());
     });
   }
 

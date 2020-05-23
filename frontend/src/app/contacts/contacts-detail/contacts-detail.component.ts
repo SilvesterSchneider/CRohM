@@ -1,7 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ContactDto, ContactPossibilitiesEntryDto, EventDto, ParticipatedDto, EventService } from '../../shared/api-generated/api-generated';
+import { ContactDto,
+  ContactPossibilitiesEntryDto,
+  EventDto,
+  ParticipatedDto,
+  EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { timeInterval } from 'rxjs/operators';
@@ -55,14 +59,14 @@ export class ContactsDetailComponent implements OnInit {
       });
       this.eventService.getById(x.id).subscribe(y => {
         this.updateParticipation(x.id, y.participated);
-      })
+      });
     });
     this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
     this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
     this.initForm();
     this.contactsForm.patchValue(this.contact);
   }
-  
+
   updateParticipation(id: number, participated: ParticipatedDto[]) {
     const update: EventDtoCustomized = this.events.find(x => x.id === id);
     if (update != null) {
@@ -70,8 +74,8 @@ export class ContactsDetailComponent implements OnInit {
     }
   }
 
-  getParticipation(participations: import("../../shared/api-generated/api-generated").ParticipatedDto[]): boolean {
-    let participatedReal: boolean = false;
+  getParticipation(participations: ParticipatedDto[]): boolean {
+    let participatedReal = false;
     const part: ParticipatedDto = participations.find(x => x.contactId === this.contact.id);
     if (part != null) {
       participatedReal = part.hasParticipated;

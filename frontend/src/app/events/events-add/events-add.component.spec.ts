@@ -6,6 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MaterialModule } from 'src/app/shared/material.module';
 
 describe('EventsAddComponent', () => {
   let component: EventsAddComponent;
@@ -14,23 +16,11 @@ describe('EventsAddComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ EventsAddComponent ],
-      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, BrowserAnimationsModule, HttpClientModule, SharedModule],
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              data: {
-                event: {
-                  id: 0,
-                  name: 'promik',
-                  eventId: 1,
-                  duration: 2
-                },
-              },
-            }
-          },
-        }]
+      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule, HttpClientModule, SharedModule],
+      providers: [{
+        provide: MatDialogRef,
+        useValue: {}
+      }]
     })
     .compileComponents();
   }));
