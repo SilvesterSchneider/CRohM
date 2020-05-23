@@ -2,7 +2,7 @@ import {
   ElementRef, HostBinding, Component, OnInit, ViewChild, forwardRef, Input, Optional, Self,
   ChangeDetectorRef, OnDestroy, Inject
 } from '@angular/core';
-import { NgControl, FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { NgControl, FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor, AbstractControl } from '@angular/forms';
 import { Subject, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -19,6 +19,8 @@ import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { isNumber } from 'util';
+import { formatDate } from '@angular/common';
 
 export class EventContactConnection {
   contactId: number;
@@ -84,7 +86,7 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
   }
 
   ngOnInit() {
-    this.eventsForm = this.createOrganizationForm();
+    this.eventsForm = this.createEventsForm();
     this.contactService.getAll().subscribe(y => {
         this.contacts = y;
         y.forEach(x => {
@@ -132,20 +134,19 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
     const d = new Date(date);
     let hours = '' + (d.getHours());
     let minutes = '' + d.getMinutes();
-    const seconds = d.getSeconds();
     if (hours.length < 2) {
       hours = '0' + hours;
     }
     if (minutes.length < 2) {
       minutes = '0' + minutes;
     }
-    return [hours, minutes, seconds].join(':');
+    return [hours, minutes].join(':');
   }
 
-  private createOrganizationForm(): FormGroup {
+  private createEventsForm(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
-      date: new FormControl(new Date(this.event.date)),
+      date: [new FormControl(new Date(this.event.date)), [dateValidator]],
       time: ['', Validators.required],
       duration: ['', Validators.required]
     });
@@ -281,4 +282,42 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
   close() {
     this.dialogRef.close();
   }
+}
+
+function dateValidator(control: AbstractControl): { [key: string]: boolean } | null {
+  if (control.value !== undefined && ((control.value) as string).length > 0 && (isValidDate(control.value as string))) {
+    return null;
+  }
+  return {'': true };
+}
+
+function isValidDate(date: string): boolean {
+  if (date.indexOf('T') > 0 && date.indexOf('-') > 0 && date.lastIndexOf('-') > date.indexOf('-') && date.lastIndexOf('-') < date.length) {
+    date = date.substring(0, date.indexOf('T'));
+    const year = date.substring(0, date.indexOf('-'));
+    const yearNum = year as unknown as number;
+    if (isNaN(yearNum)) {
+      return false;
+    }
+    const substring = date.substring(date.indexOf('-') + 1);
+    const month = substring.substr(0, substring.indexOf('-'));
+    const monthNum = month as unknown as number;
+    if (isNaN(monthNum)) {
+      return false;
+    }
+    if (monthNum > 12) {
+      return false;
+    }
+    const day = substring.substring(substring.indexOf('-') + 1);
+    const dayNum = day as unknown as number;
+    if (isNaN(dayNum)) {
+      return false;
+    }
+    if (dayNum > 31) {
+      return false;
+    }
+    return true;
+  }
+  alert('nok');
+  return false;
 }
