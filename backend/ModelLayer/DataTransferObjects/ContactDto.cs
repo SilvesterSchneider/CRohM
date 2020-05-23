@@ -14,6 +14,7 @@ namespace ModelLayer.DataTransferObjects
         public ContactPossibilitiesDto ContactPossibilities { get; set; }
         public List<OrganizationDto> Organizations { get; set; } = new List<OrganizationDto>();
         public List<EventDto> Events { get; set; } = new List<EventDto>();
+        public List<HistoryElementDto> History { get; set; } = new List<HistoryElementDto>();
     }
 
     public class ContactCreateDto

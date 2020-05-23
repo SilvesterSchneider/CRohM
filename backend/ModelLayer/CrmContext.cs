@@ -100,5 +100,6 @@ namespace ModelLayer
         public DbSet<EventContact> EventContacts { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Participated> Participations { get; set; }
+        public DbSet<HistoryElement> History { get; set; }
     }
 }

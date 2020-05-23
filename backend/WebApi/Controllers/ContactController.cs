@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -94,6 +95,16 @@ namespace WebApi.Controllers
             var contactDto = _mapper.Map<ContactDto>(contact);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
             return Created(uri, contactDto);
+        }
+
+        // creates new contact in db via frontend
+        [HttpPost("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
+        public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, long id)
+        {
+
+            await contactService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
+            return Ok();
         }
 
         // deletes with id {id} contact via frontend

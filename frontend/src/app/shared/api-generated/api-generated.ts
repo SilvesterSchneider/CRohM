@@ -669,6 +669,60 @@ export class ContactService {
     }
 
     /**
+     * @return successfully created
+     */
+    postHistoryElement(historyToCreate: HistoryElementCreateDto, id: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/contact/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(historyToCreate);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPostHistoryElement(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPostHistoryElement(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPostHistoryElement(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * @return successfully deleted
      */
     delete(id: number): Observable<void> {
@@ -1874,6 +1928,7 @@ export interface ContactDto {
     contactPossibilities?: ContactPossibilitiesDto | undefined;
     organizations?: OrganizationDto[] | undefined;
     events?: EventDto[] | undefined;
+    history?: HistoryElementDto[] | undefined;
 }
 
 export interface ContactPossibilitiesDto {
@@ -1917,6 +1972,19 @@ export interface ParticipatedDto {
     hasParticipated: boolean;
 }
 
+export interface HistoryElementDto {
+    id: number;
+    name?: string | undefined;
+    date: string;
+    type: HistoryElementType;
+}
+
+export enum HistoryElementType {
+    MAIL = 0,
+    PHONE_CALL = 1,
+    NOTE = 2,
+}
+
 export interface ContactCreateDto {
     name: string;
     description?: string | undefined;
@@ -1935,6 +2003,12 @@ export interface ContactPossibilitiesCreateDto {
 export interface ContactPossibilitiesEntryCreateDto {
     contactEntryName: string;
     contactEntryValue?: string | undefined;
+}
+
+export interface HistoryElementCreateDto {
+    name: string;
+    date: string;
+    type: HistoryElementType;
 }
 
 export interface EducationalOpportunityDto {

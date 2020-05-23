@@ -5,7 +5,8 @@ import { ContactDto,
   ContactPossibilitiesEntryDto,
   EventDto,
   ParticipatedDto,
-  EventService } from '../../shared/api-generated/api-generated';
+  EventService, 
+  HistoryElementType} from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { timeInterval } from 'rxjs/operators';
@@ -21,9 +22,10 @@ export class EventDtoCustomized {
 }
 
 export enum TYPE {
-  EVENT = 0,
-  PHONE_CALL = 1,
-  NOTE = 2
+  EVENT = 3,
+  PHONE_CALL = HistoryElementType.PHONE_CALL,
+  NOTE = HistoryElementType.NOTE,
+  MAIL = HistoryElementType.MAIL
 }
 
 @Component({
@@ -61,10 +63,29 @@ export class ContactsDetailComponent implements OnInit {
         this.updateParticipation(x.id, y.participated);
       });
     });
+    this.contact.history.forEach(x => {
+      this.events.push({
+        id: 0,
+        date: this.getDate(x.date),
+        name: x.name,
+        type: x.type,
+        participated: false
+      });
+    });
+    this.sortEvents();
     this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
     this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
     this.initForm();
     this.contactsForm.patchValue(this.contact);
+  }
+
+  sortEvents() {
+    const sortedEvents: EventDtoCustomized[] = this.events.sort(this.getSortFunction);
+    this.events = sortedEvents;
+  }
+
+  getSortFunction(a: EventDtoCustomized, b: EventDtoCustomized): number {
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
   }
 
   updateParticipation(id: number, participated: ParticipatedDto[]) {
@@ -130,5 +151,9 @@ export class ContactsDetailComponent implements OnInit {
 
   isNote(element: EventDtoCustomized): boolean {
     return element.type === TYPE.NOTE;
+  }
+
+  isMail(element: EventDtoCustomized): boolean {
+    return element.type === TYPE.MAIL;
   }
 }

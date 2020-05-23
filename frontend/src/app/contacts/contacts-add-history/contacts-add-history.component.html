@@ -1,0 +1,29 @@
+<div class="eventsAdd" [formGroup]="oppoSuitsForm">
+    <div class="column">
+        <div class="col-md-12">
+            <h3>
+            	 Historieneintrag hinzufügen
+            </h3>
+        </div>
+        <div class="col-md-3">
+        <div>Historieneintragstyp</div>
+            <select formControlName="type">
+                <option disabled>Historieneintragstyp wählen</option>
+                <option *ngFor="let suit of types">{{suit}}</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <div>Datum</div>
+            <input class="dateClass" matInput type="date" placeholder="Datum" formControlName="date">
+        </div>
+        <div class="col-md-3">
+            <div>Information</div>
+            <textarea class="dateClass" matInput
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="5"
+            formControlName="information"></textarea>
+        </div>
+    </div>
+    <button class="margin" [disabled]="!oppoSuitsForm.valid" mat-raised-button color="primary" (click)="saveHistory()">Speichern</button>
+</div>

@@ -47,6 +47,9 @@
                 <a [routerLink]="[element.id]">
                     <mat-icon color="primary" class="icon">edit</mat-icon>
                 </a>
+                <a (click)="addNote(element.id)" type="button">
+                    <mat-icon color="primary" class="icon">note_add</mat-icon>
+                </a>
                 <a (click)="deleteContact(element.id)" type="button">
                     <mat-icon color="primary" class="icon">delete</mat-icon>
                 </a>

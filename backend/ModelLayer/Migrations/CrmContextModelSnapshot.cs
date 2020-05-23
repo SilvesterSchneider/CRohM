@@ -314,6 +314,35 @@ namespace ModelLayer.Migrations
                     b.ToTable("EventContacts");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("ContactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("History");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>
                 {
                     b.Property<long>("Id")
@@ -418,7 +447,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "4e49c93b-152b-4c61-8c97-92cce1ab1ee9",
+                            ConcurrencyStamp = "c0d8d830-019d-499c-8d8d-528ce9cc2ed2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -579,6 +608,13 @@ namespace ModelLayer.Migrations
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Contact", null)
+                        .WithMany("History")
+                        .HasForeignKey("ContactId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>

@@ -43,12 +43,13 @@ namespace RepositoryLayer
                 .Include(c => c.Events)
                 .ThenInclude(d => d.Event)
                 .ThenInclude(e => e.Participated)
+                .Include(x => x.History)
                 .ToListAsync();
         }
 
         public override async Task<Contact> GetByIdAsync(long id)
         {
-            return await Entities.Include(a => a.Address).Include(b => b.ContactPossibilities).ThenInclude(b => b.ContactEntries).Include(c => c.Events).ThenInclude(d => d.Event).FirstAsync(x => x.Id == id);
+            return await Entities.Include(a => a.Address).Include(x => x.History).Include(b => b.ContactPossibilities).ThenInclude(b => b.ContactEntries).Include(c => c.Events).ThenInclude(d => d.Event).FirstAsync(x => x.Id == id);
         }
 
         public async Task<List<Contact>> GetContactsByPartStringAsync(string name)
@@ -61,6 +62,7 @@ namespace RepositoryLayer
                 .Include(c => c.Events)
                 .ThenInclude(d => d.Event)
                 .ThenInclude(e => e.Participated)
+                .Include(x => x.History)
                 .ToListAsync();
         }
 

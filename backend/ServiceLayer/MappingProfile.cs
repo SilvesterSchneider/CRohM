@@ -94,6 +94,8 @@ namespace ServiceLayer
             CreateMap<EventDto, Event>();
             CreateMap<EventCreateDto, Event>();
             CreateMap<Participated, ParticipatedDto>().ReverseMap();
+            CreateMap<HistoryElement, HistoryElementDto>().ReverseMap();
+            CreateMap<HistoryElementCreateDto, HistoryElement>();
         }
     }
 }

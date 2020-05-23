@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
+import { MatDialog } from '@angular/material/dialog';
+import { ContactsAddHistoryComponent } from '../contacts-add-history/contacts-add-history.component';
 
 @Component({
   selector: 'app-contacts-list',
@@ -14,7 +16,7 @@ export class ContactsListComponent implements OnInit {
   displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
   service: ContactService;
 
-  constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef) {
+  constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef, private dialog: MatDialog) {
     this.service = service;
    }
 
@@ -35,5 +37,10 @@ export class ContactsListComponent implements OnInit {
 
   deleteContact(id: number) {
     this.service.delete(id).subscribe(x => this.init());
+  }
+
+  addNote(id: number) {
+    const dialogRef = this.dialog.open(ContactsAddHistoryComponent, { data: id });
+    dialogRef.afterClosed().subscribe(y => this.init());
   }
 }
