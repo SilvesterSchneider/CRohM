@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutGap="100px">
-    <mat-table #table [dataSource]="events">
+    <mat-table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="bezeichnung">
             <mat-header-cell *matHeaderCellDef> Bezeichnung </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.name}}
@@ -14,7 +14,7 @@
             <mat-cell *matCellDef="let element"> {{element.time | date:'HH:mm:ss'}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
-            <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
                 <a (click)="callEdit(element.id)" type="button">
                     <mat-icon color="primary" class="icon">edit</mat-icon>
@@ -35,5 +35,10 @@
         <button button="submit" mat-raised-button color="primary" (click)="addContact()"> 
             <mat-icon>add</mat-icon> Veranstaltung hinzufügen
         </button>
+    </div>
+    <div>
+        <mat-checkbox [checked]="checkboxSelected" (change)="toggleSelection()">
+            Veranstaltungen aus der Vergangenheit ausblenden
+        </mat-checkbox>
     </div>
 </div>

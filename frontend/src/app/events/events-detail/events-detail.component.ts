@@ -17,16 +17,8 @@ import { EventCreateDto, ContactDto, EventDto, ParticipatedDto } from '../../sha
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
-export class ItemList {
-  constructor(public item: string, public selected?: boolean) {
-    if (selected === undefined) {
-      selected = false;
-    }
-  }
-}
 
 export class EventContactConnection {
   contactId: number;
@@ -79,8 +71,7 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
     private contactService: ContactService,
     private eventService: EventService,
     private fb: FormBuilder,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) {
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
@@ -93,7 +84,6 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
   }
 
   ngOnInit() {
-   // this.event = this.route.snapshot.data.event;
     this.eventsForm = this.createOrganizationForm();
     this.contactService.getAll().subscribe(y => {
         this.contacts = y;
