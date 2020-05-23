@@ -16,7 +16,8 @@ describe('EventsAddComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ EventsAddComponent ],
-      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule, HttpClientModule, SharedModule],
+      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule,
+        HttpClientModule, SharedModule],
       providers: [{
         provide: MatDialogRef,
         useValue: {}

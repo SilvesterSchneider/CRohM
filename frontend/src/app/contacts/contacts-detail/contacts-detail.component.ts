@@ -5,7 +5,7 @@ import { ContactDto,
   ContactPossibilitiesEntryDto,
   EventDto,
   ParticipatedDto,
-  EventService, 
+  EventService,
   HistoryElementType} from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';

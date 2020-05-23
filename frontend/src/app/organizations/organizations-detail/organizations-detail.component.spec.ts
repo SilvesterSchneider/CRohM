@@ -21,7 +21,7 @@ describe('OrganizationsAddComponent', () => {
           useValue: {
             snapshot: {
               data: {
-                contact: {
+                organization: {
                   id: 0,
                   description: 'mcu',
                   name: 'promik',

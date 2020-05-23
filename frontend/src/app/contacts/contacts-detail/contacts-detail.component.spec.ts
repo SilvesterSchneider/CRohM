@@ -42,7 +42,8 @@ describe('ContactsDetailComponent', () => {
                     fax: '0157-00231223344',
                     contactEntries: []
                   },
-                  events: []
+                  events: [],
+                  history: []
                 },
               },
             }

@@ -4,7 +4,7 @@ import { ContactService, HistoryElementCreateDto, HistoryElementType } from 'src
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-    selector: 'contacts-add-history',
+    selector: 'app-contacts-add-history',
     templateUrl: './contacts-add-history.component.html',
     styleUrls: ['./contacts-add-history.component.scss']
   })
@@ -17,30 +17,30 @@ export class ContactsAddHistoryComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: number,
         private contactService: ContactService,
         private fb: FormBuilder) {}
-        
+
     ngOnInit(): void {
         this.oppoSuitsForm = this.fb.group({
             type: [this.types[0], Validators.required],
             date: ['', Validators.required],
             information: ['', Validators.required]
-          })
+          });
     }
 
     saveHistory() {
         let historyToSave: HistoryElementCreateDto;
-        let type = 0;
+        let typeToSave = 0;
         const typeText: string = this.oppoSuitsForm.get('type').value;
-        if (typeText == this.types[1]) {
-            type = HistoryElementType.PHONE_CALL;
-        } else if (typeText == this.types[2]) {
-            type = HistoryElementType.NOTE;
+        if (typeText === this.types[1]) {
+            typeToSave = HistoryElementType.PHONE_CALL;
+        } else if (typeText === this.types[2]) {
+            typeToSave = HistoryElementType.NOTE;
         }
         historyToSave = {
             date: this.oppoSuitsForm.get('date').value,
             name: this.oppoSuitsForm.get('information').value,
-            type: type
+            type: typeToSave
         };
-        
+
         this.contactService.postHistoryElement(historyToSave, this.data).subscribe(x => this.dialogRef.close());
     }
 }
