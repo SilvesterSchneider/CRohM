@@ -18,6 +18,7 @@ import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -69,6 +70,8 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
   autofilled?: boolean;
 
   constructor(
+    public dialogRef: MatDialogRef<EventsDetailComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: EventDto,
     @Optional() @Self() public ngControl: NgControl,
     private fm: FocusMonitor,
     private elRef: ElementRef<HTMLElement>,
@@ -86,10 +89,11 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
       this.focused = !!origin;
       this.stateChanges.next();
     });
+    this.event = data;
   }
 
   ngOnInit() {
-    this.event = this.route.snapshot.data.event;
+   // this.event = this.route.snapshot.data.event;
     this.eventsForm = this.createOrganizationForm();
     this.contactService.getAll().subscribe(y => {
         this.contacts = y;
@@ -281,6 +285,10 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
       });
     this.event.contacts = contacts;
     this.event.participated = participants;
-    this.eventService.put(this.event, this.event.id).subscribe(x => this.router.navigate(['/events']));
+    this.eventService.put(this.event, this.event.id).subscribe(x => this.dialogRef.close());
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 }

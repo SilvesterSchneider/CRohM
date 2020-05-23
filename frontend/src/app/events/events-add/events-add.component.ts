@@ -18,7 +18,7 @@ import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -70,6 +70,7 @@ export class EventsAddComponent implements OnInit, OnDestroy, MatFormFieldContro
   autofilled?: boolean;
 
   constructor(
+    public dialogRef: MatDialogRef<EventsAddComponent>,
     @Optional() @Self() public ngControl: NgControl,
     private fm: FocusMonitor,
     private elRef: ElementRef<HTMLElement>,
@@ -207,10 +208,10 @@ export class EventsAddComponent implements OnInit, OnDestroy, MatFormFieldContro
     const eventToSave: EventCreateDto = this.eventsForm.value;
     eventToSave.contacts = new Array<number>();
     this.selectedItems.forEach(x => eventToSave.contacts.push(x.contactId));
-    this.eventService.post(eventToSave).subscribe(x => this.dialog.closeAll());
+    this.eventService.post(eventToSave).subscribe(x => this.dialogRef.close());
   }
 
   exit() {
-    this.dialog.closeAll();
+    this.dialogRef.close();
   }
 }

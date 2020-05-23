@@ -59,6 +59,6 @@
 <button mat-raised-button color="primary" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
     Speichern
 </button>
-<button mat-raised-button color="primary" routerLink="/events">
+<button mat-raised-button color="primary" (click)="close()">
     Verwerfen
 </button>

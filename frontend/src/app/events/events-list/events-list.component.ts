@@ -40,8 +40,14 @@ export class EventsListComponent implements OnInit {
   }
 
   addContact() {
-    this.dialog.open(EventsAddComponent, {
-      hasBackdrop: false
+    const dialogRef = this.dialog.open(EventsAddComponent);
+    dialogRef.afterClosed().subscribe(x => this.init());
+  }
+
+  callEdit(id: number) {
+    this.service.getById(id).subscribe(x => {
+      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x });
+      dialogRef.afterClosed().subscribe(x => this.init());
     });
   }
 
