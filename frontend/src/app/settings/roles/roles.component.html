@@ -1,0 +1,47 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <span>Rollen</span>
+        <span class="fill-remaining-space"></span>
+        <div>
+            <form >
+            <mat-form-field>
+              <mat-label>Suche</mat-label>
+              <input matInput placeholder="User..." >
+            </mat-form-field>
+          </form>
+        </div>
+        <div>
+            <button mat-fab color="accent" (click)="openCreateDialog()">
+                <mat-icon>add</mat-icon>
+              </button>
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-table [dataSource]="tableData" class="mat-elevation-z8">
+
+    <ng-container *ngFor="let col of displayedColumns" >
+    <ng-container matColumnDef="{{col}}" >        
+
+        <!-- column for permissions -->
+        <ng-container *ngIf="col == 'permission'"> 
+            <mat-header-cell *matHeaderCellDef (click)="openUpdateDialog(col)">  Berechtigung </mat-header-cell>           
+            <mat-cell *matCellDef="let element "> 
+                {{element[col]}}
+            </mat-cell>
+        </ng-container>
+
+        <!-- remaining columnes -->
+        <ng-container *ngIf="col != 'permission'">
+            <mat-header-cell *matHeaderCellDef (click)="openUpdateDialog(col)">  {{col}} </mat-header-cell>
+            <mat-cell *matCellDef="let element "> 
+                <mat-icon *ngIf=element[col] >clear</mat-icon>
+            </mat-cell>
+        </ng-container>
+
+    </ng-container>
+</ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>

@@ -1,10 +1,21 @@
+
 <mat-toolbar>
     <mat-toolbar-row>
-        <span>Einstellungen</span>
-    </mat-toolbar-row>
-
-    <mat-toolbar-row>
         <span>Benutzer</span>
+        <span class="fill-remaining-space"></span>
+        <div>
+            <form >
+            <mat-form-field>
+              <mat-label>Suche</mat-label>
+              <input matInput placeholder="User..." >
+            </mat-form-field>          
+          </form> 
+        </div>
+        <div>
+            <button mat-fab color="primary">
+                <mat-icon>add</mat-icon>
+              </button>
+        </div>
     </mat-toolbar-row>
 </mat-toolbar>
 
