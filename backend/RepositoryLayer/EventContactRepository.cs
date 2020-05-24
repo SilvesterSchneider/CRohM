@@ -18,7 +18,9 @@ namespace RepositoryLayer
 
     public class EventContactRepository : BaseRepository<EventContact>, IEventContactRepository
     {
-        public EventContactRepository(CrmContext context) : base(context) { }
+        public EventContactRepository(CrmContext context) : base(context) 
+        {
+        }
 
         public async Task<List<EventContact>> GetAllAsync()
         {

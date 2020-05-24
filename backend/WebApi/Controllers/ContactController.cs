@@ -17,11 +17,13 @@ namespace WebApi.Controllers
     public class ContactController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IEventService eventService;
         private IContactService contactService;
 
-        public ContactController(IMapper mapper, IContactService contactService)
+        public ContactController(IMapper mapper, IContactService contactService, IEventService eventService)
         {
             _mapper = mapper;
+            this.eventService = eventService;
             this.contactService = contactService;
         }
 

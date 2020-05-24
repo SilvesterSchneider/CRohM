@@ -16,37 +16,21 @@ namespace RepositoryLayer
     {
         Task<Event> GetEventByIdWithAllIncludesAsync(long id);
         Task<List<Event>> GetAllEventsWithAllIncludesAsync();
-        Task<EventContact> AddEventContactAsync(EventContact eventContact);
-        Task RemoveEventContactAsync(EventContact eventContact);
         Task<Event> CreateNewEventAsync(EventCreateDto eventToCreate);
         Task ModifyEventAsync(EventDto eventToModify);
+        Task<EventContact> AddEventContactAsync(EventContact eventContact);
+        Task RemoveEventContactAsync(EventContact eventContact);
     }
 
     public class EventRepository : BaseRepository<Event>, IEventRepository
     {
-        private IEventContactRepository eventContactRepo;
         private IContactRepository contactRepo;
+        private IEventContactRepository eventContactRepo;
 
         public EventRepository(CrmContext context, IEventContactRepository eventContactRepo, IContactRepository contactRepo) : base(context)
         {
-            this.eventContactRepo = eventContactRepo;
             this.contactRepo = contactRepo;
-        }
-
-        public async Task<EventContact> AddEventContactAsync(EventContact eventContact)
-        {
-            Contact contact = await contactRepo.GetByIdAsync(eventContact.ContactId);
-            if (contact != null)
-            {
-                Event eventToInclude = await GetByIdAsync(eventContact.EventId);
-                if (eventToInclude != null)
-                {
-                    return await eventContactRepo.CreateAsync(new EventContact() { Contact = contact, Event = eventToInclude, 
-                        ContactId = eventContact.ContactId, EventId = eventContact.EventId });
-                }
-            }
-
-            return null;
+            this.eventContactRepo = eventContactRepo;
         }
 
         public async Task<Event> CreateNewEventAsync(EventCreateDto eventToCreate)
@@ -96,6 +80,7 @@ namespace RepositoryLayer
                     {
                         eventExistent.Participated.Remove(participated);
                     }
+                    eventExistent.Contacts.Remove(part);
                     await RemoveEventContactAsync(part);
                 }
                 eventToModify.Participated.ForEach(x =>
@@ -120,6 +105,32 @@ namespace RepositoryLayer
 
                 await UpdateAsync(eventExistent);
             }
+        }
+
+        public async Task<EventContact> AddEventContactAsync(EventContact eventContact)
+        {
+            Contact contact = await contactRepo.GetByIdAsync(eventContact.ContactId);
+            if (contact != null)
+            {
+                Event eventToInclude = await GetByIdAsync(eventContact.EventId);
+                if (eventToInclude != null)
+                {
+                    EventContact result = await eventContactRepo.CreateAsync(new EventContact()
+                    {
+                        Contact = contact,
+                        Event = eventToInclude,
+                        ContactId = eventContact.ContactId,
+                        EventId = eventContact.EventId
+                    });
+                    contact.Events.Add(result);
+                    eventToInclude.Contacts.Add(result);
+                    await contactRepo.UpdateAsync(contact);
+                    await UpdateAsync(eventToInclude);
+                    return result;
+                }
+            }
+
+            return null;
         }
 
         public async Task RemoveEventContactAsync(EventContact eventContact)

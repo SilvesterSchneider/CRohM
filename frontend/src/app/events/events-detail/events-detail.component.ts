@@ -228,6 +228,7 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
       this.selectedItems.push(item);
     } else {
       const i = this.selectedItems.findIndex(value => value.contactId === item.contactId);
+      this.selectedItems[i].participated = false;
       this.selectedItems.splice(i, 1);
     }
     if (this.changeCallback) {
