@@ -46,6 +46,6 @@ export class ContactsListComponent implements OnInit {
   }
 
   openInfo(id: number) {
-    this.service.getById(id).subscribe(x => this.dialog.open(ContactsInfoComponent, { data: x, height: '1080px' }));
+    this.service.getById(id).subscribe(x => this.dialog.open(ContactsInfoComponent, { data: x, height: '600px' }));
   }
 }
