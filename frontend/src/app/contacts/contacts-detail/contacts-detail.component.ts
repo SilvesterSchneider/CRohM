@@ -13,21 +13,6 @@ import { timeInterval } from 'rxjs/operators';
 import { getLocaleDateFormat } from '@angular/common';
 import { getType } from '@angular/flex-layout/extended/typings/style/style-transforms';
 
-export class EventDtoCustomized {
-  id: number;
-  name: string;
-  date: string;
-  type: number;
-  participated: boolean;
-}
-
-export enum TYPE {
-  EVENT = 3,
-  PHONE_CALL = HistoryElementType.PHONE_CALL,
-  NOTE = HistoryElementType.NOTE,
-  MAIL = HistoryElementType.MAIL
-}
-
 @Component({
   selector: 'app-contacts-detail',
   templateUrl: './contacts-detail.component.html',
@@ -40,8 +25,6 @@ export class ContactsDetailComponent implements OnInit {
   contactPossibilitiesEntriesFormGroup: FormGroup;
   contact: ContactDto;
   contactsForm: FormGroup;
-  events: EventDtoCustomized[] = new Array<EventDtoCustomized>();
-  displayedColumns = ['icon', 'datum', 'name'];
 
   constructor(
     private fb: FormBuilder,
@@ -51,62 +34,10 @@ export class ContactsDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.contact = this.route.snapshot.data.contact;
-    this.contact.events.forEach(x => {
-      this.events.push({
-        id: x.id,
-        name: x.name,
-        date: this.getDate(x.date),
-        type: TYPE.EVENT,
-        participated: false
-      });
-      this.eventService.getById(x.id).subscribe(y => {
-        this.updateParticipation(x.id, y.participated);
-      });
-    });
-    this.contact.history.forEach(x => {
-      this.events.push({
-        id: 0,
-        date: this.getDate(x.date),
-        name: x.name,
-        type: x.type,
-        participated: false
-      });
-    });
-    this.sortEvents();
     this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
     this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
     this.initForm();
     this.contactsForm.patchValue(this.contact);
-  }
-
-  sortEvents() {
-    const sortedEvents: EventDtoCustomized[] = this.events.sort(this.getSortFunction);
-    this.events = sortedEvents;
-  }
-
-  getSortFunction(a: EventDtoCustomized, b: EventDtoCustomized): number {
-    return new Date(a.date).getTime() - new Date(b.date).getTime();
-  }
-
-  updateParticipation(id: number, participated: ParticipatedDto[]) {
-    const update: EventDtoCustomized = this.events.find(x => x.id === id);
-    if (update != null) {
-      update.participated = this.getParticipation(participated);
-    }
-  }
-
-  getParticipation(participations: ParticipatedDto[]): boolean {
-    let participatedReal = false;
-    const part: ParticipatedDto = participations.find(x => x.contactId === this.contact.id);
-    if (part != null) {
-      participatedReal = part.hasParticipated;
-    }
-    return participatedReal;
-  }
-
-  getDate(date: string): string {
-    const dateUsed = new Date(date);
-    return dateUsed.getFullYear().toString() + '-' + (+dateUsed.getMonth() + 1).toString() + '-' + dateUsed.getDate().toString();
   }
 
   initForm() {
@@ -129,31 +60,13 @@ export class ContactsDetailComponent implements OnInit {
   updateContact() {
     const idAddress = this.contact.address.id;
     const idContactPossibilities = this.contact.contactPossibilities.id;
-    const idContact = this.contact.id;
-    this.contact = this.contactsForm.value;
-    this.contact.id = idContact;
+    const newContact: ContactDto = this.contactsForm.value;
+    this.contact.address = newContact.address;
+    this.contact.preName = newContact.preName;
+    this.contact.name = newContact.name;
+    this.contact.contactPossibilities = newContact.contactPossibilities;
     this.contact.address.id = idAddress;
     this.contact.contactPossibilities.id = idContactPossibilities;
     this.service.put(this.contact, this.contact.id).subscribe();
-  }
-
-  eventParticipated(element: EventDtoCustomized): boolean {
-    return element.type === TYPE.EVENT && element.participated;
-  }
-
-  eventNotParticipated(element: EventDtoCustomized): boolean {
-    return element.type === TYPE.EVENT && !element.participated;
-  }
-
-  isLocalPhone(element: EventDtoCustomized): boolean {
-    return element.type === TYPE.PHONE_CALL;
-  }
-
-  isNote(element: EventDtoCustomized): boolean {
-    return element.type === TYPE.NOTE;
-  }
-
-  isMail(element: EventDtoCustomized): boolean {
-    return element.type === TYPE.MAIL;
   }
 }

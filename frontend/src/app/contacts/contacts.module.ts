@@ -7,6 +7,7 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/material.module';
 import { ContactsAddHistoryComponent } from './contacts-add-history/contacts-add-history.component';
+import { ContactsInfoComponent } from './contacts-info/contacts-info.component';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { ContactsAddHistoryComponent } from './contacts-add-history/contacts-add
     ContactsListComponent,
     ContactsDetailComponent,
     ContactsAddComponent,
+    ContactsInfoComponent,
     ContactsAddHistoryComponent
   ],
 })

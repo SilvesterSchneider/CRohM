@@ -37,32 +37,6 @@
         </div>
         <app-contact-possibilities></app-contact-possibilities>    
     </div>
-    <div>
-        Historie
-        <mat-table #table [dataSource]="events">
-            <ng-container matColumnDef="icon">
-                <mat-header-cell *matHeaderCellDef> Typ </mat-header-cell>
-                <mat-cell *matCellDef="let element"> <mat-icon *ngIf="eventParticipated(element)">check_box</mat-icon>
-                    <mat-icon *ngIf="eventNotParticipated(element)">check_box_outline_blank</mat-icon>
-                    <mat-icon *ngIf="isLocalPhone(element)">local_phone</mat-icon>
-                    <mat-icon *ngIf="isNote(element)">note</mat-icon>
-                    <mat-icon *ngIf="isMail(element)">mail</mat-icon>
-                </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="datum">
-                <mat-header-cell *matHeaderCellDef> Datum </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.date}}
-                </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef> Bezeichnung </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.name}}
-                </mat-cell>
-            </ng-container>
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        </mat-table>
-    </div>
     <button mat-raised-button color="primary" type="submit" (click)="updateContact()" routerLink="/contacts" [disabled]="!contactsForm.valid">Speichern</button>
 </div>
 

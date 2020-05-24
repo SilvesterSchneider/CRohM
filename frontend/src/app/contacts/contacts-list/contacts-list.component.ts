@@ -4,6 +4,7 @@ import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsAddHistoryComponent } from '../contacts-add-history/contacts-add-history.component';
+import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
 
 @Component({
   selector: 'app-contacts-list',
@@ -42,5 +43,9 @@ export class ContactsListComponent implements OnInit {
   addNote(id: number) {
     const dialogRef = this.dialog.open(ContactsAddHistoryComponent, { data: id });
     dialogRef.afterClosed().subscribe(y => this.init());
+  }
+
+  openInfo(id: number) {
+    this.service.getById(id).subscribe(x => this.dialog.open(ContactsInfoComponent, { data: x, height: '1080px' }));
   }
 }
