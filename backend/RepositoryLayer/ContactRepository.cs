@@ -49,7 +49,16 @@ namespace RepositoryLayer
 
         public override async Task<Contact> GetByIdAsync(long id)
         {
-            return await Entities.Include(g => g.OrganizationContacts).ThenInclude(j => j.Organization).Include(a => a.Address).Include(x => x.History).Include(b => b.ContactPossibilities).ThenInclude(b => b.ContactEntries).Include(c => c.Events).ThenInclude(d => d.Event).FirstAsync(x => x.Id == id);
+            return await Entities
+                .Include(g => g.OrganizationContacts)
+                .ThenInclude(j => j.Organization)
+                .Include(a => a.Address)
+                .Include(x => x.History)
+                .Include(b => b.ContactPossibilities)
+                .ThenInclude(b => b.ContactEntries)
+                .Include(c => c.Events)
+                .ThenInclude(d => d.Event)
+                .FirstAsync(x => x.Id == id);
         }
 
         public async Task<List<Contact>> GetContactsByPartStringAsync(string name)
@@ -68,7 +77,11 @@ namespace RepositoryLayer
 
         public async Task<bool> UpdateAsync(Contact contact, long id)
         {
-            Contact originalContact = await Entities.Include(x => x.Address).Include(y => y.ContactPossibilities).ThenInclude(b => b.ContactEntries).FirstAsync(x => x.Id == id);
+            Contact originalContact = await Entities
+                .Include(x => x.Address)
+                .Include(y => y.ContactPossibilities)
+                .ThenInclude(b => b.ContactEntries)
+                .FirstAsync(x => x.Id == id);
             if (originalContact != null)
             {
                 originalContact.Address.Street = contact.Address.Street;
