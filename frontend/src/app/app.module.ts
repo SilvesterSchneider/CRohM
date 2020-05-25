@@ -15,6 +15,7 @@ import { JwtService } from './shared/jwt.service';
 import { UserMenuComponent } from './shared/navigation/user-menu/user-menu.component';
 import { SidenavComponent } from './shared/navigation/sidenav/sidenav.component';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { EventsModule } from './events/events.module';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
     MaterialModule,
     FlexLayoutModule,
     ContactsModule,
+    EventsModule,
     OrganizationsModule,
     JwtModule.forRoot({
       config: {
