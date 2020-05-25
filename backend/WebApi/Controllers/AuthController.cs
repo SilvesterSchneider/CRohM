@@ -49,7 +49,7 @@ namespace WebApi.Controllers
             if (user.UserLockEnabled)
             {
                 return BadRequest("Benutzer ist gesperrt! Bitte den Administrator kontaktieren");
-            }
+            } 
 
             var signInAsync = await _signInService.PasswordSignInAsync(user, credentials.Password);
 

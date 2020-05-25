@@ -9,6 +9,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { EventsDetailComponent } from '../Events-detail/Events-detail.component';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { EventsInfoComponent } from '../events-info/events-info.component';
 
 @Component({
   selector: 'app-events-list',
@@ -87,5 +88,11 @@ export class EventsListComponent implements OnInit {
   filterValues() {
     const justNewEvents: EventDto[] = this.dataSource.filter(x => new Date(x.date).getTime() >= Date.now());
     this.dataSource = justNewEvents;
+  }
+
+  openInfo(id: number) {
+    this.service.getById(id).subscribe(x => {
+      this.dialog.open(EventsInfoComponent, { data: x, height: '600px' });
+    });
   }
 }

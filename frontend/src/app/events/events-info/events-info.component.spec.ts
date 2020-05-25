@@ -1,21 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { CreateRoleDialogComponent } from './create-role.component';
-import {  MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from 'src/app/app-routing.module';
-import { MaterialModule } from 'src/app/shared/material.module';
+import { AppRoutingModule } from '../../app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { ActivatedRoute } from '@angular/router';
+import { SharedModule } from '../../shared/shared.module';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MaterialModule } from 'src/app/shared/material.module';
+import { EventsInfoComponent } from './events-info.component';
 
-describe('CreateRoleComponent', () => {
-  let component: CreateRoleDialogComponent;
-  let fixture: ComponentFixture<CreateRoleDialogComponent>;
+describe('EventsInfoComponent', () => {
+  let component: EventsInfoComponent;
+  let fixture: ComponentFixture<EventsInfoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateRoleDialogComponent ],
+      declarations: [ EventsInfoComponent ],
       imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule,
         HttpClientModule, SharedModule],
       providers: [{
@@ -24,14 +24,21 @@ describe('CreateRoleComponent', () => {
       },
       {
         provide: MAT_DIALOG_DATA,
-        useValue: {},
+        useValue: {
+          date: '',
+          time: '',
+          name: 'testEvent',
+          duration: 2,
+          contacts: [],
+          participated: []
+        },
       }]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateRoleDialogComponent);
+    fixture = TestBed.createComponent(EventsInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

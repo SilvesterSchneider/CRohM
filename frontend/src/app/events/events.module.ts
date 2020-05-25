@@ -6,6 +6,7 @@ import { EventsAddComponent } from './Events-add/Events-add.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/material.module';
+import { EventsInfoComponent } from './events-info/events-info.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { MaterialModule } from '../shared/material.module';
     EventsListComponent,
     EventsDetailComponent,
     EventsAddComponent,
+    EventsInfoComponent
   ],
 })
 export class EventsModule { }
