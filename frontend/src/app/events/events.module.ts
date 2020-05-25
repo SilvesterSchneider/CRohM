@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { EventsListComponent } from './events-list/Events-list.component';
-import { EventsDetailComponent } from './events-detail/Events-detail.component';
+import { EventsListComponent } from './events-list/events-list.component';
+import { EventsDetailComponent } from './events-detail/events-detail.component';
 import { EventsRoutingModule } from './events-routing.module';
-import { EventsAddComponent } from './events-add/Events-add.component';
+import { EventsAddComponent } from './events-add/events-add.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/material.module';
