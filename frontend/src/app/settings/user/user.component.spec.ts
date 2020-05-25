@@ -56,5 +56,5 @@ describe('UserComponent', () => {
 
     const form: HTMLElement = fixture.nativeElement;
     expect(form.getElementsByTagName('button').item(0).getAttribute('disabled')).toBeFalsy();
-  }); 
+  });
 });
