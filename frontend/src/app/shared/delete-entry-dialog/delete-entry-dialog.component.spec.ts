@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeleteEntryDialogComponent } from './delete-entry-dialog.component';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { MaterialModule } from '../material.module';
@@ -21,6 +21,12 @@ describe('DeleteEntryDialogComponent', () => {
       providers: [{
         provide: MatDialogRef,
         useValue: {},
+      },
+      {
+        provide: MAT_DIALOG_DATA,
+        useValue: {
+          date: ''
+        },
       }]
     })
     .compileComponents();

@@ -2,9 +2,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserComponent } from './user.component';
 import { MaterialModule } from '../../shared/material.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from 'src/app/app-routing.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 describe('UserComponent', () => {
   let component: UserComponent;
@@ -13,7 +15,8 @@ describe('UserComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [UserComponent],
-      imports: [MaterialModule, ReactiveFormsModule, BrowserAnimationsModule, HttpClientModule]
+      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule,
+        HttpClientModule, SharedModule],
     })
       .compileComponents();
   }));
@@ -37,7 +40,7 @@ describe('UserComponent', () => {
     const form: HTMLElement = fixture.nativeElement;
     expect(form.getElementsByTagName('button').item(0).getAttribute('disabled')).toBeTruthy();
   });
-
+*/
 
   it('should validate email correctly', () => {
     component.userForm.get('email').setValue('wrongmail');
@@ -53,5 +56,5 @@ describe('UserComponent', () => {
 
     const form: HTMLElement = fixture.nativeElement;
     expect(form.getElementsByTagName('button').item(0).getAttribute('disabled')).toBeFalsy();
-  }); */
+  }); 
 });

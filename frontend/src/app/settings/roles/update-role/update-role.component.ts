@@ -19,7 +19,9 @@ export class UpdateRoleDialogComponent implements OnInit {
     private readonly fb: FormBuilder) {}
 
  public ngOnInit(): void {
-   this.updateForm();
+  if (this.data != null && this.data != undefined) {
+    this.updateForm();
+    }
   }
 
   public onCancle(): void {

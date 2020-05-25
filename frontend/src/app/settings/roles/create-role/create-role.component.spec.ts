@@ -24,7 +24,16 @@ describe('CreateRoleComponent', () => {
       },
       {
         provide: MAT_DIALOG_DATA,
-        useValue: {},
+        useValue: {
+          permissions: [
+            {
+              name: 'test1'
+            },
+            {
+              name: 'test2'
+            }
+          ]
+        }
       }]
     })
     .compileComponents();

@@ -24,7 +24,14 @@ describe('UpdateRoleComponent', () => {
       },
       {
         provide: MAT_DIALOG_DATA,
-        useValue: {},
+        useValue: {
+          role: {
+            id: 1,
+            name: '',
+            permissions: []
+          },
+          permissions: []
+        },
       }]
     })
     .compileComponents();
