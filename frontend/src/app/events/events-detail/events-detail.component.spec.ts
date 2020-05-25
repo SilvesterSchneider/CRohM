@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MaterialModule } from 'src/app/shared/material.module';
-import { EventsDetailComponent } from './Events-detail.component';
+import { EventsDetailComponent } from './events-detail.component';
 
 describe('EventsDetailComponent', () => {
   let component: EventsDetailComponent;
