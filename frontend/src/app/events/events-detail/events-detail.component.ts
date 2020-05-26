@@ -62,6 +62,7 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
   errorState: boolean;
   controlType?: string;
   autofilled?: boolean;
+  columnsEvent: ['participated', 'prename', 'name'];
 
   constructor(
     public dialogRef: MatDialogRef<EventsDetailComponent>,

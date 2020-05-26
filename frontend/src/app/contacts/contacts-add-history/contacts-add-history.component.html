@@ -6,25 +6,29 @@
             </h3>
         </div>
         <div class="col-md-12">
-        <div>Historieneintragstyp</div>
-            <select formControlName="type" class="dateClass">
-                <option disabled>Historieneintragstyp wählen</option>
-                <option *ngFor="let suit of types">{{suit}}</option>
-            </select>
+        <mat-form-field>
+            <mat-label>Historieneintragstyp wählen</mat-label>
+            <mat-select formControlName="type" class="dateClass">
+                <mat-option [value]="suit" *ngFor="let suit of types">{{suit}}</mat-option>
+            </mat-select>
+        </mat-form-field>
         </div>
         <div class="col-md-12">
-            <div>Datum</div>
-            <input class="dateClass" matInput type="date" placeholder="Datum" formControlName="date">
+            <mat-form-field>
+                <input matInput class="dateClass" matInput type="date" placeholder="Datum" formControlName="date">
+            </mat-form-field>
         </div>
         <div class="col-md-12">
-            <div>Information</div>
-            <textarea class="dateClass" matInput
-            cdkTextareaAutosize
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="5"
-            formControlName="information"></textarea>
+            <mat-form-field>
+                <textarea class="dateClass" matInput
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="5"
+                formControlName="information"
+                placeholder="Information"></textarea>
+            </mat-form-field>
         </div>
     </div>
     <button class="margin" [disabled]="!oppoSuitsForm.valid" mat-raised-button color="primary" (click)="saveHistory()">Speichern</button>
-    <button class="margin" mat-raised-button color="primary" (click)="close()">Schließen</button>
+    <button class="margin" mat-raised-button (click)="close()">Schließen</button>
 </div>

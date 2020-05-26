@@ -92,7 +92,7 @@ export class EventsListComponent implements OnInit {
 
   openInfo(id: number) {
     this.service.getById(id).subscribe(x => {
-      this.dialog.open(EventsInfoComponent, { data: x, height: '600px' });
+      this.dialog.open(EventsInfoComponent, { data: x });
     });
   }
 }

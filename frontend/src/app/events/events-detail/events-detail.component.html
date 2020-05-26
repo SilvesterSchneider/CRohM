@@ -1,64 +1,65 @@
-<div class="eventsAdd" [formGroup]="eventsForm">
-    <div class="column">
-        <div class="col-md-12">
-            <h3>
-            	 Veranstaltung bearbeiten
-            </h3>
-        </div>
-        <div class="col-md-3">
-            <mat-form-field>
-                <input matInput placeholder="Bezeichnung" formControlName="name">
-            </mat-form-field>
-        </div>
-        <div class="col-md-3">
-            <mat-form-field>
-                <input matInput [matDatepicker]="picker1" placeholder="Angular forms" formControlName="date">
-                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                <mat-datepicker #picker1></mat-datepicker>
-              </mat-form-field>
-        </div>
-        <div class="col-md-3">
-            <mat-form-field>
-                <input type="time" matInput placeholder="Uhrzeit" formControlName="time">
-            </mat-form-field>
-        </div>
-        <div class="col-md-3">
-            <mat-form-field>
-                <input matInput placeholder="Dauer" formControlName="duration">
-            </mat-form-field>
+<mat-dialog-content>
+    <div class="eventsAdd" [formGroup]="eventsForm">
+        <div class="column">
+            <div class="col-md-12">
+                <h3>
+                    Veranstaltung bearbeiten
+                </h3>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="Bezeichnung" formControlName="name">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput [matDatepicker]="picker1" placeholder="Angular forms" formControlName="date">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input type="time" matInput placeholder="Uhrzeit" formControlName="time">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="Dauer" formControlName="duration">
+                </mat-form-field>
+            </div>
         </div>
     </div>
     <div>
-        Hat teilgenommen        Teilnehmer
+        Hat teilgenommen Teilnehmer
     </div>
-<mat-chip-list class="mat-chip-list-stacked" aria-orientation="vertical" #chipList>
-    <mat-chip *ngFor="let item of selectedItems" [selectable]="selectable">
-        <mat-checkbox class="checkBox" [checked]="item.participated" (change)="toggleParticipated(item)">
-        </mat-checkbox>
-        {{ item.preName + ' ' + item.name }}
-    </mat-chip>
-    <input type="text" #inputTrigger placeholder="Kontakte auswählen" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
-    [matChipInputFor]="chipList">
-</mat-chip-list>
-
-<mat-autocomplete #autoComplete="matAutocomplete">
-    <mat-option>
-        <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
-                Alle selektieren
-        </mat-checkbox>
-  </mat-option>
-    <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
-        <div (click)="optionClicked($event, item);">
-            <mat-checkbox [checked]="item.selected" (change)="toggleSelection(item)" (click)="$event.stopPropagation()">
-                {{ item.preName + ' ' + item.name }}
+    <mat-chip-list class="mat-chip-list-stacked" aria-orientation="vertical" #chipList>
+        <mat-chip *ngFor="let item of selectedItems" [selectable]="selectable">
+            <mat-checkbox class="checkBox" [checked]="item.participated" (change)="toggleParticipated(item)">
             </mat-checkbox>
-        </div>
-    </mat-option>
-</mat-autocomplete>
-
-<button mat-raised-button color="primary" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
-    Speichern
-</button>
-<button mat-raised-button color="primary" (click)="close()">
-    Verwerfen
-</button>
+            {{ item.preName + ' ' + item.name }}
+        </mat-chip>
+        <input type="text" #inputTrigger placeholder="Kontakte auswählen" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
+        [matChipInputFor]="chipList">
+    </mat-chip-list>
+    <mat-autocomplete #autoComplete="matAutocomplete">
+        <mat-option>
+            <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
+                    Alle selektieren
+            </mat-checkbox>
+        </mat-option>
+        <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
+            <div (click)="optionClicked($event, item);">
+                <mat-checkbox [checked]="item.selected" (change)="toggleSelection(item)" (click)="$event.stopPropagation()">
+                    {{ item.preName + ' ' + item.name }}
+                </mat-checkbox>
+            </div>
+        </mat-option>
+    </mat-autocomplete>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
+        Speichern
+    </button>
+    <button mat-raised-button (click)="close()">
+        Verwerfen
+    </button>
+<mat-dialog-content>
