@@ -37,8 +37,8 @@
         <ng-container matColumnDef="participated">
             <mat-header-cell *matHeaderCellDef> Teilgenommen </mat-header-cell>
             <mat-cell *matCellDef="let element"> 
-                <mat-icon *ngIf="!participated(element.id)">check_box_outline_blank</mat-icon>
-                <mat-icon *ngIf="participated(element.id)">check_box</mat-icon>
+                <mat-icon *ngIf="!element.participated">check_box_outline_blank</mat-icon>
+                <mat-icon *ngIf="element.participated">check_box</mat-icon>
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="prename">

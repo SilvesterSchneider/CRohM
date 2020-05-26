@@ -1,10 +1,17 @@
 import {
   Component, OnInit, Inject
 } from '@angular/core';
-import { ContactDto, EventDto } from '../../shared/api-generated/api-generated';
+import { EventDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
+
+export class ContactDtoExtended {
+  id: number;
+  preName: string;
+  name: string;
+  participated: boolean;
+}
 
 @Component({
   selector: 'app-events-info',
@@ -13,7 +20,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 
 export class EventsInfoComponent implements OnInit {
-  contacts: ContactDto[];
+  contacts: ContactDtoExtended[] = new Array<ContactDtoExtended>();
   event: EventDto;
   eventsForm: FormGroup;
   columnsContacts = ['participated', 'prename', 'name'];
@@ -29,7 +36,20 @@ export class EventsInfoComponent implements OnInit {
 
   ngOnInit() {
     this.eventsForm = this.createEventsForm();
-    this.contacts = this.event.contacts;
+    this.event.contacts.forEach(x => {
+      this.contacts.push({
+        id: x.id,
+        preName: x.preName,
+        name: x.name,
+        participated: false
+      });
+    });
+    this.event.participated.forEach(x => {
+      const cont: ContactDtoExtended = this.contacts.find(y => y.id === x.contactId);
+      if (cont != null) {
+        cont.participated = x.hasParticipated;
+      }
+    });
     this.eventsForm.patchValue(this.event);
     this.eventsForm.get('date').patchValue(this.formatDate(this.event.date));
     this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));
@@ -73,14 +93,5 @@ export class EventsInfoComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
-  }
-
-  participated(contactId: number): boolean {
-    this.event.participated.forEach(x => {
-      if (x.contactId === contactId) {
-        return x.hasParticipated;
-      }
-    });
-    return false;
   }
 }

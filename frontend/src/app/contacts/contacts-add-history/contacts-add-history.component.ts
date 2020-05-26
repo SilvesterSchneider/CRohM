@@ -43,4 +43,8 @@ export class ContactsAddHistoryComponent implements OnInit {
 
         this.contactService.postHistoryElement(historyToSave, this.data).subscribe(x => this.dialogRef.close());
     }
+
+    close() {
+        this.dialogRef.close();
+    }
 }
