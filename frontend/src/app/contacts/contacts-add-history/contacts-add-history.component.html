@@ -29,6 +29,6 @@
             </mat-form-field>
         </div>
     </div>
-    <button class="margin" [disabled]="!oppoSuitsForm.valid" mat-raised-button color="primary" (click)="saveHistory()">Speichern</button>
-    <button class="margin" mat-raised-button (click)="close()">Schließen</button>
+    <button class="margin" [disabled]="!oppoSuitsForm.valid" title="Speichern" mat-raised-button color="primary" (click)="saveHistory()">Speichern</button>
+    <button class="margin" mat-raised-button (click)="close()" title="Schließen">Schließen</button>
 </div>

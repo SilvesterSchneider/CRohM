@@ -61,10 +61,10 @@
             </div>
         </mat-option>
     </mat-autocomplete>
-    <button mat-raised-button color="primary" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
+    <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
         Speichern
     </button>
-    <button mat-raised-button (click)="close()">
+    <button mat-raised-button title="Verwerfen" (click)="close()">
         Verwerfen
     </button>
 <mat-dialog-content>

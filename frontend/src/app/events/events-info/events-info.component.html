@@ -54,7 +54,7 @@
         <mat-header-row *matHeaderRowDef="columnsContacts"></mat-header-row>
         <mat-row *matRowDef="let row; columns: columnsContacts;"></mat-row>
     </mat-table>
-    <button mat-raised-button color="primary" (click)="close()">
+    <button mat-raised-button color="primary" title="Schließen" (click)="close()">
         Schließen
     </button>
 </mat-dialog-content>

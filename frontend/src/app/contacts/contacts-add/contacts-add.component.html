@@ -41,10 +41,10 @@
         <app-contact-possibilities></app-contact-possibilities>
     </div>
     
-    <button mat-raised-button color="primary" type="submit" [disabled]="!contactsForm.valid" (click)="addContact()">
+    <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid" (click)="addContact()">
         Speichern
     </button>
-    <button mat-raised-button color="primary" routerLink="/contacts">
+    <button mat-raised-button color="primary" title="Verwerfen" routerLink="/contacts">
         Verwerfen
     </button>
 </div>

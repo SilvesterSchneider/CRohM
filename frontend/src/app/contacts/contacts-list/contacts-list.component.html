@@ -45,16 +45,16 @@
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
                 <a [routerLink]="[element.id]">
-                    <mat-icon color="primary" class="icon">edit</mat-icon>
+                    <mat-icon color="primary" title="Kontakt bearbeiten" class="icon">edit</mat-icon>
                 </a>
                 <a (click)="openInfo(element.id)" type="button">
-                    <mat-icon color="primary" class="icon">list</mat-icon>
+                    <mat-icon color="primary" title="Kontaktinformationen anzeigen" class="icon">list</mat-icon>
                 </a>
                 <a (click)="addNote(element.id)" type="button">
-                    <mat-icon color="primary" class="icon">note_add</mat-icon>
+                    <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
                 </a>
                 <a (click)="deleteContact(element.id)" type="button">
-                    <mat-icon color="primary" class="icon">delete</mat-icon>
+                    <mat-icon color="primary" title="Kontakt löschen" class="icon">delete</mat-icon>
                 </a>
             </mat-cell>
         </ng-container>
@@ -66,7 +66,7 @@
 
 <div fxLayout="column" fxLayoutAlign="space-around end" class="content">
     <div class="blocks">
-        <button button="submit" mat-raised-button color="primary" routerLink="add"> 
+        <button button="submit" mat-raised-button color="primary" title="Kontakt hinzufügen" routerLink="add"> 
             <mat-icon>add</mat-icon> Kontakt hinzufügen
         </button>
     </div>
