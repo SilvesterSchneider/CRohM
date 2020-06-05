@@ -1,0 +1,23 @@
+#!groovy
+
+node {
+  // Clean workspace
+  cleanWs()
+
+  try {
+    stage('Checkout'){
+      git url: 'https://github.com/SilvesterSchneider/CRohM.git/' branch: 'test_env'
+    }
+
+    stage('Build') {
+        sh("docker-compose -f docker-compose.testing.yml up -d")
+        sh("echo do tests")
+        sh("docker-compose -f docker-compose.testing.yml down")      
+    }
+  }
+  catch (err) {
+    currentBuild.result = "FAILURE"
+    throw err
+  }
+}
+
