@@ -1,9 +1,5 @@
 #!groovy
 
-environment {
-        PATH = "$PATH:/usr/local/bin"
-    }
-
 node {
   // Clean workspace
   cleanWs()
@@ -14,11 +10,9 @@ node {
     }
 
     stage('Build') {
-        sh("cd /usr/local/bin")
-        sh("ls -la")
-        sh("docker-compose -f docker-compose.testing.yml up -d")
+        sh("/usr/local/bin/docker-compose -f docker-compose.testing.yml up -d")
         sh("echo do tests")
-        sh("docker-compose -f docker-compose.testing.yml down")      
+        sh("/usr/local/bin/docker-compose -f docker-compose.testing.yml down")      
     }
   }
   catch (err) {
