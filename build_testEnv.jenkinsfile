@@ -1,5 +1,9 @@
 #!groovy
 
+environment {
+        PATH = "$PATH:/usr/local/bin"
+    }
+
 node {
   // Clean workspace
   cleanWs()
