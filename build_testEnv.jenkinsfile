@@ -14,9 +14,11 @@ node {
     }
 
     stage('Build') {
-        sh("/usr/local/bin/docker-compose -f docker-compose.testing.yml up -d")
+        sh("cd /usr/local/bin")
+        sh("ls -la")
+        sh("docker-compose -f docker-compose.testing.yml up -d")
         sh("echo do tests")
-        sh("/usr/local/bin/docker-compose -f docker-compose.testing.yml down")      
+        sh("docker-compose -f docker-compose.testing.yml down")      
     }
   }
   catch (err) {
