@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './shared/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -15,6 +15,8 @@ import { JwtService } from './shared/jwt.service';
 import { UserMenuComponent } from './shared/navigation/user-menu/user-menu.component';
 import { SidenavComponent } from './shared/navigation/sidenav/sidenav.component';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { ProgressSpinnerInterceptor } from './shared/progress-spinner/progress-spinner.interceptor';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
     HttpClientModule,
     BrowserAnimationsModule,
     MaterialModule,
+    OverlayModule,
     FlexLayoutModule,
     ContactsModule,
     OrganizationsModule,
@@ -41,7 +44,13 @@ import { OrganizationsModule } from './organizations/organizations.module';
       }
     })
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ProgressSpinnerInterceptor,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
