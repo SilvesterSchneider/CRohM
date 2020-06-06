@@ -21,7 +21,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Crohm2020!
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/crohm-selfsigned.pfx
     volumes:
-      - https:/https/
+      - ./https:/https/
     restart: unless-stopped
 
   db_stag:
