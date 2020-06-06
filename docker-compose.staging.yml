@@ -17,6 +17,7 @@ services:
       - DBName=CRMDB
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=444
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Crohm2020!
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/crohm-selfsigned.pfx
     volumes:
