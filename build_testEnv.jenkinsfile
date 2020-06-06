@@ -10,16 +10,13 @@ node {
     }
 
     stage('startup') {
-        sh("start test environment")
         sh("docker-compose -f docker-compose.testing.yml up")
     }
     
     stage('test') {
-        sh("echo do tests")   
     }
     
     stage('cleanup') {
-        sh("end test environment")
         sh("docker-compose -f docker-compose.testing.yml down")      
     }
   }
