@@ -27,10 +27,12 @@ RUN chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
 RUN chown root:root /etc/apt/sources.list.d/microsoft-prod.list
 
 RUN apt-get install apt-transport-https
+RUN apt-get update
 RUN apt-get install dotnet-sdk-3.1 -y
 
 # Install docker
-RUN apt-get install -qqy apt-transport-https ca-certificates curl gnupg2 software-properties-common 
+RUN apt-get update -qq \
+    && apt-get install -qqy apt-transport-https ca-certificates curl gnupg2 software-properties-common 
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 RUN add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/debian \
