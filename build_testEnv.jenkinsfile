@@ -10,7 +10,7 @@ node {
     }
 
     stage('startup') {
-        sh("docker-compose -f docker-compose.testing.yml up")
+        sh("/usr/local/bin/docker-compose -f docker-compose.testing.yml up -d")
     }
     
     stage('test') {
