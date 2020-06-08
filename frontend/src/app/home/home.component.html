@@ -14,13 +14,13 @@
                 </mat-card-header>
                 <mat-card-content class="content">
                     <p>
-                        {{contact.address.city}}
+                        Stadt: {{contact.address.city}}
                     </p>
                     <p>
-                        {{contact.contactPossibilities.phoneNumber}}
+                        Telefonnr.: {{contact.contactPossibilities.phoneNumber}}
                     </p>
                     <p>
-                        {{contact.contactPossibilities.mail}}
+                        E-Mail: {{contact.contactPossibilities.mail}}
                     </p>
                 </mat-card-content>
                 <mat-card-actions class="actions">
@@ -45,13 +45,13 @@
                 </mat-card-header>
                 <mat-card-content class="content">
                     <p>
-                        {{organization.address.city}}
+                        Stadt: {{organization.address.city}}
                     </p>
                     <p>
-                        {{organization.contact.phoneNumber}}
+                        Telefonnr.: {{organization.contact.phoneNumber}}
                     </p>
                     <p>
-                        {{organization.contact.mail}}
+                        E-Mail: {{organization.contact.mail}}
                     </p>
                 </mat-card-content>
                 <mat-card-actions class="actions">
@@ -66,6 +66,34 @@
         </div>
         <div class="column">
             <div class="spacer"></div>       
+        </div>
+        <div class="column">
+            <mat-card *ngFor="let event of events" class="example-card">
+                <mat-card-header class="header">
+                    <div mat-card-avatar class="header"></div>
+                    <mat-card-title class="text">Veranstaltung</mat-card-title>
+                    <mat-card-subtitle class="text">{{event.name}}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="content">
+                    <p>
+                        Datum: {{event.date | date:'shortDate'}}
+                    </p>
+                    <p>
+                        Uhrzeit: {{event.time | date:'shortTime'}}
+                    </p>
+                    <p>
+                        Dauer: {{event.duration}} stunden
+                    </p>
+                </mat-card-content>
+                <mat-card-actions class="actions">
+                    <div class="buttonMargin">
+                        <button class="button" mat-raised-button color="primary">Details anzeigen</button>
+                    </div>
+                    <div class="buttonMargin">
+                        <button class="button" routerLink="events" mat-raised-button color="primary">Öffne Übersicht</button>
+                    </div>
+                </mat-card-actions>
+            </mat-card>
         </div>
     </div>
 </div>
