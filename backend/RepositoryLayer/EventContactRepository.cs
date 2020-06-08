@@ -12,7 +12,17 @@ namespace RepositoryLayer
 {
     public interface IEventContactRepository : IBaseRepository<EventContact>
     {
-        Task<EventContact> GetEventContactByIdAsync(EventContact eventContact);
+        /// <summary>
+        /// Getter für eventContact anhand eines anderen event kontakts
+        /// </summary>
+        /// <param name="eventContact">der event kontakt dessen ids abgefragt werden sollen</param>
+        /// <returns>eventContact</returns>
+        Task<EventContact> GetEventContactByEventContactAsync(EventContact eventContact);
+
+        /// <summary>
+        /// Getter für alle einträge als liste
+        /// </summary>
+        /// <returns>Liste mit allen eventContacts</returns>
         Task<List<EventContact>> GetAllAsync();
     }
 
@@ -27,7 +37,7 @@ namespace RepositoryLayer
             return await Entities.Include(x => x.Contact).Include(y => y.Event).ToListAsync();
         }
 
-        public async Task<EventContact> GetEventContactByIdAsync(EventContact eventContact)
+        public async Task<EventContact> GetEventContactByEventContactAsync(EventContact eventContact)
         {
             return await Entities.Include(x => x.Contact).Include(y => y.Event).FirstOrDefaultAsync(x => x.ContactId == eventContact.ContactId && x.EventId == eventContact.EventId);
         }

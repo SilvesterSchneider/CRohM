@@ -14,12 +14,46 @@ namespace RepositoryLayer
 {
     public interface IEventRepository : IBaseRepository<Event>
     {
+        /// <summary>
+        /// Getter für event mit allen includes anhand id
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns>event</returns>
         Task<Event> GetEventByIdWithAllIncludesAsync(long id);
+
+        /// <summary>
+        /// Getter für alle events als liste mit allen includes
+        /// </summary>
+        /// <returns>liste aller events</returns>
         Task<List<Event>> GetAllEventsWithAllIncludesAsync();
+
+        /// <summary>
+        /// Erzeuge ein neues event
+        /// </summary>
+        /// <param name="eventToCreate">das event welches erzeugt werden soll</param>
+        /// <returns>das erzeugte event</returns>
         Task<Event> CreateNewEventAsync(EventCreateDto eventToCreate);
-        Task ModifyEventAsync(EventDto eventToModify);
+
+        /// <summary>
+        /// Bearbeite einen existierenden event
+        /// </summary>
+        /// <param name="eventToModify">event zum bearbeiten</param>
+        /// <returns>true wenn korrekt angepasst, ansonsten false</returns>
+        Task<bool> ModifyEventAsync(EventDto eventToModify);
+
+        /// <summary>
+        /// Hinzufügen eines eventContacts
+        /// </summary>
+        /// <param name="eventContact">das eventContact</param>
+        /// <returns>das erzeugte EventContact</returns>
         Task<EventContact> AddEventContactAsync(EventContact eventContact);
-        Task RemoveEventContactAsync(EventContact eventContact);
+
+        /// <summary>
+        /// Löschen eines eventContacts
+        /// </summary>
+        /// <param name="eventContact">das eventContact</param>
+        /// <returns>true wenn alles ok, ansonsten false</returns>
+        Task<bool> RemoveEventContactAsync(EventContact eventContact);
     }
 
     public class EventRepository : BaseRepository<Event>, IEventRepository
@@ -54,7 +88,7 @@ namespace RepositoryLayer
             return await Entities.Include(y => y.Contacts).ThenInclude(z => z.Contact).Include(x => x.Participated).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task ModifyEventAsync(EventDto eventToModify)
+        public async Task<bool> ModifyEventAsync(EventDto eventToModify)
         {
             Event eventExistent = await GetEventByIdWithAllIncludesAsync(eventToModify.Id);
             if (eventExistent != null)
@@ -104,7 +138,10 @@ namespace RepositoryLayer
                 }
 
                 await UpdateAsync(eventExistent);
+                return true;
             }
+
+            return false;
         }
 
         public async Task<EventContact> AddEventContactAsync(EventContact eventContact)
@@ -133,13 +170,16 @@ namespace RepositoryLayer
             return null;
         }
 
-        public async Task RemoveEventContactAsync(EventContact eventContact)
+        public async Task<bool> RemoveEventContactAsync(EventContact eventContact)
         {
-            EventContact eventContactToDelete = await eventContactRepo.GetEventContactByIdAsync(eventContact);
+            EventContact eventContactToDelete = await eventContactRepo.GetEventContactByEventContactAsync(eventContact);
             if (eventContactToDelete != null)
             {
                 await eventContactRepo.DeleteAsync(eventContactToDelete);
+                return true;
             }
+
+            return false;
         }
     }
 }
