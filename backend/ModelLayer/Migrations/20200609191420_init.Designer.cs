@@ -10,7 +10,7 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20200523165415_init")]
+    [Migration("20200609191420_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -323,6 +323,9 @@ namespace ModelLayer.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("ContactId")
                         .HasColumnType("bigint");
 
@@ -449,7 +452,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "c0d8d830-019d-499c-8d8d-528ce9cc2ed2",
+                            ConcurrencyStamp = "72e0d730-cf4b-4640-a7ad-8ba3dd807414",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

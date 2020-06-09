@@ -20,6 +20,7 @@ export class EventDtoCustomized {
   name: string;
   date: string;
   type: number;
+  comment: string;
   participated: boolean;
 }
 
@@ -42,7 +43,7 @@ export class ContactsInfoComponent implements OnInit {
   contactPossibilitiesEntries: ContactPossibilitiesEntryDto[];
   contactsForm: FormGroup;
   events: EventDtoCustomized[] = new Array<EventDtoCustomized>();
-  displayedColumns = ['icon', 'datum', 'name'];
+  displayedColumns = ['icon', 'datum', 'name', 'kommentar'];
   displayedColumnsOrganizations = ['name'];
   displayedColumnsContactPossibilities = ['name', 'kontakt'];
 
@@ -63,7 +64,8 @@ export class ContactsInfoComponent implements OnInit {
         name: x.name,
         date: this.getDate(x.date),
         type: TYPE.EVENT,
-        participated: false
+        participated: false,
+        comment: ''
       });
       this.eventService.getById(x.id).subscribe(y => {
         this.updateParticipation(x.id, y.participated);
@@ -75,7 +77,8 @@ export class ContactsInfoComponent implements OnInit {
         date: this.getDate(x.date),
         name: x.name,
         type: x.type,
-        participated: false
+        participated: false,
+        comment: x.comment
       });
     });
     this.sortEvents();

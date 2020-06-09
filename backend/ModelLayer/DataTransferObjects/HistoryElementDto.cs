@@ -12,6 +12,7 @@ namespace ModelLayer.DataTransferObjects
         public string Name { get; set; }
         public DateTime Date { get; set; }
         public HistoryElementType Type { get; set; }
+        public string Comment { get; set; }
     }
 
     public class HistoryElementCreateDto
@@ -24,5 +25,8 @@ namespace ModelLayer.DataTransferObjects
 
         [Required(AllowEmptyStrings = false)]
         public HistoryElementType Type { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        public string Comment { get; set; }
     }
 }

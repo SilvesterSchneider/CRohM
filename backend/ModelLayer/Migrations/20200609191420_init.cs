@@ -365,6 +365,7 @@ namespace ModelLayer.Migrations
                     Description = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
                     Type = table.Column<int>(nullable: false),
+                    Comment = table.Column<string>(nullable: true),
                     ContactId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
@@ -405,7 +406,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "c0d8d830-019d-499c-8d8d-528ce9cc2ed2", "Admin", "ADMIN" });
+                values: new object[] { 1L, "72e0d730-cf4b-4640-a7ad-8ba3dd807414", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",

@@ -16,5 +16,6 @@ namespace ModelLayer.Models
     {
         public DateTime Date { get; set; }
         public HistoryElementType Type { get; set; }
+        public string Comment { get; set; }
     }
 }

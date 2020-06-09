@@ -22,7 +22,8 @@ export class ContactsAddHistoryComponent implements OnInit {
         this.oppoSuitsForm = this.fb.group({
             type: [this.types[0], Validators.required],
             date: ['', Validators.required],
-            information: ['', Validators.required]
+            information: ['', Validators.required],
+            comment: ['', Validators.required]
           });
     }
 
@@ -38,9 +39,9 @@ export class ContactsAddHistoryComponent implements OnInit {
         historyToSave = {
             date: this.oppoSuitsForm.get('date').value,
             name: this.oppoSuitsForm.get('information').value,
-            type: typeToSave
+            type: typeToSave,
+            comment: this.oppoSuitsForm.get('comment').value,
         };
-
         this.contactService.postHistoryElement(historyToSave, this.data).subscribe(x => this.dialogRef.close());
     }
 

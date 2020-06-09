@@ -135,8 +135,13 @@
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef> Bezeichnung </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> Thema </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.name}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="kommentar">
+                <mat-header-cell *matHeaderCellDef> Kommentar </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.comment}}
                 </mat-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
