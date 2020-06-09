@@ -175,6 +175,7 @@ export class EventsListComponent implements OnInit {
     // +1 we start with week number 1
     // +0.5 an easy and dirty way to round result (in combinationen with Math.floor)
     const weekNumber = Math.floor(1 + 0.5 + (currentThursday.getTime() - firstThursday.getTime()) / 86400000 / 7);
+
     return weekNumber;
   }
 }
