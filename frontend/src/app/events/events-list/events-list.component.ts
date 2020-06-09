@@ -54,18 +54,14 @@ export class EventsListComponent implements OnInit {
 
   funtionGetSortedData(a: EventDto, b: EventDto): number {
     const dateA = new Date(a.date);
-    let dateTimeA = dateA.getTime();
     const timeA = new Date(a.time);
-    dateTimeA += timeA.getHours();
-    dateTimeA += timeA.getMinutes();
-    dateTimeA += timeA.getSeconds();
+    dateA.setHours(timeA.getHours());
+    dateA.setMinutes(timeA.getMinutes());
     const dateB = new Date(b.date);
-    let dateTimeB = dateB.getTime();
-    const timeB = new Date(a.time);
-    dateTimeB += timeB.getHours();
-    dateTimeB += timeB.getMinutes();
-    dateTimeB += timeB.getSeconds();
-    return (dateTimeA - dateTimeB);
+    const timeB = new Date(b.time);
+    dateB.setHours(timeB.getHours());
+    dateB.setMinutes(timeB.getMinutes());
+    return (dateA.getTime() - dateB.getTime());
   }
 
   addContact() {
