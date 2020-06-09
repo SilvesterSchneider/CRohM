@@ -22,7 +22,7 @@ export class EventsListComponent implements OnInit {
   events: Observable<EventDto[]>;
   displayedColumns = ['bezeichnung', 'datum', 'uhrzeit', 'action'];
   public dataSource: EventDto[];
-  checkboxSelected = false;
+  checkboxSelected = true;
 
   constructor(
     private service: EventService,
