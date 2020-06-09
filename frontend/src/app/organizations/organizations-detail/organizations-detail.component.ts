@@ -174,15 +174,15 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy {
 
   toggleSelectAll() {
     this.isAllSelected = !this.isAllSelected;
-    const len = this.filteredItems.length;    
+    const len = this.filteredItems.length;
     if (this.isAllSelected) {
       this.selectedItems = [];
-      for (var i = 0; i < len; i++) {
+      for (let i = 0; i < len; i++) {
         this.filteredItems[i].selected = true;
         this.selectedItems.push(this.filteredItems[i]);
-      }   
+      }
     } else {
-      for (var i = 0; i < len; i++) {
+      for (let i = 0; i < len; i++) {
         this.filteredItems[i].selected = false;
       }
       this.selectedItems = [];
