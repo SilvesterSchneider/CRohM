@@ -147,7 +147,7 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
   private createEventsForm(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
-      date: [new FormControl(new Date(this.event.date)), [dateValidator]],
+      date: [new FormControl(new Date(this.event.date)), Validators.required],
       time: ['', Validators.required],
       duration: ['', Validators.required]
     });
@@ -286,40 +286,4 @@ export class EventsDetailComponent implements OnInit, OnDestroy, MatFormFieldCon
   }
 }
 
-function dateValidator(control: AbstractControl): { [key: string]: boolean } | null {
-  if (control.value !== undefined && ((control.value) as string).length > 0 && (isValidDate(control.value as string))) {
-    return null;
-  }
-  return {'': true };
-}
 
-function isValidDate(date: string): boolean {
-  if (date.indexOf('T') > 0 && date.indexOf('-') > 0 && date.lastIndexOf('-') > date.indexOf('-') && date.lastIndexOf('-') < date.length) {
-    date = date.substring(0, date.indexOf('T'));
-    const year = date.substring(0, date.indexOf('-'));
-    const yearNum = year as unknown as number;
-    if (isNaN(yearNum)) {
-      return false;
-    }
-    const substring = date.substring(date.indexOf('-') + 1);
-    const month = substring.substr(0, substring.indexOf('-'));
-    const monthNum = month as unknown as number;
-    if (isNaN(monthNum)) {
-      return false;
-    }
-    if (monthNum > 12) {
-      return false;
-    }
-    const day = substring.substring(substring.indexOf('-') + 1);
-    const dayNum = day as unknown as number;
-    if (isNaN(dayNum)) {
-      return false;
-    }
-    if (dayNum > 31) {
-      return false;
-    }
-    return true;
-  }
-  alert('nok');
-  return false;
-}

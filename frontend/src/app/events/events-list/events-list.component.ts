@@ -1,17 +1,21 @@
-import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EventService, ParticipatedDto, ContactDto } from '../../shared/api-generated/api-generated';
 import { EventDto } from '../../shared/api-generated/api-generated';
-import { EventsServiceMock } from '../events.service-mock';
 import { MatDialog } from '@angular/material/dialog';
 import { EventsAddComponent } from '../events-add/events-add.component';
-import { ActivatedRouteSnapshot } from '@angular/router';
 import { EventsDetailComponent } from '../events-detail/events-detail.component';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { EventsInfoComponent } from '../events-info/events-info.component';
 
-export interface GroupBy {
+export class EventDtoGroup implements EventDto {
+  id: number;
+  date: string;
+  time: string;
+  name?: string;
+  duration: number;
+  contacts?: ContactDto[];
+  participated?: ParticipatedDto[];
   weekNumber: number;
   isGroupBy: boolean;
 }
@@ -26,14 +30,12 @@ export class EventsListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   events: Observable<EventDto[]>;
   displayedColumns = ['bezeichnung', 'datum', 'uhrzeit', 'action'];
-  public dataSource: (EventDto | GroupBy)[] = new Array<(EventDto | GroupBy)>();
+  public dataSource: EventDtoGroup[] = new Array<EventDtoGroup>();
   checkboxSelected = true;
   weekNumber: number = 0;
 
   constructor(
     private service: EventService,
-    private changeDetectorRefs: ChangeDetectorRef,
-    private serviceMock: EventsServiceMock,
     private dialog: MatDialog) {
    }
 
@@ -43,26 +45,11 @@ export class EventsListComponent implements OnInit {
 
   private init() {
     this.events = this.service.get();
-    this.events.subscribe(x => {
-      const xSort: EventDto[] = x.sort(this.funtionGetSortedData);
-      xSort.forEach(x => 
-        {
-          const week = this.getWeekNumber(new Date(x.date));
-          if (week > this.weekNumber) {
-            this.weekNumber = week;
-            this.dataSource.push({
-              weekNumber: week,
-              isGroupBy: true
-            });
-          }
-          this.dataSource.push(x);
-        });          
-      if (this.checkboxSelected) {
-    //    this.filterValues();
-      }
-    });    
-    this.changeDetectorRefs.detectChanges();
-   // this.events = this.serviceMock.getEvents();
+    this.events.subscribe(y => 
+    {
+      const xSort: EventDto[] = y.sort(this.funtionGetSortedData);
+      this.filterValues(xSort);
+    });
   }
 
   funtionGetSortedData(a: EventDto, b: EventDto): number {
@@ -93,6 +80,15 @@ export class EventsListComponent implements OnInit {
     });
   }
 
+  isToday(element: EventDtoGroup) : boolean {
+    const date: Date = new Date(element.date);
+    if (date.getDate() === new Date(Date.now()).getDate()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   deleteEvent(id: number) {
     this.service.delete(id).subscribe(x => this.init());
   }
@@ -102,26 +98,54 @@ export class EventsListComponent implements OnInit {
     this.init();
   }
 
-  filterValues() {
+  filterValues(events: EventDto[]) {
     this.dataSource = [];
     this.weekNumber = 0;
-    const justNewEvents: (EventDto | GroupBy)[] = new Array<(EventDto | GroupBy)>();
     let eventsFiltered: EventDto[] = new Array<EventDto>();
-    this.events.subscribe(y => eventsFiltered = y.filter(x => new Date(x.date).getTime() >= Date.now()));
+    if (this.checkboxSelected) {
+      eventsFiltered = events.filter(x => this.getDate(x.date, x.time) >= new Date(Date.now()).getTime());
+    } else {
+      eventsFiltered = events;
+    }
     eventsFiltered.forEach(x => 
       {
         const week = this.getWeekNumber(new Date(x.date));
-        if (week > this.weekNumber) {
-          this.weekNumber = week;
+          if (week > this.weekNumber) {
+            this.weekNumber = week;
+            this.dataSource.push({
+              date: x.date,
+              duration: x.duration,
+              id: x.id,
+              time: x.time,
+              contacts: x.contacts,
+              name: x.name,
+              participated: x.participated,
+              weekNumber: week,
+              isGroupBy: true
+            });
+          }
           this.dataSource.push({
-            weekNumber: week,
-            isGroupBy: true
+            date: x.date,
+            duration: x.duration,
+            id: x.id,
+            time: x.time,
+            contacts: x.contacts,
+            name: x.name,
+            participated: x.participated,
+            weekNumber: 0,
+            isGroupBy: false
           });
-        }
-        this.dataSource.push(x)});
+      });
   }
 
-  //https://stackblitz.com/edit/angular-mattable-with-groupheader?file=app%2Ftable-basic-example.html
+  getDate(date: string, time: string) : number {
+    let dateFinished: Date = new Date(date);
+    const timeFinished: Date = new Date(time);
+    dateFinished.setHours(timeFinished.getHours());
+    dateFinished.setMinutes(timeFinished.getMinutes());
+    dateFinished.setSeconds(timeFinished.getSeconds());
+    return dateFinished.getTime();
+  }
 
   openInfo(id: number) {
     this.service.getById(id).subscribe(x => {
@@ -129,7 +153,7 @@ export class EventsListComponent implements OnInit {
     });
   }
 
-  isGroup(index, item): boolean{
+  isGroup(index: number, item: EventDtoGroup): boolean{
     return item.isGroupBy;
   }
 
