@@ -1,6 +1,8 @@
 Coding Guidelines Backend:
-	- Konstanten werden nur in Großbuchstaben benannt
-		- const int DASISTEINEKONSTANTE = 0;
+	- Konstanten und Enumerationen werden nur in Großbuchstaben benannt und mit unterstrich unterteilt
+		- const int DAS_IST_EINE_KONSTANTE = 0;
+		- enum DAS_IST_EINE_ENUMERATION {
+			}
 	- Variablen beginnen immer mit einem kleinen Buchstaben und folgen zusätzlich dem Camel-Case Prinzip: 
 		- int dasIstEinBeispielFürEinenKorrektenVariablenNamen = 0;
 		- Grundsätzlich darauf achten möglichst in kurzen zusammenhängenden Worten zu erklären was es für eine Variable ist
