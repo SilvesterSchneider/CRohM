@@ -104,7 +104,7 @@ export class EventsListComponent implements OnInit {
     }
     eventsFiltered.forEach(x => {
         const week = this.getWeekNumber(new Date(x.date));
-        if (week != this.weekNumber) {
+        if (week !== this.weekNumber) {
           this.weekNumber = week;
           this.dataSource.push({
             date: x.date,
