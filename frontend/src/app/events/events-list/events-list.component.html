@@ -29,6 +29,12 @@
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+        <!-- Group header -->
+        <ng-container matColumnDef="groupHeader">
+            <mat-cell colspan="999" *matCellDef="let groupBy"><strong>start with {{groupBy.weekNumber}}</strong></mat-cell>
+        </ng-container>
+        <mat-row *matRowDef="let row; columns: ['groupHeader']; when: isGroup"> </mat-row>
     </mat-table>
 </div>
 <br>
