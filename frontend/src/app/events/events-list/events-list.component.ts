@@ -121,6 +121,8 @@ export class EventsListComponent implements OnInit {
         this.dataSource.push(x)});
   }
 
+  //https://stackblitz.com/edit/angular-mattable-with-groupheader?file=app%2Ftable-basic-example.html
+
   openInfo(id: number) {
     this.service.getById(id).subscribe(x => {
       this.dialog.open(EventsInfoComponent, { data: x });
