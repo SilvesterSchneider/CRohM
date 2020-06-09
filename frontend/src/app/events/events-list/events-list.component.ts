@@ -32,7 +32,7 @@ export class EventsListComponent implements OnInit {
   displayedColumns = ['bezeichnung', 'datum', 'uhrzeit', 'action'];
   public dataSource: EventDtoGroup[] = new Array<EventDtoGroup>();
   checkboxSelected = true;
-  weekNumber: number = 0;
+  weekNumber = 0;
 
   constructor(
     private service: EventService,
@@ -45,8 +45,7 @@ export class EventsListComponent implements OnInit {
 
   private init() {
     this.events = this.service.get();
-    this.events.subscribe(y => 
-    {
+    this.events.subscribe(y => {
       const xSort: EventDto[] = y.sort(this.funtionGetSortedData);
       this.filterValues(xSort);
     });
@@ -76,7 +75,7 @@ export class EventsListComponent implements OnInit {
     });
   }
 
-  isToday(element: EventDtoGroup) : boolean {
+  isToday(element: EventDtoGroup): boolean {
     const date: Date = new Date(element.date);
     if (date.getDate() === new Date(Date.now()).getDate()) {
       return true;
@@ -103,23 +102,10 @@ export class EventsListComponent implements OnInit {
     } else {
       eventsFiltered = events;
     }
-    eventsFiltered.forEach(x => 
-      {
+    eventsFiltered.forEach(x => {
         const week = this.getWeekNumber(new Date(x.date));
-          if (week > this.weekNumber) {
-            this.weekNumber = week;
-            this.dataSource.push({
-              date: x.date,
-              duration: x.duration,
-              id: x.id,
-              time: x.time,
-              contacts: x.contacts,
-              name: x.name,
-              participated: x.participated,
-              weekNumber: week,
-              isGroupBy: true
-            });
-          }
+        if (week > this.weekNumber) {
+          this.weekNumber = week;
           this.dataSource.push({
             date: x.date,
             duration: x.duration,
@@ -128,14 +114,26 @@ export class EventsListComponent implements OnInit {
             contacts: x.contacts,
             name: x.name,
             participated: x.participated,
-            weekNumber: 0,
-            isGroupBy: false
+            weekNumber: week,
+            isGroupBy: true
           });
-      });
+        }
+        this.dataSource.push({
+          date: x.date,
+          duration: x.duration,
+          id: x.id,
+          time: x.time,
+          contacts: x.contacts,
+          name: x.name,
+          participated: x.participated,
+          weekNumber: 0,
+          isGroupBy: false
+        });
+    });
   }
 
-  getDate(date: string, time: string) : number {
-    let dateFinished: Date = new Date(date);
+  getDate(date: string, time: string): number {
+    const dateFinished: Date = new Date(date);
     const timeFinished: Date = new Date(time);
     dateFinished.setHours(timeFinished.getHours());
     dateFinished.setMinutes(timeFinished.getMinutes());
@@ -149,7 +147,7 @@ export class EventsListComponent implements OnInit {
     });
   }
 
-  isGroup(index: number, item: EventDtoGroup): boolean{
+  isGroup(index: number, item: EventDtoGroup): boolean {
     return item.isGroupBy;
   }
 
@@ -165,17 +163,18 @@ export class EventsListComponent implements OnInit {
     // Sunday: ((0+6) % 7) = 6
     // (3 - result) is necessary to get the Thursday of the current week.
     // If we want to have Tuesday it would be (1-result)
-    const currentThursday = new Date(date.getTime() +(3-((date.getDay()+6) % 7)) * 86400000);
+    const currentThursday = new Date(date.getTime() + (3 - ((date.getDay() + 6) % 7)) * 86400000);
 
     // At the beginnig or end of a year the thursday could be in another year.
     const yearOfThursday = currentThursday.getFullYear();
 
     // Get first Thursday of the year
-    const firstThursday = new Date(new Date(yearOfThursday,0,4).getTime() +(3-((new Date(yearOfThursday,0,4).getDay()+6) % 7)) * 86400000);
+    const firstThursday = new Date(new Date(yearOfThursday, 0, 4).getTime() +
+      (3 - ((new Date(yearOfThursday, 0, 4).getDay() + 6) % 7)) * 86400000);
 
     // +1 we start with week number 1
     // +0.5 an easy and dirty way to round result (in combinationen with Math.floor)
-    const weekNumber = Math.floor(1 + 0.5 + (currentThursday.getTime() - firstThursday.getTime()) / 86400000/7);
+    const weekNumber = Math.floor(1 + 0.5 + (currentThursday.getTime() - firstThursday.getTime()) / 86400000 / 7);
     return weekNumber;
   }
 }
