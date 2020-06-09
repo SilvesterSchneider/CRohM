@@ -11,7 +11,9 @@ namespace ModelLayer.Models
         public DateTime Date { get; set; }
         //die genaue uhrzeit des events
         public DateTime Time { get; set; }
-        //die dauer des events in x.y stunden
+        /// <summary>
+        /// die dauer des events in x.y stunden
+        /// </summary>
         public float Duration { get; set; }
         //die kontakte die diesem event zugeordnet sind
         public List<EventContact> Contacts { get; set; } = new List<EventContact>();

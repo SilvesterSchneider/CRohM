@@ -134,5 +134,8 @@
       }
     }
   },
-  "defaultProject": "crms-frontend"
+  "defaultProject": "crms-frontend",
+  "cli": {
+    "analytics": false
+  }
 }
