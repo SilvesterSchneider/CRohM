@@ -7,45 +7,56 @@ import { ContactsAddHistoryComponent } from '../contacts-add-history/contacts-ad
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
 
 @Component({
-  selector: 'app-contacts-list',
-  templateUrl: './contacts-list.component.html',
-  styleUrls: ['./contacts-list.component.scss']
+	selector: 'app-contacts-list',
+	templateUrl: './contacts-list.component.html',
+	styleUrls: [ './contacts-list.component.scss' ]
 })
-
 export class ContactsListComponent implements OnInit {
-  contacts: Observable<ContactDto[]>;
-  displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
-  service: ContactService;
+	contacts: Observable<ContactDto[]>;
+	displayedColumns = [
+		'vorname',
+		'nachname',
+		'stasse',
+		'hausnummer',
+		'plz',
+		'ort',
+		'land',
+		'telefon',
+		'fax',
+		'mail',
+		'action'
+	];
+	service: ContactService;
 
-  constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef, private dialog: MatDialog) {
-    this.service = service;
-   }
+	constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef, private dialog: MatDialog) {
+		this.service = service;
+	}
 
-  ngOnInit() {
-    this.init();
-  }
+	ngOnInit() {
+		this.init();
+	}
 
-  private init() {
-    this.contacts = this.service.getAll();
-    this.contacts.subscribe();
-    this.changeDetectorRefs.detectChanges();
-   // this.contacts = this.serviceMock.getContacts();
-  }
+	private init() {
+		this.contacts = this.service.getAll();
+		this.contacts.subscribe();
+		this.changeDetectorRefs.detectChanges();
+		// this.contacts = this.serviceMock.getContacts();
+	}
 
-  addContact() {
-    console.log('addContact');
-  }
+	addContact() {
+		console.log('addContact');
+	}
 
-  deleteContact(id: number) {
-    this.service.delete(id).subscribe(x => this.init());
-  }
+	deleteContact(id: number) {
+		this.service.delete(id).subscribe((x) => this.init());
+	}
 
-  addNote(id: number) {
-    const dialogRef = this.dialog.open(ContactsAddHistoryComponent, { data: id });
-    dialogRef.afterClosed().subscribe(y => this.init());
-  }
+	addNote(id: number) {
+		const dialogRef = this.dialog.open(ContactsAddHistoryComponent, { data: id });
+		dialogRef.afterClosed().subscribe((y) => this.init());
+	}
 
-  openInfo(id: number) {
-    this.service.getById(id).subscribe(x => this.dialog.open(ContactsInfoComponent, { data: x }));
-  }
+	openInfo(id: number) {
+		this.service.getById(id).subscribe((x) => this.dialog.open(ContactsInfoComponent, { data: x }));
+	}
 }

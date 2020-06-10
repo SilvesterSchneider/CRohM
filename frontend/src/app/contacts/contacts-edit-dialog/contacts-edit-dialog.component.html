@@ -1,0 +1,43 @@
+<div class="contactDetails" [formGroup]="contactsForm">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                Kontaktdaten
+            </h3>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Vorname" formControlName="preName">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Nachname" formControlName="name">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <app-osm-address formControlName="address"></app-osm-address>
+
+    <div class="row" formGroupName="contactPossibilities">
+        <div class="col-md">
+            <mat-form-field>
+                <input matInput placeholder="E-Mail" formControlName="mail">
+            </mat-form-field>
+        </div>
+        <div class="col-md">
+            <mat-form-field>
+                <input matInput placeholder="Telefonnummer" formControlName="phoneNumber">
+            </mat-form-field>
+        </div>
+        <div class="col-md">
+            <mat-form-field>
+                <input matInput placeholder="Faxnummer" formControlName="fax">
+            </mat-form-field>
+        </div>
+        <app-contact-possibilities></app-contact-possibilities>    
+    </div>
+    <button mat-raised-button color="primary" type="submit" title="Speichern" (click)="updateContact()" routerLink="/contacts" [disabled]="!contactsForm.valid">Speichern</button>
+</div>
+
+<hr>

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OrganizationsAddComponent } from './organizations-add/organizations-add.component';
+import { OrganizationsAddComponent } from './organizations-add-dialog/organizations-add-dialog.component';
 import { OrganizationsRoutingModule } from './organizations-routing.module';
 import { OrganizationsListComponent } from './organizations-list/organizations-list.component';
 import { OrganizationsDetailComponent } from './organizations-detail/organizations-detail.component';
