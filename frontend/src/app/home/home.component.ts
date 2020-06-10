@@ -123,7 +123,7 @@ export class HomeComponent implements OnInit {
   }
 
   openOrganizationDetails(organization: OrganizationDto) {
-    //TO DO: open dialog of organizations detail!
+    // TO DO: open dialog of organizations detail!
   }
 
   openEventDetails(event: EventDto) {
