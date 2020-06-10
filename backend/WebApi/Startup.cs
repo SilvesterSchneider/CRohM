@@ -171,6 +171,7 @@ namespace WebApi
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();
             services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<IEventService, EventService>();
 
             //###########################Repositories#######################################
 
@@ -179,6 +180,8 @@ namespace WebApi
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<IOrganizationContactRepository, OrganizationContactRepository>();
+            services.AddScoped<IEventContactRepository, EventContactRepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
         }
     }
 }

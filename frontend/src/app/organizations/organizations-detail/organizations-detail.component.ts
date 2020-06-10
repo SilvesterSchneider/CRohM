@@ -2,17 +2,14 @@ import {
   ElementRef, HostBinding, Component, OnInit, ViewChild, forwardRef, Input, Optional, Self,
   ChangeDetectorRef, OnDestroy
 } from '@angular/core';
-import { NgControl, FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { Subject, Observable } from 'rxjs';
+import { NgControl, FormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { MatChipsModule } from '@angular/material/chips';
 import {
-  MatAutocompleteTrigger, MatAutocompleteModule, MatAutocompleteSelectedEvent,
-  MatAutocomplete
+  MatAutocompleteTrigger
 } from '@angular/material/autocomplete';
-import { MatFormFieldModule, MatFormFieldControl } from '@angular/material/form-field';
-import { MatCheckboxModule, MatCheckbox } from '@angular/material/checkbox';
+import { MatFormFieldControl } from '@angular/material/form-field';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
 import { OrganizationService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
@@ -42,7 +39,7 @@ export class OrganizationContactConnection {
   providers: [{ provide: MatFormFieldControl, useExisting: OrganizationsDetailComponent }]
 })
 
-export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormFieldControl<OrganizationContactConnection> {
+export class OrganizationsDetailComponent implements OnInit, OnDestroy {
   static nextId = 0;
   @ViewChild('inputTrigger', { read: MatAutocompleteTrigger }) inputTrigger: MatAutocompleteTrigger;
   @HostBinding() id = `input-ac-${OrganizationsDetailComponent.nextId++}`;
@@ -58,7 +55,6 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
   itemsToInsert: OrganizationContactConnection[] = new Array<OrganizationContactConnection>();
   public organizationForm: FormGroup;
   private organization: OrganizationDto;
-  private changeCallback: (input: OrganizationContactConnection[]) => void;
   itemControl = new FormControl();
   stateChanges = new Subject<void>();
   private placeholderSecond: string;
@@ -83,9 +79,6 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     private fb: FormBuilder,
     private route: ActivatedRoute
   ) {
-    if (this.ngControl != null) {
-      this.ngControl.valueAccessor = this;
-    }
     fm.monitor(elRef.nativeElement, true).subscribe(origin => {
       this.focused = !!origin;
       this.stateChanges.next();
@@ -145,10 +138,6 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     });
   }
 
-  setDescribedByIds(ids: string[]) {
-    this.describedBy = ids.join(' ');
-  }
-
   @Input() set value(value: any) {
     if (value) {
       this.selectedItems = value;
@@ -165,22 +154,6 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
   set placeholder(plh) {
     this.placeholderSecond = plh;
     this.stateChanges.next();
-  }
-
-  onContainerClick(event: MouseEvent): void {
-    throw new Error('Method not implemented.');
-  }
-
-  writeValue(value: any) {
-  }
-  registerOnChange(fn: (input: OrganizationContactConnection[]) => void) {
-    this.changeCallback = fn;
-  }
-  registerOnTouched(fn: () => void) {
-  }
-
-  clicker() {
-    this.inputTrigger.openPanel();
   }
 
   filter(filter: string): OrganizationContactConnection[] {
@@ -203,16 +176,18 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     this.isAllSelected = !this.isAllSelected;
     const len = this.filteredItems.length;
     if (this.isAllSelected) {
-      for (let i = 0; i++; i < len) {
+      this.selectedItems = [];
+      for (let i = 0; i < len; i++) {
         this.filteredItems[i].selected = true;
+        this.selectedItems.push(this.filteredItems[i]);
       }
-      this.selectedItems = this.filteredItems;
-      this.changeCallback(this.selectedItems);
-      this.cd.markForCheck();
     } else {
+      for (let i = 0; i < len; i++) {
+        this.filteredItems[i].selected = false;
+      }
       this.selectedItems = [];
     }
-    this.changeCallback(this.selectedItems);
+    this.cd.markForCheck();
   }
 
   toggleSelection(item: OrganizationContactConnection) {
@@ -222,9 +197,6 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     } else {
       const i = this.selectedItems.findIndex(value => value.contactId === item.contactId);
       this.selectedItems.splice(i, 1);
-    }
-    if (this.changeCallback) {
-      this.changeCallback(this.selectedItems);
     }
   }
 

@@ -59,6 +59,23 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Time = table.Column<DateTime>(nullable: false),
+                    Duration = table.Column<float>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -182,6 +199,29 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Participations",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    ContactId = table.Column<long>(nullable: false),
+                    HasParticipated = table.Column<bool>(nullable: false),
+                    EventId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Participations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Participations_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RoleClaims",
                 columns: table => new
                 {
@@ -288,6 +328,58 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EventContacts",
+                columns: table => new
+                {
+                    EventId = table.Column<long>(nullable: false),
+                    ContactId = table.Column<long>(nullable: false),
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventContacts", x => new { x.EventId, x.ContactId });
+                    table.ForeignKey(
+                        name: "FK_EventContacts_Contacts_ContactId",
+                        column: x => x.ContactId,
+                        principalTable: "Contacts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventContacts_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "History",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    Comment = table.Column<string>(nullable: true),
+                    ContactId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_History", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_History_Contacts_ContactId",
+                        column: x => x.ContactId,
+                        principalTable: "Contacts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrganizationContacts",
                 columns: table => new
                 {
@@ -314,7 +406,11 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200606133327_init.cs
                 values: new object[] { 1L, "2e8b6cf2-f142-4979-b35d-27f3990958e0", "Admin", "ADMIN" });
+=======
+                values: new object[] { 1L, "72e0d730-cf4b-4640-a7ad-8ba3dd807414", "Admin", "ADMIN" });
+>>>>>>> 603af02707be98a0f30a24d2efa0275644607a54:backend/ModelLayer/Migrations/20200609191420_init.cs
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
@@ -332,6 +428,16 @@ namespace ModelLayer.Migrations
                 column: "ContactPossibilitiesId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EventContacts_ContactId",
+                table: "EventContacts",
+                column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_History_ContactId",
+                table: "History",
+                column: "ContactId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrganizationContacts_ContactId",
                 table: "OrganizationContacts",
                 column: "ContactId");
@@ -345,6 +451,11 @@ namespace ModelLayer.Migrations
                 name: "IX_Organizations_ContactId",
                 table: "Organizations",
                 column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Participations_EventId",
+                table: "Participations",
+                column: "EventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -395,7 +506,16 @@ namespace ModelLayer.Migrations
                 name: "EducationalOpportunities");
 
             migrationBuilder.DropTable(
+                name: "EventContacts");
+
+            migrationBuilder.DropTable(
+                name: "History");
+
+            migrationBuilder.DropTable(
                 name: "OrganizationContacts");
+
+            migrationBuilder.DropTable(
+                name: "Participations");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");
@@ -417,6 +537,9 @@ namespace ModelLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Organizations");
+
+            migrationBuilder.DropTable(
+                name: "Events");
 
             migrationBuilder.DropTable(
                 name: "Roles");

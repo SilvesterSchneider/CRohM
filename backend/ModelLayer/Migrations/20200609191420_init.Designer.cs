@@ -10,7 +10,11 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200606133327_init.Designer.cs
     [Migration("20200606133327_init")]
+=======
+    [Migration("20200609191420_init")]
+>>>>>>> 603af02707be98a0f30a24d2efa0275644607a54:backend/ModelLayer/Migrations/20200609191420_init.Designer.cs
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -263,6 +267,91 @@ namespace ModelLayer.Migrations
                     b.ToTable("EducationalOpportunities");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.Event", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Duration")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.EventContact", b =>
+                {
+                    b.Property<long>("EventId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ContactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EventId", "ContactId");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("EventContacts");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("ContactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("History");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>
                 {
                     b.Property<long>("Id")
@@ -306,6 +395,35 @@ namespace ModelLayer.Migrations
                     b.ToTable("OrganizationContacts");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.Participated", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ContactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("EventId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("HasParticipated")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("Participations");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.Role", b =>
                 {
                     b.Property<long>("Id")
@@ -338,7 +456,11 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200606133327_init.Designer.cs
                             ConcurrencyStamp = "2e8b6cf2-f142-4979-b35d-27f3990958e0",
+=======
+                            ConcurrencyStamp = "72e0d730-cf4b-4640-a7ad-8ba3dd807414",
+>>>>>>> 603af02707be98a0f30a24d2efa0275644607a54:backend/ModelLayer/Migrations/20200609191420_init.Designer.cs
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -486,6 +608,28 @@ namespace ModelLayer.Migrations
                         .HasForeignKey("ContactPossibilitiesId");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.EventContact", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Contact", "Contact")
+                        .WithMany("Events")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelLayer.Models.Event", "Event")
+                        .WithMany("Contacts")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Contact", null)
+                        .WithMany("History")
+                        .HasForeignKey("ContactId");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>
                 {
                     b.HasOne("ModelLayer.Models.Address", "Address")
@@ -510,6 +654,13 @@ namespace ModelLayer.Migrations
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.Participated", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Event", null)
+                        .WithMany("Participated")
+                        .HasForeignKey("EventId");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,57 @@
+<div class="eventsAdd" [formGroup]="eventsForm">
+    <div class="column">
+        <div class="col-md-12">
+            <h3>
+            	 Veranstaltung hinzufügen
+            </h3>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input matInput placeholder="Bezeichnung" formControlName="name">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input type="date" matInput placeholder="Datum" formControlName="date">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input type="time" matInput placeholder="Uhrzeit" formControlName="time">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input type="number" matInput placeholder="Dauer in Stunden" formControlName="duration">
+            </mat-form-field>
+        </div>
+    </div>
+
+<mat-chip-list #chipList>
+    <mat-chip *ngFor="let item of selectedItems" [selectable]="selectable">
+        {{ item.preName + ' ' + item.name }}
+    </mat-chip>
+    <input type="text" #inputTrigger placeholder="Teilnehmer auswählen" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
+    [matChipInputFor]="chipList">
+</mat-chip-list>
+
+<mat-autocomplete #autoComplete="matAutocomplete">
+    <mat-option>
+        <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
+                Alle selektieren
+        </mat-checkbox>
+  </mat-option>
+    <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
+        <div (click)="optionClicked($event, item);">
+            <mat-checkbox [checked]="item.selected" (change)="toggleSelection(item)" (click)="$event.stopPropagation()">
+                {{ item.preName + ' ' + item.name }}
+            </mat-checkbox>
+        </div>
+    </mat-option>
+</mat-autocomplete>
+<button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
+    Speichern
+</button>
+<button mat-raised-button color="primary" title="Verwerfen" (click)="exit()">
+    Verwerfen
+</button>

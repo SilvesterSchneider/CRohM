@@ -56,12 +56,46 @@ namespace ServiceLayer
                         {
                             return new List<Organization>();
                         }
+                    }))
+                .ForMember(dto => dto.Events,
+                    expression => expression.MapFrom((events, dto) =>
+                    {
+                        if (events.Events.Any())
+                        {
+                            return events.Events
+                                .Select(eventToGet => eventToGet.Event)
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<Event>();
+                        }
                     }));
 
             CreateMap<ContactDto, Contact>();
             CreateMap<ContactCreateDto, Contact>();
             CreateMap<ContactPossibilitiesEntryCreateDto, ContactPossibilitiesEntry>().ReverseMap();
             CreateMap<ContactPossibilitiesEntryDto, ContactPossibilitiesEntry>().ReverseMap();
+            CreateMap<Event, EventDto>()
+                .ForMember(dto => dto.Contacts,
+                    expression => expression.MapFrom((contact, dto) =>
+                    {
+                        if (contact.Contacts.Any())
+                        {
+                            return contact.Contacts
+                                .Select(contactToGet => contactToGet.Contact)
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<Contact>();
+                        }
+                    }));
+            CreateMap<EventDto, Event>();
+            CreateMap<EventCreateDto, Event>();
+            CreateMap<Participated, ParticipatedDto>().ReverseMap();
+            CreateMap<HistoryElement, HistoryElementDto>().ReverseMap();
+            CreateMap<HistoryElementCreateDto, HistoryElement>();
         }
     }
 }
