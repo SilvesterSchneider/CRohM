@@ -3,22 +3,15 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
 	ContactDto,
-	ContactPossibilitiesEntryDto,
-	EventDto,
-	ParticipatedDto,
-	EventService,
-	HistoryElementType
+	EventService
 } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
-import { timeInterval } from 'rxjs/operators';
-import { getLocaleDateFormat } from '@angular/common';
-import { getType } from '@angular/flex-layout/extended/typings/style/style-transforms';
 
 @Component({
-	selector: 'app-contacts-detail',
-	templateUrl: './contacts-detail.component.html',
-	styleUrls: [ './contacts-detail.component.scss' ]
+	selector: 'app-contacts-edit-dialog',
+	templateUrl: './contacts-edit-dialog.component.html',
+	styleUrls: [ './contacts-edit-dialog.component.scss' ]
 })
 export class ContactsEditDialogComponent implements OnInit {
 	@ViewChild(ContactPossibilitiesComponent, { static: true })

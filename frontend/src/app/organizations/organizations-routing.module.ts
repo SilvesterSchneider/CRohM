@@ -5,28 +5,22 @@ import { OrganizationsDetailComponent } from './organizations-detail/organizatio
 import { OrganizationsDetailResolverService } from './organizations-detail-resolver.service';
 
 const organizationsRoutes: Routes = [
-    {
-        path: '',
-        component: OrganizationsListComponent
-    },
-    {
-        path: ':id',
-        component: OrganizationsDetailComponent,
-        resolve: {
-            organization: OrganizationsDetailResolverService
-        }
-    }
+	{
+		path: '',
+		component: OrganizationsListComponent
+	},
+	{
+		path: ':id',
+		component: OrganizationsDetailComponent,
+		resolve: {
+			organization: OrganizationsDetailResolverService
+		}
+	}
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(organizationsRoutes)
-    ],
-    exports: [
-        RouterModule
-    ],
-    providers: [
-        OrganizationsDetailResolverService
-    ]
+	imports: [ RouterModule.forChild(organizationsRoutes) ],
+	exports: [ RouterModule ],
+	providers: [ OrganizationsDetailResolverService ]
 })
-export class OrganizationsRoutingModule { }
+export class OrganizationsRoutingModule {}

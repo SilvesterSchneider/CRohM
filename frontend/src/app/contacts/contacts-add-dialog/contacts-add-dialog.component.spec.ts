@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../../shared/shared.module';
 
-describe('ContactsAddComponent', () => {
+describe('ContactsAddDialogComponent', () => {
 	let component: ContactsAddDialogComponent;
 	let fixture: ComponentFixture<ContactsAddDialogComponent>;
 

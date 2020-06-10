@@ -5,48 +5,49 @@ import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibiliti
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-organizations-add',
-  templateUrl: './organizations-add.component.html',
-  styleUrls: ['./organizations-add.component.scss']
+	selector: 'app-organizations-add',
+	templateUrl: './organizations-add.component.html',
+	styleUrls: [ './organizations-add.component.scss' ]
 })
 export class OrganizationsAddComponent implements OnInit {
-  @ViewChild(ContactPossibilitiesComponent, {static: true})
-  contactPossibilitiesEntries: ContactPossibilitiesComponent;
-  contactPossibilitiesEntriesFormGroup: FormGroup;
-  public organizationForm: FormGroup;
-  private organization: OrganizationCreateDto;
+	@ViewChild(ContactPossibilitiesComponent, { static: true })
+	contactPossibilitiesEntries: ContactPossibilitiesComponent;
+	contactPossibilitiesEntriesFormGroup: FormGroup;
+	public organizationForm: FormGroup;
+	private organization: OrganizationCreateDto;
 
-  constructor(private readonly fb: FormBuilder,
-              private readonly organizationsService: OrganizationService,
-              private readonly contactService: ContactService,
-              private readonly router: Router) { }
+	constructor(
+		private readonly fb: FormBuilder,
+		private readonly organizationsService: OrganizationService,
+		private readonly contactService: ContactService,
+		private readonly router: Router
+	) {}
 
-  public ngOnInit(): void {
-    this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
-    this.organizationForm = this.createOrganizationForm();
-  }
+	public ngOnInit(): void {
+		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
+		this.organizationForm = this.createOrganizationForm();
+	}
 
-  public onAddOrganization(): void {
-    this.organization = this.organizationForm.value;
-    this.organizationsService.post(this.organization).subscribe(x => this.router.navigate(['/organizations']));
-  }
+	public onAddOrganization(): void {
+		this.organization = this.organizationForm.value;
+		this.organizationsService.post(this.organization).subscribe((x) => this.router.navigate([ '/organizations' ]));
+	}
 
-  private createOrganizationForm(): FormGroup {
-    return this.fb.group({
-      name: ['', Validators.required],
-      description: [''],
-      address: this.fb.control(''),
-      contact: this.createContactForm()
-    });
-  }
+	private createOrganizationForm(): FormGroup {
+		return this.fb.group({
+			name: [ '', Validators.required ],
+			description: [ '' ],
+			address: this.fb.control(''),
+			contact: this.createContactForm()
+		});
+	}
 
-  private createContactForm(): FormGroup {
-    return this.fb.group({
-      phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
-      fax: ['', Validators.pattern('^0[0-9\- ]*$')],
-      mail: ['', Validators.email],
-      contactEntries: this.contactPossibilitiesEntriesFormGroup
-    });
-  }
+	private createContactForm(): FormGroup {
+		return this.fb.group({
+			phoneNumber: [ '', Validators.pattern('^0[0-9- ]*$') ],
+			fax: [ '', Validators.pattern('^0[0-9- ]*$') ],
+			mail: [ '', Validators.email ],
+			contactEntries: this.contactPossibilitiesEntriesFormGroup
+		});
+	}
 }
-

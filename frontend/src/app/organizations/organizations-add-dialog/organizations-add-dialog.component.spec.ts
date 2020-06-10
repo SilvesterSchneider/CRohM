@@ -8,24 +8,33 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../../shared/shared.module';
 
 describe('OrganizationsAddComponent', () => {
-  let component: OrganizationsAddComponent;
-  let fixture: ComponentFixture<OrganizationsAddComponent>;
+	let component: OrganizationsAddComponent;
+	let fixture: ComponentFixture<OrganizationsAddComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ OrganizationsAddComponent ],
-      imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule, HttpClientModule, SharedModule]
-    })
-    .compileComponents();
-  }));
+	beforeEach(
+		async(() => {
+			TestBed.configureTestingModule({
+				declarations: [ OrganizationsAddComponent ],
+				imports: [
+					FormsModule,
+					ReactiveFormsModule,
+					AppRoutingModule,
+					MaterialModule,
+					BrowserAnimationsModule,
+					HttpClientModule,
+					SharedModule
+				]
+			}).compileComponents();
+		})
+	);
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(OrganizationsAddComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	beforeEach(() => {
+		fixture = TestBed.createComponent(OrganizationsAddComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

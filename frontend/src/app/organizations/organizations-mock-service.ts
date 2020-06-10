@@ -4,24 +4,24 @@ import { OrganizationDto } from '../shared/api-generated/api-generated';
 import { ORGANIZATIONS } from './mock-organizations';
 
 @Injectable({
-    providedIn: 'root',
+	providedIn: 'root'
 })
 export class OrganizationsMockService {
-    static nextId = 4;
-    private orgas: OrganizationDto[] = ORGANIZATIONS;
-    private organizations: BehaviorSubject<OrganizationDto[]> = new BehaviorSubject<OrganizationDto[]>(ORGANIZATIONS);
+	static nextId = 4;
+	private orgas: OrganizationDto[] = ORGANIZATIONS;
+	private organizations: BehaviorSubject<OrganizationDto[]> = new BehaviorSubject<OrganizationDto[]>(ORGANIZATIONS);
 
-    constructor() { }
+	constructor() {}
 
-    getOrganizationsMock() {
-        return this.organizations.asObservable();
-    }
+	getOrganizationsMock() {
+		return this.organizations.asObservable();
+	}
 
-    delete(id: number) {
-        const index: number = this.orgas.findIndex(x => x.id === id);
-        if (index !== -1) {
-            this.orgas.splice(index, 1);
-            this.organizations.next(this.orgas);
-        }
-    }
+	delete(id: number) {
+		const index: number = this.orgas.findIndex((x) => x.id === id);
+		if (index !== -1) {
+			this.orgas.splice(index, 1);
+			this.organizations.next(this.orgas);
+		}
+	}
 }

@@ -1,20 +1,18 @@
-import { Component, OnInit, ViewChild, createPlatformFactory } from '@angular/core';
-import { Validators, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import {
 	ContactCreateDto,
 	AddressCreateDto,
-	ContactPossibilitiesCreateDto,
-	ContactDto
+	ContactPossibilitiesCreateDto
 } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
-	selector: 'app-contacts-add',
-	templateUrl: './contacts-add.component.html',
-	styleUrls: [ './contacts-add.component.scss' ]
+	selector: 'app-contacts-add-dialog',
+	templateUrl: './contacts-add-dialog.component.html',
+	styleUrls: [ './contacts-add-dialog.component.scss' ]
 })
 export class ContactsAddDialogComponent implements OnInit {
 	contactCreateDto: ContactCreateDto = { name: 'n', preName: 'n' };
