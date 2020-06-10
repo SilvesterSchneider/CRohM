@@ -1,4 +1,4 @@
-<div class="contactDetails" [formGroup]="contactsForm">
+<mat-dialog-content class="contactDetails" [formGroup]="contactsForm">
     <div class="row">
         <div class="col-md-12">
             <h3>
@@ -13,7 +13,7 @@
         </mat-form-field>
     </div>
 
-  <app-osm-address formControlName="address"></app-osm-address>
+    <app-osm-address formControlName="address"></app-osm-address>
 
     <div class="row">
         <div class="col-md-12">
@@ -40,11 +40,12 @@
         </div>
         <app-contact-possibilities></app-contact-possibilities>
     </div>
-    
-    <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid" (click)="addContact()">
+
+    <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid"
+        (click)="addContact()">
         Speichern
     </button>
     <button mat-raised-button color="primary" title="Verwerfen" routerLink="/contacts">
         Verwerfen
     </button>
-</div>
+</mat-dialog-content>
