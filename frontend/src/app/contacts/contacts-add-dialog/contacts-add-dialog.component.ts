@@ -7,7 +7,7 @@ import {
 } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
-import { Router } from '@angular/router';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-contacts-add-dialog',
@@ -23,12 +23,17 @@ export class ContactsAddDialogComponent implements OnInit {
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	contactsForm: FormGroup;
 
-	constructor(private fb: FormBuilder, private service: ContactService, private router: Router) {}
+	constructor(
+		private fb: FormBuilder,
+		private service: ContactService,
+		public dialogRef: MatDialogRef<ContactsAddDialogComponent>
+	) {}
 
 	ngOnInit(): void {
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
 		this.createForm();
 	}
+
 	createForm() {
 		this.contactsForm = this.fb.group({
 			name: [ '', Validators.required ],
@@ -45,7 +50,7 @@ export class ContactsAddDialogComponent implements OnInit {
 		});
 	}
 
-	addContact() {
+	onApprove() {
 		// Take values from Input-Form and fits them into api-dto's.
 		this.contactCreateDto.name = this.contactsForm.value.name;
 		this.contactCreateDto.preName = this.contactsForm.value.preName;
@@ -65,6 +70,11 @@ export class ContactsAddDialogComponent implements OnInit {
 		this.contactCreateDto.contactPossibilities = this.contactPossibilitiesCreateDto;
 
 		// And add a new Contact with the service
-		this.service.post(this.contactCreateDto).subscribe((x) => this.router.navigate([ '/contacts' ]));
+		this.service.post(this.contactCreateDto); // subscribe neccessary?
+		this.dialogRef.close();
+	}
+
+	onCancel() {
+		this.dialogRef.close();
 	}
 }

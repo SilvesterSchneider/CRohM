@@ -1,10 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import {
-	ContactDto,
-	EventService
-} from '../../shared/api-generated/api-generated';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ContactDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 
@@ -17,18 +14,16 @@ export class ContactsEditDialogComponent implements OnInit {
 	@ViewChild(ContactPossibilitiesComponent, { static: true })
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
 	contactPossibilitiesEntriesFormGroup: FormGroup;
-	contact: ContactDto;
 	contactsForm: FormGroup;
 
 	constructor(
 		private fb: FormBuilder,
-		private route: ActivatedRoute,
-		private service: ContactService,
-		private eventService: EventService
+		public dialogRef: MatDialogRef<ContactsEditDialogComponent>,
+		@Inject(MAT_DIALOG_DATA) public contact: ContactDto,
+		private service: ContactService
 	) {}
 
 	ngOnInit(): void {
-		this.contact = this.route.snapshot.data.contact;
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
 		this.initForm();
@@ -52,7 +47,7 @@ export class ContactsEditDialogComponent implements OnInit {
 		});
 	}
 
-	updateContact() {
+	onApprove() {
 		const idAddress = this.contact.address.id;
 		const idContactPossibilities = this.contact.contactPossibilities.id;
 		const newContact: ContactDto = this.contactsForm.value;
@@ -62,6 +57,11 @@ export class ContactsEditDialogComponent implements OnInit {
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
-		this.service.put(this.contact, this.contact.id).subscribe();
+		this.service.put(this.contact, this.contact.id); // subscribe neccessary?
+		this.dialogRef.close();
+	}
+
+	onCancel() {
+		this.dialogRef.close();
 	}
 }

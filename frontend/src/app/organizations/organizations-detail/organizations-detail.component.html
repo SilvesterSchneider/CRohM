@@ -1,8 +1,8 @@
-<mat-dialog-content class="organizationDetails" [formGroup]="organizationForm">
+<div class="organizationDetails" [formGroup]="organizationForm">
     <div class="row">
         <div class="col-md-12">
             <h3>
-                Organisation bearbeiten
+                Organisation
             </h3>
         </div>
         <div class="col-md-3">
@@ -37,34 +37,33 @@
         </div>
         <app-contact-possibilities></app-contact-possibilities>
     </div>
-    <mat-chip-list #chipList>
-        <mat-chip *ngFor="let item of selectedItems" [selectable]="selectable">
-            {{ item.preName + ' ' + item.name }}
-        </mat-chip>
-        <input type="text" #inputTrigger placeholder="Mitarbeiter auswählen" matInput [matAutocomplete]="autoComplete"
-            [formControl]="itemControl" [matChipInputFor]="chipList">
-    </mat-chip-list>
+</div>
+<mat-chip-list #chipList>
+    <mat-chip *ngFor="let item of selectedItems" [selectable]="selectable">
+        {{ item.preName + ' ' + item.name }}
+    </mat-chip>
+    <input type="text" #inputTrigger placeholder="Mitarbeiter auswählen" matInput [matAutocomplete]="autoComplete"
+        [formControl]="itemControl" [matChipInputFor]="chipList">
+</mat-chip-list>
 
-    <mat-autocomplete #autoComplete="matAutocomplete">
-        <mat-option>
-            <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
-                Alle selektieren
+<mat-autocomplete #autoComplete="matAutocomplete">
+    <mat-option>
+        <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
+            Alle selektieren
+        </mat-checkbox>
+    </mat-option>
+    <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
+        <div (click)="optionClicked($event, item);">
+            <mat-checkbox [checked]="item.selected" (change)="toggleSelection(item)" (click)="$event.stopPropagation()">
+                {{ item.preName + ' ' + item.name }}
             </mat-checkbox>
-        </mat-option>
-        <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
-            <div (click)="optionClicked($event, item);">
-                <mat-checkbox [checked]="item.selected" (change)="toggleSelection(item)"
-                    (click)="$event.stopPropagation()">
-                    {{ item.preName + ' ' + item.name }}
-                </mat-checkbox>
-            </div>
-        </mat-option>
-    </mat-autocomplete>
-    <button mat-raised-button color="primary" type="submit" [disabled]="!organizationForm.valid" (click)="saveValues()"
-        routerLink="/organizations">
-        Speichern
-    </button>
-    <button mat-raised-button color="primary" routerLink="/organizations">
-        Verwerfen
-    </button>
-</mat-dialog-content>
+        </div>
+    </mat-option>
+</mat-autocomplete>
+<button mat-raised-button color="primary" type="submit" [disabled]="!organizationForm.valid" (click)="saveValues()"
+    routerLink="/organizations">
+    Speichern
+</button>
+<button mat-raised-button color="primary" routerLink="/organizations">
+    Verwerfen
+</button>

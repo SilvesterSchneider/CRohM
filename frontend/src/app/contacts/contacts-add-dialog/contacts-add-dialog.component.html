@@ -40,12 +40,14 @@
         </div>
         <app-contact-possibilities></app-contact-possibilities>
     </div>
-
-    <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid"
-        (click)="addContact()">
-        Speichern
-    </button>
-    <button mat-raised-button color="primary" title="Verwerfen" routerLink="/contacts">
-        Verwerfen
-    </button>
+    <div>
+        <span class="fill-remaining-space"></span>
+        <button mat-raised-button color="primary" title="Abbrechen" (click)="onCancel()">
+            Abbrechen
+        </button>
+        <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid"
+            (click)="onApprove()">
+            Speichern
+        </button>
+    </div>
 </mat-dialog-content>

@@ -1,4 +1,4 @@
-<mat-dialog-content class="contactDetails" [formGroup]="contactsForm">
+<div class="contactDetails" [formGroup]="contactsForm">
     <div class="row">
         <div class="col-md-12">
             <h3>
@@ -20,17 +20,17 @@
     <app-osm-address formControlName="address"></app-osm-address>
 
     <div class="row" formGroupName="contactPossibilities">
-        <div class="col-md">
+        <div class="col-md-3">
             <mat-form-field>
                 <input matInput placeholder="E-Mail" formControlName="mail">
             </mat-form-field>
         </div>
-        <div class="col-md">
+        <div class="col-md-3">
             <mat-form-field>
                 <input matInput placeholder="Telefonnummer" formControlName="phoneNumber">
             </mat-form-field>
         </div>
-        <div class="col-md">
+        <div class="col-md-3">
             <mat-form-field>
                 <input matInput placeholder="Faxnummer" formControlName="fax">
             </mat-form-field>
@@ -39,4 +39,6 @@
     </div>
     <button mat-raised-button color="primary" type="submit" title="Speichern" (click)="updateContact()"
         routerLink="/contacts" [disabled]="!contactsForm.valid">Speichern</button>
-</mat-dialog-content>
+</div>
+
+<hr>
