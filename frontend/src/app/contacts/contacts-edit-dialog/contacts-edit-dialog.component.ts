@@ -15,13 +15,16 @@ export class ContactsEditDialogComponent implements OnInit {
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	contactsForm: FormGroup;
+	contact: ContactDto;
 
 	constructor(
 		public dialogRef: MatDialogRef<ContactsEditDialogComponent>,
-		@Inject(MAT_DIALOG_DATA) public contact: any,
+		@Inject(MAT_DIALOG_DATA) public data: ContactDto,
 		private fb: FormBuilder,
 		private service: ContactService
-	) {}
+	) {
+		this.contact = data;
+	}
 
 	ngOnInit(): void {
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
@@ -57,15 +60,16 @@ export class ContactsEditDialogComponent implements OnInit {
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
-		this.service.put(this.contact, this.contact.id); // subscribe neccessary?
-		this.dialogRef.close();
+		this.service.put(this.contact, this.contact.id).subscribe(x => {
+			this.dialogRef.close({ delete: false, id: 0 });
+		});
 	}
 
 	onCancel() {
-		this.dialogRef.close();
+		this.dialogRef.close({ delete: false, id: 0 });
 	}
 
 	onDelete() {
-		this.dialogRef.close({ delete: true });
+		this.dialogRef.close({ delete: true, id: this.contact.id });
 	}
 }

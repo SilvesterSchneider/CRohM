@@ -1,41 +1,43 @@
-<mat-dialog-content class="contactDetails" [formGroup]="contactsForm">
-    <div class="row">
-        <div class="col-md-12">
-            <h3>
-                Kontakt bearbeiten
-            </h3>
+<mat-dialog-content>
+    <div class="contactDetails" [formGroup]="contactsForm">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>
+                    Kontakt bearbeiten
+                </h3>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="Vorname" formControlName="preName">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="Nachname" formControlName="name">
+                </mat-form-field>
+            </div>
         </div>
-        <div class="col-md-3">
-            <mat-form-field>
-                <input matInput placeholder="Vorname" formControlName="preName">
-            </mat-form-field>
-        </div>
-        <div class="col-md-3">
-            <mat-form-field>
-                <input matInput placeholder="Nachname" formControlName="name">
-            </mat-form-field>
-        </div>
-    </div>
 
-    <app-osm-address formControlName="address"></app-osm-address>
+        <app-osm-address formControlName="address"></app-osm-address>
 
-    <div class="row" formGroupName="contactPossibilities">
-        <div class="col-md-3">
-            <mat-form-field>
-                <input matInput placeholder="E-Mail" formControlName="mail">
-            </mat-form-field>
+        <div class="row" formGroupName="contactPossibilities">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="E-Mail" formControlName="mail">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="Telefonnummer" formControlName="phoneNumber">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="Faxnummer" formControlName="fax">
+                </mat-form-field>
+            </div>
+            <app-contact-possibilities></app-contact-possibilities>
         </div>
-        <div class="col-md-3">
-            <mat-form-field>
-                <input matInput placeholder="Telefonnummer" formControlName="phoneNumber">
-            </mat-form-field>
-        </div>
-        <div class="col-md-3">
-            <mat-form-field>
-                <input matInput placeholder="Faxnummer" formControlName="fax">
-            </mat-form-field>
-        </div>
-        <app-contact-possibilities></app-contact-possibilities>
     </div>
     <div>
         <button mat-raised-button (click)="onDelete()" color="warn">Löschen</button>

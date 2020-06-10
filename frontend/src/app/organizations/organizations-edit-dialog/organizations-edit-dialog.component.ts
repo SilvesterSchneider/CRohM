@@ -78,36 +78,22 @@ export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
 	autofilled?: boolean;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: any,
-		@Optional()
-		@Self()
 		public dialogRef: MatDialogRef<OrganizationsEditDialogComponent>,
-		public ngControl: NgControl,
+		@Inject(MAT_DIALOG_DATA) public data: OrganizationDto,
+		@Optional()	@Self()	public ngControl: NgControl,
 		private fm: FocusMonitor,
 		private elRef: ElementRef<HTMLElement>,
 		private cd: ChangeDetectorRef,
 		private contactService: ContactService,
 		private organizationService: OrganizationService,
-		private fb: FormBuilder,
-		private route: ActivatedRoute
+		private fb: FormBuilder
 	) {
+		this.organization = data;
 		fm.monitor(elRef.nativeElement, true).subscribe((origin) => {
 			this.focused = !!origin;
 			this.stateChanges.next();
 		});
 	}
-
-	// mdie TODO check if neccessary
-
-	// patchData() {
-	// 	if (this.data.organization.employees == null) {
-	// 		// initialize with empty array if null
-	// 		this.data.organization.employees = [];
-	// 	}
-	// 	this.organizationForm.patchValue(this.data.organization);
-	// }
-
-	// mdie -> raz: Was neccessary because if selection was null, error in log occured
 
 	ngOnInit() {
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
@@ -134,7 +120,6 @@ export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
 				map((filter) => this.filter(filter))
 			)
 			.subscribe();
-		this.organization = this.route.snapshot.data.organization;
 
 		if (this.organization.employees.length > 0) {
 			this.organization.employees.forEach((x) => {
@@ -268,14 +253,14 @@ export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
 			this.organizationService.removeContact(idOrganization, x.contactId).subscribe()
 		);
 		this.itemsToInsert.forEach((x) => this.organizationService.addContact(idOrganization, x.contactId).subscribe());
-		this.dialogRef.close();
+		this.dialogRef.close({delete: false, id: 0 });
 	}
 
 	onCancel() {
-		this.dialogRef.close();
+		this.dialogRef.close({delete: false, id: 0 });
 	}
 
 	onDelete() {
-		this.dialogRef.close({ delete: true });
+		this.dialogRef.close({ delete: true, id: this.organization.id });
 	}
 }

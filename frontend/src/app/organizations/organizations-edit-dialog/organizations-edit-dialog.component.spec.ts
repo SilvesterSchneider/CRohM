@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('OrganizationsEditDialogComponent', () => {
 	let component: OrganizationsEditDialogComponent;
@@ -23,36 +24,14 @@ describe('OrganizationsEditDialogComponent', () => {
 					HttpClientModule,
 					SharedModule
 				],
-				providers: [
-					{
-						provide: ActivatedRoute,
-						useValue: {
-							snapshot: {
-								data: {
-									organization: {
-										id: 0,
-										description: 'mcu',
-										name: 'promik',
-										address: {
-											country: 'Deutschland',
-											street: 'Teststrasse 1',
-											city: 'Nürnberg',
-											zipcode: '12345',
-											streetNumber: '10'
-										},
-										contactPossibilities: {
-											mail: 'maxmustermann@getMaxListeners.com',
-											phoneNumber: '0157 0011223344',
-											fax: '0157-00231223344',
-											contactEntries: []
-										},
-										employees: []
-									}
-								}
-							}
-						}
-					}
-				]
+				providers: [{
+					provide: MatDialogRef,
+					useValue: {},
+				  },
+				  {
+					provide: MAT_DIALOG_DATA,
+					useValue: {},
+				  }]
 			}).compileComponents();
 		})
 	);

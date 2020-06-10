@@ -70,8 +70,7 @@ export class ContactsAddDialogComponent implements OnInit {
 		this.contactCreateDto.contactPossibilities = this.contactPossibilitiesCreateDto;
 
 		// And add a new Contact with the service
-		this.service.post(this.contactCreateDto); // subscribe neccessary?
-		this.dialogRef.close();
+		this.service.post(this.contactCreateDto).subscribe(x => this.dialogRef.close());
 	}
 
 	onCancel() {

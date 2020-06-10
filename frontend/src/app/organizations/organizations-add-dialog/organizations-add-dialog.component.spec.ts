@@ -6,6 +6,7 @@ import { MaterialModule } from '../../shared/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../../shared/shared.module';
+import { MatDialogRef } from '@angular/material/dialog';
 
 describe('OrganizationsAddComponent', () => {
 	let component: OrganizationsAddDialogComponent;
@@ -23,7 +24,11 @@ describe('OrganizationsAddComponent', () => {
 					BrowserAnimationsModule,
 					HttpClientModule,
 					SharedModule
-				]
+				],
+				providers: [{
+					provide: MatDialogRef,
+					useValue: {}
+				  }]
 			}).compileComponents();
 		})
 	);

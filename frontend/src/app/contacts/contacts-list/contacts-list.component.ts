@@ -61,34 +61,14 @@ export class ContactsListComponent implements OnInit {
 		});
 	}
 
-	openEditDialog(id: number) {
-		const dialogRef = this.dialog.open(ContactsEditDialogComponent, {
-			data: {
-				contact: id
-			}
-		});
+	openEditDialog(contact: ContactDto) {
+		const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: contact	});
 
 		dialogRef.afterClosed().subscribe((result) => {
-			if (result) {
 				if (result.delete) {
-					const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-						data: {
-							contact: id
-						}
-					});
-
-					deleteDialogRef.afterClosed().subscribe((deleteResult) => {
-						if (deleteResult.delete) {
-							// TODO:
-							// call backend to delete role
-						}
-					});
-				} else {
-					// TODO:
-					// call backend to update role
-					// call backend for all roles
+					this.deleteContact(result.id);
 				}
-			}
+				this.getData();
 		});
 	}
 

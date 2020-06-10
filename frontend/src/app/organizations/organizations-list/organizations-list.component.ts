@@ -65,33 +65,13 @@ export class OrganizationsListComponent implements OnInit {
 	}
 
 	openEditDialog(organization: OrganizationDto) {
-		const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, {
-			data: {
-				organization: organization
-			}
-		});
+		const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, { data: organization });
 
 		dialogRef.afterClosed().subscribe((result) => {
-			if (result) {
-				if (result.delete) {
-					const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-						data: {
-							organization: organization
-						}
-					});
-
-					deleteDialogRef.afterClosed().subscribe((deleteResult) => {
-						if (deleteResult.delete) {
-							// TODO:
-							// call backend to delete role
-						}
-					});
-				} else {
-					// TODO:
-					// call backend to update role
-					// call backend for all roles
-				}
+			if (result.delete) {
+				this.deleteOrganization(result.id);
 			}
+			this.getData();
 		});
 	}
 
