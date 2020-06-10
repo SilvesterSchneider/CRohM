@@ -15,11 +15,13 @@ namespace WebApi.Controllers
     public class EventController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IModificationEntryService modService;
         private IEventService eventService;
 
-        public EventController(IMapper mapper, IEventService eventService)
+        public EventController(IMapper mapper, IEventService eventService, IModificationEntryService modService)
         {
             this._mapper = mapper;
+            this.modService = modService;
             this.eventService = eventService;
         }
 
@@ -78,6 +80,7 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
             await eventService.ModifyEventAsync(eventToModify);
+            await modService.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
             return Ok(eventToModify);
         }
 
@@ -95,6 +98,7 @@ namespace WebApi.Controllers
             EventContact result = await eventService.AddEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
             if (result != null)
             {
+                await modService.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
                 return Ok();
             }
             else
@@ -117,6 +121,7 @@ namespace WebApi.Controllers
             bool result = await eventService.RemoveEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
             if (result)
             {
+                await modService.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
                 return Ok();
             }
             else
@@ -143,6 +148,7 @@ namespace WebApi.Controllers
                     await eventService.AddEventContactAsync(new EventContact() { ContactId = contactId, EventId = newEvent.Id });
                 }
                 var uri = $"https://{Request.Host}{Request.Path}/{_mapper.Map<EventDto>(newEvent).Id}";
+                await modService.CreateNewEntryAsync(newEvent.Id, MODEL_TYPE.EVENT);
                 return Created(uri, eventToCreate);
             }
             return BadRequest("Fehler beim erzeugen eines Events!");
@@ -164,6 +170,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             await eventService.DeleteAsync(eventToDelete);
+            await modService.RemoveEntryAsync(id, MODEL_TYPE.EVENT);
             return Ok();
         }
     }

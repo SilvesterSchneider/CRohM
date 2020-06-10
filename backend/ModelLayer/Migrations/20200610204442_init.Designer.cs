@@ -10,11 +10,7 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200606133327_init.Designer.cs
-    [Migration("20200606133327_init")]
-=======
-    [Migration("20200609191420_init")]
->>>>>>> 603af02707be98a0f30a24d2efa0275644607a54:backend/ModelLayer/Migrations/20200609191420_init.Designer.cs
+    [Migration("20200610204442_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -352,6 +348,39 @@ namespace ModelLayer.Migrations
                     b.ToTable("History");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.ModificationEntry", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("DataModelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("DataModelType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModificationType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ModificatonHistory");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>
                 {
                     b.Property<long>("Id")
@@ -456,11 +485,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200606133327_init.Designer.cs
-                            ConcurrencyStamp = "2e8b6cf2-f142-4979-b35d-27f3990958e0",
-=======
-                            ConcurrencyStamp = "72e0d730-cf4b-4640-a7ad-8ba3dd807414",
->>>>>>> 603af02707be98a0f30a24d2efa0275644607a54:backend/ModelLayer/Migrations/20200609191420_init.Designer.cs
+                            ConcurrencyStamp = "8e277fa1-4021-4fa9-9695-33c6fbfacab9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

@@ -7,6 +7,15 @@
         </div>
         <div class="column">
             <mat-card *ngFor="let contact of contacts" class="example-card">
+                <small *ngIf="contact.created">
+                    Angelegt von
+                </small>
+                <small *ngIf="!contact.created">
+                    Bearbeitet von
+                </small>
+                <small>
+                    {{contact.userName}}
+                </small>
                 <mat-card-header class="header">
                     <div mat-card-avatar class="header"></div>
                     <mat-card-title class="text">Kontakt</mat-card-title>
@@ -25,7 +34,7 @@
                 </mat-card-content>
                 <mat-card-actions class="actions">
                     <div class="buttonMargin">
-                        <button class="button" mat-raised-button color="primary">Details anzeigen</button>
+                        <button class="button" (click)="openContactDetails(contact)" mat-raised-button color="primary">Details anzeigen</button>
                     </div>
                     <div class="buttonMargin">
                         <button class="button" routerLink="contacts" mat-raised-button color="primary">Öffne Übersicht</button>
@@ -38,6 +47,15 @@
         </div>
         <div class="column">
             <mat-card *ngFor="let organization of organizations" class="example-card">
+                <small *ngIf="organization.created">
+                    Angelegt von
+                </small>
+                <small *ngIf="!organization.created">
+                    Bearbeitet von
+                </small>
+                <small>
+                    {{organization.userName}}
+                </small>
                 <mat-card-header class="header">
                     <div mat-card-avatar class="header"></div>
                     <mat-card-title class="text">Organisation</mat-card-title>
@@ -56,7 +74,7 @@
                 </mat-card-content>
                 <mat-card-actions class="actions">
                     <div class="buttonMargin">
-                        <button class="button" mat-raised-button color="primary">Details anzeigen</button>
+                        <button class="button" (click)="openOrganizationDetails(organization)" mat-raised-button color="primary">Details anzeigen</button>
                     </div>
                     <div class="buttonMargin">
                         <button class="button" routerLink="organizations" mat-raised-button color="primary">Öffne Übersicht</button>
@@ -69,6 +87,15 @@
         </div>
         <div class="column">
             <mat-card *ngFor="let event of events" class="example-card">
+                <small *ngIf="event.created">
+                    Angelegt von
+                </small>
+                <small *ngIf="!event.created">
+                    Bearbeitet von
+                </small>
+                <small>
+                    {{event.userName}}
+                </small>
                 <mat-card-header class="header">
                     <div mat-card-avatar class="header"></div>
                     <mat-card-title class="text">Veranstaltung</mat-card-title>
@@ -87,7 +114,7 @@
                 </mat-card-content>
                 <mat-card-actions class="actions">
                     <div class="buttonMargin">
-                        <button class="button" mat-raised-button color="primary">Details anzeigen</button>
+                        <button class="button" (click)="openEventDetails(event)" mat-raised-button color="primary">Details anzeigen</button>
                     </div>
                     <div class="buttonMargin">
                         <button class="button" routerLink="events" mat-raised-button color="primary">Öffne Übersicht</button>

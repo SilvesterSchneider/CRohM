@@ -1315,6 +1315,79 @@ export class EventService {
 @Injectable({
     providedIn: 'root'
 })
+export class ModificationEntryService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param modelDataType (optional) 
+     * @return successfully found
+     */
+    getSortedListByType(modelDataType?: MODEL_TYPE | undefined): Observable<ModificationEntryDto[]> {
+        let url_ = this.baseUrl + "/api/home?";
+        if (modelDataType === null)
+            throw new Error("The parameter 'modelDataType' cannot be null.");
+        else if (modelDataType !== undefined)
+            url_ += "modelDataType=" + encodeURIComponent("" + modelDataType) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSortedListByType(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSortedListByType(<any>response_);
+                } catch (e) {
+                    return <Observable<ModificationEntryDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ModificationEntryDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetSortedListByType(response: HttpResponseBase): Observable<ModificationEntryDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <ModificationEntryDto[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("contact not found", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ModificationEntryDto[]>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class OrganizationService {
     private http: HttpClient;
     private baseUrl: string;
@@ -2040,6 +2113,26 @@ export interface EventCreateDto {
     name?: string | undefined;
     duration: number;
     contacts?: number[] | undefined;
+}
+
+export interface ModificationEntryDto {
+    id: number;
+    dataModelType: MODEL_TYPE;
+    dataModelId: number;
+    modificationType: MODIFICATION;
+    userName?: string | undefined;
+    dateTime: string;
+}
+
+export enum MODEL_TYPE {
+    CONTACT = 0,
+    ORGANIZATION = 1,
+    EVENT = 2,
+}
+
+export enum MODIFICATION {
+    CREATED = 0,
+    MODIFIED = 1,
 }
 
 export interface OrganizationCreateDto {

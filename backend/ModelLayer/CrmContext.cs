@@ -101,5 +101,6 @@ namespace ModelLayer
         public DbSet<Event> Events { get; set; }
         public DbSet<Participated> Participations { get; set; }
         public DbSet<HistoryElement> History { get; set; }
+        public DbSet<ModificationEntry> ModificatonHistory { get; set; }
     }
 }

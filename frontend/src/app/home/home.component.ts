@@ -1,34 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { ContactService, OrganizationService, ContactDto, OrganizationDto } from '../shared/api-generated/api-generated';
+import { ContactService, OrganizationService, ContactDto, OrganizationDto, EventDto, EventService,
+  ModificationEntryService, MODEL_TYPE, MODIFICATION, ModificationEntryDto, AddressDto,
+  ContactPossibilitiesDto } from '../shared/api-generated/api-generated';
+import { MatDialog } from '@angular/material/dialog';
+import { ContactsInfoComponent } from '../contacts/contacts-info/contacts-info.component';
+import { EventsInfoComponent } from '../events/events-info/events-info.component';
 
-export class EventDto {
-  id: number;
-    date: string;
-    time: string;
-    name: string;
-    duration: number;
-    contacts: ContactDto[];
+export class ContactExtended {
+  name?: string;
+  preName?: string;
+  address?: AddressDto;
+  contactPossibilities?: ContactPossibilitiesDto;
+  userName: string;
+  created: boolean;
 }
 
-function getDummyEvents(): EventDto[] {
-  let events: EventDto[] = new Array<EventDto>();
-  events.push({
-    date: Date.now().toString(),
-    id: 1,
-    duration: 2,
-    name: 'testEvent1',
-    time: Date.now().toString(),
-    contacts: []
-  });
-  events.push({
-    date: Date.now().toString(),
-    id: 2,
-    duration: 4.5,
-    name: 'testEvent2',
-    time: Date.now().toString(),
-    contacts: []
-  });
-  return events;
+export class OrganizationExtended {
+  name?: string;
+  description?: string;
+  address?: AddressDto;
+  contact?: ContactPossibilitiesDto;
+  userName: string;
+  created: boolean;
+}
+
+export class EventExtended {
+  date: string;
+  time: string;
+  name?: string;
+  duration: number;
+  userName: string;
+  created: boolean;
 }
 
 @Component({
@@ -37,34 +39,94 @@ function getDummyEvents(): EventDto[] {
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  public contacts: ContactDto[] = new Array<ContactDto>();
-  public organizations: OrganizationDto[] = new Array<OrganizationDto>();
-  public events: EventDto[] = new Array<EventDto>();
+  public contacts: ContactExtended[] = new Array<ContactExtended>();
+  public organizations: OrganizationExtended[] = new Array<OrganizationExtended>();
+  public events: EventExtended[] = new Array<EventExtended>();
 
-  constructor(private contactsService: ContactService,
-    private organizationService: OrganizationService) { }
+  constructor(
+    private contactsService: ContactService,
+    private organizationService: OrganizationService,
+    private eventsService: EventService,
+    private modificationEntryService: ModificationEntryService,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.contactsService.getAll().subscribe(x =>
-      {
-        let index = x.length - 1;
-        if (index > -1) {
-          this.contacts.push(x[index]);
+    this.modificationEntryService.getSortedListByType(MODEL_TYPE.CONTACT).subscribe(x => {
+      const index = x.length - 1;
+      if (index > -1) {
+        this.addContact(x[0]);
+      }
+      if (index > 0) {
+        this.addContact(x[1]);
+      }
+    });
+    this.modificationEntryService.getSortedListByType(MODEL_TYPE.ORGANIZATION).subscribe(x => {
+      const index = x.length - 1;
+      if (index > -1) {
+        this.addOrganization(x[0]);
+      }
+      if (index > 0) {
+        this.addOrganization(x[1]);
+      }});
+    this.modificationEntryService.getSortedListByType(MODEL_TYPE.EVENT).subscribe(x => {
+      const index = x.length - 1;
+      if (index > -1) {
+        this.addEvent(x[0]);
+      }
+      if (index > 0) {
+        this.addEvent(x[1]);
+    }});
+  }
+
+  addEvent(entry: ModificationEntryDto) {
+    this.eventsService.getById(entry.dataModelId).subscribe(y => {
+          this.events.push({
+            date: y.date,
+            time: y.time,
+            duration: y.duration,
+            name: y.name,
+            userName: entry.userName,
+            created: entry.modificationType === MODIFICATION.CREATED
+          });
         }
-        if (index > 0) {
-          this.contacts.push(x[index - 1]);
+      );
+  }
+
+  addOrganization(entry: ModificationEntryDto) {
+    this.organizationService.getById(entry.dataModelId).subscribe(y => {
+          this.organizations.push({
+            address: y.address,
+            contact: y.contact,
+            description: y.description,
+            name: y.name,
+            userName: entry.userName,
+            created: entry.modificationType === MODIFICATION.CREATED
+          });
         }
-      });
-    this.organizationService.get().subscribe(x =>
-      {
-        let index = x.length - 1;
-        if (index > -1) {
-          this.organizations.push(x[index]);
-        }
-        if (index > 0) {
-          this.organizations.push(x[index - 1]);
-        }
-      });
-    this.events = getDummyEvents();
+      );
+  }
+
+  addContact(entry: ModificationEntryDto) {
+    this.contactsService.getById(entry.dataModelId).subscribe(y =>
+      this.contacts.push({
+        address: y.address,
+        contactPossibilities: y.contactPossibilities,
+        name: y.name,
+        preName: y.preName,
+        userName: entry.userName,
+        created: entry.modificationType === MODIFICATION.CREATED
+    }));
+  }
+
+  openContactDetails(contact: ContactDto) {
+    this.dialog.open(ContactsInfoComponent, {data: contact});
+  }
+
+  openOrganizationDetails(organization: OrganizationDto) {
+    //TO DO: open dialog of organizations detail!
+  }
+
+  openEventDetails(event: EventDto) {
+    this.dialog.open(EventsInfoComponent, {data: event});
   }
 }

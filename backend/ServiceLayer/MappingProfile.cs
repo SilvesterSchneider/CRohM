@@ -96,6 +96,7 @@ namespace ServiceLayer
             CreateMap<Participated, ParticipatedDto>().ReverseMap();
             CreateMap<HistoryElement, HistoryElementDto>().ReverseMap();
             CreateMap<HistoryElementCreateDto, HistoryElement>();
+            CreateMap<ModificationEntry, ModificationEntryDto>();
         }
     }
 }
