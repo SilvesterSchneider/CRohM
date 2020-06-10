@@ -1,5 +1,5 @@
 Coding Guidelines Backend:
-	- Konstanten und Enumerationen werden nur in Großbuchstaben benannt und mit unterstrich unterteilt
+	- Konstanten und Enumerationen werden nur in Großbuchstaben benannt und mit Unterstrich unterteilt
 		- const int DAS_IST_EINE_KONSTANTE = 0;
 		- enum DAS_IST_EINE_ENUMERATION {
 			}
@@ -19,22 +19,23 @@ Coding Guidelines Backend:
 	- Asynchrone Funktionen sollten immer mit Async enden
 		- async Task SetZahlAsync(int zahl);
 		- async Task SetTextAsync(string text);
-	- Funktionen die einen bool Rückgabewert besitzen sollten immer mit Is anfangen
+	- Funktionen die einen boolschen Rückgabewert besitzen sollten immer mit Is anfangen
 		- bool IsValid();
 		- async Task<bool> IsCalculationErrorAsync();
-	- Interfaces beginnen immer mit einem großen I im namen und erweitern am besten einen Klassennamen
+	- Interfaces beginnen immer mit einem großen I im namen und erweitern, wenn möglich, einen Klassennamen
 		- interface IApfel { }
 		- class Apfel : IApfel { }
-	- Dto Klassen enden immer mit Dto bzw. CreateDto im Namen und werden zusammen innerhalb einer gemeinsamen Datei deklariert
+	- Data-Transfer-Object-Klassen enden immer mit Dto bzw. CreateDto im Namen und werden zusammen innerhalb einer gemeinsamen Datei deklariert
 		- class ApfelDto { }
 		- class ApfelCreateDto { }
-	- Repositories Namen setzen sich zusammen aus Name der Model-Klasse + Repository
+	- Repository-Namen setzen sich aus dem Name der Model-Klasse + Repository zusammen
 		- class ApfelRepository { }
-	- Services Namen setzen sich zusammen aus Name der Model-Klasse + Service
+	- Services Namen setzen sich aus dem Name der Model-Klasse + Service zusammen
 		- class ApfelService { }
 	- Controller Namen setzen sich zusammen aus Name der Model-Klasse + Controller
 		- class ApfelController { }
-	- Kommentare werden immer dann definiert wenn irgendetwas einer zusätzlichen Erklärung bedarf
+	- Kommentare werden immer dann definiert wenn irgendetwas einer zusätzlichen Erklärung Bedarf
+		// Als Faustformel dürft ihr das euch in die Lage des aus eurer Einschätzung nach unwissendsten Teammembers versetzen
 		- weil nicht trivial
 			- 	/// <summary>
 				/// die dauer des events in x.y stunden
@@ -47,17 +48,20 @@ Coding Guidelines Backend:
 				/// <param name="id">id</param>
 				/// <returns>event</returns>
 				Task<Event> GetEventByIdWithAllIncludesAsync(long id);
-		- Generell gilt lieber zuviel Kommentare als zu wenig!
+				
 	- Test Namen setzen sich zusammen aus Name der zu testenden Klasse + Tests
 		- class ApfelTests { }
-	- Testmethodennamen setzen sich zusammen aus dem Namen der zu prüfenden Methode + Prüfungsinhalt + Erwartetes Ergebnis
+		
+	- Testmethodennamen setzen sich zusammen aus dem Namen der zu prüfenden Methode + Prüfungsinhalt + erwartetes Ergebnis
 		- public async void GetByZipcodeAsync_SearchWithExistingZipcode_ReturnsSingleAddress();
 		- public void Registration_CorrectData_AssertPassed();
+		
 	- Tests setzen sich zusammen aus einem 
 		- Arrange Bereich für das Definieren der Mocks und Testdaten
 		- einem Act Bereich, wo tatsächlich die Tests ausgeführt werden
-		- und einem Assert Bereich, wo die Ergebnisse abgeglichen werdem
-	- Grundsätzlich ist nach jeder geschlossenen geschweiften Klammer eines Statements eine zusätzlich leerzeile einzuhalten
+		- und einem Assert Bereich, wo die Ergebnisse abgeglichen werden
+		
+	- Grundsätzlich ist nach jeder geschlossenen geschweiften Klammer eines Statements eine zusätzliche Leerzeile einzuhalten
 		- 	if (a > b) {
 				DoSomething();
 			}
@@ -69,6 +73,7 @@ Coding Guidelines Backend:
 			}
 			
 			b += 2;
+			
 	- Grundsätzlich ist jede zusätzliche Logikebene durch einen Tabulator abzugrenzen und sicherzustellen das die schließenden geschweiften Klammern auf der selben Höhe liegen wie das statement
 		- 	if (a < b) {
 				if (b > c) {
@@ -80,12 +85,14 @@ Coding Guidelines Backend:
 					DoSomethingElse();
 				}
 			}
+			
 	- Grundsätzlich sollte immer erst dann eine lokale Variable angelegt werden, wenn mind. 2x auf diesen Wert zugegriffen wird
 		- 	int a = 3;
 			if (a + b > 4) {
 				DoSomething();
 			}
 			int c = a + b;
+			
 	- Exceptions sollten immer so stark typisiert gefangen werden wie möglich und nicht einfach nur anhand von catch (Exception e)
 		- 	try {
 				kritischerCode();
@@ -96,6 +103,7 @@ Coding Guidelines Backend:
 			catch (SpecificExceptionVariant2 e) {
 				DoSomethingElse();
 			}
+			
 	- Lambda Expressions welche mehr als eine Zeile code beinhalten sollten immer durch einen Zeilenumbruch eingeleitet werden
 		- 	x.ForEach(
 				(x) => 
@@ -104,6 +112,7 @@ Coding Guidelines Backend:
 					x.Failed = true;
 				}				
 			);
+			
 	- Linq expressions sollten immer nach jedem neuen Methodenaufruf eine neue Zeile einleiten
 		-	return Entities
 					.Include(x => x.Apfel)
