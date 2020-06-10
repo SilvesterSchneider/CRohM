@@ -8,8 +8,10 @@ import {
 	Optional,
 	Self,
 	ChangeDetectorRef,
-	OnDestroy
+	OnDestroy,
+	Inject
 } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgControl, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -39,9 +41,9 @@ export class OrganizationContactConnection {
 }
 
 @Component({
-	selector: 'app-organizations-detail',
-	templateUrl: './organizations-detail.component.html',
-	styleUrls: [ './organizations-detail.component.scss' ],
+	selector: 'app-organizations-edit-dialog',
+	templateUrl: './organizations-edit-dialog.component.html',
+	styleUrls: [ './organizations-edit-dialog.component.scss' ],
 	providers: [ { provide: MatFormFieldControl, useExisting: OrganizationsEditDialogComponent } ]
 })
 export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
@@ -76,8 +78,10 @@ export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
 	autofilled?: boolean;
 
 	constructor(
+		@Inject(MAT_DIALOG_DATA) public data: any,
 		@Optional()
 		@Self()
+		public dialogRef: MatDialogRef<OrganizationsEditDialogComponent>,
 		public ngControl: NgControl,
 		private fm: FocusMonitor,
 		private elRef: ElementRef<HTMLElement>,
@@ -92,6 +96,18 @@ export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
 			this.stateChanges.next();
 		});
 	}
+
+	// mdie TODO check if neccessary
+
+	// patchData() {
+	// 	if (this.data.organization.employees == null) {
+	// 		// initialize with empty array if null
+	// 		this.data.organization.employees = [];
+	// 	}
+	// 	this.organizationForm.patchValue(this.data.organization);
+	// }
+
+	// mdie -> raz: Was neccessary because if selection was null, error in log occured
 
 	ngOnInit() {
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
@@ -217,7 +233,7 @@ export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
 		this.stateChanges.complete();
 	}
 
-	saveValues() {
+	onApprove() {
 		const idOrganization = this.organization.id;
 		const idAddress = this.organization.address.id;
 		const idContactPossibilities = this.organization.contact.id;
@@ -252,5 +268,14 @@ export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
 			this.organizationService.removeContact(idOrganization, x.contactId).subscribe()
 		);
 		this.itemsToInsert.forEach((x) => this.organizationService.addContact(idOrganization, x.contactId).subscribe());
+		this.dialogRef.close();
+	}
+
+	onCancel() {
+		this.dialogRef.close();
+	}
+
+	onDelete() {
+		this.dialogRef.close({ delete: true });
 	}
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
@@ -17,9 +17,9 @@ export class ContactsEditDialogComponent implements OnInit {
 	contactsForm: FormGroup;
 
 	constructor(
-		private fb: FormBuilder,
 		public dialogRef: MatDialogRef<ContactsEditDialogComponent>,
-		@Inject(MAT_DIALOG_DATA) public contact: ContactDto,
+		@Inject(MAT_DIALOG_DATA) public contact: any,
+		private fb: FormBuilder,
 		private service: ContactService
 	) {}
 
@@ -63,5 +63,9 @@ export class ContactsEditDialogComponent implements OnInit {
 
 	onCancel() {
 		this.dialogRef.close();
+	}
+
+	onDelete() {
+		this.dialogRef.close({ delete: true });
 	}
 }

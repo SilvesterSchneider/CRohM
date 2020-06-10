@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { OrganizationsAddComponent } from './organizations-add-dialog.component';
+import { OrganizationsAddDialogComponent } from './organizations-add-dialog.component';
 import { AppRoutingModule } from '../../app-routing.module';
 import { MaterialModule } from '../../shared/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,13 +8,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../../shared/shared.module';
 
 describe('OrganizationsAddComponent', () => {
-	let component: OrganizationsAddComponent;
-	let fixture: ComponentFixture<OrganizationsAddComponent>;
+	let component: OrganizationsAddDialogComponent;
+	let fixture: ComponentFixture<OrganizationsAddDialogComponent>;
 
 	beforeEach(
 		async(() => {
 			TestBed.configureTestingModule({
-				declarations: [ OrganizationsAddComponent ],
+				declarations: [ OrganizationsAddDialogComponent ],
 				imports: [
 					FormsModule,
 					ReactiveFormsModule,
@@ -29,7 +29,7 @@ describe('OrganizationsAddComponent', () => {
 	);
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(OrganizationsAddComponent);
+		fixture = TestBed.createComponent(OrganizationsAddDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

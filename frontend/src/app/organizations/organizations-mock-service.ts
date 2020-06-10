@@ -6,7 +6,7 @@ import { ORGANIZATIONS } from './mock-organizations';
 @Injectable({
 	providedIn: 'root'
 })
-export class OrganizationsMockService {
+export class OrganizationMockService {
 	static nextId = 4;
 	private orgas: OrganizationDto[] = ORGANIZATIONS;
 	private organizations: BehaviorSubject<OrganizationDto[]> = new BehaviorSubject<OrganizationDto[]>(ORGANIZATIONS);

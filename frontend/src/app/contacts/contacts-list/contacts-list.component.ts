@@ -1,12 +1,14 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs';
 import { ContactService } from '../../shared/api-generated/api-generated';
+import { ContactMockService } from '../contacts.service-mock';
+import { Observable } from 'rxjs';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsAddDialogComponent } from '../contacts-add-dialog/contacts-add-dialog.component';
 import { ContactsEditDialogComponent } from '../contacts-edit-dialog/contacts-edit-dialog.component';
 import { ContactsAddHistoryComponent } from '../contacts-add-history/contacts-add-history.component';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
+import { DeleteEntryDialogComponent } from 'src/app/shared/delete-entry-dialog/delete-entry-dialog.component';
 
 @Component({
 	selector: 'app-contacts-list',
@@ -14,6 +16,8 @@ import { ContactsInfoComponent } from '../contacts-info/contacts-info.component'
 	styleUrls: [ './contacts-list.component.scss' ]
 })
 export class ContactsListComponent implements OnInit {
+	service: ContactService;
+	mockService: ContactMockService;
 	contacts: Observable<ContactDto[]>;
 	displayedColumns = [
 		'vorname',
@@ -28,10 +32,15 @@ export class ContactsListComponent implements OnInit {
 		'mail',
 		'action'
 	];
-	service: ContactService;
 
-	constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef, private dialog: MatDialog) {
+	constructor(
+		service: ContactService,
+		mock: ContactMockService,
+		private changeDetectorRefs: ChangeDetectorRef,
+		private dialog: MatDialog
+	) {
 		this.service = service;
+		this.mockService = mock;
 	}
 
 	ngOnInit() {
@@ -46,22 +55,40 @@ export class ContactsListComponent implements OnInit {
 	}
 
 	openAddDialog() {
-		const addDialogRef = this.dialog.open(ContactsAddDialogComponent);
-		addDialogRef.afterClosed().subscribe((result) => {
+		const dialogRef = this.dialog.open(ContactsAddDialogComponent);
+		dialogRef.afterClosed().subscribe((result) => {
 			this.contacts = this.service.getAll();
 		});
 	}
 
 	openEditDialog(id: number) {
-		const editDialogRef = this.dialog.open(ContactsEditDialogComponent, {
+		const dialogRef = this.dialog.open(ContactsEditDialogComponent, {
 			data: {
 				contact: id
 			}
 		});
 
-		editDialogRef.afterClosed().subscribe((result) => {
-			console.log(`Dialog result: ${result}`); // mdie TODO comment out
-			this.contacts = this.service.getAll();
+		dialogRef.afterClosed().subscribe((result) => {
+			if (result) {
+				if (result.delete) {
+					const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
+						data: {
+							contact: id
+						}
+					});
+
+					deleteDialogRef.afterClosed().subscribe((deleteResult) => {
+						if (deleteResult.delete) {
+							// TODO:
+							// call backend to delete role
+						}
+					});
+				} else {
+					// TODO:
+					// call backend to update role
+					// call backend for all roles
+				}
+			}
 		});
 	}
 

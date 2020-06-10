@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OrganizationService, OrganizationCreateDto, ContactService } from 'src/app/shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
-import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-organizations-add',
-	templateUrl: './organizations-add.component.html',
-	styleUrls: [ './organizations-add.component.scss' ]
+	templateUrl: './organizations-add-dialog.component.html',
+	styleUrls: [ './organizations-add-dialog.component.scss' ]
 })
-export class OrganizationsAddComponent implements OnInit {
+export class OrganizationsAddDialogComponent implements OnInit {
 	@ViewChild(ContactPossibilitiesComponent, { static: true })
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
 	contactPossibilitiesEntriesFormGroup: FormGroup;
@@ -17,10 +17,9 @@ export class OrganizationsAddComponent implements OnInit {
 	private organization: OrganizationCreateDto;
 
 	constructor(
+		public dialogRef: MatDialogRef<OrganizationsAddDialogComponent>,
 		private readonly fb: FormBuilder,
-		private readonly organizationsService: OrganizationService,
-		private readonly contactService: ContactService,
-		private readonly router: Router
+		private readonly service: OrganizationService
 	) {}
 
 	public ngOnInit(): void {
@@ -28,9 +27,12 @@ export class OrganizationsAddComponent implements OnInit {
 		this.organizationForm = this.createOrganizationForm();
 	}
 
-	public onAddOrganization(): void {
+	public onApprove(): void {
 		this.organization = this.organizationForm.value;
-		this.organizationsService.post(this.organization).subscribe((x) => this.router.navigate([ '/organizations' ]));
+		this.service.post(this.organization).subscribe((organization) => {
+			console.log(organization);
+		});
+		this.dialogRef.close();
 	}
 
 	private createOrganizationForm(): FormGroup {
@@ -49,5 +51,9 @@ export class OrganizationsAddComponent implements OnInit {
 			mail: [ '', Validators.email ],
 			contactEntries: this.contactPossibilitiesEntriesFormGroup
 		});
+	}
+
+	onCancel() {
+		this.dialogRef.close();
 	}
 }

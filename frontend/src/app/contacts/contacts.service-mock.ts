@@ -8,7 +8,7 @@ import { ContactCreateDto } from '../shared/api-generated/api-generated';
 @Injectable({
 	providedIn: 'root'
 })
-export class ContactsServiceMock {
+export class ContactMockService {
 	static nextId = 4;
 	private contacts$: BehaviorSubject<ContactDto[]> = new BehaviorSubject<ContactDto[]>(CONTACTS);
 	private contactInner: ContactDto;
@@ -24,11 +24,11 @@ export class ContactsServiceMock {
 
 	addContact(contact: ContactCreateDto) {
 		this.contactInner = {
-			id: ContactsServiceMock.nextId++,
+			id: ContactMockService.nextId++,
 			name: contact.name,
 			preName: contact.preName,
 			address: {
-                id: 1,
+				id: 1,
 				city: contact.address.city,
 				country: contact.address.country,
 				street: contact.address.street,

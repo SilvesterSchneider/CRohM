@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import {
 	ContactCreateDto,
@@ -7,7 +8,6 @@ import {
 } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
-import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-contacts-add-dialog',
@@ -24,9 +24,9 @@ export class ContactsAddDialogComponent implements OnInit {
 	contactsForm: FormGroup;
 
 	constructor(
+		public dialogRef: MatDialogRef<ContactsAddDialogComponent>,
 		private fb: FormBuilder,
-		private service: ContactService,
-		public dialogRef: MatDialogRef<ContactsAddDialogComponent>
+		private service: ContactService
 	) {}
 
 	ngOnInit(): void {
