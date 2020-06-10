@@ -15,6 +15,7 @@ import { JwtService } from './shared/jwt.service';
 import { UserMenuComponent } from './shared/navigation/user-menu/user-menu.component';
 import { SidenavComponent } from './shared/navigation/sidenav/sidenav.component';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { EventsModule } from './events/events.module';
 import { ProgressSpinnerInterceptor } from './shared/progress-spinner/progress-spinner.interceptor';
 import { OverlayModule } from '@angular/cdk/overlay';
 
@@ -37,6 +38,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     OverlayModule,
     FlexLayoutModule,
     ContactsModule,
+    EventsModule,
     OrganizationsModule,
     JwtModule.forRoot({
       config: {
