@@ -1,19 +1,17 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ContactDto,
+import {
+  ContactDto,
   ContactPossibilitiesEntryDto,
-  EventDto,
   ParticipatedDto,
   EventService,
   HistoryElementType,
-  OrganizationDto} from '../../shared/api-generated/api-generated';
+  OrganizationDto
+} from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
-import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
-import { timeInterval } from 'rxjs/operators';
-import { getLocaleDateFormat } from '@angular/common';
-import { getType } from '@angular/flex-layout/extended/typings/style/style-transforms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 
 export class EventDtoCustomized {
   id: number;
@@ -37,7 +35,7 @@ export enum TYPE {
   styleUrls: ['./contacts-info.component.scss']
 })
 
-export class ContactsInfoComponent implements OnInit {
+export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   contact: ContactDto;
   organizations: OrganizationDto[];
   contactPossibilitiesEntries: ContactPossibilitiesEntryDto[];
@@ -49,13 +47,15 @@ export class ContactsInfoComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ContactsInfoComponent>,
+    public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: ContactDto,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private service: ContactService,
     private eventService: EventService) {
-      this.contact = data;
-    }
+    super(dialogRef, dialog);
+    this.contact = data;
+  }
 
   ngOnInit(): void {
     this.contact.events.forEach(x => {
@@ -132,7 +132,7 @@ export class ContactsInfoComponent implements OnInit {
         zipcode: [''],
         city: [''],
         country: ['']
-       }),
+      }),
       contactPossibilities: this.fb.group({
         // Validiert auf korrektes E-Mail-Format
         mail: [''],

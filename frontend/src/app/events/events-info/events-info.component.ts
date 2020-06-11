@@ -3,8 +3,9 @@ import {
 } from '@angular/core';
 import { EventDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 
 export class ContactDtoExtended {
   id: number;
@@ -19,7 +20,7 @@ export class ContactDtoExtended {
   styleUrls: ['./events-info.component.scss']
 })
 
-export class EventsInfoComponent implements OnInit {
+export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> implements OnInit {
   contacts: ContactDtoExtended[] = new Array<ContactDtoExtended>();
   event: EventDto;
   eventsForm: FormGroup;
@@ -27,10 +28,12 @@ export class EventsInfoComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<EventsInfoComponent>,
+    public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: EventDto,
     private eventService: EventService,
     private fb: FormBuilder,
   ) {
+    super(dialogRef, dialog);
     this.event = data;
   }
 

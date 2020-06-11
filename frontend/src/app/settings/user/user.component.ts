@@ -33,6 +33,7 @@ export class UserComponent implements OnInit {
   openAddDialog(): void {
     const dialogRef = this.dialog.open(AddUserDialogComponent, {
       width: '400px',
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -47,6 +48,7 @@ export class UserComponent implements OnInit {
   openEditDialog(): void {
     const dialogRef = this.dialog.open(EditUserDialogComponent, {
       width: '400px',
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {

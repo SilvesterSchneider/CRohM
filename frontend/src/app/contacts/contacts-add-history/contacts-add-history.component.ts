@@ -1,22 +1,26 @@
-import { OnInit, Component, Inject, NgModule } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { OnInit, Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ContactService, HistoryElementCreateDto, HistoryElementType } from 'src/app/shared/api-generated/api-generated';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 
 @Component({
     selector: 'app-contacts-add-history',
     templateUrl: './contacts-add-history.component.html',
     styleUrls: ['./contacts-add-history.component.scss']
-  })
+})
 
-export class ContactsAddHistoryComponent implements OnInit {
+export class ContactsAddHistoryComponent extends BaseDialogInput<ContactsAddHistoryComponent> implements OnInit {
     public types: string[] = ['E-Mail', 'Telefonanruf', 'Notiz'];
     public oppoSuitsForm: FormGroup;
     constructor(
         public dialogRef: MatDialogRef<ContactsAddHistoryComponent>,
+        public dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: number,
         private contactService: ContactService,
-        private fb: FormBuilder) {}
+        private fb: FormBuilder) {
+        super(dialogRef, dialog);
+    }
 
     ngOnInit(): void {
         this.oppoSuitsForm = this.fb.group({
@@ -24,7 +28,7 @@ export class ContactsAddHistoryComponent implements OnInit {
             date: ['', Validators.required],
             information: ['', Validators.required],
             comment: ['', Validators.required]
-          });
+        });
     }
 
     saveHistory() {
@@ -46,6 +50,6 @@ export class ContactsAddHistoryComponent implements OnInit {
     }
 
     close() {
-        this.dialogRef.close();
+        super.confirmDialog();
     }
 }

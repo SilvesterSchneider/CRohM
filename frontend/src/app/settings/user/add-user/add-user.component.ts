@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Validators, FormControl, FormBuilder } from '@angular/forms';
 import { UsersService } from '../../../shared/api-generated/api-generated';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogModel, ConfirmDialogComponent } from '../../../confirmdialog/confirmdialog.component';
 import { Permission } from '../user.model';
+import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
 
 /**
  * Komponente fuer den Modal-Dialog zum Hinzufuegen eines Nutzers
@@ -13,7 +13,7 @@ import { Permission } from '../user.model';
     templateUrl: './add-user.component.html',
     styleUrls: ['./add-user.component.scss']
 })
-export class AddUserDialogComponent {
+export class AddUserDialogComponent extends BaseDialogInput<AddUserDialogComponent> {
 
     userForm = this.fb.group({
         email: ['', [Validators.email, Validators.required]],
@@ -39,16 +39,9 @@ export class AddUserDialogComponent {
         private readonly usersService: UsersService,
         public dialogRef: MatDialogRef<AddUserDialogComponent>,
         public dialog: MatDialog,
-    ) { }
-
-
-    /**
-     * Funktion zum Schliessen des Dialogs
-     */
-    abortDialog(): void {
-        this.dialogRef.close();
+    ) {
+        super(dialogRef, dialog);
     }
-
 
     /**
      * Funktion zum Speichen des neuen Users und Schliessen des Dialogs
@@ -65,32 +58,6 @@ export class AddUserDialogComponent {
         this.dialogRef.close();
     }
 
-
-    /**
-     * Funktion zum Aufruf des Confirm-Dialogs
-     */
-    confirmDialog(): void {
-        // Angezeigte Ueberschrift bzw. Nachricht im Confirm-Dialog
-        const message = `Wollen Sie den Vorgang wirklich abbrechen?`;
-        const dialogData = new ConfirmDialogModel('Warnung', message);
-
-        // Oeffnet den Confirm-Dialog mit definierter Ueberschrift bzw. Nachricht
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            maxWidth: '400px',
-            data: dialogData
-        });
-
-        // Schliesst den Confirm-Dialog
-        dialogRef.afterClosed().subscribe(dialogResult => {
-            // Wenn Nein angeklickt wurde passiert nichts.
-            // Wenn 'Ja' angeklickt wurde, dann wird die abortDialog-Funktion
-            // des drunterliegenden Dialogs (hier also Dialog zum Hinzufuegen
-            // eines Nutzers) geschlossen.
-            if (dialogResult === true) {
-                this.abortDialog();
-            }
-        });
-    }
 }
 
 

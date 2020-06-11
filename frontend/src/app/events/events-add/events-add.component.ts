@@ -1,24 +1,19 @@
 import {
-  ElementRef, HostBinding, Component, OnInit, ViewChild, forwardRef, Input, Optional, Self,
+  ElementRef, HostBinding, Component, OnInit, ViewChild, Input, Optional, Self,
   ChangeDetectorRef, OnDestroy
 } from '@angular/core';
-import { NgControl, FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { Subject, Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { NgControl, FormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { MatChipsModule } from '@angular/material/chips';
 import {
-  MatAutocompleteTrigger, MatAutocompleteModule, MatAutocompleteSelectedEvent,
-  MatAutocomplete
-} from '@angular/material/autocomplete';
-import { MatFormFieldModule, MatFormFieldControl } from '@angular/material/form-field';
-import { MatCheckboxModule, MatCheckbox } from '@angular/material/checkbox';
-import { EventCreateDto, ContactDto } from '../../shared/api-generated/api-generated';
+  MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { EventCreateDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -41,7 +36,8 @@ export class EventContactConnection {
   styleUrls: ['./events-add.component.scss']
 })
 
-export class EventsAddComponent implements OnInit, OnDestroy, MatFormFieldControl<EventContactConnection> {
+export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
+  implements OnInit, OnDestroy, MatFormFieldControl<EventContactConnection> {
   static nextId = 0;
   @ViewChild('inputTrigger', { read: MatAutocompleteTrigger }) inputTrigger: MatAutocompleteTrigger;
   @HostBinding() id = `input-ac-${EventsAddComponent.nextId++}`;
@@ -53,7 +49,6 @@ export class EventsAddComponent implements OnInit, OnDestroy, MatFormFieldContro
   itemsToDelete: EventContactConnection[] = new Array<EventContactConnection>();
   itemsToInsert: EventContactConnection[] = new Array<EventContactConnection>();
   public eventsForm: FormGroup;
-  private event: EventCreateDto;
   private changeCallback: (input: EventContactConnection[]) => void;
   itemControl = new FormControl();
   stateChanges = new Subject<void>();
@@ -78,9 +73,9 @@ export class EventsAddComponent implements OnInit, OnDestroy, MatFormFieldContro
     private contactService: ContactService,
     private eventService: EventService,
     private fb: FormBuilder,
-    private router: Router,
-    private dialog: MatDialog
+    public dialog: MatDialog
   ) {
+    super(dialogRef, dialog);
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
@@ -93,17 +88,17 @@ export class EventsAddComponent implements OnInit, OnDestroy, MatFormFieldContro
   ngOnInit() {
     this.eventsForm = this.createOrganizationForm();
     this.contactService.getAll().subscribe(y => {
-        y.forEach(x => {
-          this.filteredItems.push(
-            {
-              contactId: x.id,
-              name: x.name,
-              preName: x.preName,
-              selected: false
-            }
-          );
-        });
-      }
+      y.forEach(x => {
+        this.filteredItems.push(
+          {
+            contactId: x.id,
+            name: x.name,
+            preName: x.preName,
+            selected: false
+          }
+        );
+      });
+    }
     );
   }
 
@@ -142,12 +137,12 @@ export class EventsAddComponent implements OnInit, OnDestroy, MatFormFieldContro
     throw new Error('Method not implemented.');
   }
 
-  writeValue(value: any) {
+  writeValue() {
   }
   registerOnChange(fn: (input: EventContactConnection[]) => void) {
     this.changeCallback = fn;
   }
-  registerOnTouched(fn: () => void) {
+  registerOnTouched() {
   }
 
   clicker() {
@@ -208,10 +203,10 @@ export class EventsAddComponent implements OnInit, OnDestroy, MatFormFieldContro
     const eventToSave: EventCreateDto = this.eventsForm.value;
     eventToSave.contacts = new Array<number>();
     this.selectedItems.forEach(x => eventToSave.contacts.push(x.contactId));
-    this.eventService.post(eventToSave).subscribe(x => this.dialogRef.close());
+    this.eventService.post(eventToSave).subscribe(() => this.dialogRef.close());
   }
 
   exit() {
-    this.dialogRef.close();
+    super.confirmDialog();
   }
 }

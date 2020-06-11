@@ -64,13 +64,13 @@ export class EventsListComponent implements OnInit {
   }
 
   addContact() {
-    const dialogRef = this.dialog.open(EventsAddComponent);
+    const dialogRef = this.dialog.open(EventsAddComponent, {disableClose: true});
     dialogRef.afterClosed().subscribe(x => this.init());
   }
 
   callEdit(id: number) {
     this.service.getById(id).subscribe(x => {
-      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x });
+      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true });
       dialogRef.afterClosed().subscribe(y => this.init());
     });
   }
@@ -143,7 +143,7 @@ export class EventsListComponent implements OnInit {
 
   openInfo(id: number) {
     this.service.getById(id).subscribe(x => {
-      this.dialog.open(EventsInfoComponent, { data: x });
+      this.dialog.open(EventsInfoComponent, { data: x, disableClose: true });
     });
   }
 

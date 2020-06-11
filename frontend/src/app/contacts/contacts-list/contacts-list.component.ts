@@ -41,11 +41,11 @@ export class ContactsListComponent implements OnInit {
   }
 
   addNote(id: number) {
-    const dialogRef = this.dialog.open(ContactsAddHistoryComponent, { data: id });
+    const dialogRef = this.dialog.open(ContactsAddHistoryComponent, { data: id, disableClose: true });
     dialogRef.afterClosed().subscribe(y => this.init());
   }
 
   openInfo(id: number) {
-    this.service.getById(id).subscribe(x => this.dialog.open(ContactsInfoComponent, { data: x }));
+    this.service.getById(id).subscribe(x => this.dialog.open(ContactsInfoComponent, { data: x, disableClose: true }));
   }
 }
