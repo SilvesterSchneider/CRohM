@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserComponent, UserDialogEditComponent, UserDialogAddComponent } from './user/user.component';
+import { UserComponent } from './user/user.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -11,12 +11,14 @@ import { RolesComponent } from './roles/roles.component';
 import { CreateRoleDialogComponent } from './roles/create-role/create-role.component';
 import { UpdateRoleDialogComponent } from './roles/update-role/update-role.component';
 import { DeleteEntryDialogModule } from '../shared/delete-entry-dialog/delete-entry-dialog.module';
+import { AddUserDialogComponent } from './user/add-user/add-user.component';
+import { EditUserDialogComponent } from './user/edit-user/edit-user.component';
 
 
 
 @NgModule({
   declarations: [UserComponent, OverviewComponent, RolesComponent, CreateRoleDialogComponent, UpdateRoleDialogComponent,
-    UserDialogEditComponent, UserDialogAddComponent],
+    EditUserDialogComponent, AddUserDialogComponent],
   imports: [
     DeleteEntryDialogModule,
     CommonModule,

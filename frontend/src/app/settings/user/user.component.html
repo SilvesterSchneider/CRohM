@@ -2,27 +2,13 @@
 <mat-toolbar>
     <mat-toolbar-row>
         <span>Benutzer</span>
-        <!-- <span class="spacer"></span>
+        <span class="spacer"></span>
         <mat-form-field>
             <input matInput placeholder="Suche">
         </mat-form-field>
         <button button="submit" mat-mini-fab color="primary" (click)="openAddDialog()">
             <mat-icon>add</mat-icon> 
-        </button> --> <!-- HEAD -->
-        <span class="fill-remaining-space"></span>
-        <div>
-            <form >
-            <mat-form-field>
-              <mat-label>Suche</mat-label>
-              <input matInput placeholder="User..." >
-            </mat-form-field>          
-          </form> 
-        </div>
-        <div>
-            <button mat-fab color="primary">
-                <mat-icon>add</mat-icon>
-              </button>
-        </div>
+        </button>
     </mat-toolbar-row>
 </mat-toolbar>
 
@@ -63,33 +49,3 @@
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
-
-<!-- <mat-toolbar>
-    <span>Neuer Benutzer</span>
-</mat-toolbar>
-
-<form [formGroup]="userForm">
-    <div class="row">
-        <div class="col-md-3">
-            <mat-form-field>
-                <input matInput placeholder="E-Mail" formControlName="email">
-            </mat-form-field>
-        </div>
-        <div class="col-md-3">
-            <mat-form-field>
-                <input matInput placeholder="Vorname" formControlName="firstName">
-            </mat-form-field>
-        </div>
-        <div class="col-md-3">
-            <mat-form-field>
-                <input matInput placeholder="Nachname" formControlName="lastName">
-            </mat-form-field>
-        </div>
-        <div class="col-md-3">
-            <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid" (click)="addUser()">
-                Anlegen
-            </button>
-
-        </div>
-    </div>
-</form> -->
