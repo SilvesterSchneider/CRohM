@@ -70,5 +70,8 @@
         <button button="submit" mat-raised-button color="primary" routerLink="add"> 
             <mat-icon>add</mat-icon> Organisation hinzufügen
         </button>
+        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Organisation hinzufügen" (click)="addDummyOrganization()"> 
+            <mat-icon>add</mat-icon> Dummy Organisation hinzufügen
+        </button>
     </div>
 </div>

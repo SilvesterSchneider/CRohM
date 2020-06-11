@@ -36,6 +36,22 @@ namespace WebApi.Controllers
             return Ok(_mapper.Map<List<UserDto>>(users));
         }
 
+        [HttpGet("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(UserDto), Description = "successfully found")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "no logged in user found!")]
+        public async Task<IActionResult> GetLoggedInUser(long id)
+        {
+            User user = await Task.FromResult(LoggedInUser.GetLoggedInUser());
+            if (user != null)
+            {
+                return Ok(_mapper.Map<UserDto>(user));
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(UserDto), Description = "successfully created")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "unsuccessfully request")]

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EventService, ParticipatedDto, ContactDto } from '../../shared/api-generated/api-generated';
+import { EventService, ParticipatedDto, ContactDto, UsersService } from '../../shared/api-generated/api-generated';
 import { EventDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { EventsAddComponent } from '../events-add/events-add.component';
@@ -33,14 +33,20 @@ export class EventsListComponent implements OnInit {
   public dataSource: EventDtoGroup[] = new Array<EventDtoGroup>();
   checkboxSelected = true;
   weekNumber = 0;
+  isAdminUserLoggedIn: boolean = false;
+  length: number = 0;
 
   constructor(
     private service: EventService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private userService: UsersService) {
    }
 
   ngOnInit() {
     this.init();
+    this.userService.getLoggedInUser(1).subscribe(x => {
+      this.isAdminUserLoggedIn = x.id === 1;
+    });
   }
 
   private init() {
@@ -48,6 +54,7 @@ export class EventsListComponent implements OnInit {
     this.events.subscribe(y => {
       const xSort: EventDto[] = y.sort(this.funtionGetSortedData);
       this.filterValues(xSort);
+      this.length = y.length;
     });
   }
 
@@ -149,6 +156,16 @@ export class EventsListComponent implements OnInit {
 
   isGroup(index: number, item: EventDtoGroup): boolean {
     return item.isGroupBy;
+  }
+
+  addDummyEvent() {
+    this.service.post({
+      name: 'Veranstaltung' + this.length,
+      duration: this.length,
+      contacts: [],
+      date: '2020-' + (new Date(Date.now()).getMonth() + 2) + '-' + this.length % 30,
+      time: '20:' + this.length % 59
+    }).subscribe(x => this.init());
   }
 
   getWeekNumber(date: Date): number {
