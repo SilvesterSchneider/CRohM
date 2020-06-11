@@ -36,20 +36,24 @@ export class EventsInfoComponent implements OnInit {
 
   ngOnInit() {
     this.eventsForm = this.createEventsForm();
-    this.event.contacts.forEach(x => {
-      this.contacts.push({
-        id: x.id,
-        preName: x.preName,
-        name: x.name,
-        participated: false
+    if (this.event.contacts != null) {
+      this.event.contacts.forEach(x => {
+        this.contacts.push({
+          id: x.id,
+          preName: x.preName,
+          name: x.name,
+          participated: false
+        });
       });
-    });
-    this.event.participated.forEach(x => {
-      const cont: ContactDtoExtended = this.contacts.find(y => y.id === x.contactId);
-      if (cont != null) {
-        cont.participated = x.hasParticipated;
-      }
-    });
+    }
+    if (this.event.participated != null) {
+      this.event.participated.forEach(x => {
+        const cont: ContactDtoExtended = this.contacts.find(y => y.id === x.contactId);
+        if (cont != null) {
+          cont.participated = x.hasParticipated;
+        }
+      });
+    }
     this.eventsForm.patchValue(this.event);
     this.eventsForm.get('date').patchValue(this.formatDate(this.event.date));
     this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));

@@ -3,6 +3,8 @@ import { OrganizationService, UsersService } from '../../shared/api-generated/ap
 import { Observable } from 'rxjs';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
 import { OrganizationsMockService } from '../organizations-mock-service';
+import { MatDialog } from '@angular/material/dialog';
+import { OrganizationsInfoComponent } from '../organizations-info/organizations-info.component';
 
 @Component({
   selector: 'app-organizations-list',
@@ -27,7 +29,8 @@ export class OrganizationsListComponent implements OnInit {
     organizationServive: OrganizationService,
     mock: OrganizationsMockService,
     private changeDetectorRefs: ChangeDetectorRef,
-    private userService: UsersService) {
+    private userService: UsersService,
+    private dialog: MatDialog) {
     this.orga = organizationServive;
     this.orgaMock = mock;
   }
@@ -69,6 +72,9 @@ export class OrganizationsListComponent implements OnInit {
         phoneNumber: '02342-234234' + this.length
       }
     }).subscribe(x => this.loadData());
+
+  openInfo(id: number) {
+    this.orga.getById(id).subscribe(x => this.dialog.open(OrganizationsInfoComponent, { data: x }));
   }
 }
 

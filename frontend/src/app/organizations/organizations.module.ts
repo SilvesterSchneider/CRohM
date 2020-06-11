@@ -7,12 +7,14 @@ import { OrganizationsDetailComponent } from './organizations-detail/organizatio
 import { MaterialModule } from '../shared/material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { OrganizationsInfoComponent } from './organizations-info/organizations-info.component';
 
 @NgModule({
   declarations: [
     OrganizationsAddComponent,
     OrganizationsListComponent,
-    OrganizationsDetailComponent
+    OrganizationsDetailComponent,
+    OrganizationsInfoComponent
   ],
   imports: [
     CommonModule,
