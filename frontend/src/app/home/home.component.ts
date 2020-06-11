@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ContactService, OrganizationService, ContactDto, OrganizationDto, EventDto, EventService,
   ModificationEntryService, MODEL_TYPE, MODIFICATION, ModificationEntryDto, AddressDto,
-  ContactPossibilitiesDto } from '../shared/api-generated/api-generated';
+  ContactPossibilitiesDto,
+  ParticipatedDto,
+  HistoryElementDto} from '../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts/contacts-info/contacts-info.component';
 import { EventsInfoComponent } from '../events/events-info/events-info.component';
@@ -12,7 +14,7 @@ export class ContactExtended implements ContactDto {
   description?: string;
   organizations?: OrganizationDto[];
   events?: EventDto[];
-  history?: import("../shared/api-generated/api-generated").HistoryElementDto[];
+  history?: HistoryElementDto[];
   name?: string;
   preName?: string;
   address?: AddressDto;
@@ -35,7 +37,7 @@ export class OrganizationExtended implements OrganizationDto {
 export class EventExtended implements EventDto {
   id: number;
   contacts?: ContactDto[];
-  participated?: import("../shared/api-generated/api-generated").ParticipatedDto[];
+  participated?: ParticipatedDto[];
   date: string;
   time: string;
   name?: string;
