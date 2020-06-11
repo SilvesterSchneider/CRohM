@@ -72,7 +72,8 @@ export class OrganizationsListComponent implements OnInit {
         phoneNumber: '02342-234234' + this.length
       }
     }).subscribe(x => this.loadData());
-
+  }
+  
   openInfo(id: number) {
     this.orga.getById(id).subscribe(x => this.dialog.open(OrganizationsInfoComponent, { data: x }));
   }
