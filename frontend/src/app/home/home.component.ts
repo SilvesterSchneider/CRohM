@@ -5,8 +5,14 @@ import { ContactService, OrganizationService, ContactDto, OrganizationDto, Event
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts/contacts-info/contacts-info.component';
 import { EventsInfoComponent } from '../events/events-info/events-info.component';
+import { OrganizationsInfoComponent } from '../organizations/organizations-info/organizations-info.component';
 
-export class ContactExtended {
+export class ContactExtended implements ContactDto {
+  id: number;
+  description?: string;
+  organizations?: OrganizationDto[];
+  events?: EventDto[];
+  history?: import("../shared/api-generated/api-generated").HistoryElementDto[];
   name?: string;
   preName?: string;
   address?: AddressDto;
@@ -15,7 +21,9 @@ export class ContactExtended {
   created: boolean;
 }
 
-export class OrganizationExtended {
+export class OrganizationExtended implements OrganizationDto {
+  id: number;
+  employees?: ContactDto[];
   name?: string;
   description?: string;
   address?: AddressDto;
@@ -24,7 +32,10 @@ export class OrganizationExtended {
   created: boolean;
 }
 
-export class EventExtended {
+export class EventExtended implements EventDto {
+  id: number;
+  contacts?: ContactDto[];
+  participated?: import("../shared/api-generated/api-generated").ParticipatedDto[];
   date: string;
   time: string;
   name?: string;
@@ -85,6 +96,9 @@ export class HomeComponent implements OnInit {
             time: y.time,
             duration: y.duration,
             name: y.name,
+            id: y.id,
+            contacts: y.contacts,
+            participated: y.participated,
             userName: entry.userName,
             created: entry.modificationType === MODIFICATION.CREATED
           });
@@ -99,6 +113,8 @@ export class HomeComponent implements OnInit {
             contact: y.contact,
             description: y.description,
             name: y.name,
+            id: y.id,
+            employees: y.employees,
             userName: entry.userName,
             created: entry.modificationType === MODIFICATION.CREATED
           });
@@ -113,6 +129,11 @@ export class HomeComponent implements OnInit {
         contactPossibilities: y.contactPossibilities,
         name: y.name,
         preName: y.preName,
+        id: y.id,
+        description: y.description,
+        events: y.events,
+        history: y.history,
+        organizations: y.organizations,
         userName: entry.userName,
         created: entry.modificationType === MODIFICATION.CREATED
     }));
@@ -123,7 +144,7 @@ export class HomeComponent implements OnInit {
   }
 
   openOrganizationDetails(organization: OrganizationDto) {
-    // TO DO: open dialog of organizations detail!
+    this.dialog.open(OrganizationsInfoComponent, {data: organization});
   }
 
   openEventDetails(event: EventDto) {
