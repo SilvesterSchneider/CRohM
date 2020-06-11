@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AddressDto } from '../api-generated/api-generated';
 
 
-export const API_URL = 'http://photon.komoot.de/api';
+export const API_URL = 'https://photon.komoot.de/api';
 
 @Injectable({
   providedIn: 'root'

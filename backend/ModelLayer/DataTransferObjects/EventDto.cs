@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ModelLayer.DataTransferObjects
+{
+    public class EventDto
+    {
+        public long Id { get; set; }
+        public DateTime Date { get; set; }
+        public DateTime Time { get; set; }
+        public string Name { get; set; }
+        public float Duration { get; set; }
+        public List<ContactDto> Contacts { get; set; } = new List<ContactDto>();
+        public List<ParticipatedDto> Participated { get; set; } = new List<ParticipatedDto>();
+    }
+
+    public class EventCreateDto
+    {
+        public DateTime Date { get; set; }
+        public DateTime Time { get; set; }
+        public string Name { get; set; }
+        public float Duration { get; set; }
+        public List<int> Contacts { get; set; } = new List<int>();
+    }
+}

@@ -1,15 +1,24 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ContactDto, ContactPossibilitiesEntryDto } from '../../shared/api-generated/api-generated';
+import { ContactDto,
+  ContactPossibilitiesEntryDto,
+  EventDto,
+  ParticipatedDto,
+  EventService,
+  HistoryElementType} from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
+import { timeInterval } from 'rxjs/operators';
+import { getLocaleDateFormat } from '@angular/common';
+import { getType } from '@angular/flex-layout/extended/typings/style/style-transforms';
 
 @Component({
   selector: 'app-contacts-detail',
   templateUrl: './contacts-detail.component.html',
   styleUrls: ['./contacts-detail.component.scss']
 })
+
 export class ContactsDetailComponent implements OnInit {
   @ViewChild(ContactPossibilitiesComponent, {static: true})
   contactPossibilitiesEntries: ContactPossibilitiesComponent;
@@ -20,7 +29,8 @@ export class ContactsDetailComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private service: ContactService) { }
+    private service: ContactService,
+    private eventService: EventService) { }
 
   ngOnInit(): void {
     this.contact = this.route.snapshot.data.contact;
@@ -50,9 +60,11 @@ export class ContactsDetailComponent implements OnInit {
   updateContact() {
     const idAddress = this.contact.address.id;
     const idContactPossibilities = this.contact.contactPossibilities.id;
-    const idContact = this.contact.id;
-    this.contact = this.contactsForm.value;
-    this.contact.id = idContact;
+    const newContact: ContactDto = this.contactsForm.value;
+    this.contact.address = newContact.address;
+    this.contact.preName = newContact.preName;
+    this.contact.name = newContact.name;
+    this.contact.contactPossibilities = newContact.contactPossibilities;
     this.contact.address.id = idAddress;
     this.contact.contactPossibilities.id = idContactPossibilities;
     this.service.put(this.contact, this.contact.id).subscribe();

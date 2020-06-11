@@ -1,0 +1,147 @@
+Coding Guidelines Backend:
+	- Konstanten und Enumerationen werden nur in Großbuchstaben benannt und mit unterstrich unterteilt
+		- const int DAS_IST_EINE_KONSTANTE = 0;
+		- enum DAS_IST_EINE_ENUMERATION {
+			}
+	- Variablen beginnen immer mit einem kleinen Buchstaben und folgen zusätzlich dem Camel-Case Prinzip: 
+		- int dasIstEinBeispielFürEinenKorrektenVariablenNamen = 0;
+		- Grundsätzlich darauf achten möglichst in kurzen zusammenhängenden Worten zu erklären was es für eine Variable ist
+			- int beispielKorrekterVariablenName = 0;
+	- Klassen und Funktionen beginnen immer mit einem großen Buchstaben und folgen zusätzlich dem Camel-Case Prinzip
+		- class DasHausKlasse { }
+		- public void RechneWert();
+	- Getter Funktionen sollten immer mit Get anfangen
+		- int GetAmount();
+		- String GetText();
+	- Setter Funktionen sollten immer mit Set anfangen
+		- void SetZahl(int zahl);
+		- void SetText(string text);
+	- Asynchrone Funktionen sollten immer mit Async enden
+		- async Task SetZahlAsync(int zahl);
+		- async Task SetTextAsync(string text);
+	- Funktionen die einen bool Rückgabewert besitzen sollten immer mit Is anfangen
+		- bool IsValid();
+		- async Task<bool> IsCalculationErrorAsync();
+	- Interfaces beginnen immer mit einem großen I im namen und erweitern am besten einen Klassennamen
+		- interface IApfel { }
+		- class Apfel : IApfel { }
+	- Dto Klassen enden immer mit Dto bzw. CreateDto im Namen und werden zusammen innerhalb einer gemeinsamen Datei deklariert
+		- class ApfelDto { }
+		- class ApfelCreateDto { }
+	- Repositories Namen setzen sich zusammen aus Name der Model-Klasse + Repository
+		- class ApfelRepository { }
+	- Services Namen setzen sich zusammen aus Name der Model-Klasse + Service
+		- class ApfelService { }
+	- Controller Namen setzen sich zusammen aus Name der Model-Klasse + Controller
+		- class ApfelController { }
+	- Kommentare werden immer dann definiert wenn irgendetwas einer zusätzlichen Erklärung bedarf
+		- weil nicht trivial
+			- 	/// <summary>
+				/// die dauer des events in x.y stunden
+				/// </summary>
+				public float Duration { get; set; }
+		- weil komplex im Umfang bzw. Logik
+			-	/// <summary>
+				/// Getter für event mit allen includes anhand id
+				/// </summary>
+				/// <param name="id">id</param>
+				/// <returns>event</returns>
+				Task<Event> GetEventByIdWithAllIncludesAsync(long id);
+		- Generell gilt lieber zuviel Kommentare als zu wenig!
+	- Test Namen setzen sich zusammen aus Name der zu testenden Klasse + Tests
+		- class ApfelTests { }
+	- Testmethodennamen setzen sich zusammen aus dem Namen der zu prüfenden Methode + Prüfungsinhalt + Erwartetes Ergebnis
+		- public async void GetByZipcodeAsync_SearchWithExistingZipcode_ReturnsSingleAddress();
+		- public void Registration_CorrectData_AssertPassed();
+	- Tests setzen sich zusammen aus einem 
+		- Arrange Bereich für das Definieren der Mocks und Testdaten
+		- einem Act Bereich, wo tatsächlich die Tests ausgeführt werden
+		- und einem Assert Bereich, wo die Ergebnisse abgeglichen werdem
+	- Grundsätzlich ist nach jeder geschlossenen geschweiften Klammer eines Statements eine zusätzlich leerzeile einzuhalten
+		- 	if (a > b) {
+				DoSomething();
+			}
+			
+			b += 2;
+			...
+		- 	while (a < b) {
+				DoSomething();
+			}
+			
+			b += 2;
+	- Grundsätzlich ist jede zusätzliche Logikebene durch einen Tabulator abzugrenzen und sicherzustellen das die schließenden geschweiften Klammern auf der selben Höhe liegen wie das statement
+		- 	if (a < b) {
+				if (b > c) {
+					while (d < c) {
+						DoSomething();
+					}
+				}
+				for (int i = 0; i < 5; i++) {
+					DoSomethingElse();
+				}
+			}
+	- Grundsätzlich sollte immer erst dann eine lokale Variable angelegt werden, wenn mind. 2x auf diesen Wert zugegriffen wird
+		- 	int a = 3;
+			if (a + b > 4) {
+				DoSomething();
+			}
+			int c = a + b;
+	- Exceptions sollten immer so stark typisiert gefangen werden wie möglich und nicht einfach nur anhand von catch (Exception e)
+		- 	try {
+				kritischerCode();
+			} 
+			catch (SpecificExceptionVariant1 e) {
+				DoSomething();
+			}
+			catch (SpecificExceptionVariant2 e) {
+				DoSomethingElse();
+			}
+	- Lambda Expressions welche mehr als eine Zeile code beinhalten sollten immer durch einen Zeilenumbruch eingeleitet werden
+		- 	x.ForEach(
+				(x) => 
+				{ 
+					x.Enabled = false;
+					x.Failed = true;
+				}				
+			);
+	- Linq expressions sollten immer nach jedem neuen Methodenaufruf eine neue Zeile einleiten
+		-	return Entities
+					.Include(x => x.Apfel)
+					.ThenInclude(y => y.Birnen)
+					.ToListAsync();
+	- Grundsätzlich sollten zuerst 
+		alle Enumerationen, 
+		dann Konstanten, 
+		dann public Variablen, 
+		dann private Variablen, 
+		dann konstruktoren, 
+		dann public Properties,
+		dann public Methoden 
+		und danach alle private Methoden deklariert werden 
+		und bei Properties / Methoden darauf achten das sie durch eine Leerzeile von einander getrennt sind
+		-	public class Apfel {
+				enum WOCHENTAG {
+					MONTAG,
+					DIENSTAG
+				}
+				
+				public const int KONSTANTE = 1;
+				public int zahl = 3;
+				private string text = string.empty;
+				
+				public Apfel(string text) {
+					this.text = text;
+				}
+				
+				public string Text { get; set; }
+				
+				public int Zahl { get; set; }
+				
+				public void DoSomething() { };
+				
+				public void DoSomethingElse() { };
+				
+				private void DoNothing() { };
+				
+				private int GetNothing() { };
+			}

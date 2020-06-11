@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserComponent } from './user.component';
 import { MaterialModule } from '../../shared/material.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -13,7 +13,7 @@ describe('UserComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [UserComponent],
-      imports: [MaterialModule, ReactiveFormsModule, BrowserAnimationsModule, HttpClientModule]
+      imports: [MaterialModule, ReactiveFormsModule, FormsModule, BrowserAnimationsModule, HttpClientModule]
     })
       .compileComponents();
   }));
@@ -35,7 +35,8 @@ describe('UserComponent', () => {
     component.userForm.get('lastName').setValue('');
 
     const form: HTMLElement = fixture.nativeElement;
-    expect(form.getElementsByTagName('button').item(0).getAttribute('disabled')).toBeTruthy();
+    const buttons = form.getElementsByTagName('button');
+    expect(buttons.item(buttons.length - 1).getAttribute('disabled')).toBeTruthy();
   });
 
 

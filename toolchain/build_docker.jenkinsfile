@@ -13,7 +13,7 @@ node {
 
     try {
         stage('Checkout') {
-            git url: 'https://github.com/SilvesterSchneider/CRohM.git/'
+            git url: 'https://github.com/SilvesterSchneider/CRohM.git/', branch: env.BRANCH_NAME
             shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
         }
         dir(folder) {
