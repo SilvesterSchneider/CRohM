@@ -57,6 +57,10 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
     this.contact = data;
   }
 
+  hasChanged() {
+    return !this.contactsForm.pristine;
+  }
+
   ngOnInit(): void {
     this.contact.events.forEach(x => {
       this.events.push({

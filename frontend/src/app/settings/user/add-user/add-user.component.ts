@@ -43,6 +43,10 @@ export class AddUserDialogComponent extends BaseDialogInput<AddUserDialogCompone
         super(dialogRef, dialog);
     }
 
+    hasChanged() {
+        return !this.userForm.pristine;
+    }
+
     /**
      * Funktion zum Speichen des neuen Users und Schliessen des Dialogs
      */

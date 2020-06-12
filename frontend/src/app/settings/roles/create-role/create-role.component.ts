@@ -27,4 +27,9 @@ export class CreateRoleDialogComponent extends BaseDialogInput<CreateRoleDialogC
   public onCancle(): void {
     super.confirmDialog();
   }
+
+  hasChanged() {
+    return !this.roleForm.pristine;
+  }
+
 }

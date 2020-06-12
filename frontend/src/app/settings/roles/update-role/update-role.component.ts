@@ -3,6 +3,7 @@ import { IRoleTemp, IPermissionTemp } from '../mock-roles';
 import { Validators, FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
+import { DeleteEntryDialogComponent } from '../../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 
 @Component({
   selector: 'app-update-role',
@@ -28,12 +29,26 @@ export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogC
     }
   }
 
+  hasChanged() {
+    return !this.roleForm.pristine;
+  }
+
   public onCancle(): void {
     super.confirmDialog();
   }
 
   public onDelete(): void {
-    this.dialogRef.close({ delete: true });
+    const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
+      data: 'Rolle',
+      disableClose: true
+    });
+
+    deleteDialogRef.afterClosed().subscribe((deleteResult) => {
+      if (deleteResult.delete) {
+
+        this.dialogRef.close({ delete: true });
+      }
+    });
   }
 
   private updateForm(): void {

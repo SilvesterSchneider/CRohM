@@ -37,6 +37,10 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     this.event = data;
   }
 
+  hasChanged() {
+    return !this.eventsForm.pristine;
+  }
+
   ngOnInit() {
     this.eventsForm = this.createEventsForm();
     this.event.contacts.forEach(x => {

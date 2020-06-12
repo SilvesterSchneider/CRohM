@@ -36,6 +36,10 @@ export abstract class BaseDialogInput<T = any> implements OnInit {
      * Funktion zum Aufruf des Confirm-Dialogs
      */
     confirmDialog(): void {
+        if (!this.hasChanged()) {
+            this.dialogRef.close();
+            return;
+        }
         // Angezeigte Ueberschrift bzw. Nachricht im Confirm-Dialog
         const message = `Wollen Sie den Vorgang wirklich abbrechen?`;
         const dialogData = new ConfirmDialogModel('Warnung', message);
@@ -54,6 +58,8 @@ export abstract class BaseDialogInput<T = any> implements OnInit {
             }
         });
     }
+
+    abstract hasChanged(): boolean;
 }
 
 

@@ -31,6 +31,10 @@ export class ContactsAddHistoryComponent extends BaseDialogInput<ContactsAddHist
         });
     }
 
+    hasChanged() {
+        return !this.oppoSuitsForm.pristine;
+    }
+
     saveHistory() {
         let historyToSave: HistoryElementCreateDto;
         let typeToSave = 0;

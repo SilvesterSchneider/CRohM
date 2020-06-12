@@ -7,7 +7,8 @@ import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
-  MatAutocompleteTrigger} from '@angular/material/autocomplete';
+  MatAutocompleteTrigger
+} from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { ContactDto, EventDto, ParticipatedDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
@@ -70,7 +71,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     private cd: ChangeDetectorRef,
     private contactService: ContactService,
     private eventService: EventService,
-    private fb: FormBuilder  ) {
+    private fb: FormBuilder) {
     super(dialogRef, dialog);
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
@@ -80,6 +81,10 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       this.stateChanges.next();
     });
     this.event = data;
+  }
+
+  hasChanged() {
+    return !this.eventsForm.pristine;
   }
 
   ngOnInit() {

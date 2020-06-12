@@ -5,6 +5,7 @@ import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsAddHistoryComponent } from '../contacts-add-history/contacts-add-history.component';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
+import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 
 @Component({
   selector: 'app-contacts-list',
@@ -19,7 +20,7 @@ export class ContactsListComponent implements OnInit {
 
   constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef, private dialog: MatDialog) {
     this.service = service;
-   }
+  }
 
   ngOnInit() {
     this.init();
@@ -29,7 +30,7 @@ export class ContactsListComponent implements OnInit {
     this.contacts = this.service.getAll();
     this.contacts.subscribe();
     this.changeDetectorRefs.detectChanges();
-   // this.contacts = this.serviceMock.getContacts();
+    // this.contacts = this.serviceMock.getContacts();
   }
 
   addContact() {
@@ -37,7 +38,17 @@ export class ContactsListComponent implements OnInit {
   }
 
   deleteContact(id: number) {
-    this.service.delete(id).subscribe(x => this.init());
+    const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
+      data: 'Kontakt',
+      disableClose: true
+    });
+
+    deleteDialogRef.afterClosed().subscribe((deleteResult) => {
+      if (deleteResult.delete) {
+        this.service.delete(id).subscribe(x => this.init());
+      }
+    });
+
   }
 
   addNote(id: number) {

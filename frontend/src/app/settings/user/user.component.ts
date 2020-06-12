@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTable } from '@angular/material/table';
 import { AddUserDialogComponent } from './add-user/add-user.component';
 import { EditUserDialogComponent } from './edit-user/edit-user.component';
+import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 
 
 @Component({
@@ -65,7 +66,17 @@ export class UserComponent implements OnInit {
   }
 
   public OnDelete(userId: number) {
-    // TODO: call backend delete function
+    const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
+      data: 'Benutzer',
+      disableClose: true
+    });
+
+    deleteDialogRef.afterClosed().subscribe((deleteResult) => {
+      if (deleteResult.delete) {
+        // TODO: call backend delete function
+      }
+    });
+
   }
 
   public OnPasswordReset(userId: number) {

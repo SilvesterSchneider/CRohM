@@ -85,6 +85,11 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     });
   }
 
+  hasChanged() {
+    return !this.eventsForm.pristine;
+  }
+
+
   ngOnInit() {
     this.eventsForm = this.createOrganizationForm();
     this.contactService.getAll().subscribe(y => {
