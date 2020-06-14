@@ -20,31 +20,32 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   contacts: Observable<ContactDto[]>;
   displayedColumns = [];
   service: ContactService;
-  currentScreenWidth: string = '';
+  currentScreenWidth = '';
   flexMediaWatcher: Subscription;
-  constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef, private dialog: MatDialog, private mediaObserver: MediaObserver) {
+  constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef,
+              private dialog: MatDialog, private mediaObserver: MediaObserver) {
     this.service = service;
-    this.flexMediaWatcher = mediaObserver.media$.subscribe((change: MediaChange) => {
-        if (change.mqAlias !== this.currentScreenWidth) {
-            this.currentScreenWidth = change.mqAlias;
-            this.setupTable();
-        }
-      });
+    this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
+      if (change[0].mqAlias !== this.currentScreenWidth) {
+        this.currentScreenWidth = change[0].mqAlias;
+        this.setupTable();
+      }
+    });
   }
 
   ngOnInit() {
     this.getData();
   }
-  
+
   ngOnDestroy(): void {
     this.flexMediaWatcher.unsubscribe();
   }
 
   setupTable() {
-    if (this.currentScreenWidth === 'xs') { 
+    if (this.currentScreenWidth === 'xs') {
       // only display prename and name on larger screens
-      this.displayedColumns = ['vorname', 'nachname', 'action'];}
-      else{
+      this.displayedColumns = ['vorname', 'nachname', 'action'];
+    } else {
       this.displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
     }
   }

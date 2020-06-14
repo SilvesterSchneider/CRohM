@@ -11,7 +11,7 @@ import { MediaChange, MediaObserver } from '@angular/flex-layout';
 @Component({
 	selector: 'app-organizations-list',
 	templateUrl: './organizations-list.component.html',
-	styleUrls: [ './organizations-list.component.scss' ]
+	styleUrls: ['./organizations-list.component.scss']
 })
 @Injectable({
 	providedIn: 'root'
@@ -21,14 +21,15 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	organizations: Observable<OrganizationDto[]>;
 	organizationMock: Observable<OrganizationDto[]>;
 	displayedColumns = [];
-	currentScreenWidth: string = '';
+	currentScreenWidth = '';
 	flexMediaWatcher: Subscription;
 
-	constructor(public dialog: MatDialog, service: OrganizationService, private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver) {
+	constructor(public dialog: MatDialog, service: OrganizationService,
+		           private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver) {
 		this.service = service;
-		this.flexMediaWatcher = mediaObserver.media$.subscribe((change: MediaChange) => {
-			if (change.mqAlias !== this.currentScreenWidth) {
-				this.currentScreenWidth = change.mqAlias;
+		this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
+			if (change[0].mqAlias !== this.currentScreenWidth) {
+				this.currentScreenWidth = change[0].mqAlias;
 				this.setupTable();
 			}
 		});
@@ -45,7 +46,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	setupTable() {
 		if (this.currentScreenWidth === 'xs') {
 			// only display prename and name on larger screens
-			this.displayedColumns = [ 'Name', 'Zugehörige', 'Action' ];
+			this.displayedColumns = ['Name', 'Zugehörige', 'Action'];
 		} else {
 			this.displayedColumns = [
 				'Name',
