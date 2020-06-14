@@ -35,9 +35,9 @@ export abstract class BaseDialogInput<T = any> implements OnInit {
     /**
      * Funktion zum Aufruf des Confirm-Dialogs
      */
-    confirmDialog(): void {
+    confirmDialog(data? : any): void {
         if (!this.hasChanged()) {
-            this.dialogRef.close();
+            this.dialogRef.close(data);
             return;
         }
         // Angezeigte Ueberschrift bzw. Nachricht im Confirm-Dialog
@@ -54,7 +54,7 @@ export abstract class BaseDialogInput<T = any> implements OnInit {
         // Schliesst den Confirm-Dialog
         dialogRef.afterClosed().subscribe(dialogResult => {
             if (dialogResult === true) {
-                this.dialogRef.close();
+                this.dialogRef.close(data);
             }
         });
     }

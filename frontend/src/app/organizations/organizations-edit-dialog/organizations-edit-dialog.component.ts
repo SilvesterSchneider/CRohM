@@ -11,7 +11,7 @@ import {
 	OnDestroy,
 	Inject
 } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { NgControl, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -24,6 +24,7 @@ import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
+import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
 
 export class ItemList {
 	constructor(public item: string, public selected?: boolean) {
@@ -46,7 +47,7 @@ export class OrganizationContactConnection {
 	styleUrls: [ './organizations-edit-dialog.component.scss' ],
 	providers: [ { provide: MatFormFieldControl, useExisting: OrganizationsEditDialogComponent } ]
 })
-export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
+export class OrganizationsEditDialogComponent extends BaseDialogInput implements OnInit, OnDestroy {
 	static nextId = 0;
 	@ViewChild('inputTrigger', { read: MatAutocompleteTrigger })
 	inputTrigger: MatAutocompleteTrigger;
@@ -80,6 +81,7 @@ export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
 	constructor(
 		public dialogRef: MatDialogRef<OrganizationsEditDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: OrganizationDto,
+		public dialog : MatDialog,
 		@Optional()	@Self()	public ngControl: NgControl,
 		private fm: FocusMonitor,
 		private elRef: ElementRef<HTMLElement>,
@@ -88,6 +90,7 @@ export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
 		private organizationService: OrganizationService,
 		private fb: FormBuilder
 	) {
+		super(dialogRef, dialog);
 		this.organization = data;
 		fm.monitor(elRef.nativeElement, true).subscribe((origin) => {
 			this.focused = !!origin;
@@ -257,10 +260,14 @@ export class OrganizationsEditDialogComponent implements OnInit, OnDestroy {
 	}
 
 	onCancel() {
-		this.dialogRef.close({delete: false, id: 0 });
+		super.confirmDialog({ delete: false, id: 0 });
 	}
 
 	onDelete() {
-		this.dialogRef.close({ delete: true, id: this.organization.id });
+		super.confirmDialog({ delete: true, id: this.organization.id});
+	}
+
+	hasChanged(): boolean {
+		return !this.organizationForm.pristine;
 	}
 }

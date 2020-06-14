@@ -1,15 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OrganizationService, OrganizationCreateDto, ContactService } from 'src/app/shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
+import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
 
 @Component({
 	selector: 'app-organizations-add',
 	templateUrl: './organizations-add-dialog.component.html',
 	styleUrls: [ './organizations-add-dialog.component.scss' ]
 })
-export class OrganizationsAddDialogComponent implements OnInit {
+export class OrganizationsAddDialogComponent extends BaseDialogInput implements OnInit {
 	@ViewChild(ContactPossibilitiesComponent, { static: true })
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
 	contactPossibilitiesEntriesFormGroup: FormGroup;
@@ -18,9 +19,12 @@ export class OrganizationsAddDialogComponent implements OnInit {
 
 	constructor(
 		public dialogRef: MatDialogRef<OrganizationsAddDialogComponent>,
+		public dialog: MatDialog,
 		private readonly fb: FormBuilder,
 		private readonly service: OrganizationService
-	) {}
+	) {
+		super(dialogRef, dialog);
+	}
 
 	public ngOnInit(): void {
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
@@ -54,6 +58,10 @@ export class OrganizationsAddDialogComponent implements OnInit {
 	}
 
 	onCancel() {
-		this.dialogRef.close();
+		super.confirmDialog();
+	}
+
+	hasChanged(): boolean {
+		return !this.organizationForm.pristine;
 	}
 }
