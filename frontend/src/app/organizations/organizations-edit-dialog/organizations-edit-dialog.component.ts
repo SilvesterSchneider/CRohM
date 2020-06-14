@@ -44,8 +44,8 @@ export class OrganizationContactConnection {
 @Component({
 	selector: 'app-organizations-edit-dialog',
 	templateUrl: './organizations-edit-dialog.component.html',
-	styleUrls: [ './organizations-edit-dialog.component.scss' ],
-	providers: [ { provide: MatFormFieldControl, useExisting: OrganizationsEditDialogComponent } ]
+	styleUrls: ['./organizations-edit-dialog.component.scss'],
+	providers: [{ provide: MatFormFieldControl, useExisting: OrganizationsEditDialogComponent }]
 })
 export class OrganizationsEditDialogComponent extends BaseDialogInput implements OnInit, OnDestroy {
 	static nextId = 0;
@@ -81,8 +81,8 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 	constructor(
 		public dialogRef: MatDialogRef<OrganizationsEditDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: OrganizationDto,
-		public dialog : MatDialog,
-		@Optional()	@Self()	public ngControl: NgControl,
+		public dialog: MatDialog,
+		@Optional() @Self() public ngControl: NgControl,
 		private fm: FocusMonitor,
 		private elRef: ElementRef<HTMLElement>,
 		private cd: ChangeDetectorRef,
@@ -138,17 +138,17 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 
 	private createOrganizationForm(): FormGroup {
 		return this.fb.group({
-			name: [ '', Validators.required ],
-			description: [ '' ],
+			name: ['', Validators.required],
+			description: [''],
 			address: this.fb.control(''),
 			contact: this.createContactForm()
 		});
 	}
 	private createContactForm(): FormGroup {
 		return this.fb.group({
-			phoneNumber: [ '', Validators.pattern('^0[0-9- ]*$') ],
-			fax: [ '', Validators.pattern('^0[0-9- ]*$') ],
-			mail: [ '', Validators.email ],
+			phoneNumber: ['', Validators.pattern('^0[0-9- ]*$')],
+			fax: ['', Validators.pattern('^0[0-9- ]*$')],
+			mail: ['', Validators.email],
 			contactEntries: this.contactPossibilitiesEntriesFormGroup
 		});
 	}
@@ -256,7 +256,7 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 			this.organizationService.removeContact(idOrganization, x.contactId).subscribe()
 		);
 		this.itemsToInsert.forEach((x) => this.organizationService.addContact(idOrganization, x.contactId).subscribe());
-		this.dialogRef.close({delete: false, id: 0 });
+		this.dialogRef.close({ delete: false, id: 0 });
 	}
 
 	onCancel() {
@@ -264,7 +264,7 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 	}
 
 	onDelete() {
-		super.confirmDialog({ delete: true, id: this.organization.id});
+		super.confirmDialog({ delete: true, id: this.organization.id });
 	}
 
 	hasChanged(): boolean {

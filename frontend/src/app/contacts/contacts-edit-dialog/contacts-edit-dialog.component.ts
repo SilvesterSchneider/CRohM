@@ -9,7 +9,7 @@ import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialo
 @Component({
 	selector: 'app-contacts-edit-dialog',
 	templateUrl: './contacts-edit-dialog.component.html',
-	styleUrls: [ './contacts-edit-dialog.component.scss' ]
+	styleUrls: ['./contacts-edit-dialog.component.scss']
 })
 export class ContactsEditDialogComponent extends BaseDialogInput implements OnInit {
 	@ViewChild(ContactPossibilitiesComponent, { static: true })
@@ -21,7 +21,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	constructor(
 		public dialogRef: MatDialogRef<ContactsEditDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: ContactDto,
-		public dialog : MatDialog,
+		public dialog: MatDialog,
 		private fb: FormBuilder,
 		private service: ContactService
 	) {
@@ -38,16 +38,16 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 
 	initForm() {
 		this.contactsForm = this.fb.group({
-			id: [ '', Validators.required ],
-			name: [ '', Validators.required ],
-			preName: [ '', Validators.required ],
+			id: ['', Validators.required],
+			name: ['', Validators.required],
+			preName: ['', Validators.required],
 			address: this.fb.control(''),
 			contactPossibilities: this.fb.group({
 				// Validiert auf korrektes E-Mail-Format
-				mail: [ '', Validators.email ],
+				mail: ['', Validators.email],
 				// Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
-				phoneNumber: [ '', Validators.pattern('^0[0-9- ]*$') ],
-				fax: [ '', Validators.pattern('^0[0-9- ]*$') ],
+				phoneNumber: ['', Validators.pattern('^0[0-9- ]*$')],
+				fax: ['', Validators.pattern('^0[0-9- ]*$')],
 				contactEntries: this.contactPossibilitiesEntriesFormGroup
 			})
 		});
@@ -73,7 +73,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	}
 
 	onDelete() {
-		super.confirmDialog({ delete: true, id: this.contact.id});
+		super.confirmDialog({ delete: true, id: this.contact.id });
 	}
 
 	hasChanged(): boolean {

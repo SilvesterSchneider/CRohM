@@ -35,7 +35,7 @@ export abstract class BaseDialogInput<T = any> implements OnInit {
     /**
      * Funktion zum Aufruf des Confirm-Dialogs
      */
-    confirmDialog(data? : any): void {
+    confirmDialog(data?: any): void {
         if (!this.hasChanged()) {
             this.dialogRef.close(data);
             return;
