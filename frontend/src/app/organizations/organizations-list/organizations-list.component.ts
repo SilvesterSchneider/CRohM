@@ -1,44 +1,81 @@
 import { Component, OnInit, ChangeDetectorRef, Injectable } from '@angular/core';
 import { OrganizationService } from '../../shared/api-generated/api-generated';
+import { OrganizationMockService } from '../organizations-mock-service';
 import { Observable } from 'rxjs';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
-import { OrganizationsMockService } from '../organizations-mock-service';
+import { MatDialog } from '@angular/material/dialog';
+import { OrganizationsAddDialogComponent } from '../organizations-add-dialog/organizations-add-dialog.component';
+import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/organizations-edit-dialog.component';
+import { DeleteEntryDialogComponent } from 'src/app/shared/delete-entry-dialog/delete-entry-dialog.component';
 
 @Component({
-  selector: 'app-organizations-list',
-  templateUrl: './organizations-list.component.html',
-  styleUrls: ['./organizations-list.component.scss']
+	selector: 'app-organizations-list',
+	templateUrl: './organizations-list.component.html',
+	styleUrls: [ './organizations-list.component.scss' ]
 })
-
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root'
 })
 export class OrganizationsListComponent implements OnInit {
-  orga: OrganizationService;
-  orgaMock: OrganizationsMockService;
-  organizations: Observable<OrganizationDto[]>;
-  organizationMock: Observable<OrganizationDto[]>;
-  displayedColumns = ['Name', 'Beschreibung', 'Strasse', 'Hausnummer', 'PLZ', 'Stadt', 'Telefonnummer',
-   'E-Mail', 'Faxnummer', 'Zugehörige', 'Action'];
+	service: OrganizationService;
+	mockService: OrganizationMockService;
+	organizations: Observable<OrganizationDto[]>;
+	organizationMock: Observable<OrganizationDto[]>;
+	displayedColumns = [
+		'Name',
+		'Beschreibung',
+		'Strasse',
+		'Hausnummer',
+		'PLZ',
+		'Stadt',
+		'Telefonnummer',
+		'E-Mail',
+		'Faxnummer',
+		'Zugehörige',
+		'Action'
+	];
 
-  constructor(organizationServive: OrganizationService, mock: OrganizationsMockService, private changeDetectorRefs: ChangeDetectorRef) {
-    this.orga = organizationServive;
-    this.orgaMock = mock;
-  }
+	constructor(
+		public dialog: MatDialog,
+		service: OrganizationService,
+		mock: OrganizationMockService,
+		private changeDetectorRefs: ChangeDetectorRef
+	) {
+		this.service = service;
+		this.mockService = mock;
+	}
 
-  ngOnInit(): void {
-    this.loadData();
-  }
+	ngOnInit(): void {
+		this.getData();
+	}
 
-  private loadData() {
-    this.organizations = this.orga.get();
-    this.organizations.subscribe();
-    this.changeDetectorRefs.detectChanges();
-   // this.organizationMock = this.orgaMock.getOrganizationsMock();
-  }
+	private getData() {
+		this.organizations = this.service.get();
+		this.organizations.subscribe();
+		this.changeDetectorRefs.detectChanges();
+		// this.organizationMock = this.orgaMock.getOrganizationsMock();
+	}
 
-  deleteOrganization(id: number) {
-    this.orga.delete(id).subscribe(x => this.loadData());
-  }
+	openAddDialog() {
+		console.log('openedAddDialog');
+		const dialogRef = this.dialog.open(OrganizationsAddDialogComponent);
+		dialogRef.afterClosed().subscribe((result) => {
+			this.getData();
+		});
+	}
+
+	openEditDialog(organization: OrganizationDto) {
+		const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, { data: organization });
+
+		dialogRef.afterClosed().subscribe((result) => {
+			if (result.delete) {
+				this.deleteOrganization(result.id);
+			}
+			this.getData();
+		});
+	}
+
+	deleteOrganization(id: number) {
+		this.service.delete(id).subscribe((x) => this.getData());
+	}
 }
-

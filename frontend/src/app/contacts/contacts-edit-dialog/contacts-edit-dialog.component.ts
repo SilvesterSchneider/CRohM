@@ -1,31 +1,32 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { ContactDto, EventService } from '../../shared/api-generated/api-generated';
+import { ContactDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 
 @Component({
-	selector: 'app-contacts-detail',
-	templateUrl: './contacts-detail.component.html',
-	styleUrls: [ './contacts-detail.component.scss' ]
+	selector: 'app-contacts-edit-dialog',
+	templateUrl: './contacts-edit-dialog.component.html',
+	styleUrls: [ './contacts-edit-dialog.component.scss' ]
 })
-export class ContactsDetailComponent implements OnInit {
+export class ContactsEditDialogComponent implements OnInit {
 	@ViewChild(ContactPossibilitiesComponent, { static: true })
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
 	contactPossibilitiesEntriesFormGroup: FormGroup;
-	contact: ContactDto;
 	contactsForm: FormGroup;
+	contact: ContactDto;
 
 	constructor(
+		public dialogRef: MatDialogRef<ContactsEditDialogComponent>,
+		@Inject(MAT_DIALOG_DATA) public data: ContactDto,
 		private fb: FormBuilder,
-		private route: ActivatedRoute,
-		private service: ContactService,
-		private eventService: EventService
-	) {}
+		private service: ContactService
+	) {
+		this.contact = data;
+	}
 
 	ngOnInit(): void {
-		this.contact = this.route.snapshot.data.contact;
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
 		this.initForm();
@@ -49,7 +50,7 @@ export class ContactsDetailComponent implements OnInit {
 		});
 	}
 
-	updateContact() {
+	onApprove() {
 		const idAddress = this.contact.address.id;
 		const idContactPossibilities = this.contact.contactPossibilities.id;
 		const newContact: ContactDto = this.contactsForm.value;
@@ -59,6 +60,16 @@ export class ContactsDetailComponent implements OnInit {
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
-		this.service.put(this.contact, this.contact.id).subscribe();
+		this.service.put(this.contact, this.contact.id).subscribe(x => {
+			this.dialogRef.close({ delete: false, id: 0 });
+		});
+	}
+
+	onCancel() {
+		this.dialogRef.close({ delete: false, id: 0 });
+	}
+
+	onDelete() {
+		this.dialogRef.close({ delete: true, id: this.contact.id });
 	}
 }
