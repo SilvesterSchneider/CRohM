@@ -24,7 +24,7 @@ export class CreateRoleDialogComponent extends BaseDialogInput<CreateRoleDialogC
 
   public ngOnInit(): void {
   }
-  public onCancle(): void {
+  public onCancel(): void {
     super.confirmDialog();
   }
 

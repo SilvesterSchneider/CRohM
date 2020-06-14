@@ -1,33 +1,40 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ContactsAddDialogComponent } from './contacts-add-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../../app-routing.module';
 import { MaterialModule } from '../../shared/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { OrganizationsListComponent } from './organizations-list.component';
 import { HttpClientModule } from '@angular/common/http';
+import { SharedModule } from '../../shared/shared.module';
+import { MatDialogRef } from '@angular/material/dialog';
 
-describe('OrganizationsComponent', () => {
-	let component: OrganizationsListComponent;
-	let fixture: ComponentFixture<OrganizationsListComponent>;
+describe('ContactsAddDialogComponent', () => {
+	let component: ContactsAddDialogComponent;
+	let fixture: ComponentFixture<ContactsAddDialogComponent>;
 
 	beforeEach(
 		async(() => {
 			TestBed.configureTestingModule({
-				declarations: [ OrganizationsListComponent ],
+				declarations: [ ContactsAddDialogComponent ],
 				imports: [
 					FormsModule,
 					ReactiveFormsModule,
 					AppRoutingModule,
 					MaterialModule,
 					BrowserAnimationsModule,
-					HttpClientModule
-				]
+					HttpClientModule,
+					SharedModule
+				],
+				providers: [{
+					provide: MatDialogRef,
+					useValue: {}
+				  }]
 			}).compileComponents();
 		})
 	);
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(OrganizationsListComponent);
+		fixture = TestBed.createComponent(ContactsAddDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
