@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataTransferObjects\Base\**" />
+    <EmbeddedResource Remove="DataTransferObjects\Base\**" />
+    <None Remove="DataTransferObjects\Base\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,10 +18,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DataTransferObjects\Base\" />
   </ItemGroup>
 
   <ItemGroup>
