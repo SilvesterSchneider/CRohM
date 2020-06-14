@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { ContactsInfoComponent } from '../contacts-info/contacts-info.component'
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { ContactsEditDialogComponent } from '../contacts-edit-dialog/contacts-edit-dialog.component';
 import { ContactsAddDialogComponent } from '../contacts-add-dialog/contacts-add-dialog.component';
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
 
 @Component({
   selector: 'app-contacts-list',
@@ -15,23 +16,42 @@ import { ContactsAddDialogComponent } from '../contacts-add-dialog/contacts-add-
   styleUrls: ['./contacts-list.component.scss']
 })
 
-export class ContactsListComponent implements OnInit {
+export class ContactsListComponent implements OnInit, OnDestroy {
   contacts: Observable<ContactDto[]>;
-  displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
+  displayedColumns = [];
   service: ContactService;
-  constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef, private dialog: MatDialog) {
+  currentScreenWidth: string = '';
+  flexMediaWatcher: Subscription;
+  constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef, private dialog: MatDialog, private mediaObserver: MediaObserver) {
     this.service = service;
+    this.flexMediaWatcher = mediaObserver.media$.subscribe((change: MediaChange) => {
+        if (change.mqAlias !== this.currentScreenWidth) {
+            this.currentScreenWidth = change.mqAlias;
+            this.setupTable();
+        }
+      });
   }
 
   ngOnInit() {
     this.getData();
   }
+  
+  ngOnDestroy(): void {
+    this.flexMediaWatcher.unsubscribe();
+  }
+
+  setupTable() {
+    if (this.currentScreenWidth === 'xs') { 
+      // only display prename and name on larger screens
+      this.displayedColumns = ['vorname', 'nachname', 'action'];}
+      else{
+      this.displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
+    }
+  }
 
   private getData() {
     this.contacts = this.service.getAll();
-    this.changeDetectorRefs.detectChanges(); // mdie comment from raz: This is not needed if implemented properly
-    // this.contacts.subscribe((x) => (this.contacts = x)); // mdie TODO implement working change subscription
-    // this.contacts = this.serviceMock.getContacts();
+    this.changeDetectorRefs.detectChanges();
   }
 
   openAddDialog() {

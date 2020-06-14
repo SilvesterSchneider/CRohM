@@ -406,7 +406,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "72e0d730-cf4b-4640-a7ad-8ba3dd807414", "Admin", "ADMIN" });
+                values: new object[] { 1L, "85e856c9-aca0-481d-b9be-ea722de6ef97", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
