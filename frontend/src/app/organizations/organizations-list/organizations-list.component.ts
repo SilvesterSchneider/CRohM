@@ -54,14 +54,16 @@ export class OrganizationsListComponent implements OnInit {
 
   openAddDialog() {
     console.log('openedAddDialog');
-    const dialogRef = this.dialog.open(OrganizationsAddDialogComponent);
+    const dialogRef = this.dialog.open(OrganizationsAddDialogComponent, {
+      disableClose: true
+    });
     dialogRef.afterClosed().subscribe((result) => {
       this.getData();
     });
   }
 
   openEditDialog(organization: OrganizationDto) {
-    const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, { data: organization });
+    const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, { data: organization, disableClose: true });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result.delete) {

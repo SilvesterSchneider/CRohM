@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import {
 	ContactCreateDto,
@@ -8,13 +8,14 @@ import {
 } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
+import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
 
 @Component({
 	selector: 'app-contacts-add-dialog',
 	templateUrl: './contacts-add-dialog.component.html',
-	styleUrls: [ './contacts-add-dialog.component.scss' ]
+	styleUrls: ['./contacts-add-dialog.component.scss']
 })
-export class ContactsAddDialogComponent implements OnInit {
+export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialogComponent> implements OnInit {
 	contactCreateDto: ContactCreateDto = { name: 'n', preName: 'n' };
 	adressCreateDto: AddressCreateDto = { country: '', street: '', streetNumber: '', zipcode: '', city: '' };
 	contactPossibilitiesCreateDto: ContactPossibilitiesCreateDto = { mail: '', phoneNumber: '', fax: '' };
@@ -25,9 +26,12 @@ export class ContactsAddDialogComponent implements OnInit {
 
 	constructor(
 		public dialogRef: MatDialogRef<ContactsAddDialogComponent>,
+		public dialog: MatDialog,
 		private fb: FormBuilder,
 		private service: ContactService
-	) {}
+	) {
+		super(dialogRef, dialog);
+	}
 
 	ngOnInit(): void {
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
@@ -36,15 +40,15 @@ export class ContactsAddDialogComponent implements OnInit {
 
 	createForm() {
 		this.contactsForm = this.fb.group({
-			name: [ '', Validators.required ],
-			preName: [ '', Validators.required ],
+			name: ['', Validators.required],
+			preName: ['', Validators.required],
 			address: this.fb.control(''),
 			contactPossibilities: this.fb.group({
 				// Validiert auf korrektes E-Mail-Format
-				mail: [ '', Validators.email ],
+				mail: ['', Validators.email],
 				// Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
-				phoneNumber: [ '', Validators.pattern('^0[0-9- ]*$') ],
-				fax: [ '', Validators.pattern('^0[0-9- ]*$') ],
+				phoneNumber: ['', Validators.pattern('^0[0-9- ]*$')],
+				fax: ['', Validators.pattern('^0[0-9- ]*$')],
 				contactEntries: this.contactPossibilitiesEntriesFormGroup
 			})
 		});
@@ -74,6 +78,10 @@ export class ContactsAddDialogComponent implements OnInit {
 	}
 
 	onCancel() {
-		this.dialogRef.close();
+		super.confirmDialog();
+	}
+
+	hasChanged(): boolean {
+		return !this.contactsForm.pristine;	// pristine means no data was filled inside dialog
 	}
 }
