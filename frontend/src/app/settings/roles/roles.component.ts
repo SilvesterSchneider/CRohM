@@ -3,7 +3,7 @@ import {ROLES, PERMISSIONS, IRoleTemp, IPermissionTemp} from './mock-roles';
 import {MatDialog} from '@angular/material/dialog';
 import { CreateRoleDialogComponent } from './create-role/create-role.component';
 import { UpdateRoleDialogComponent } from './update-role/update-role.component';
-import { DeleteEntryDialogComponent } from 'src/app/shared/delete-entry-dialog/delete-entry-dialog.component';
+import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 
 interface LooseTableObject {
   [key: string]: any;
@@ -33,7 +33,8 @@ export class RolesComponent implements OnInit {
 
   public openCreateDialog(): void {
     const dialogRef = this.dialog.open(CreateRoleDialogComponent, {
-      data: PERMISSIONS
+      data: PERMISSIONS,
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -50,7 +51,8 @@ export class RolesComponent implements OnInit {
     const dialogRef = this.dialog.open(UpdateRoleDialogComponent, {
       data: {
         role: ROLES.find(x => x.name === columnName),
-        permissions: PERMISSIONS
+        permissions: PERMISSIONS,
+        disableClose: true
       }
     });
 
@@ -58,7 +60,8 @@ export class RolesComponent implements OnInit {
       if (result) {
         if (result.delete) {
           const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-            data: columnName
+            data: columnName,
+            disableClose: true
           });
 
           deleteDialogRef.afterClosed().subscribe(deleteResult => {
