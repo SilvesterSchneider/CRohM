@@ -35,14 +35,16 @@ export class ContactsListComponent implements OnInit {
   }
 
   openAddDialog() {
-    const dialogRef = this.dialog.open(ContactsAddDialogComponent);
+    const dialogRef = this.dialog.open(ContactsAddDialogComponent, {
+      disableClose: true
+    });
     dialogRef.afterClosed().subscribe((result) => {
       this.contacts = this.service.getAll();
     });
   }
 
   openEditDialog(contact: ContactDto) {
-    const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: contact });
+    const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: contact, disableClose: true });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result.delete) {

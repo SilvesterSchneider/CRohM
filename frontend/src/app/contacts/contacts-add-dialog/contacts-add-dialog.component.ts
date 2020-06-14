@@ -13,9 +13,9 @@ import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialo
 @Component({
 	selector: 'app-contacts-add-dialog',
 	templateUrl: './contacts-add-dialog.component.html',
-	styleUrls: [ './contacts-add-dialog.component.scss' ]
+	styleUrls: ['./contacts-add-dialog.component.scss']
 })
-export class ContactsAddDialogComponent extends BaseDialogInput implements OnInit {
+export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialogComponent> implements OnInit {
 	contactCreateDto: ContactCreateDto = { name: 'n', preName: 'n' };
 	adressCreateDto: AddressCreateDto = { country: '', street: '', streetNumber: '', zipcode: '', city: '' };
 	contactPossibilitiesCreateDto: ContactPossibilitiesCreateDto = { mail: '', phoneNumber: '', fax: '' };
@@ -26,7 +26,7 @@ export class ContactsAddDialogComponent extends BaseDialogInput implements OnIni
 
 	constructor(
 		public dialogRef: MatDialogRef<ContactsAddDialogComponent>,
-		public dialog : MatDialog,
+		public dialog: MatDialog,
 		private fb: FormBuilder,
 		private service: ContactService
 	) {
@@ -40,15 +40,15 @@ export class ContactsAddDialogComponent extends BaseDialogInput implements OnIni
 
 	createForm() {
 		this.contactsForm = this.fb.group({
-			name: [ '', Validators.required ],
-			preName: [ '', Validators.required ],
+			name: ['', Validators.required],
+			preName: ['', Validators.required],
 			address: this.fb.control(''),
 			contactPossibilities: this.fb.group({
 				// Validiert auf korrektes E-Mail-Format
-				mail: [ '', Validators.email ],
+				mail: ['', Validators.email],
 				// Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
-				phoneNumber: [ '', Validators.pattern('^0[0-9- ]*$') ],
-				fax: [ '', Validators.pattern('^0[0-9- ]*$') ],
+				phoneNumber: ['', Validators.pattern('^0[0-9- ]*$')],
+				fax: ['', Validators.pattern('^0[0-9- ]*$')],
 				contactEntries: this.contactPossibilitiesEntriesFormGroup
 			})
 		});
