@@ -346,39 +346,6 @@ namespace ModelLayer.Migrations
                     b.ToTable("History");
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.ModificationEntry", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("DataModelId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("DataModelType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModificationType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ModificatonHistory");
-                });
-
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>
                 {
                     b.Property<long>("Id")
@@ -483,7 +450,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "8e277fa1-4021-4fa9-9695-33c6fbfacab9",
+                            ConcurrencyStamp = "85e856c9-aca0-481d-b9be-ea722de6ef97",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

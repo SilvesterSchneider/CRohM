@@ -1,8 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { UserDto, UsersService, AuthService } from '../../shared/api-generated/api-generated';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTable } from '@angular/material/table';
+import { AddUserDialogComponent } from './add-user/add-user.component';
+import { EditUserDialogComponent } from './edit-user/edit-user.component';
+import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
+
 
 @Component({
   selector: 'app-user',
@@ -15,21 +19,44 @@ export class UserComponent implements OnInit {
   dataSource = new BehaviorSubject<UserDto[]>([]);
   displayedColumns: string[] = ['username', 'mail', 'firstname', 'lastname', 'options'];
 
-  userForm = this.fb.group({
-    email: ['', [Validators.email, Validators.required]],
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required]
-  });
-
-
-  constructor(
-    private readonly fb: FormBuilder,
+  constructor(// private readonly fb: FormBuilder,
     private readonly usersService: UsersService,
-    private readonly authService: AuthService) { }
+    private readonly authService: AuthService,
+    public dialog: MatDialog) { }
+
   public ngOnInit(): void {
     this.GetData();
   }
 
+  /**
+   * Oeffnen des Dialogs zum Hinzufuegen eines neuen Nutzers
+   */
+  openAddDialog(): void {
+    const dialogRef = this.dialog.open(AddUserDialogComponent, {
+      width: '400px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Update der angezeigten User-Liste
+      this.GetData();
+    });
+  }
+
+  /**
+   * Oeffnen des Dialogs zum Bearbeiten eines Nutzers
+   */
+  openEditDialog(): void {
+    const dialogRef = this.dialog.open(EditUserDialogComponent, {
+      width: '400px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Update der angezeigten User-Liste
+      this.GetData();
+    });
+  }
 
   private GetData() {
     this.usersService.get().subscribe(x => {
@@ -39,9 +66,18 @@ export class UserComponent implements OnInit {
   }
 
   public OnDelete(userId: number) {
-    // TODO: call backend delete function
-  }
+    const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
+      data: 'Benutzer',
+      disableClose: true
+    });
 
+    deleteDialogRef.afterClosed().subscribe((deleteResult) => {
+      if (deleteResult.delete) {
+        // TODO: call backend delete function
+      }
+    });
+
+  }
 
   public OnPasswordReset(userId: number) {
     this.authService.changePassword(userId).subscribe(result => {
@@ -49,14 +85,9 @@ export class UserComponent implements OnInit {
     });
   }
 
-  public addUser() {
-    this.usersService.post(this.userForm.value).subscribe(user => {
-      console.log(user);
-      this.GetData();
-    });
-  }
-
   public SetLockoutState(userId: number) {
     this.usersService.updateLockoutState(userId).subscribe(x => this.GetData());
   }
 }
+
+

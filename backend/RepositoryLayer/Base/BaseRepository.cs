@@ -103,7 +103,7 @@ namespace RepositoryLayer.Base
         public T Update(T entity)
         {
             NullCheck(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            _context.Update(entity);
             _context.SaveChanges();
             return entity;
         }
@@ -111,7 +111,7 @@ namespace RepositoryLayer.Base
         public async Task<T> UpdateAsync(T entity)
         {
             NullCheck(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            _context.Update(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
@@ -119,7 +119,7 @@ namespace RepositoryLayer.Base
         public List<T> UpdateRange(List<T> entities)
         {
             NullCheck(entities);
-            _context.Entry(entities).State = EntityState.Modified;
+            _context.UpdateRange(entities);
             _context.SaveChanges();
             return entities;
         }
@@ -127,7 +127,7 @@ namespace RepositoryLayer.Base
         public async Task<List<T>> UpdateRangeAsync(List<T> entities)
         {
             NullCheck(entities);
-            _context.Entry(entities).State = EntityState.Modified;
+            _context.UpdateRange(entities);
             await _context.SaveChangesAsync();
             return entities;
         }
