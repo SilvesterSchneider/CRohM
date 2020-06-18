@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
@@ -28,6 +29,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ModificationEntryDto>), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
         public async Task<IActionResult> GetSortedListByType(MODEL_TYPE modelDataType)
