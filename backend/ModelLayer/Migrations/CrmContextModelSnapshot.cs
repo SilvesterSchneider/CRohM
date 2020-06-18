@@ -483,7 +483,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "ba0c4d5e-4f08-494d-bccc-4ac737ec6a9a",
+                            ConcurrencyStamp = "5773b0d7-dcb8-4362-93a9-94597e303f47",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
