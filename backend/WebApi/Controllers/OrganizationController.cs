@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using RepositoryLayer;
 
 namespace WebApi.Controllers
 {
@@ -19,12 +20,14 @@ namespace WebApi.Controllers
     public class OrganizationController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IModificationEntryRepository modRepo;
         private readonly IOrganizationService _organizationService;
         private readonly ILogger _logger;
 
-        public OrganizationController(IMapper mapper, IOrganizationService organizationService, ILoggerFactory logger)
+        public OrganizationController(IMapper mapper, IOrganizationService organizationService, ILoggerFactory logger, IModificationEntryRepository modRepo)
         {
             _mapper = mapper;
+            this.modRepo = modRepo;
             _organizationService = organizationService;
             _logger = logger.CreateLogger(nameof(OrganizationController));
         }
@@ -70,7 +73,7 @@ namespace WebApi.Controllers
             }
             var mappedOrganization = _mapper.Map<Organization>(organization);
             await _organizationService.UpdateAsyncWithAlleDependencies(mappedOrganization);
-
+            await modRepo.UpdateModificationAsync(id, MODEL_TYPE.ORGANIZATION);
             var organizationDto = _mapper.Map<OrganizationDto>(mappedOrganization);
             return Ok(organizationDto);
         }
@@ -97,6 +100,7 @@ namespace WebApi.Controllers
             }
 
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
+            await modRepo.UpdateModificationAsync(id, MODEL_TYPE.ORGANIZATION);
             return Ok(organizationDto);
         }
 
@@ -119,6 +123,7 @@ namespace WebApi.Controllers
                 _logger.LogWarning(e.Message);
                 return BadRequest();
             }
+            await modRepo.UpdateModificationAsync(id, MODEL_TYPE.ORGANIZATION);
             return Ok();
         }
 
@@ -130,6 +135,7 @@ namespace WebApi.Controllers
 
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
             var uri = $"https://{Request.Host}{Request.Path}/{organizationDto.Id}";
+            await modRepo.CreateNewEntryAsync(organization.Id, MODEL_TYPE.ORGANIZATION);
             return Created(uri, organizationDto);
         }
 
@@ -144,6 +150,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             await _organizationService.DeleteAsync(organization);
+            await modRepo.RemoveEntryAsync(id, MODEL_TYPE.ORGANIZATION);
             return Ok();
         }
     }

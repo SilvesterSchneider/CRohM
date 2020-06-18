@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
 using NSwag.Annotations;
+using RepositoryLayer;
 using ServiceLayer;
 
 namespace WebApi.Controllers
@@ -18,12 +19,14 @@ namespace WebApi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IEventService eventService;
+        private readonly IModificationEntryRepository modRepo;
         private IContactService contactService;
 
-        public ContactController(IMapper mapper, IContactService contactService, IEventService eventService)
+        public ContactController(IMapper mapper, IContactService contactService, IEventService eventService, IModificationEntryRepository modRepo)
         {
             _mapper = mapper;
             this.eventService = eventService;
+            this.modRepo = modRepo;
             this.contactService = contactService;
         }
 
@@ -78,6 +81,7 @@ namespace WebApi.Controllers
             var mappedContact = _mapper.Map<Contact>(contact);
             if (await contactService.UpdateAsync(mappedContact, id))
             {
+                await modRepo.UpdateModificationAsync(id, MODEL_TYPE.CONTACT);
                 return Ok(contact);
             }
             else
@@ -95,6 +99,7 @@ namespace WebApi.Controllers
             Contact contact = await contactService.CreateAsync(_mapper.Map<Contact>(contactToCreate));
 
             var contactDto = _mapper.Map<ContactDto>(contact);
+            await modRepo.CreateNewEntryAsync(contact.Id, MODEL_TYPE.CONTACT);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
             return Created(uri, contactDto);
         }
@@ -106,6 +111,7 @@ namespace WebApi.Controllers
         {
 
             await contactService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
+            await modRepo.UpdateModificationAsync(id, MODEL_TYPE.CONTACT);
             return Ok();
         }
 
@@ -121,6 +127,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             await contactService.DeleteAsync(contact);
+            await modRepo.RemoveEntryAsync(id, MODEL_TYPE.CONTACT);
             return Ok();
         }
     }

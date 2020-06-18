@@ -3,6 +3,7 @@ import { OrganizationService } from '../../shared/api-generated/api-generated';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
+import { OrganizationsInfoComponent } from '../organizations-info/organizations-info.component';
 import { OrganizationsAddDialogComponent } from '../organizations-add-dialog/organizations-add-dialog.component';
 import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/organizations-edit-dialog.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
@@ -16,6 +17,7 @@ import { MediaChange, MediaObserver } from '@angular/flex-layout';
 @Injectable({
 	providedIn: 'root'
 })
+
 export class OrganizationsListComponent implements OnInit, OnDestroy {
 	service: OrganizationService;
 	organizations: Observable<OrganizationDto[]>;
@@ -94,6 +96,10 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			this.getData();
 		});
 	}
+
+	openInfo(id: number) {
+		this.service.getById(id).subscribe(x => this.dialog.open(OrganizationsInfoComponent, { data: x }));
+	  }
 
 	deleteOrganization(id: number) {
 		const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {

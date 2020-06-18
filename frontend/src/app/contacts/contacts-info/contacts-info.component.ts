@@ -37,8 +37,8 @@ export enum TYPE {
 
 export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   contact: ContactDto;
-  organizations: OrganizationDto[];
-  contactPossibilitiesEntries: ContactPossibilitiesEntryDto[];
+  organizations: OrganizationDto[] = new Array<OrganizationDto>();
+  contactPossibilitiesEntries: ContactPossibilitiesEntryDto[] = new Array<ContactPossibilitiesEntryDto>();
   contactsForm: FormGroup;
   events: EventDtoCustomized[] = new Array<EventDtoCustomized>();
   displayedColumns = ['icon', 'datum', 'name', 'kommentar'];
@@ -62,33 +62,41 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   }
 
   ngOnInit(): void {
-    this.contact.events.forEach(x => {
-      this.events.push({
-        id: x.id,
-        name: x.name,
-        date: this.getDate(x.date),
-        type: TYPE.EVENT,
-        participated: false,
-        comment: ''
+    if (this.contact.events != null) {
+      this.contact.events.forEach(x => {
+        this.events.push({
+          id: x.id,
+          name: x.name,
+          date: this.getDate(x.date),
+          type: TYPE.EVENT,
+          participated: false,
+          comment: ''
+        });
+        this.eventService.getById(x.id).subscribe(y => {
+          this.updateParticipation(x.id, y.participated);
+        });
       });
-      this.eventService.getById(x.id).subscribe(y => {
-        this.updateParticipation(x.id, y.participated);
+    }
+    if (this.contact.history != null) {
+      this.contact.history.forEach(x => {
+        this.events.push({
+          id: 0,
+          date: this.getDate(x.date),
+          name: x.name,
+          type: x.type,
+          participated: false,
+          comment: x.comment
+        });
       });
-    });
-    this.contact.history.forEach(x => {
-      this.events.push({
-        id: 0,
-        date: this.getDate(x.date),
-        name: x.name,
-        type: x.type,
-        participated: false,
-        comment: x.comment
-      });
-    });
+    }
     this.sortEvents();
     this.initForm();
-    this.organizations = this.contact.organizations;
-    this.contactPossibilitiesEntries = this.contact.contactPossibilities.contactEntries;
+    if (this.contact.organizations != null) {
+      this.contact.organizations.forEach(x => this.organizations.push(x));
+    }
+    if (this.contact.contactPossibilities.contactEntries != null) {
+      this.contact.contactPossibilities.contactEntries.forEach(x => this.contactPossibilitiesEntries.push(x));
+    }
     this.contactsForm.patchValue(this.contact);
   }
 

@@ -7,18 +7,24 @@ import { OrganizationsDetailComponent } from './organizations-detail/organizatio
 import { MaterialModule } from '../shared/material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { OrganizationsInfoComponent } from './organizations-info/organizations-info.component';
 import { OrganizationsEditDialogComponent } from './organizations-edit-dialog/organizations-edit-dialog.component';
 
 @NgModule({
-	declarations: [ OrganizationsAddDialogComponent, OrganizationsListComponent, OrganizationsDetailComponent,
-		OrganizationsEditDialogComponent ],
-	imports: [
-		CommonModule,
-		OrganizationsRoutingModule,
-		MaterialModule,
-		ReactiveFormsModule,
-		FormsModule,
-		SharedModule
-	]
+  declarations: [
+    OrganizationsAddDialogComponent,
+    OrganizationsListComponent,
+    OrganizationsDetailComponent,
+    OrganizationsInfoComponent,
+	  OrganizationsEditDialogComponent
+  ],
+  imports: [
+    CommonModule,
+    OrganizationsRoutingModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    SharedModule
+  ]
 })
 export class OrganizationsModule {}

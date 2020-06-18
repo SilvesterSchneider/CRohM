@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20200614115428_init")]
-    partial class init
+    [Migration("20200618160355_init_landing_page")]
+    partial class init_landing_page
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -348,6 +348,39 @@ namespace ModelLayer.Migrations
                     b.ToTable("History");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.ModificationEntry", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("DataModelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("DataModelType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModificationType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ModificatonHistory");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>
                 {
                     b.Property<long>("Id")
@@ -452,7 +485,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "85e856c9-aca0-481d-b9be-ea722de6ef97",
+                            ConcurrencyStamp = "5773b0d7-dcb8-4362-93a9-94597e303f47",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

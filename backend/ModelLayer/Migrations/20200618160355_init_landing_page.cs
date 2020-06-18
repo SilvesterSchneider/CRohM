@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class init : Migration
+    public partial class init_landing_page : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -73,6 +73,25 @@ namespace ModelLayer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Events", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ModificatonHistory",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    DataModelType = table.Column<int>(nullable: false),
+                    DataModelId = table.Column<long>(nullable: false),
+                    ModificationType = table.Column<int>(nullable: false),
+                    UserName = table.Column<string>(nullable: true),
+                    DateTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModificatonHistory", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -406,7 +425,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "85e856c9-aca0-481d-b9be-ea722de6ef97", "Admin", "ADMIN" });
+                values: new object[] { 1L, "5773b0d7-dcb8-4362-93a9-94597e303f47", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
@@ -506,6 +525,9 @@ namespace ModelLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "History");
+
+            migrationBuilder.DropTable(
+                name: "ModificatonHistory");
 
             migrationBuilder.DropTable(
                 name: "OrganizationContacts");

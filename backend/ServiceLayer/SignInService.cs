@@ -27,7 +27,6 @@ namespace ServiceLayer
     {
         private readonly AppSettings _appSettings;
         private readonly ISignInManager _signInManager;
-        private User loggedInUser;
 
         // had to include dll because fail from microsoft
         // https://www.gitmemory.com/issue/aspnet/AspNetCore/12536/515210764

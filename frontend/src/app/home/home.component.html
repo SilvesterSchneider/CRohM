@@ -1,7 +1,126 @@
 <div style="text-align:center">
     <h1>CRohM - Customer Relationship Management System</h1>
-    <p>
-        This is a platform for managing customer relationships.
-        <br> Click on Contacts to get Started!!!
-    </p>
+    <div>Kürzlich hinzugefügte Daten </div>
+    <div class="row">
+        <div class="column">
+            <div class="spacer"></div>       
+        </div>
+        <div class="column">
+            <mat-card *ngFor="let contact of contacts" class="example-card">
+                <small *ngIf="contact.created">
+                    Angelegt von
+                </small>
+                <small *ngIf="!contact.created">
+                    Bearbeitet von
+                </small>
+                <small>
+                    {{contact.userName}}
+                </small>
+                <mat-card-header class="header">
+                    <div mat-card-avatar class="header"></div>
+                    <mat-card-title class="text">Kontakt</mat-card-title>
+                    <mat-card-subtitle class="text">{{contact.preName + " " + contact.name}}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="content">
+                    <p>
+                        Stadt: {{contact.address.city}}
+                    </p>
+                    <p>
+                        Telefonnr.: {{contact.contactPossibilities.phoneNumber}}
+                    </p>
+                    <p>
+                        E-Mail: {{contact.contactPossibilities.mail}}
+                    </p>
+                </mat-card-content>
+                <mat-card-actions class="actions">
+                    <div class="buttonMargin">
+                        <button class="button" (click)="openContactDetails(contact)" mat-raised-button color="primary">Details anzeigen</button>
+                    </div>
+                    <div class="buttonMargin">
+                        <button class="button" routerLink="contacts" mat-raised-button color="primary">Öffne Übersicht</button>
+                    </div>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        <div class="column">
+            <div class="spacer"></div>       
+        </div>
+        <div class="column">
+            <mat-card *ngFor="let organization of organizations" class="example-card">
+                <small *ngIf="organization.created">
+                    Angelegt von
+                </small>
+                <small *ngIf="!organization.created">
+                    Bearbeitet von
+                </small>
+                <small>
+                    {{organization.userName}}
+                </small>
+                <mat-card-header class="header">
+                    <div mat-card-avatar class="header"></div>
+                    <mat-card-title class="text">Organisation</mat-card-title>
+                    <mat-card-subtitle class="text">{{organization.name + " " + organization.description}}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="content">
+                    <p>
+                        Stadt: {{organization.address.city}}
+                    </p>
+                    <p>
+                        Telefonnr.: {{organization.contact.phoneNumber}}
+                    </p>
+                    <p>
+                        E-Mail: {{organization.contact.mail}}
+                    </p>
+                </mat-card-content>
+                <mat-card-actions class="actions">
+                    <div class="buttonMargin">
+                        <button class="button" (click)="openOrganizationDetails(organization)" mat-raised-button color="primary">Details anzeigen</button>
+                    </div>
+                    <div class="buttonMargin">
+                        <button class="button" routerLink="organizations" mat-raised-button color="primary">Öffne Übersicht</button>
+                    </div>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        <div class="column">
+            <div class="spacer"></div>       
+        </div>
+        <div class="column">
+            <mat-card *ngFor="let event of events" class="example-card">
+                <small *ngIf="event.created">
+                    Angelegt von
+                </small>
+                <small *ngIf="!event.created">
+                    Bearbeitet von
+                </small>
+                <small>
+                    {{event.userName}}
+                </small>
+                <mat-card-header class="header">
+                    <div mat-card-avatar class="header"></div>
+                    <mat-card-title class="text">Veranstaltung</mat-card-title>
+                    <mat-card-subtitle class="text">{{event.name}}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="content">
+                    <p>
+                        Datum: {{event.date | date:'shortDate'}}
+                    </p>
+                    <p>
+                        Uhrzeit: {{event.time | date:'shortTime'}}
+                    </p>
+                    <p>
+                        Dauer: {{event.duration}} stunden
+                    </p>
+                </mat-card-content>
+                <mat-card-actions class="actions">
+                    <div class="buttonMargin">
+                        <button class="button" (click)="openEventDetails(event)" mat-raised-button color="primary">Details anzeigen</button>
+                    </div>
+                    <div class="buttonMargin">
+                        <button class="button" routerLink="events" mat-raised-button color="primary">Öffne Übersicht</button>
+                    </div>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
 </div>
