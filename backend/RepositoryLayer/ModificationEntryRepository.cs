@@ -15,8 +15,28 @@ namespace RepositoryLayer
 {
     public interface IModificationEntryRepository : IBaseRepository<ModificationEntry>
     {
+        /// <summary>
+        /// Update the entry by new data
+        /// </summary>
+        /// <param name="id">the id of dataset to be updated</param>
+        /// <param name="dataType">the datatype to be updated</param>
+        /// <returns></returns>
         Task<IdentityResult> UpdateModificationAsync(long id, MODEL_TYPE dataType);
+
+        /// <summary>
+        /// Create a new entry by dataModel id and datatype
+        /// </summary>
+        /// <param name="dataModelId">the id of the model which was changed</param>
+        /// <param name="dataType">the data type of the changed model</param>
+        /// <returns></returns>
         Task<IdentityResult> CreateNewEntryAsync(long dataModelId, MODEL_TYPE dataType);
+
+        /// <summary>
+        /// Remove an entry from DB
+        /// </summary>
+        /// <param name="id">the id of dataset</param>
+        /// <param name="dataType">the datatype to be considered</param>
+        /// <returns></returns>
         Task<IdentityResult> RemoveEntryAsync(long id, MODEL_TYPE dataType);
 
         /// <summary>
