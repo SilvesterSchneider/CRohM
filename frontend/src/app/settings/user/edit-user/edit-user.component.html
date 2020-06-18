@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Benutzer bearbeiten</h2>
+
+<div mat-dialog-content>
+    <form [formGroup]="userForm">
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="Vorname" formControlName="firstName">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="Nachname" formControlName="lastName">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="E-Mail" formControlName="email">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <mat-label>Gruppenberechtigungen</mat-label>
+                    <mat-select [formControl]="groupPermission" multiple>
+                        <mat-option *ngFor="let groupPermission of groupPermissionList" [value]="groupPermission.value">
+                            {{groupPermission.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        
+
+
+        <div mat-dialog-actions>
+            <!--Mit Klick auf 'Abbrechen' wird der ConfirmDialog aufgerufen-->
+            <button mat-raised-button (click)="confirmDialog()">
+                Abbrechen
+            </button>
+            <!--Mit Klick auf 'Hinzufuegen' wird die Funktion addUser() aufgerufen-->
+            <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid" (click)="editUser()">
+                Speichern
+            </button>
+        </div>
+    </form>
+
+</div>

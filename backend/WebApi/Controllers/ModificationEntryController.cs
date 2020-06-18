@@ -4,11 +4,13 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
 using NSwag.Annotations;
+using RepositoryLayer;
 using ServiceLayer;
 
 namespace WebApi.Controllers
@@ -17,24 +19,25 @@ namespace WebApi.Controllers
     [ApiController]
     public class ModificationEntryController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly IModificationEntryService modificationEntryService;
+        private readonly IMapper mapper;
+        private readonly IModificationEntryRepository modificationEntryRepository;
 
-        public ModificationEntryController(IMapper mapper, IModificationEntryService modificationEntryService)
+        public ModificationEntryController(IMapper mapper, IModificationEntryRepository modificationEntryRepository)
         {
-            this._mapper = mapper;
-            this.modificationEntryService = modificationEntryService;
+            this.mapper = mapper;
+            this.modificationEntryRepository = modificationEntryRepository;
         }
 
         [HttpGet]
+        [Authorize]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ModificationEntryDto>), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
         public async Task<IActionResult> GetSortedListByType(MODEL_TYPE modelDataType)
         {
-            List<ModificationEntry> entries = await modificationEntryService.GetSortedModificationEntriesByTypeAsync(modelDataType);
-            if (entries != null)
+            List<ModificationEntry> entries = await modificationEntryRepository.GetSortedModificationEntriesByTypeAsync(modelDataType);
+            if (entries.Any())
             {
-                return Ok(_mapper.Map<List<ModificationEntryDto>>(entries));
+                return Ok(mapper.Map<List<ModificationEntryDto>>(entries));
             }
             else
             {

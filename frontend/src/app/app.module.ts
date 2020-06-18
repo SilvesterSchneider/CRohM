@@ -18,6 +18,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
 import { EventsModule } from './events/events.module';
 import { ProgressSpinnerInterceptor } from './shared/progress-spinner/progress-spinner.interceptor';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { ConfirmDialogComponent } from './shared/form/confirmdialog/confirmdialog.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { OverlayModule } from '@angular/cdk/overlay';
     HomeComponent,
     LoginComponent,
     UserMenuComponent,
-    SidenavComponent
+    SidenavComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,

@@ -1,10 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { ContactService, UsersService } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsAddHistoryComponent } from '../contacts-add-history/contacts-add-history.component';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
+import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
+import { ContactsEditDialogComponent } from '../contacts-edit-dialog/contacts-edit-dialog.component';
+import { ContactsAddDialogComponent } from '../contacts-add-dialog/contacts-add-dialog.component';
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
 
 @Component({
   selector: 'app-contacts-list',
@@ -12,50 +16,94 @@ import { ContactsInfoComponent } from '../contacts-info/contacts-info.component'
   styleUrls: ['./contacts-list.component.scss']
 })
 
-export class ContactsListComponent implements OnInit {
+export class ContactsListComponent implements OnInit, OnDestroy {
   contacts: Observable<ContactDto[]>;
-  displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
-  service: ContactService;
-  isAdminUserLoggedIn: boolean = false;
-  length: number = 0;
+  displayedColumns = [];
+  isAdminUserLoggedIn = false;
+  length = 0;
+  currentScreenWidth = '';
+  flexMediaWatcher: Subscription;
 
   constructor(
-    service: ContactService,
+    private userService: UsersService,
+    private service: ContactService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dialog: MatDialog,
-    private userService: UsersService) {
-    this.service = service;
-   }
-
-  ngOnInit() {
-    this.init();
-    this.userService.getLoggedInUser(1).subscribe(x => {
-      this.isAdminUserLoggedIn = x.id === 1;
+    private mediaObserver: MediaObserver) {
+      this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
+      if (change[0].mqAlias !== this.currentScreenWidth) {
+        this.currentScreenWidth = change[0].mqAlias;
+        this.setupTable();
+      }
     });
   }
 
-  private init() {
+  ngOnInit() {
+    this.userService.getLoggedInUser(1).subscribe(x => {
+      this.isAdminUserLoggedIn = x.id === 1;
+    });
+    this.getData();
+  }
+
+  ngOnDestroy(): void {
+    this.flexMediaWatcher.unsubscribe();
+  }
+
+  setupTable() {
+    if (this.currentScreenWidth === 'xs') {
+      // only display prename and name on larger screens
+      this.displayedColumns = ['vorname', 'nachname', 'action'];
+    } else {
+      this.displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
+    }
+  }
+
+  private getData() {
     this.contacts = this.service.getAll();
     this.contacts.subscribe(x => this.length = x.length);
     this.changeDetectorRefs.detectChanges();
-   // this.contacts = this.serviceMock.getContacts();
   }
 
-  addContact() {
-    console.log('addContact');
+  openAddDialog() {
+    const dialogRef = this.dialog.open(ContactsAddDialogComponent, {
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      this.contacts = this.service.getAll();
+    });
+  }
+
+  openEditDialog(contact: ContactDto) {
+    const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: contact, disableClose: true });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result.delete) {
+        this.deleteContact(result.id);
+      }
+      this.getData();
+    });
   }
 
   deleteContact(id: number) {
-    this.service.delete(id).subscribe(x => this.init());
+    const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
+      data: 'Kontakt',
+      disableClose: true
+    });
+
+    deleteDialogRef.afterClosed().subscribe((deleteResult) => {
+      if (deleteResult?.delete) {
+        this.service.delete(id).subscribe(x => this.getData());
+      }
+    });
   }
 
   addNote(id: number) {
     const dialogRef = this.dialog.open(ContactsAddHistoryComponent, { data: id });
-    dialogRef.afterClosed().subscribe(y => this.init());
+    dialogRef.afterClosed().subscribe((y) => this.getData());
   }
 
   openInfo(id: number) {
-    this.service.getById(id).subscribe(x => this.dialog.open(ContactsInfoComponent, { data: x }));
+    this.service.getById(id).subscribe((x) => this.dialog.open(ContactsInfoComponent, { data: x }));
   }
 
   addDummyContact() {
@@ -75,6 +123,6 @@ export class ContactsListComponent implements OnInit {
         phoneNumber: '0172-9344333' + this.length,
         contactEntries: []
       }
-    }).subscribe(x => this.init());
+    }).subscribe(x => this.getData());
   }
 }

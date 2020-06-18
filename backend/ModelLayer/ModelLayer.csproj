@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataTransferObjects\Base\**" />
+    <EmbeddedResource Remove="DataTransferObjects\Base\**" />
+    <None Remove="DataTransferObjects\Base\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,14 +21,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataTransferObjects\Base\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Microsoft.Extensions.Identity.Stores">
       <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\3.1.0\ref\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll</HintPath>
       <Private>true</Private>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

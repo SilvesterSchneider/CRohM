@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class init : Migration
+    public partial class init_landing_page : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -425,7 +425,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "8e277fa1-4021-4fa9-9695-33c6fbfacab9", "Admin", "ADMIN" });
+                values: new object[] { 1L, "5773b0d7-dcb8-4362-93a9-94597e303f47", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",

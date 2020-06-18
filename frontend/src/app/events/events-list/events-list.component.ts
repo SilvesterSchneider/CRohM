@@ -7,6 +7,7 @@ import { EventsAddComponent } from '../events-add/events-add.component';
 import { EventsDetailComponent } from '../events-detail/events-detail.component';
 import { MatSort } from '@angular/material/sort';
 import { EventsInfoComponent } from '../events-info/events-info.component';
+import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 
 export class EventDtoGroup implements EventDto {
   id: number;
@@ -33,14 +34,14 @@ export class EventsListComponent implements OnInit {
   public dataSource: EventDtoGroup[] = new Array<EventDtoGroup>();
   checkboxSelected = true;
   weekNumber = 0;
-  isAdminUserLoggedIn: boolean = false;
-  length: number = 0;
+  isAdminUserLoggedIn = false;
+  length = 0;
 
   constructor(
     private service: EventService,
-    private dialog: MatDialog,
-    private userService: UsersService) {
-   }
+    private userService: UsersService,
+    private dialog: MatDialog) {
+  }
 
   ngOnInit() {
     this.init();
@@ -71,13 +72,13 @@ export class EventsListComponent implements OnInit {
   }
 
   addContact() {
-    const dialogRef = this.dialog.open(EventsAddComponent);
+    const dialogRef = this.dialog.open(EventsAddComponent, { disableClose: true });
     dialogRef.afterClosed().subscribe(x => this.init());
   }
 
   callEdit(id: number) {
     this.service.getById(id).subscribe(x => {
-      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x });
+      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true });
       dialogRef.afterClosed().subscribe(y => this.init());
     });
   }
@@ -92,7 +93,16 @@ export class EventsListComponent implements OnInit {
   }
 
   deleteEvent(id: number) {
-    this.service.delete(id).subscribe(x => this.init());
+    const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
+      data: 'Event',
+      disableClose: true
+    });
+
+    deleteDialogRef.afterClosed().subscribe((deleteResult) => {
+      if (deleteResult.delete) {
+        this.service.delete(id).subscribe(x => this.init());
+      }
+    });
   }
 
   toggleSelection() {
@@ -110,21 +120,9 @@ export class EventsListComponent implements OnInit {
       eventsFiltered = events;
     }
     eventsFiltered.forEach(x => {
-        const week = this.getWeekNumber(new Date(x.date));
-        if (week !== this.weekNumber) {
-          this.weekNumber = week;
-          this.dataSource.push({
-            date: x.date,
-            duration: x.duration,
-            id: x.id,
-            time: x.time,
-            contacts: x.contacts,
-            name: x.name,
-            participated: x.participated,
-            weekNumber: week,
-            isGroupBy: true
-          });
-        }
+      const week = this.getWeekNumber(new Date(x.date));
+      if (week !== this.weekNumber) {
+        this.weekNumber = week;
         this.dataSource.push({
           date: x.date,
           duration: x.duration,
@@ -133,9 +131,21 @@ export class EventsListComponent implements OnInit {
           contacts: x.contacts,
           name: x.name,
           participated: x.participated,
-          weekNumber: 0,
-          isGroupBy: false
+          weekNumber: week,
+          isGroupBy: true
         });
+      }
+      this.dataSource.push({
+        date: x.date,
+        duration: x.duration,
+        id: x.id,
+        time: x.time,
+        contacts: x.contacts,
+        name: x.name,
+        participated: x.participated,
+        weekNumber: 0,
+        isGroupBy: false
+      });
     });
   }
 
@@ -150,7 +160,7 @@ export class EventsListComponent implements OnInit {
 
   openInfo(id: number) {
     this.service.getById(id).subscribe(x => {
-      this.dialog.open(EventsInfoComponent, { data: x });
+      this.dialog.open(EventsInfoComponent, { data: x, disableClose: true });
     });
   }
 
@@ -163,7 +173,7 @@ export class EventsListComponent implements OnInit {
       name: 'Veranstaltung' + this.length,
       duration: this.length,
       contacts: [],
-      date: '2020-' + (new Date(Date.now()).getMonth() + 2) + '-' + this.length % 30,
+      date: '2020-' + (new Date(Date.now()).getMonth() + 2) + '-' + (this.length + 1) % 30,
       time: '20:' + this.length % 59
     }).subscribe(x => this.init());
   }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
 using NSwag.Annotations;
+using RepositoryLayer;
 using ServiceLayer;
 using System.Collections.Generic;
 using System.Net;
@@ -15,13 +16,13 @@ namespace WebApi.Controllers
     public class EventController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IModificationEntryService modService;
+        private readonly IModificationEntryRepository modRepo;
         private IEventService eventService;
 
-        public EventController(IMapper mapper, IEventService eventService, IModificationEntryService modService)
+        public EventController(IMapper mapper, IEventService eventService, IModificationEntryRepository modRepo)
         {
             this._mapper = mapper;
-            this.modService = modService;
+            this.modRepo = modRepo;
             this.eventService = eventService;
         }
 
@@ -80,7 +81,7 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
             await eventService.ModifyEventAsync(eventToModify);
-            await modService.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
+            await modRepo.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
             return Ok(eventToModify);
         }
 
@@ -98,7 +99,7 @@ namespace WebApi.Controllers
             EventContact result = await eventService.AddEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
             if (result != null)
             {
-                await modService.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
+                await modRepo.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
                 return Ok();
             }
             else
@@ -121,7 +122,7 @@ namespace WebApi.Controllers
             bool result = await eventService.RemoveEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
             if (result)
             {
-                await modService.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
+                await modRepo.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
                 return Ok();
             }
             else
@@ -148,7 +149,7 @@ namespace WebApi.Controllers
                     await eventService.AddEventContactAsync(new EventContact() { ContactId = contactId, EventId = newEvent.Id });
                 }
                 var uri = $"https://{Request.Host}{Request.Path}/{_mapper.Map<EventDto>(newEvent).Id}";
-                await modService.CreateNewEntryAsync(newEvent.Id, MODEL_TYPE.EVENT);
+                await modRepo.CreateNewEntryAsync(newEvent.Id, MODEL_TYPE.EVENT);
                 return Created(uri, eventToCreate);
             }
             return BadRequest("Fehler beim erzeugen eines Events!");
@@ -170,7 +171,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             await eventService.DeleteAsync(eventToDelete);
-            await modService.RemoveEntryAsync(id, MODEL_TYPE.EVENT);
+            await modRepo.RemoveEntryAsync(id, MODEL_TYPE.EVENT);
             return Ok();
         }
     }

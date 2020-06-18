@@ -1,81 +1,140 @@
-import { Component, OnInit, ChangeDetectorRef, Injectable } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Injectable, OnDestroy } from '@angular/core';
 import { OrganizationService, UsersService } from '../../shared/api-generated/api-generated';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
-import { OrganizationsMockService } from '../organizations-mock-service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationsInfoComponent } from '../organizations-info/organizations-info.component';
+import { OrganizationsAddDialogComponent } from '../organizations-add-dialog/organizations-add-dialog.component';
+import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/organizations-edit-dialog.component';
+import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
+import { MediaChange, MediaObserver } from '@angular/flex-layout';
 
 @Component({
-  selector: 'app-organizations-list',
-  templateUrl: './organizations-list.component.html',
-  styleUrls: ['./organizations-list.component.scss']
+	selector: 'app-organizations-list',
+	templateUrl: './organizations-list.component.html',
+	styleUrls: ['./organizations-list.component.scss']
 })
-
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root'
 })
-export class OrganizationsListComponent implements OnInit {
-  orga: OrganizationService;
-  orgaMock: OrganizationsMockService;
-  organizations: Observable<OrganizationDto[]>;
-  organizationMock: Observable<OrganizationDto[]>;
-  displayedColumns = ['Name', 'Beschreibung', 'Strasse', 'Hausnummer', 'PLZ', 'Stadt', 'Telefonnummer',
-   'E-Mail', 'Faxnummer', 'Zugehörige', 'Action'];
-   isAdminUserLoggedIn: boolean = false;
-   length: number = 0;
 
-  constructor(
-    organizationServive: OrganizationService,
-    mock: OrganizationsMockService,
-    private changeDetectorRefs: ChangeDetectorRef,
-    private userService: UsersService,
-    private dialog: MatDialog) {
-    this.orga = organizationServive;
-    this.orgaMock = mock;
-  }
+export class OrganizationsListComponent implements OnInit, OnDestroy {
+	service: OrganizationService;
+	organizations: Observable<OrganizationDto[]>;
+	organizationMock: Observable<OrganizationDto[]>;
+	displayedColumns = [];
+	currentScreenWidth = '';
+	flexMediaWatcher: Subscription;
+	length = 0;
+	isAdminUserLoggedIn = false;
 
-  ngOnInit(): void {
-    this.loadData();
-    this.userService.getLoggedInUser(1).subscribe(x => {
-      this.isAdminUserLoggedIn = x.id === 1;
-    });
-  }
+	constructor(public dialog: MatDialog, service: OrganizationService, private userService: UsersService,
+		           private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver) {
+		this.service = service;
+		this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
+			if (change[0].mqAlias !== this.currentScreenWidth) {
+				this.currentScreenWidth = change[0].mqAlias;
+				this.setupTable();
+			}
+		});
+	}
 
-  private loadData() {
-    this.organizations = this.orga.get();
-    this.organizations.subscribe(x => this.length = x.length);
-    this.changeDetectorRefs.detectChanges();
-   // this.organizationMock = this.orgaMock.getOrganizationsMock();
-  }
+	ngOnInit(): void {
+		this.userService.getLoggedInUser(0).subscribe(x => this.isAdminUserLoggedIn = x.id === 1);
+		this.getData();
+	}
 
-  deleteOrganization(id: number) {
-    this.orga.delete(id).subscribe(x => this.loadData());
-  }
+	ngOnDestroy(): void {
+		this.flexMediaWatcher.unsubscribe();
+	}
 
-  addDummyOrganization() {
-    this.orga.post({
-      name: 'Organisation' + this.length,
-      description: 'Bezeichnung' + this.length,
-      employees: [],
-      address: {
-        city: 'Statd' + this.length,
-        country: 'Land' + this.length,
-        street: 'Strasse' + this.length,
-        streetNumber: this.length.toString(),
-        zipcode: '12345'
-      },
-      contact: {
-        contactEntries: [],
-        fax: '0234234-234' +this.length,
-        mail: 'info@testorga' + this.length + '.de',
-        phoneNumber: '02342-234234' + this.length
-      }
-    }).subscribe(x => this.loadData());
-  }
-  
-  openInfo(id: number) {
-    this.orga.getById(id).subscribe(x => this.dialog.open(OrganizationsInfoComponent, { data: x }));
-  }
+	setupTable() {
+		if (this.currentScreenWidth === 'xs') {
+			// only display prename and name on larger screens
+			this.displayedColumns = ['Name', 'Zugehörige', 'Action'];
+		} else {
+			this.displayedColumns = [
+				'Name',
+				'Beschreibung',
+				'Strasse',
+				'Hausnummer',
+				'PLZ',
+				'Stadt',
+				'Telefonnummer',
+				'E-Mail',
+				'Faxnummer',
+				'Zugehörige',
+				'Action'
+			];
+		}
+	}
+
+	private getData() {
+		this.organizations = this.service.get();
+		this.organizations.subscribe(x => this.length = x.length);
+		this.changeDetectorRefs.detectChanges();
+		// this.organizationMock = this.orgaMock.getOrganizationsMock();
+	}
+
+	openAddDialog() {
+		console.log('openedAddDialog');
+		const dialogRef = this.dialog.open(OrganizationsAddDialogComponent, {
+			disableClose: true
+		});
+		dialogRef.afterClosed().subscribe((result) => {
+			this.getData();
+		});
+	}
+
+	openEditDialog(organization: OrganizationDto) {
+		const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, {
+			data: organization,
+			disableClose: true
+		});
+
+		dialogRef.afterClosed().subscribe((result) => {
+			if (result.delete) {
+				this.deleteOrganization(result.id);
+			}
+			this.getData();
+		});
+	}
+
+	openInfo(id: number) {
+		this.service.getById(id).subscribe(x => this.dialog.open(OrganizationsInfoComponent, { data: x }));
+	  }
+
+	deleteOrganization(id: number) {
+		const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
+			data: 'Organisation',
+			disableClose: true
+		});
+
+		deleteDialogRef.afterClosed().subscribe((deleteResult) => {
+			if (deleteResult.delete) {
+				this.service.delete(id).subscribe((x) => this.getData());
+			}
+		});
+	}
+
+	addDummyOrganization() {
+		this.service.post({
+		  name: 'Organisation' + this.length,
+		  description: 'Bezeichnung' + this.length,
+		  employees: [],
+		  address: {
+			city: 'Statd' + this.length,
+			country: 'Land' + this.length,
+			street: 'Strasse' + this.length,
+			streetNumber: this.length.toString(),
+			zipcode: '12345'
+		  },
+		  contact: {
+			contactEntries: [],
+			fax: '0234234-234' + this.length,
+			mail: 'info@testorga' + this.length + '.de',
+			phoneNumber: '02342-234234' + this.length
+		  }
+		}).subscribe(x => this.getData());
+	}
 }
-

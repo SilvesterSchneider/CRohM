@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ModelLayer;
 using ModelLayer.Helper;
 using ModelLayer.Models;
@@ -14,9 +15,35 @@ namespace RepositoryLayer
 {
     public interface IModificationEntryRepository : IBaseRepository<ModificationEntry>
     {
-        Task UpdateModificationAsync(long id, MODEL_TYPE dataType);
-        Task CreateNewEntryAsync(long id, MODEL_TYPE dataType);
-        Task RemoveEntryAsync(long id, MODEL_TYPE dataType);
+        /// <summary>
+        /// Update the entry by new data
+        /// </summary>
+        /// <param name="id">the id of dataset to be updated</param>
+        /// <param name="dataType">the datatype to be updated</param>
+        /// <returns></returns>
+        Task<IdentityResult> UpdateModificationAsync(long id, MODEL_TYPE dataType);
+
+        /// <summary>
+        /// Create a new entry by dataModel id and datatype
+        /// </summary>
+        /// <param name="dataModelId">the id of the model which was changed</param>
+        /// <param name="dataType">the data type of the changed model</param>
+        /// <returns></returns>
+        Task<IdentityResult> CreateNewEntryAsync(long dataModelId, MODEL_TYPE dataType);
+
+        /// <summary>
+        /// Remove an entry from DB
+        /// </summary>
+        /// <param name="id">the id of dataset</param>
+        /// <param name="dataType">the datatype to be considered</param>
+        /// <returns></returns>
+        Task<IdentityResult> RemoveEntryAsync(long id, MODEL_TYPE dataType);
+
+        /// <summary>
+        /// Get a sorted list of all history entries beginning with the newest one.
+        /// </summary>
+        /// <param name="dataType">the data type to get it for</param>
+        /// <returns>the sorted list</returns>
         Task<List<ModificationEntry>> GetSortedModificationEntriesByTypeAsync(MODEL_TYPE dataType);
     }
 
@@ -27,7 +54,7 @@ namespace RepositoryLayer
 
         }
 
-        public async Task CreateNewEntryAsync(long id, MODEL_TYPE dataType)
+        public async Task<IdentityResult> CreateNewEntryAsync(long id, MODEL_TYPE dataType)
         {
             ModificationEntry entry = new ModificationEntry()
             {
@@ -37,10 +64,17 @@ namespace RepositoryLayer
                 ModificationType = MODIFICATION.CREATED,
                 UserName = GetLoggedInUserName()
             };
-            await CreateAsync(entry);
+            if (await CreateAsync(entry) != null)
+            {
+                return IdentityResult.Success;
+            } 
+            else
+            {
+                return IdentityResult.Failed();
+            }
         }
 
-        public async Task UpdateModificationAsync(long id, MODEL_TYPE dataType)
+        public async Task<IdentityResult> UpdateModificationAsync(long id, MODEL_TYPE dataType)
         {
             ModificationEntry entry = await GetModificationEntryByIdAndTypeAsync(id, dataType);
             if (entry != null)
@@ -52,18 +86,25 @@ namespace RepositoryLayer
                 {
                     entry.UserName = userName;
                 }
-                
-                await UpdateAsync(entry);
+
+                if (await UpdateAsync(entry) != null)
+                {
+                    return IdentityResult.Success;
+                }
             }
+            return IdentityResult.Failed();
         }
 
-        public async Task RemoveEntryAsync(long id, MODEL_TYPE dataType)
+        public async Task<IdentityResult> RemoveEntryAsync(long id, MODEL_TYPE dataType)
         {
             ModificationEntry entry = await GetModificationEntryByIdAndTypeAsync(id, dataType);
             if (entry != null)
             {
                 await DeleteAsync(entry);
+                return IdentityResult.Success;
             }
+
+            return IdentityResult.Failed();
         }
 
         public async Task<List<ModificationEntry>> GetSortedModificationEntriesByTypeAsync(MODEL_TYPE dataType)

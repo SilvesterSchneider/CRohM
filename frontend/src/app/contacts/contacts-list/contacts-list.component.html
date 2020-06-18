@@ -44,8 +44,8 @@
         <ng-container matColumnDef="action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
-                <a [routerLink]="[element.id]">
-                    <mat-icon color="primary" title="Kontakt bearbeiten" class="icon">edit</mat-icon>
+                <a (click)="openEditDialog(element)" type="button">
+                    <mat-icon color="primary" class="icon">edit</mat-icon>
                 </a>
                 <a (click)="openInfo(element.id)" type="button">
                     <mat-icon color="primary" title="Kontaktinformationen anzeigen" class="icon">list</mat-icon>
@@ -65,8 +65,7 @@
 <br>
 
 <div fxLayout="column" fxLayoutAlign="space-around end" class="content">
-    <div class="blocks">
-        <button button="submit" mat-raised-button color="primary" title="Kontakt hinzufügen" routerLink="add"> 
+    <div class="blocks"><button button (click)="openAddDialog()" mat-raised-button color="primary">
             <mat-icon>add</mat-icon> Kontakt hinzufügen
         </button>
         <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Kontakt hinzufügen" (click)="addDummyContact()"> 
