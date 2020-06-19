@@ -497,10 +497,15 @@ export class ContactService {
     }
 
     /**
+     * @param userIdOfChange (optional) 
      * @return successfully created
      */
-    post(contactToCreate: ContactCreateDto): Observable<ContactDto> {
-        let url_ = this.baseUrl + "/api/contact";
+    post(contactToCreate: ContactCreateDto, userIdOfChange?: number | undefined): Observable<ContactDto> {
+        let url_ = this.baseUrl + "/api/contact?";
+        if (userIdOfChange === null)
+            throw new Error("The parameter 'userIdOfChange' cannot be null.");
+        else if (userIdOfChange !== undefined)
+            url_ += "userIdOfChange=" + encodeURIComponent("" + userIdOfChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(contactToCreate);
@@ -608,13 +613,18 @@ export class ContactService {
     }
 
     /**
+     * @param userIdOfChange (optional) 
      * @return successfully updated
      */
-    put(contact: ContactDto, id: number): Observable<ContactDto> {
-        let url_ = this.baseUrl + "/api/contact/{id}";
+    put(contact: ContactDto, id: number, userIdOfChange?: number | undefined): Observable<ContactDto> {
+        let url_ = this.baseUrl + "/api/contact/{id}?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (userIdOfChange === null)
+            throw new Error("The parameter 'userIdOfChange' cannot be null.");
+        else if (userIdOfChange !== undefined)
+            url_ += "userIdOfChange=" + encodeURIComponent("" + userIdOfChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(contact);
@@ -669,13 +679,18 @@ export class ContactService {
     }
 
     /**
+     * @param userIdOfChange (optional) 
      * @return successfully created
      */
-    postHistoryElement(historyToCreate: HistoryElementCreateDto, id: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/contact/{id}";
+    postHistoryElement(historyToCreate: HistoryElementCreateDto, id: number, userIdOfChange?: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/contact/{id}?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (userIdOfChange === null)
+            throw new Error("The parameter 'userIdOfChange' cannot be null.");
+        else if (userIdOfChange !== undefined)
+            url_ += "userIdOfChange=" + encodeURIComponent("" + userIdOfChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(historyToCreate);
@@ -963,10 +978,15 @@ export class EventService {
     }
 
     /**
+     * @param idOfUserChange (optional) 
      * @return successfully created
      */
-    post(eventToCreate: EventCreateDto): Observable<void> {
-        let url_ = this.baseUrl + "/api/Event";
+    post(eventToCreate: EventCreateDto, idOfUserChange?: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Event?";
+        if (idOfUserChange === null)
+            throw new Error("The parameter 'idOfUserChange' cannot be null.");
+        else if (idOfUserChange !== undefined)
+            url_ += "idOfUserChange=" + encodeURIComponent("" + idOfUserChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(eventToCreate);
@@ -1077,13 +1097,18 @@ export class EventService {
     }
 
     /**
+     * @param idOfUserChange (optional) 
      * @return successfully updated
      */
-    put(eventToModify: EventDto, id: number): Observable<EventDto> {
-        let url_ = this.baseUrl + "/api/Event/{id}";
+    put(eventToModify: EventDto, id: number, idOfUserChange?: number | undefined): Observable<EventDto> {
+        let url_ = this.baseUrl + "/api/Event/{id}?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (idOfUserChange === null)
+            throw new Error("The parameter 'idOfUserChange' cannot be null.");
+        else if (idOfUserChange !== undefined)
+            url_ += "idOfUserChange=" + encodeURIComponent("" + idOfUserChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(eventToModify);
@@ -1192,13 +1217,18 @@ export class EventService {
     }
 
     /**
+     * @param idOfUserChange (optional) 
      * @return successfully updated
      */
-    addContact(id: number, contactId: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/Event/{id}/addContact";
+    addContact(id: number, contactId: number, idOfUserChange?: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Event/{id}/addContact?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (idOfUserChange === null)
+            throw new Error("The parameter 'idOfUserChange' cannot be null.");
+        else if (idOfUserChange !== undefined)
+            url_ += "idOfUserChange=" + encodeURIComponent("" + idOfUserChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(contactId);
@@ -1252,13 +1282,18 @@ export class EventService {
     }
 
     /**
+     * @param idOfUserChange (optional) 
      * @return successfully updated
      */
-    removeContact(id: number, contactId: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/Event/{id}/removeContact";
+    removeContact(id: number, contactId: number, idOfUserChange?: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Event/{id}/removeContact?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (idOfUserChange === null)
+            throw new Error("The parameter 'idOfUserChange' cannot be null.");
+        else if (idOfUserChange !== undefined)
+            url_ += "idOfUserChange=" + encodeURIComponent("" + idOfUserChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(contactId);
@@ -1449,10 +1484,15 @@ export class OrganizationService {
     }
 
     /**
+     * @param idOfUserChange (optional) 
      * @return successfully created
      */
-    post(organizationToCreate: OrganizationCreateDto): Observable<OrganizationDto> {
-        let url_ = this.baseUrl + "/api/organization";
+    post(organizationToCreate: OrganizationCreateDto, idOfUserChange?: number | undefined): Observable<OrganizationDto> {
+        let url_ = this.baseUrl + "/api/organization?";
+        if (idOfUserChange === null)
+            throw new Error("The parameter 'idOfUserChange' cannot be null.");
+        else if (idOfUserChange !== undefined)
+            url_ += "idOfUserChange=" + encodeURIComponent("" + idOfUserChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(organizationToCreate);
@@ -1560,13 +1600,18 @@ export class OrganizationService {
     }
 
     /**
+     * @param idOfUserChange (optional) 
      * @return successfully updated
      */
-    put(organization: OrganizationDto, id: number): Observable<OrganizationDto> {
-        let url_ = this.baseUrl + "/api/organization/{id}";
+    put(organization: OrganizationDto, id: number, idOfUserChange?: number | undefined): Observable<OrganizationDto> {
+        let url_ = this.baseUrl + "/api/organization/{id}?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (idOfUserChange === null)
+            throw new Error("The parameter 'idOfUserChange' cannot be null.");
+        else if (idOfUserChange !== undefined)
+            url_ += "idOfUserChange=" + encodeURIComponent("" + idOfUserChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(organization);
@@ -1675,13 +1720,18 @@ export class OrganizationService {
     }
 
     /**
+     * @param idOfUserChange (optional) 
      * @return successfully updated
      */
-    addContact(id: number, contactId: number): Observable<OrganizationDto> {
-        let url_ = this.baseUrl + "/api/organization/{id}/addContact";
+    addContact(id: number, contactId: number, idOfUserChange?: number | undefined): Observable<OrganizationDto> {
+        let url_ = this.baseUrl + "/api/organization/{id}/addContact?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (idOfUserChange === null)
+            throw new Error("The parameter 'idOfUserChange' cannot be null.");
+        else if (idOfUserChange !== undefined)
+            url_ += "idOfUserChange=" + encodeURIComponent("" + idOfUserChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(contactId);
@@ -1736,13 +1786,18 @@ export class OrganizationService {
     }
 
     /**
+     * @param idOfUserChange (optional) 
      * @return successfully updated
      */
-    removeContact(id: number, contactId: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/organization/{id}/removeContact";
+    removeContact(id: number, contactId: number, idOfUserChange?: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/organization/{id}/removeContact?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (idOfUserChange === null)
+            throw new Error("The parameter 'idOfUserChange' cannot be null.");
+        else if (idOfUserChange !== undefined)
+            url_ += "idOfUserChange=" + encodeURIComponent("" + idOfUserChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(contactId);

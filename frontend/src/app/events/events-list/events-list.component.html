@@ -43,6 +43,9 @@
         <button button="submit" mat-raised-button color="primary" title="Veranstaltung hinzufügen" (click)="addContact()"> 
             <mat-icon>add</mat-icon> Veranstaltung hinzufügen
         </button>
+        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Veranstaltung hinzufügen" (click)="addDummyEvent()"> 
+            <mat-icon>add</mat-icon> Dummy Veranstaltung hinzufügen
+        </button>
     </div>
     <div>
         <mat-checkbox [checked]="checkboxSelected" title="Veranstaltungen aus der Vergangenheit ausblenden" (change)="toggleSelection()">

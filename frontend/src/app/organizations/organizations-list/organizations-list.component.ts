@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, Injectable, OnDestroy } from '@angular/core';
-import { OrganizationService } from '../../shared/api-generated/api-generated';
+import { OrganizationService, UsersService } from '../../shared/api-generated/api-generated';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { OrganizationsAddDialogComponent } from '../organizations-add-dialog/org
 import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/organizations-edit-dialog.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 @Component({
 	selector: 'app-organizations-list',
@@ -25,9 +26,11 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	displayedColumns = [];
 	currentScreenWidth = '';
 	flexMediaWatcher: Subscription;
+	length = 0;
+	isAdminUserLoggedIn = false;
 
-	constructor(public dialog: MatDialog, service: OrganizationService,
-		           private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver) {
+	constructor(public dialog: MatDialog, service: OrganizationService, private userService: UsersService,
+		           private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver, private jwt: JwtService) {
 		this.service = service;
 		this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
 			if (change[0].mqAlias !== this.currentScreenWidth) {
@@ -38,6 +41,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
 		this.getData();
 	}
 
@@ -68,7 +72,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 
 	private getData() {
 		this.organizations = this.service.get();
-		this.organizations.subscribe();
+		this.organizations.subscribe(x => this.length = x.length);
 		this.changeDetectorRefs.detectChanges();
 		// this.organizationMock = this.orgaMock.getOrganizationsMock();
 	}
@@ -112,5 +116,26 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 				this.service.delete(id).subscribe((x) => this.getData());
 			}
 		});
+	}
+
+	addDummyOrganization() {
+		this.service.post({
+		  name: 'Organisation' + this.length,
+		  description: 'Bezeichnung' + this.length,
+		  employees: [],
+		  address: {
+			city: 'Statd' + this.length,
+			country: 'Land' + this.length,
+			street: 'Strasse' + this.length,
+			streetNumber: this.length.toString(),
+			zipcode: '12345'
+		  },
+		  contact: {
+			contactEntries: [],
+			fax: '0234234-234' + this.length,
+			mail: 'info@testorga' + this.length + '.de',
+			phoneNumber: '02342-234234' + this.length
+		  }
+		}, this.jwt.getUserId()).subscribe(x => this.getData());
 	}
 }

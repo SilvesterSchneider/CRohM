@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OrganizationService, OrganizationCreateDto, ContactService } from 'src/app/shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 @Component({
 	selector: 'app-organizations-add',
@@ -21,7 +22,8 @@ export class OrganizationsAddDialogComponent extends BaseDialogInput implements 
 		public dialogRef: MatDialogRef<OrganizationsAddDialogComponent>,
 		public dialog: MatDialog,
 		private readonly fb: FormBuilder,
-		private readonly service: OrganizationService
+		private readonly service: OrganizationService,
+		private jwt: JwtService
 	) {
 		super(dialogRef, dialog);
 	}
@@ -33,7 +35,7 @@ export class OrganizationsAddDialogComponent extends BaseDialogInput implements 
 
 	public onApprove(): void {
 		this.organization = this.organizationForm.value;
-		this.service.post(this.organization).subscribe((organization) => {
+		this.service.post(this.organization, this.jwt.getUserId()).subscribe((organization) => {
 			console.log(organization);
 		});
 		this.dialogRef.close();

@@ -63,17 +63,10 @@ namespace WebApi.Controllers
         {
             if (id != 1)
             {
-                if (LoggedInUser.GetLoggedInUser() != null && LoggedInUser.GetLoggedInUser().Id != id)
+                var result = await _userService.SetUserLockedAsync(id);
+                if (result.Succeeded)
                 {
-                    var result = await _userService.SetUserLockedAsync(id);
-                    if (result.Succeeded)
-                    {
-                        return Ok();
-                    }
-                    else
-                    {
-                        return Conflict();
-                    }
+                    return Ok();
                 }
                 else
                 {

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EventService, ParticipatedDto, ContactDto } from '../../shared/api-generated/api-generated';
+import { EventService, ParticipatedDto, ContactDto, UsersService } from '../../shared/api-generated/api-generated';
 import { EventDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { EventsAddComponent } from '../events-add/events-add.component';
@@ -8,6 +8,7 @@ import { EventsDetailComponent } from '../events-detail/events-detail.component'
 import { MatSort } from '@angular/material/sort';
 import { EventsInfoComponent } from '../events-info/events-info.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 export class EventDtoGroup implements EventDto {
   id: number;
@@ -34,14 +35,19 @@ export class EventsListComponent implements OnInit {
   public dataSource: EventDtoGroup[] = new Array<EventDtoGroup>();
   checkboxSelected = true;
   weekNumber = 0;
+  isAdminUserLoggedIn = false;
+  length = 0;
 
   constructor(
     private service: EventService,
-    private dialog: MatDialog) {
+    private userService: UsersService,
+    private dialog: MatDialog,
+    private jwt: JwtService) {
   }
 
   ngOnInit() {
     this.init();
+    this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
   }
 
   private init() {
@@ -49,6 +55,7 @@ export class EventsListComponent implements OnInit {
     this.events.subscribe(y => {
       const xSort: EventDto[] = y.sort(this.funtionGetSortedData);
       this.filterValues(xSort);
+      this.length = y.length;
     });
   }
 
@@ -159,6 +166,16 @@ export class EventsListComponent implements OnInit {
 
   isGroup(index: number, item: EventDtoGroup): boolean {
     return item.isGroupBy;
+  }
+
+  addDummyEvent() {
+    this.service.post({
+      name: 'Veranstaltung' + this.length,
+      duration: this.length,
+      contacts: [],
+      date: '2020-' + (new Date(Date.now()).getMonth() + 2) + '-' + (this.length + 1) % 30,
+      time: '20:' + this.length % 59
+    }, this.jwt.getUserId()).subscribe(x => this.init());
   }
 
   getWeekNumber(date: Date): number {

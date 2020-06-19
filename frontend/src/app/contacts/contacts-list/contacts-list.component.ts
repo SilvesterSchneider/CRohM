@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { ContactService } from '../../shared/api-generated/api-generated';
+import { ContactService, UsersService } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsAddHistoryComponent } from '../contacts-add-history/contacts-add-history.component';
@@ -9,6 +9,7 @@ import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialo
 import { ContactsEditDialogComponent } from '../contacts-edit-dialog/contacts-edit-dialog.component';
 import { ContactsAddDialogComponent } from '../contacts-add-dialog/contacts-add-dialog.component';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 @Component({
   selector: 'app-contacts-list',
@@ -19,13 +20,19 @@ import { MediaObserver, MediaChange } from '@angular/flex-layout';
 export class ContactsListComponent implements OnInit, OnDestroy {
   contacts: Observable<ContactDto[]>;
   displayedColumns = [];
-  service: ContactService;
+  isAdminUserLoggedIn = false;
+  length = 0;
   currentScreenWidth = '';
   flexMediaWatcher: Subscription;
-  constructor(service: ContactService, private changeDetectorRefs: ChangeDetectorRef,
-              private dialog: MatDialog, private mediaObserver: MediaObserver) {
-    this.service = service;
-    this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
+
+  constructor(
+    private userService: UsersService,
+    private service: ContactService,
+    private changeDetectorRefs: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private mediaObserver: MediaObserver,
+    private jwt: JwtService) {
+      this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
       if (change[0].mqAlias !== this.currentScreenWidth) {
         this.currentScreenWidth = change[0].mqAlias;
         this.setupTable();
@@ -34,6 +41,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
     this.getData();
   }
 
@@ -52,6 +60,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   private getData() {
     this.contacts = this.service.getAll();
+    this.contacts.subscribe(x => this.length = x.length);
     this.changeDetectorRefs.detectChanges();
   }
 
@@ -95,5 +104,25 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   openInfo(id: number) {
     this.service.getById(id).subscribe((x) => this.dialog.open(ContactsInfoComponent, { data: x }));
+  }
+
+  addDummyContact() {
+    this.service.post({
+      name: 'Nachname' + this.length,
+      preName: 'Vorname' + this.length,
+      address: {
+        city: 'Stadt' + this.length,
+        country: 'Land' + this.length,
+        street: 'Strasse' + this.length,
+        streetNumber: this.length.toString(),
+        zipcode: '12345'
+      },
+      contactPossibilities: {
+        fax: '01234-123' + this.length,
+        mail: 'info@test' + this.length + '.de',
+        phoneNumber: '0172-9344333' + this.length,
+        contactEntries: []
+      }
+    }, this.jwt.getUserId()).subscribe(x => this.getData());
   }
 }
