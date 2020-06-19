@@ -37,6 +37,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         [SwaggerResponse(HttpStatusCode.OK, typeof(UserDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "no logged in user found!")]
         public async Task<IActionResult> GetLoggedInUser(long id)
