@@ -8,6 +8,7 @@ import { OrganizationsAddDialogComponent } from '../organizations-add-dialog/org
 import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/organizations-edit-dialog.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 @Component({
 	selector: 'app-organizations-list',
@@ -29,7 +30,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	isAdminUserLoggedIn = false;
 
 	constructor(public dialog: MatDialog, service: OrganizationService, private userService: UsersService,
-		           private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver) {
+		           private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver, private jwt: JwtService) {
 		this.service = service;
 		this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
 			if (change[0].mqAlias !== this.currentScreenWidth) {
@@ -40,7 +41,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.userService.getLoggedInUser(0).subscribe(x => this.isAdminUserLoggedIn = x.id === 1);
+		this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
 		this.getData();
 	}
 
@@ -135,6 +136,6 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			mail: 'info@testorga' + this.length + '.de',
 			phoneNumber: '02342-234234' + this.length
 		  }
-		}).subscribe(x => this.getData());
+		}, this.jwt.getUserId()).subscribe(x => this.getData());
 	}
 }

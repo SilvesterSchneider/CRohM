@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ContactDto, EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 @Component({
 	selector: 'app-contacts-detail',
@@ -21,7 +22,8 @@ export class ContactsDetailComponent implements OnInit {
 		private fb: FormBuilder,
 		private route: ActivatedRoute,
 		private service: ContactService,
-		private eventService: EventService
+		private eventService: EventService,
+		private jwt: JwtService
 	) {}
 
 	ngOnInit(): void {
@@ -59,6 +61,6 @@ export class ContactsDetailComponent implements OnInit {
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
-		this.service.put(this.contact, this.contact.id).subscribe();
+		this.service.put(this.contact, this.contact.id, this.jwt.getUserId()).subscribe();
 	}
 }

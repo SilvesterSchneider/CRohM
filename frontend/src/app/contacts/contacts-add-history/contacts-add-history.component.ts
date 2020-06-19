@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dial
 import { ContactService, HistoryElementCreateDto, HistoryElementType } from 'src/app/shared/api-generated/api-generated';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 @Component({
     selector: 'app-contacts-add-history',
@@ -18,7 +19,8 @@ export class ContactsAddHistoryComponent extends BaseDialogInput<ContactsAddHist
         public dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: number,
         private contactService: ContactService,
-        private fb: FormBuilder) {
+        private fb: FormBuilder,
+        private jwt: JwtService) {
         super(dialogRef, dialog);
     }
 
@@ -50,7 +52,7 @@ export class ContactsAddHistoryComponent extends BaseDialogInput<ContactsAddHist
             type: typeToSave,
             comment: this.oppoSuitsForm.get('comment').value,
         };
-        this.contactService.postHistoryElement(historyToSave, this.data).subscribe(x => this.dialogRef.close());
+        this.contactService.postHistoryElement(historyToSave, this.data, this.jwt.getUserId()).subscribe(x => this.dialogRef.close());
     }
 
     close() {

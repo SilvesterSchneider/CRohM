@@ -8,6 +8,7 @@ import { EventsDetailComponent } from '../events-detail/events-detail.component'
 import { MatSort } from '@angular/material/sort';
 import { EventsInfoComponent } from '../events-info/events-info.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 export class EventDtoGroup implements EventDto {
   id: number;
@@ -40,14 +41,13 @@ export class EventsListComponent implements OnInit {
   constructor(
     private service: EventService,
     private userService: UsersService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private jwt: JwtService) {
   }
 
   ngOnInit() {
     this.init();
-    this.userService.getLoggedInUser(1).subscribe(x => {
-      this.isAdminUserLoggedIn = x.id === 1;
-    });
+    this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
   }
 
   private init() {
@@ -175,7 +175,7 @@ export class EventsListComponent implements OnInit {
       contacts: [],
       date: '2020-' + (new Date(Date.now()).getMonth() + 2) + '-' + (this.length + 1) % 30,
       time: '20:' + this.length % 59
-    }).subscribe(x => this.init());
+    }, this.jwt.getUserId()).subscribe(x => this.init());
   }
 
   getWeekNumber(date: Date): number {

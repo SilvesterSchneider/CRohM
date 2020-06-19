@@ -25,6 +25,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 export class ItemList {
 	constructor(public item: string, public selected?: boolean) {
@@ -88,7 +89,8 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 		private cd: ChangeDetectorRef,
 		private contactService: ContactService,
 		private organizationService: OrganizationService,
-		private fb: FormBuilder
+		private fb: FormBuilder,
+		private jwt: JwtService
 	) {
 		super(dialogRef, dialog);
 		this.organization = data;
@@ -251,11 +253,11 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 		this.organization.id = idOrganization;
 		this.organization.address.id = idAddress;
 		this.organization.contact.id = idContactPossibilities;
-		this.organizationService.put(this.organization, this.organization.id).subscribe();
+		this.organizationService.put(this.organization, this.organization.id, this.jwt.getUserId()).subscribe();
 		this.itemsToDelete.forEach((x) =>
-			this.organizationService.removeContact(idOrganization, x.contactId).subscribe()
+			this.organizationService.removeContact(idOrganization, x.contactId, this.jwt.getUserId()).subscribe()
 		);
-		this.itemsToInsert.forEach((x) => this.organizationService.addContact(idOrganization, x.contactId).subscribe());
+		this.itemsToInsert.forEach((x) => this.organizationService.addContact(idOrganization, x.contactId, this.jwt.getUserId()).subscribe());
 		this.dialogRef.close({ delete: false, id: 0 });
 	}
 

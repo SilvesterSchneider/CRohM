@@ -9,6 +9,7 @@ import {
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 @Component({
 	selector: 'app-contacts-add-dialog',
@@ -28,7 +29,8 @@ export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialo
 		public dialogRef: MatDialogRef<ContactsAddDialogComponent>,
 		public dialog: MatDialog,
 		private fb: FormBuilder,
-		private service: ContactService
+		private service: ContactService,
+		private jwt: JwtService
 	) {
 		super(dialogRef, dialog);
 	}
@@ -74,7 +76,7 @@ export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialo
 		this.contactCreateDto.contactPossibilities = this.contactPossibilitiesCreateDto;
 
 		// And add a new Contact with the service
-		this.service.post(this.contactCreateDto).subscribe(x => this.dialogRef.close());
+		this.service.post(this.contactCreateDto, this.jwt.getUserId()).subscribe(x => this.dialogRef.close());
 	}
 
 	onCancel() {

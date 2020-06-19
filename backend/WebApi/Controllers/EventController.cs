@@ -16,12 +16,14 @@ namespace WebApi.Controllers
     public class EventController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IUserService userService;
         private readonly IModificationEntryRepository modRepo;
         private IEventService eventService;
 
-        public EventController(IMapper mapper, IEventService eventService, IModificationEntryRepository modRepo)
+        public EventController(IMapper mapper, IEventService eventService, IModificationEntryRepository modRepo, IUserService userService)
         {
             this._mapper = mapper;
+            this.userService = userService;
             this.modRepo = modRepo;
             this.eventService = eventService;
         }
@@ -70,7 +72,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(EventDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> Put([FromBody]EventDto eventToModify, [FromRoute]long id)
+        public async Task<IActionResult> Put([FromBody]EventDto eventToModify, [FromRoute]long id, [FromQuery]long idOfUserChange)
         {
             if (eventToModify == null)
             {
@@ -81,7 +83,8 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
             await eventService.ModifyEventAsync(eventToModify);
-            await modRepo.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
+            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
             return Ok(eventToModify);
         }
 
@@ -94,12 +97,13 @@ namespace WebApi.Controllers
         [HttpPut("{id}/addContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
-        public async Task<IActionResult> AddContact([FromRoute]long id, [FromBody]long contactId)
+        public async Task<IActionResult> AddContact([FromRoute]long id, [FromBody]long contactId, [FromQuery]long idOfUserChange)
         {
             EventContact result = await eventService.AddEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
             if (result != null)
             {
-                await modRepo.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
+                string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+                await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
                 return Ok();
             }
             else
@@ -117,12 +121,13 @@ namespace WebApi.Controllers
         [HttpPut("{id}/removeContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
-        public async Task<IActionResult> RemoveContact([FromRoute]long id, [FromBody]long contactId)
+        public async Task<IActionResult> RemoveContact([FromRoute]long id, [FromBody]long contactId, [FromQuery]long idOfUserChange)
         {
             bool result = await eventService.RemoveEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
             if (result)
             {
-                await modRepo.UpdateModificationAsync(id, MODEL_TYPE.EVENT);
+                string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+                await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
                 return Ok();
             }
             else
@@ -139,7 +144,7 @@ namespace WebApi.Controllers
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(void), Description = "successfully created")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
-        public async Task<IActionResult> Post([FromBody]EventCreateDto eventToCreate)
+        public async Task<IActionResult> Post([FromBody]EventCreateDto eventToCreate, [FromQuery]long idOfUserChange)
         {
             Event newEvent = await eventService.CreateNewEventAsync(eventToCreate);
             if (newEvent != null)
@@ -149,7 +154,8 @@ namespace WebApi.Controllers
                     await eventService.AddEventContactAsync(new EventContact() { ContactId = contactId, EventId = newEvent.Id });
                 }
                 var uri = $"https://{Request.Host}{Request.Path}/{_mapper.Map<EventDto>(newEvent).Id}";
-                await modRepo.CreateNewEntryAsync(newEvent.Id, MODEL_TYPE.EVENT);
+                string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+                await modRepo.CreateNewEntryAsync(userNameOfChange, newEvent.Id, MODEL_TYPE.EVENT);
                 return Created(uri, eventToCreate);
             }
             return BadRequest("Fehler beim erzeugen eines Events!");

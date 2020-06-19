@@ -17,6 +17,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 export class EventContactConnection {
   contactId: number;
@@ -71,7 +72,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     private cd: ChangeDetectorRef,
     private contactService: ContactService,
     private eventService: EventService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private jwt: JwtService) {
     super(dialogRef, dialog);
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
@@ -279,7 +281,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     });
     this.event.contacts = contacts;
     this.event.participated = participants;
-    this.eventService.put(this.event, this.event.id).subscribe(() => this.dialogRef.close());
+    this.eventService.put(this.event, this.event.id, this.jwt.getUserId()).subscribe(() => this.dialogRef.close());
   }
 
   close() {

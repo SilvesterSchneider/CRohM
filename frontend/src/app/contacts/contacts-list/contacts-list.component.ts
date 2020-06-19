@@ -9,6 +9,7 @@ import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialo
 import { ContactsEditDialogComponent } from '../contacts-edit-dialog/contacts-edit-dialog.component';
 import { ContactsAddDialogComponent } from '../contacts-add-dialog/contacts-add-dialog.component';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 @Component({
   selector: 'app-contacts-list',
@@ -29,7 +30,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     private service: ContactService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dialog: MatDialog,
-    private mediaObserver: MediaObserver) {
+    private mediaObserver: MediaObserver,
+    private jwt: JwtService) {
       this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
       if (change[0].mqAlias !== this.currentScreenWidth) {
         this.currentScreenWidth = change[0].mqAlias;
@@ -39,9 +41,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.userService.getLoggedInUser(1).subscribe(x => {
-      this.isAdminUserLoggedIn = x.id === 1;
-    });
+    this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
     this.getData();
   }
 
@@ -123,6 +123,6 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         phoneNumber: '0172-9344333' + this.length,
         contactEntries: []
       }
-    }).subscribe(x => this.getData());
+    }, this.jwt.getUserId()).subscribe(x => this.getData());
   }
 }

@@ -25,7 +25,10 @@ namespace ServiceLayer
         Task ChangePasswordForUser(int primKey);
 
         Task<List<User>> GetAsync();
+
         Task<IdentityResult> SetUserLockedAsync(long id);
+
+        Task<string> GetUserNameByIdAsync(long id);
     }
 
     public class UserService : IUserService
@@ -146,6 +149,24 @@ namespace ServiceLayer
             else
             {
                 return IdentityResult.Failed(new IdentityError());
+            }
+        }
+
+        public async Task<string> GetUserNameByIdAsync(long id)
+        {
+            User userToFind = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (userToFind != null)
+            {
+                string userName = userToFind.FirstName + " " + userToFind.LastName;
+                if (string.IsNullOrEmpty(userName.Trim()))
+                {
+                    userName = "admin";
+                }
+                return userName;
+            }
+            else
+            {
+                return string.Empty;
             }
         }
     }

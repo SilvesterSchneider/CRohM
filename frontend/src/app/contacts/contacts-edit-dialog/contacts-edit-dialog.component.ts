@@ -5,6 +5,7 @@ import { ContactDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 @Component({
 	selector: 'app-contacts-edit-dialog',
@@ -23,7 +24,8 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		@Inject(MAT_DIALOG_DATA) public data: ContactDto,
 		public dialog: MatDialog,
 		private fb: FormBuilder,
-		private service: ContactService
+		private service: ContactService,
+		private jwt: JwtService
 	) {
 		super(dialogRef, dialog);
 		this.contact = data;
@@ -63,7 +65,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
-		this.service.put(this.contact, this.contact.id).subscribe(x => {
+		this.service.put(this.contact, this.contact.id, this.jwt.getUserId()).subscribe(x => {
 			this.dialogRef.close({ delete: false, id: 0 });
 		});
 	}

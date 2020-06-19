@@ -35,7 +35,6 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string))]
         public async Task<IActionResult> Login([FromBody] CredentialsDto credentials)
         {
-            LoggedInUser.SetLoggedInUser(null);
             var user = await _userService.FindByNameAsync(credentials.UserNameOrEmail);
             if (user == null)
             {
@@ -57,7 +56,6 @@ namespace WebApi.Controllers
             {
                 var userDto = _mapper.Map<UserDto>(user);
                 userDto.AccessToken = _signInService.CreateToken(user);
-                LoggedInUser.SetLoggedInUser(user);
                 return Ok(userDto);
             }
 
