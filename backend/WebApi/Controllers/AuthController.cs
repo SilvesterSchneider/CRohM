@@ -79,7 +79,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// The password change controler request.
         /// </summary>
-        /// <param name="primKey">the primary key of the user to be changed</param>
+        /// <param name="id">the primary key of the user to be changed</param>
         /// <param name="newPassword">the new password to be changed</param>
         /// <returns></returns>
         [Route("updatePassword")]
