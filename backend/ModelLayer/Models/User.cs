@@ -10,6 +10,8 @@ namespace ModelLayer.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        public bool hasPasswordChanged { get; set; } = false;
+
         public bool UserLockEnabled { get
             {
                 if (LockoutEnd.HasValue && LockoutEnd.Value.LocalDateTime > DateTime.Today)

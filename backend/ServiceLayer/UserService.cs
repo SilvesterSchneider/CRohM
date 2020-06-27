@@ -29,6 +29,8 @@ namespace ServiceLayer
         Task<IdentityResult> SetUserLockedAsync(long id);
 
         Task<string> GetUserNameByIdAsync(long id);
+
+        Task ChangePasswordForUser(long primKey, string newPassword);
     }
 
     public class UserService : IUserService
@@ -169,6 +171,26 @@ namespace ServiceLayer
                 return string.Empty;
             }
         }
+
+        public async Task ChangePasswordForUser(long primKey, string newPassword)
+        {
+            User userToBeUpdated = null;
+            //why iterate over user?
+            foreach (User us in Users)
+            {
+                if (us.Id == primKey)
+                {
+                    userToBeUpdated = us;
+                    break;
+                }
+            }
+            if (userToBeUpdated != null && !string.IsNullOrEmpty(userToBeUpdated.Email))
+            {
+                await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
+                userToBeUpdated.hasPasswordChanged = true;
+                await _userManager.UpdateUserAsync(userToBeUpdated);
+            }
+        }
     }
 
     #region DefaultUserManager
@@ -190,6 +212,8 @@ namespace ServiceLayer
         Task<IdentityResult> SetUserLockedAsync(User user, bool lockoutEnabled);
 
         IQueryable<User> Users { get; }
+
+        Task<IdentityResult> UpdateUserAsync(User user);
     }
 
     public class DefaultUserManager : IUserManager
@@ -242,6 +266,11 @@ namespace ServiceLayer
         {
             await _manager.RemovePasswordAsync(user);
             return await _manager.AddPasswordAsync(user, newPassword);
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _manager.UpdateAsync(user);
         }
 
         public IQueryable<User> Users => _manager.Users;

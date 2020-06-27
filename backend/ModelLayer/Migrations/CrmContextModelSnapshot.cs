@@ -483,7 +483,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "5773b0d7-dcb8-4362-93a9-94597e303f47",
+                            ConcurrencyStamp = "7c4bccf6-05ad-43ef-8b77-9fbaa1327f00",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -548,6 +548,9 @@ namespace ModelLayer.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<bool>("hasPasswordChanged")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
