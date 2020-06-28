@@ -19,26 +19,26 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	contactsForm: FormGroup;
 	contact: ContactDto;
 
-	constructor(
+	public constructor(
 		public dialogRef: MatDialogRef<ContactsEditDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: ContactDto,
 		public dialog: MatDialog,
-		private fb: FormBuilder,
-		private service: ContactService,
-		private jwt: JwtService
+		private readonly fb: FormBuilder,
+		private readonly contactService: ContactService,
+		private readonly jwtService: JwtService
 	) {
 		super(dialogRef, dialog);
 		this.contact = data;
 	}
 
-	ngOnInit(): void {
+	public ngOnInit(): void {
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
 		this.initForm();
 		this.contactsForm.patchValue(this.contact);
 	}
 
-	initForm() {
+	public initForm(): void {
 		this.contactsForm = this.fb.group({
 			id: ['', Validators.required],
 			name: ['', Validators.required],
@@ -51,11 +51,12 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 				phoneNumber: ['', Validators.pattern('^0[0-9- ]*$')],
 				fax: ['', Validators.pattern('^0[0-9- ]*$')],
 				contactEntries: this.contactPossibilitiesEntriesFormGroup
-			})
+			}),
+			notifyContact: false
 		});
 	}
 
-	onApprove() {
+	public onApprove(): void {
 		const idAddress = this.contact.address.id;
 		const idContactPossibilities = this.contact.contactPossibilities.id;
 		const newContact: ContactDto = this.contactsForm.value;
@@ -65,20 +66,20 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
-		this.service.put(this.contact, this.contact.id, this.jwt.getUserId()).subscribe(x => {
+		this.contactService.put(this.contact, this.contact.id, this.jwtService.getUserId()).subscribe(x => {
 			this.dialogRef.close({ delete: false, id: 0 });
 		});
 	}
 
-	onCancel() {
+	public onCancel(): void {
 		super.confirmDialog({ delete: false, id: 0 });
 	}
 
-	onDelete() {
+	public onDelete(): void {
 		super.confirmDialog({ delete: true, id: this.contact.id });
 	}
 
-	hasChanged(): boolean {
+	public hasChanged(): boolean {
 		return !this.contactsForm.pristine;
 	}
 }

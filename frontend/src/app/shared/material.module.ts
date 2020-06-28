@@ -18,6 +18,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -41,7 +42,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatDialogModule,
     MatCheckboxModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule, MatDividerModule
   ],
   exports: [
     MatSidenavModule,
@@ -64,7 +65,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatDialogModule,
     MatCheckboxModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule, MatDividerModule
   ]
 })
 export class MaterialModule { }
