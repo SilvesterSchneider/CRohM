@@ -10,9 +10,10 @@ import { ContactsEditDialogComponent } from './contacts-edit-dialog/contacts-edi
 import { ContactsDetailComponent } from './contacts-detail/contacts-detail.component';
 import { ContactsInfoComponent } from './contacts-info/contacts-info.component';
 import { ContactsAddHistoryComponent } from './contacts-add-history/contacts-add-history.component';
+import { DataProtectionModule } from '../shared/data-protection';
 
 @NgModule({
-	imports: [ SharedModule, FormsModule, ReactiveFormsModule, MaterialModule, MatDialogModule, ContactsRoutingModule ],
+	imports: [ SharedModule, FormsModule, ReactiveFormsModule, MaterialModule, MatDialogModule, ContactsRoutingModule, DataProtectionModule ],
 	declarations: [
 		ContactsListComponent,
 		ContactsAddDialogComponent,
