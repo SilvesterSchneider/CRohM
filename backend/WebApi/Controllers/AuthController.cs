@@ -86,8 +86,18 @@ namespace WebApi.Controllers
         [Route("updatePassword")]
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully updated")]
+        [SwaggerResponse(HttpStatusCode.Conflict, typeof(string), Description = "password does not match guidelines!")]
         public async Task<IActionResult> UpdatePassword([FromQuery]long id, [FromQuery]String newPassword)
         {
+            if (!PasswordGuidelines.IsPasswordWithinRestrictions(newPassword))
+            {
+                string text = "Passwort sollte mindestens eine Länge haben von " + PasswordGuidelines.RequiredLength + " Zeichen" +
+                    (PasswordGuidelines.RequireDigit ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfNumerics() + " Zahlen" : "") + 
+                    (PasswordGuidelines.RequireNonAlphanumeric ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfSpecialChars() + " Sonderzeichen" : "") +
+                    (PasswordGuidelines.RequireLowercase ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfLowerLetters() + " kleinen Buchstaben" : "") +
+                    (PasswordGuidelines.RequireUppercase ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfUpperLetters() + " großen Buchstaben." : "");
+                return Conflict(text);
+            }
             await _userService.ChangePasswordForUser(id, newPassword).ConfigureAwait(false);
             return Ok(true);
         }

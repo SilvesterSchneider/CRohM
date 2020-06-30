@@ -37,5 +37,98 @@ namespace ModelLayer.Helper
         {
             return RequireDigit ? 1 : 0;
         }
+
+        public static bool IsPasswordWithinRestrictions(string password)
+        {
+            if (password.Length < RequiredLength)
+            {
+                return false;
+            }
+            int requiredAmountOfSpecialChar = GetAmountOfSpecialChars();
+            if (requiredAmountOfSpecialChar > 0)
+            {
+                if (GetAmountOfSpecialChars(password) < requiredAmountOfSpecialChar)
+                {
+                    return false;
+                }
+            }
+            int requiredAmountOfDigits = GetAmountOfNumerics();
+            if (requiredAmountOfDigits > 0)
+            {
+                if (GetAmountOfNumerics(password) < requiredAmountOfDigits)
+                {
+                    return false;
+                }
+            }
+            int requiredUpperLetters = GetAmountOfUpperLetters();
+            if (requiredUpperLetters > 0)
+            {
+                if (GetAmountOfUpperLetters(password) < requiredUpperLetters)
+                {
+                    return false;
+                }
+            }
+            int requiredLowerLetters = GetAmountOfLowerLetters();
+            if (requiredLowerLetters > 0)
+            {
+                if (GetAmountOfLowerLetters(password) < requiredLowerLetters)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static int GetAmountOfLowerLetters(string password)
+        {
+            int amount = 0;
+            foreach (char ch in password)
+            {
+                if (Char.IsLower(ch))
+                {
+                    amount++;
+                }
+            }
+            return amount;
+        }
+
+        private static int GetAmountOfUpperLetters(string password)
+        {
+            int amount = 0;
+            foreach (char ch in password)
+            {
+                if (Char.IsUpper(ch))
+                {
+                    amount++;
+                }
+            }
+            return amount;
+        }
+
+        private static int GetAmountOfNumerics(string password)
+        {
+            int amount = 0;
+            foreach (char ch in password)
+            {
+                if (Char.IsDigit(ch))
+                {
+                    amount++;
+                }
+            }
+            return amount;
+        }
+
+        private static int GetAmountOfSpecialChars(string password)
+        {
+            int amount = 0;
+            foreach (char ch in password)
+            {
+                if (!Char.IsLetterOrDigit(ch))
+                {
+                    amount++;
+                }
+            }
+            return amount;
+        }
     }
 }
