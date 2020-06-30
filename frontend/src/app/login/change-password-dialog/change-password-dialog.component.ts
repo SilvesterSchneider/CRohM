@@ -13,6 +13,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   export class ChangePasswordComponent implements OnInit {
     formGroup: FormGroup;
     text: string;
+    errorText: string;
 
     constructor(
       public dialogRef: MatDialogRef<ChangePasswordComponent>,
@@ -34,6 +35,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
     }
 
     public savePassword() {
-        this.authService.updatePassword(this.data.id, this.formGroup.get('password').value).subscribe(x => this.dialogRef.close());
+        this.authService.updatePassword(this.data.id, this.formGroup.get('password').value).subscribe((x) => {
+          if (x) {
+            this.dialogRef.close();
+          }
+        }, error => {
+          if (!error || error == null) {
+            this.dialogRef.close();
+          } else {
+            this.errorText = error;
+          }
+        });
     }
 }
