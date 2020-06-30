@@ -30,7 +30,7 @@ namespace ServiceLayer
 
         Task<string> GetUserNameByIdAsync(long id);
 
-        Task<IdentityResult> ChangePasswordForUser(long primKey, string newPassword);
+        Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword);
     }
 
     public class UserService : IUserService
@@ -172,7 +172,7 @@ namespace ServiceLayer
             }
         }
 
-        public async Task<IdentityResult> ChangePasswordForUser(long primKey, string newPassword)
+        public async Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword)
         {
             User userToBeUpdated = Users.FirstOrDefault(x => x.Id == primKey);
             if (userToBeUpdated != null && userToBeUpdated.Id != 1 && !string.IsNullOrEmpty(userToBeUpdated.Email))

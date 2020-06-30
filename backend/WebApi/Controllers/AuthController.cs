@@ -99,7 +99,7 @@ namespace WebApi.Controllers
                     (PasswordGuidelines.RequireUppercase ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfUpperLetters() + " großen Buchstaben." : "");
                 return Conflict(text);
             }
-            IdentityResult result = await _userService.ChangePasswordForUser(id, newPassword).ConfigureAwait(false);
+            IdentityResult result = await _userService.ChangePasswordForUserAsync(id, newPassword).ConfigureAwait(false);
             if (result.Succeeded)
             {
                 return Ok(true);
