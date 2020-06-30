@@ -6,16 +6,17 @@ namespace ModelLayer.Helper
 {
     public class PasswordGuidelines
     {
-        public const bool RequireDigit = false;
+        public const bool RequireDigit = true;
         public const bool RequireLowercase = false;
-        public const bool RequireNonAlphanumeric = false;
+        public const bool RequireNonAlphanumeric = true;
         public const bool RequireUppercase = false;
-        public const int RequiredLength = 5;
+        public const int RequiredMinLength = 5;
         public const int RequiredUniqueChars = 0;
+        public const int MaxLength = 64;
 
         public static int GetMaximumLength()
         {
-            return RequiredLength * 2;
+            return RequiredMinLength * 2;
         }
 
         public static int GetAmountOfSpecialChars()
@@ -40,7 +41,7 @@ namespace ModelLayer.Helper
 
         public static bool IsPasswordWithinRestrictions(string password)
         {
-            if (password.Length < RequiredLength)
+            if (password.Length < RequiredMinLength)
             {
                 return false;
             }

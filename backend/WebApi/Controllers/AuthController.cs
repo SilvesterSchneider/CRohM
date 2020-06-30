@@ -92,7 +92,7 @@ namespace WebApi.Controllers
         {
             if (!PasswordGuidelines.IsPasswordWithinRestrictions(newPassword))
             {
-                string text = "Passwort sollte mindestens eine Länge haben von " + PasswordGuidelines.RequiredLength + " Zeichen" +
+                string text = "Passwort sollte eine Länge haben von " + PasswordGuidelines.RequiredMinLength + " bis zu " + PasswordGuidelines.MaxLength + " Zeichen" +
                     (PasswordGuidelines.RequireDigit ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfNumerics() + " Zahlen" : "") + 
                     (PasswordGuidelines.RequireNonAlphanumeric ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfSpecialChars() + " Sonderzeichen" : "") +
                     (PasswordGuidelines.RequireLowercase ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfLowerLetters() + " kleinen Buchstaben" : "") +

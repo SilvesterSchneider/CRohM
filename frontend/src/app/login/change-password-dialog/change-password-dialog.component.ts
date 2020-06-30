@@ -31,6 +31,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
     private createForm(): FormGroup {
         return this.fb.group({
           password: ['', Validators.required],
+          error: ['']
         });
     }
 
@@ -40,10 +41,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
             this.dialogRef.close();
           }
         }, error => {
-          if (!error || error == null) {
+          if (error == null) {
             this.dialogRef.close();
           } else {
             this.errorText = error;
+            this.formGroup.get('error').setValue(error);
           }
         });
     }

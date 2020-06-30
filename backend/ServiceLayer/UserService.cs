@@ -86,7 +86,7 @@ namespace ServiceLayer
             }
             if (userToBeUpdated != null && !string.IsNullOrEmpty(userToBeUpdated.Email))
             {
-                string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredLength, PasswordGuidelines.GetMaximumLength(),
+                string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredMinLength, PasswordGuidelines.GetMaximumLength(),
                     PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
                     PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
                 await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);

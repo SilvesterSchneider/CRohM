@@ -42,7 +42,7 @@ namespace WebApi
             var database = Configuration["DBName"] ?? "CRMDB";
 
             var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
-            //connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
+            connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -79,7 +79,7 @@ namespace WebApi
                     options.Password.RequireLowercase = PasswordGuidelines.RequireLowercase;
                     options.Password.RequireNonAlphanumeric = PasswordGuidelines.RequireNonAlphanumeric;
                     options.Password.RequireUppercase = PasswordGuidelines.RequireUppercase;
-                    options.Password.RequiredLength = PasswordGuidelines.RequiredLength;
+                    options.Password.RequiredLength = PasswordGuidelines.RequiredMinLength;
                     options.Password.RequiredUniqueChars = PasswordGuidelines.RequiredUniqueChars;
                     options.User.RequireUniqueEmail = true;
                     options.SignIn.RequireConfirmedAccount = false;
