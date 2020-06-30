@@ -86,7 +86,8 @@ namespace WebApi.Controllers
         [Route("updatePassword")]
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully updated")]
-        [SwaggerResponse(HttpStatusCode.Conflict, typeof(string), Description = "password does not match guidelines!")]
+        [SwaggerResponse(HttpStatusCode.Conflict, typeof(string), Description = "conflict in update process!")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "user not found!")]
         public async Task<IActionResult> UpdatePassword([FromQuery]long id, [FromQuery]String newPassword)
         {
             if (!PasswordGuidelines.IsPasswordWithinRestrictions(newPassword))
@@ -98,8 +99,19 @@ namespace WebApi.Controllers
                     (PasswordGuidelines.RequireUppercase ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfUpperLetters() + " großen Buchstaben." : "");
                 return Conflict(text);
             }
-            await _userService.ChangePasswordForUser(id, newPassword).ConfigureAwait(false);
-            return Ok(true);
+            IdentityResult result = await _userService.ChangePasswordForUser(id, newPassword).ConfigureAwait(false);
+            if (result.Succeeded)
+            {
+                return Ok(true);
+            } 
+            else if (result.Errors.GetEnumerator().Current.Code.Equals("404"))
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Conflict("Not allowed to update password for ADMIN user!");
+            }            
         }
 
         //TODO: implement endpoint for login with refresh token
