@@ -17,6 +17,7 @@ namespace WebApi.Helper
                 User user = new User
                 {
                     UserName = "admin",
+                    LastName = "admin",
                     Email = "admin@admin.com"
                 };
 
