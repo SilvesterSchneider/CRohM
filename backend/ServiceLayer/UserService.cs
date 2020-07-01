@@ -175,20 +175,15 @@ namespace ServiceLayer
         public async Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword)
         {
             User userToBeUpdated = Users.FirstOrDefault(x => x.Id == primKey);
-            if (userToBeUpdated != null && userToBeUpdated.Id != 1 && !string.IsNullOrEmpty(userToBeUpdated.Email))
+            if (userToBeUpdated != null && !string.IsNullOrEmpty(userToBeUpdated.Email))
             {
                 await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
                 userToBeUpdated.hasPasswordChanged = true;
                 return await _userManager.UpdateUserAsync(userToBeUpdated);
-            }
-
-            if (userToBeUpdated == null)
-            {
-                return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "404", Description = "User not found!" } });
-            }
+            } 
             else
             {
-                return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "403", Description = "Not allowed to update admin password!" } });
+                return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "404", Description = "Benutzer nicht gefunden!" } });
             }
         }
     }

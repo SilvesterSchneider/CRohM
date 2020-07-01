@@ -104,14 +104,10 @@ namespace WebApi.Controllers
             {
                 return Ok(true);
             } 
-            else if (result.Errors.GetEnumerator().Current.Code.Equals("404"))
+            else 
             {
                 return NotFound();
-            }
-            else
-            {
-                return Conflict("Not allowed to update password for ADMIN user!");
-            }            
+            }          
         }
 
         //TODO: implement endpoint for login with refresh token
