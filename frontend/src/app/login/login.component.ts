@@ -32,7 +32,7 @@ export class LoginComponent {
   }
 
   redirect() {
-    if (this.user.hasPasswordChanged || this.user.id === 1) {
+    if (this.user.hasPasswordChanged) {
       this.router.navigate(['/contacts'], { relativeTo: this.route });
     } else {
       this.matDialog = this.dialog.open(ChangePasswordComponent, { data: this.user, disableClose: true });
