@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService, UserDto } from 'src/app/shared/api-generated/api-generated';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
