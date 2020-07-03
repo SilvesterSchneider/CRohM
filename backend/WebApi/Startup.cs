@@ -79,7 +79,7 @@ namespace WebApi
                     options.Password.RequireLowercase = PasswordGuidelines.RequireLowercase;
                     options.Password.RequireNonAlphanumeric = PasswordGuidelines.RequireNonAlphanumeric;
                     options.Password.RequireUppercase = PasswordGuidelines.RequireUppercase;
-                    options.Password.RequiredLength = PasswordGuidelines.RequiredLength;
+                    options.Password.RequiredLength = PasswordGuidelines.RequiredMinLength;
                     options.Password.RequiredUniqueChars = PasswordGuidelines.RequiredUniqueChars;
                     options.User.RequireUniqueEmail = true;
                     options.SignIn.RequireConfirmedAccount = false;

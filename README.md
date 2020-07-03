@@ -20,3 +20,4 @@ Frontend:	1. Visual Studio Code installieren
 			7. Browser öffnen und https://localhost:4200 öffnen
 			8. Als admin mit Passwort @dm1n1stR4tOr anmelden
 			9. Genießen!
+			

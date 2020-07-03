@@ -19,6 +19,7 @@ import { EventsModule } from './events/events.module';
 import { ProgressSpinnerInterceptor } from './shared/progress-spinner/progress-spinner.interceptor';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ConfirmDialogComponent } from './shared/form/confirmdialog/confirmdialog.component';
+import { ChangePasswordComponent } from './login/change-password-dialog/change-password-dialog.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ConfirmDialogComponent } from './shared/form/confirmdialog/confirmdialo
     LoginComponent,
     UserMenuComponent,
     SidenavComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,

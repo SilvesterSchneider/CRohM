@@ -29,6 +29,8 @@ namespace ServiceLayer
         Task<IdentityResult> SetUserLockedAsync(long id);
 
         Task<string> GetUserNameByIdAsync(long id);
+
+        Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword);
     }
 
     public class UserService : IUserService
@@ -84,7 +86,7 @@ namespace ServiceLayer
             }
             if (userToBeUpdated != null && !string.IsNullOrEmpty(userToBeUpdated.Email))
             {
-                string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredLength, PasswordGuidelines.GetMaximumLength(),
+                string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredMinLength, PasswordGuidelines.GetMaximumLength(),
                     PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
                     PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
                 await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
@@ -169,6 +171,21 @@ namespace ServiceLayer
                 return string.Empty;
             }
         }
+
+        public async Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword)
+        {
+            User userToBeUpdated = Users.FirstOrDefault(x => x.Id == primKey);
+            if (userToBeUpdated != null && !string.IsNullOrEmpty(userToBeUpdated.Email))
+            {
+                await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
+                userToBeUpdated.hasPasswordChanged = true;
+                return await _userManager.UpdateUserAsync(userToBeUpdated);
+            } 
+            else
+            {
+                return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "404", Description = "Benutzer nicht gefunden!" } });
+            }
+        }
     }
 
     #region DefaultUserManager
@@ -190,6 +207,8 @@ namespace ServiceLayer
         Task<IdentityResult> SetUserLockedAsync(User user, bool lockoutEnabled);
 
         IQueryable<User> Users { get; }
+
+        Task<IdentityResult> UpdateUserAsync(User user);
     }
 
     public class DefaultUserManager : IUserManager
@@ -242,6 +261,11 @@ namespace ServiceLayer
         {
             await _manager.RemovePasswordAsync(user);
             return await _manager.AddPasswordAsync(user, newPassword);
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _manager.UpdateAsync(user);
         }
 
         public IQueryable<User> Users => _manager.Users;

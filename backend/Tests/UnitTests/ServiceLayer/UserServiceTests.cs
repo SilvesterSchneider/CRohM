@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using MockQueryable.Moq;
@@ -56,6 +57,42 @@ namespace UnitTests.ServiceLayer
 
             //Assert
             Assert.Equal("wurstha21", userName);
+        }
+
+        [Fact]
+        public void ChangePasswordForUserAsync_WorksCorrectly()
+        {
+            // Arrange
+            var mockUserManager = new Mock<IUserManager>();
+            var mockMailProvider = new Mock<IMailProvider>();
+            var sut = new UserService(mockUserManager.Object, mockMailProvider.Object);
+
+            var users = new List<User>()
+            {
+                new User() { Id=2, PasswordHash="someOldPassword", Email="test@mail.de" }
+            };
+
+            var mock = users.AsQueryable().BuildMock();
+
+            mockUserManager.Setup(manager => manager.Users)
+                .Returns(mock.Object);
+
+            mockUserManager.Setup(manager => manager.ChangePasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
+                .Callback<User, string>(PerformPasswordChange)
+                .ReturnsAsync(IdentityResult.Success);
+            mockUserManager.Setup(manager => manager.UpdateUserAsync(It.IsAny<User>()))
+                .ReturnsAsync(IdentityResult.Success);
+            //Act
+            _= sut.ChangePasswordForUserAsync(2, "newPassword");
+
+            //Assert
+            Assert.Equal("newPassword", users[0].PasswordHash);
+            Assert.True(users[0].hasPasswordChanged);
+        }
+
+        private void PerformPasswordChange(User user, string password)
+        {
+            user.PasswordHash = password;
         }
     }
 }

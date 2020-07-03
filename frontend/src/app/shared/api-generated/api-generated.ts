@@ -431,6 +431,145 @@ export class AuthService {
         }
         return _observableOf<boolean>(<any>null);
     }
+
+    /**
+     * @param id (optional) 
+     * @param newPassword (optional) 
+     * @return successfully updated
+     */
+    updatePassword(id?: number | undefined, newPassword?: string | null | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/auth/updatePassword?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (newPassword !== undefined && newPassword !== null)
+            url_ += "newPassword=" + encodeURIComponent("" + newPassword) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePassword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePassword(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdatePassword(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <boolean>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            result409 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("conflict in update process!", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("user not found!", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
+
+    /**
+     * @param idQuery (optional) 
+     * @param newPassword (optional) 
+     * @return successfully updated
+     */
+    updatePassword2(idPath: string, idQuery?: number | undefined, newPassword?: string | null | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/auth/{id}?";
+        if (idPath === undefined || idPath === null)
+            throw new Error("The parameter 'idPath' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + idPath));
+        if (idQuery === null)
+            throw new Error("The parameter 'idQuery' cannot be null.");
+        else if (idQuery !== undefined)
+            url_ += "id=" + encodeURIComponent("" + idQuery) + "&";
+        if (newPassword !== undefined && newPassword !== null)
+            url_ += "newPassword=" + encodeURIComponent("" + newPassword) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePassword2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePassword2(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdatePassword2(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <boolean>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            result409 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("conflict in update process!", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("user not found!", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
 }
 
 @Injectable({
@@ -2054,6 +2193,7 @@ export interface UserDto {
     twoFactorEnabled: boolean;
     accessToken?: string | undefined;
     userLockEnabled: boolean;
+    hasPasswordChanged: boolean;
 }
 
 export interface CredentialsDto {
