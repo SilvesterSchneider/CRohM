@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="PDFsharp" Version="1.50.5147" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ModelLayer\ModelLayer.csproj" />
   </ItemGroup>
 
