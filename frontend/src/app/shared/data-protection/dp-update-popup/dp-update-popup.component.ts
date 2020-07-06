@@ -8,7 +8,6 @@ import { Component, OnInit } from '@angular/core';
 export class DpUpdatePopupComponent implements OnInit {
 
   constructor() { }
-
   public ngOnInit(): void {
   }
 

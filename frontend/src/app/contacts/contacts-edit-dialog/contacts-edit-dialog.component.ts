@@ -6,6 +6,7 @@ import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
 import { JwtService } from 'src/app/shared/jwt.service';
+import { DpUpdatePopupComponent } from 'src/app/shared/data-protection/dp-update-popup/dp-update-popup.component';
 
 @Component({
 	selector: 'app-contacts-edit-dialog',
@@ -25,7 +26,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		public dialog: MatDialog,
 		private readonly fb: FormBuilder,
 		private readonly contactService: ContactService,
-		private readonly jwtService: JwtService
+		private readonly jwtService: JwtService,
 	) {
 		super(dialogRef, dialog);
 		this.contact = data;
@@ -41,6 +42,10 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	public initForm(): void {
 		this.contactsForm = this.fb.group({
 			id: ['', Validators.required],
+			description: [],
+			events: [[]],
+			history: [[]],
+			organizations: [[]],
 			name: ['', Validators.required],
 			preName: ['', Validators.required],
 			address: this.fb.control(''),
@@ -50,24 +55,27 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 				// Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
 				phoneNumber: ['', Validators.pattern('^0[0-9- ]*$')],
 				fax: ['', Validators.pattern('^0[0-9- ]*$')],
+				name: [],
+				id: [],
+				description: [],
 				contactEntries: this.contactPossibilitiesEntriesFormGroup
-			}),
-			notifyContact: false
+			})
 		});
 	}
 
 	public onApprove(): void {
+		const oldContact = this.contact;
+		const newContact: ContactDto = this.contactsForm.value;
 		const idAddress = this.contact.address.id;
 		const idContactPossibilities = this.contact.contactPossibilities.id;
-		const newContact: ContactDto = this.contactsForm.value;
 		this.contact.address = newContact.address;
 		this.contact.preName = newContact.preName;
 		this.contact.name = newContact.name;
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
-		this.contactService.put(this.contact, this.contact.id, this.jwtService.getUserId()).subscribe(x => {
-			this.dialogRef.close({ delete: false, id: 0 });
+		this.contactService.put(this.contact.id, this.contact).subscribe(x => {
+			this.dialogRef.close({ delete: false, id: 0, oldContact, newContact });
 		});
 	}
 
