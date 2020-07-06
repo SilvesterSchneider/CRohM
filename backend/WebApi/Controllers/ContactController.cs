@@ -104,12 +104,17 @@ namespace WebApi.Controllers
         // creates new contact in db via frontend
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(ContactDto), Description = "successfully created")]
-        public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate, [FromQuery]long userIdOfChange)
+        public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate)
         {
             Contact contact = await contactService.CreateAsync(_mapper.Map<Contact>(contactToCreate));
 
+            //Get user id out of jwt
+            var userId = User.Claims
+                .FirstOrDefault(claim => claim.Type == "Id")
+                ?.Value;
+
             var contactDto = _mapper.Map<ContactDto>(contact);
-            string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
+            string userNameOfChange = await userService.GetUserNameByIdAsync(Convert.ToInt64(userId));
             await modRepo.CreateNewEntryAsync(userNameOfChange, contact.Id, MODEL_TYPE.CONTACT);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
             return Created(uri, contactDto);
