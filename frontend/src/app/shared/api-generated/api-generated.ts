@@ -990,7 +990,7 @@ export class DataProtectionService {
     /**
      * @return successfully send message
      */
-    sendMessage(sendInoInfoDto: SendInfoDTO): Observable<void> {
+    sendUpdateMessage(sendInoInfoDto: SendInfoDTO): Observable<void> {
         let url_ = this.baseUrl + "/api/DataProtection";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1006,11 +1006,11 @@ export class DataProtectionService {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSendMessage(response_);
+            return this.processSendUpdateMessage(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processSendMessage(<any>response_);
+                    return this.processSendUpdateMessage(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -1019,7 +1019,7 @@ export class DataProtectionService {
         }));
     }
 
-    protected processSendMessage(response: HttpResponseBase): Observable<void> {
+    protected processSendUpdateMessage(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2410,7 +2410,8 @@ export interface HistoryElementCreateDto {
 }
 
 export interface SendInfoDTO {
-    delete?: ContactDto | undefined;
+    delete: boolean;
+    customer?: any | undefined;
 }
 
 export interface EducationalOpportunityDto {

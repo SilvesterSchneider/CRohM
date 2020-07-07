@@ -19,6 +19,8 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	contactsForm: FormGroup;
 	contact: ContactDto;
+	private oldContact: ContactDto;
+	private newContact: ContactDto;
 
 	public constructor(
 		public dialogRef: MatDialogRef<ContactsEditDialogComponent>,
@@ -30,9 +32,11 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	) {
 		super(dialogRef, dialog);
 		this.contact = data;
+
 	}
 
 	public ngOnInit(): void {
+		this.oldContact = this.data;
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
 		this.initForm();
@@ -64,18 +68,9 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	}
 
 	public onApprove(): void {
-		const oldContact = this.contact;
-		const newContact: ContactDto = this.contactsForm.value;
-		const idAddress = this.contact.address.id;
-		const idContactPossibilities = this.contact.contactPossibilities.id;
-		this.contact.address = newContact.address;
-		this.contact.preName = newContact.preName;
-		this.contact.name = newContact.name;
-		this.contact.contactPossibilities = newContact.contactPossibilities;
-		this.contact.address.id = idAddress;
-		this.contact.contactPossibilities.id = idContactPossibilities;
-		this.contactService.put(this.contact.id, this.contact).subscribe(x => {
-			this.dialogRef.close({ delete: false, id: 0, oldContact, newContact });
+		this.newContact =  this.contactsForm.value;
+		this.contactService.put(this.contact.id, this.contactsForm.value).subscribe(x => {
+			this.dialogRef.close({ delete: false, id: 0, oldContact: this.oldContact, newContact: this.newContact });
 		});
 	}
 

@@ -84,13 +84,13 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       if (editDialogResult.delete) {
         this.deleteContact(editDialogResult.id);
       } else {
-        if (editDialogResult.newContact && editDialogResult.newContact) {
+        if (editDialogResult.newContact && editDialogResult.oldContact) {
         const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
 
         dialogDSGVORef.afterClosed().subscribe(sendMessage => {
           if (sendMessage) {
             const diff = this.dsgvoService.getDiffOfObjects( editDialogResult.newContact, editDialogResult.oldContact, ['unchanged']);
-            this.dataProtectionService.sendMessage({}).subscribe();
+            this.dataProtectionService.sendUpdateMessage({delete: false, customer: diff}).subscribe();
           }
         });
       }
@@ -112,7 +112,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
         dialogDSGVORef.afterClosed().subscribe(sendMessage => {
           if (sendMessage) {
-            this.dataProtectionService.sendDeleteMessage({}).subscribe();
+            this.dataProtectionService.sendDeleteMessage({delete: true, customer: null}).subscribe();
             this.service.delete(id).subscribe(x => this.getData());
           }
         });
