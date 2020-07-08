@@ -159,7 +159,7 @@ namespace WebApi
         {
             //###########################Helper#######################################
 
-            services.AddSingleton<IMailProvider, MailService>();
+            services.AddSingleton<IMailService, MailService>();
 
             //###########################Services#######################################
 
@@ -172,6 +172,7 @@ namespace WebApi
             services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IDataProtectionService, DataProtectionService>();
 
             //###########################Repositories#######################################
 

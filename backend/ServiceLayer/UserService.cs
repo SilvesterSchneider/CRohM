@@ -38,14 +38,14 @@ namespace ServiceLayer
         private readonly IUserManager _userManager;
 
         //TODO: fix it with di
-        private readonly IMailProvider mailProvider;
+        private readonly IMailService _mailService;
 
         public IQueryable<User> Users => _userManager.Users;
 
-        public UserService(IUserManager userManager, IMailProvider mailProvider)
+        public UserService(IUserManager userManager, IMailService mailService)
         {
             _userManager = userManager;
-            this.mailProvider = mailProvider;
+            this._mailService = mailService;
         }
 
         public async Task<IdentityResult> CreateCRohMUserAsync(User user)
@@ -59,7 +59,7 @@ namespace ServiceLayer
 
             if (result.Succeeded)
             {
-                mailProvider.Registration(user.UserName, password, user.Email);
+                _mailService.Registration(user.UserName, password, user.Email);
             }
 
             return result;
@@ -90,7 +90,7 @@ namespace ServiceLayer
                     PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
                     PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
                 await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
-                mailProvider.PasswordReset(newPassword, userToBeUpdated.Email);
+                _mailService.PasswordReset(newPassword, userToBeUpdated.Email);
             }
         }
 
