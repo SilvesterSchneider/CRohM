@@ -20,7 +20,7 @@ namespace ServiceLayer
 
         public bool Registration(string benutzer, string passwort, string email);
 
-        public bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, List<string> data);
+        public bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
     }
 
     public class MailService : IMailService
@@ -39,20 +39,16 @@ namespace ServiceLayer
             return SendMail("Zugangsdaten", body, email);
         }
 
-        public bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, List<string> data)
+        public bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data)
         {
-            var fstrig = data.Aggregate((i, j) => "<p>" + i + "</p><p>" + j + "</p>");
-
             string body = $"<p>Sehr geehrte/r {title} {lastname}</p> " +
                           " <p> Sie hatten um Änderung bzw. Löschung von zur Ihrer Person in " +
                           "       unserem Customer Relationship Management System(CRMS) " +
                           "       gespeicherten Daten gebeten.</p> " +
                           " <p> Folgende Daten wurden geändert:</p> " +
-
-                          fstrig +
-                          " <p> Folgende Daten wurden gelöscht:</p> " +
-                          //"< !--iteration über objekte --> " +
-                          " <p></p> " +
+                          " <ul> " +
+                          data +
+                          " </ul> " +
                           " <p> Technische Hochschule Nürnberg</p> ";
 
             return SendMail("Mitteilung über Änderung oder Löschung von Daten", body, emailAddressRecipient);

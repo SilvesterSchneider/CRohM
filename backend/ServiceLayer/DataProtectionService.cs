@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
 using ModelLayer.DataTransferObjects;
 using Newtonsoft.Json.Linq;
 
@@ -12,28 +6,21 @@ namespace ServiceLayer
 {
     public interface IDataProtectionService
     {
-        Task<List<string>> MakeSomethingAsync(JObject carlist, ContactDto car);
+        List<string> MakeSomething(JObject carlist, ContactDto car);
     }
 
     public class DataProtectionService : IDataProtectionService
     {
-        public async Task<List<string>> MakeSomethingAsync(JObject obj, ContactDto car)
+        public List<string> MakeSomething(JObject obj, ContactDto car)
         {
-            // TODO: return await
-            await Task.Delay(1);
-
-            var list = new List<string>();
-
-            list = loop(null, obj);
-
-            // TODO: should i really use identity result?
-            return list;
+            return loop(null, obj);
         }
 
         private List<string> loop(string pre, JObject obj)
         {
             var list = new List<string>();
-            // TODO: hier weitermachen || sieht noch nicht so aus wie in dem wf008 von julian
+            // TODO: hier weitermachen
+            // TODO rename this zeug
 
             foreach (var x in obj)
             {
@@ -43,28 +30,53 @@ namespace ServiceLayer
                 JObject test = value as JObject;
                 if (test != null)
                 {
-                    list = loop(name, test);
+                    list.AddRange(loop(name, test));
                 }
                 else
                 {
-                    string tuple;
+                    string tuple = "<li>";
                     if (pre != null)
                     {
-                        tuple = pre;
+                        tuple += $"{GetGermanTranslation(pre)} ";
                     }
-                    //wie bekomme ich den pre vorne hin?
-                    tuple = obj.GetValue("type") + " " + obj.GetValue("data");
+                    tuple += @$"({GetGermanTranslation(obj.GetValue("type").ToString())}: ""{GetGermanTranslation(obj.GetValue("data").ToString())}"")</li>";
 
                     list.Add(tuple);
+                    break;
                 }
             }
 
             return list;
         }
-    }
 
-    /*{
-    type: this.compareValues(obj1, obj2),
-    data: obj1 === undefined? obj2 : obj1
-    }*/
+        public string GetGermanTranslation(string englishKey)
+        {
+            switch (englishKey)
+            {
+                case "created": return "neu";
+                case "updated": return "aktualisiert";
+                case "deleted": return "gelöscht";
+                case "name": return "Name";
+                case "description": return "Beschreibung";
+                case "preName": return "Vorname";
+                case "city": return "Stadt";
+                case "street": return "Straße";
+                case "streetNumber": return "Hausnummer";
+                case "zipcode": return "Postleitzahl";
+                case "country": return "Land";
+                case "phoneNumber": return "Telefonnummer";
+                case "fax": return "Faxnummer";
+                case "mail": return "E-Mail";
+                case "date": return "Datum";
+                case "time": return "Zeitpunkt";
+                case "duration": return "dauer";
+                case "type": return "Typ";
+                case "comment": return "Kommentar";
+                case "contactEntryName": return "Name der Kontaktmöglichkeit";
+                case "contactEntryValue": return "Inhalt der Kontaktmöglichkeit";
+                case "id": return "Id";
+                default: return englishKey;
+            }
+        }
+    }
 }

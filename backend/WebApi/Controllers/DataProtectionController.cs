@@ -34,8 +34,10 @@ namespace WebApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                var bla = await _dataProtectionService.MakeSomethingAsync(sendInoInfoDto.Customer, new ContactDto() { Name = "hans" });
-                _mailService.SendDataProtectionUpdateMessage("Herr Lord Superman", "Därbe", "silvester.schneider@gmail.com", bla);
+                var bla = _dataProtectionService.MakeSomething(sendInoInfoDto.Customer, new ContactDto() { Name = "hans" });
+
+                var @join = String.Join("", bla);
+                _mailService.SendDataProtectionUpdateMessage("Herr Lord Superman", "Därbe", "silvester.schneider@gmail.com", @join);
 
                 return Ok();
             }

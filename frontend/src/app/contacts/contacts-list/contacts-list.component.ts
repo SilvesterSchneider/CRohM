@@ -89,7 +89,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
         dialogDSGVORef.afterClosed().subscribe(sendMessage => {
           if (sendMessage) {
-            const diff = this.dsgvoService.getDiffOfObjects( editDialogResult.newContact, editDialogResult.oldContact, ['unchanged']);
+            const diff = this.dsgvoService.getDiffOfObjects( editDialogResult.oldContact, editDialogResult.newContact, ['unchanged']);
             this.dataProtectionService.sendUpdateMessage({delete: false, customer: diff}).subscribe();
           }
         });
