@@ -4,6 +4,7 @@ import {MatDialog} from '@angular/material/dialog';
 import { CreateRoleDialogComponent } from './create-role/create-role.component';
 import { UpdateRoleDialogComponent } from './update-role/update-role.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 interface LooseTableObject {
   [key: string]: any;
@@ -19,6 +20,7 @@ export class RolesComponent implements OnInit {
 
   public tableData: LooseTableObject[] = [];
   public displayedColumns: string[] = ['permission'];
+  public dataSource = new MatTableDataSource();
 
 
   constructor(public dialog: MatDialog) { }
@@ -28,6 +30,7 @@ export class RolesComponent implements OnInit {
     // load data
     this.createDynamicColums();
     this.createTableData();
+    this.dataSource.data = this.tableData;
 
   }
 
@@ -99,6 +102,11 @@ export class RolesComponent implements OnInit {
     ROLES.forEach(role => {
       this.displayedColumns.push(role.name);
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }
 
