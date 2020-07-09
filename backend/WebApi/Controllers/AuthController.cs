@@ -48,7 +48,8 @@ namespace WebApi.Controllers
             if (signInAsync.Succeeded)
             {
                 var userDto = _mapper.Map<UserDto>(user);
-                userDto.AccessToken = _signInService.CreateToken(user);
+                var roles = await _userService.GetRolesAsync(user);
+                userDto.AccessToken = _signInService.CreateToken(user, roles);
                 return Ok(userDto);
             }
 

@@ -11,6 +11,8 @@ using ModelLayer.DataTransferObjects;
 using NSwag.Annotations;
 using ServiceLayer;
 using Microsoft.AspNetCore.Authorization;
+using ModelLayer.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApi.Controllers
 { 
@@ -19,6 +21,7 @@ namespace WebApi.Controllers
     //[Authorize]
     public class PermissionsController : ControllerBase
     {
+        
         IPermissionGroupService permission;
         IUserService userservice;
         IMapper mapper;
@@ -37,71 +40,38 @@ namespace WebApi.Controllers
             return Ok(mapper.Map<List<PermissionGroupDto>>(list));
         }
 
-
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully request")]
         public async Task<IActionResult> DeletePermissionGroup(long id)
         {
-            await permission.DeleteAsyncWithAllDependencies(id);
-            return Ok();
+            if (id != 1)
+            {
+                await permission.DeleteAsyncWithAllDependencies(id);
+                return Ok();
+            }
+            return Ok("Der Admin darf nicht gelöscht oder bearbeitet werden.");
         }
 
         [HttpPut]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully request")]
-        public async Task<IActionResult> CreatOrModifyGroup([FromBody] PermissionGroupDto group)
+        public async Task<IActionResult> UpdatePermissionGroup([FromBody] PermissionGroupDto group)
         {
             if(group.id != 1)
             {
-                PermissionGroupDto newGroup = new PermissionGroupDto();
-                newGroup.id = group.id;
-                newGroup.Name = group.Name;
-                group.Permissions.ForEach(x => {
-                    if (x.IsEnabled)
-                    {
-                        PermissionDto permission = newGroup.Permissions.FirstOrDefault(y => y.Grant.Equals(x.Grant));
-                        if (permission != null)
-                        {
-                            permission.IsEnabled = true;
-                        }
-                    }
-                });
-                await permission.CreateOrModifyPermissionGroupByIdAsync(mapper.Map<PermissionGroup>(newGroup));
+                await permission.UpdatePermissionGroupByIdAsync(mapper.Map<PermissionGroup>(group));
                 return Ok();
             }
 
             return Ok("Der Admin darf nicht gelöscht oder bearbeitet werden.");
         }
-        
-        /*
-        [HttpGet("{id}")]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(List<PermissionGroupDto>), Description = "successfully request")]
-        public async Task<IActionResult> GetPermissionGroupsByUserId(long id)
-        {
-            List<PermissionGroup> list = await userservice.GetPermissionGroupsByUserIdAsync(id);
-            return Ok(mapper.Map<List<PermissionGroupDto>>(list));
-        }
 
-        [HttpPut]
+
+        [HttpPost]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully request")]
-        public async Task<IActionResult> SetUserPermissionsById([FromBody] List<int> groups, long id)
+        public async Task<IActionResult> CreatePermissionGroup([FromBody] PermissionGroupDto group)
         {
-            List<PermissionGroupDto> newGroups = new List<PermissionGroupDto>();
-
-            foreach (int group in groups) {
-                PermissionGroupDto newGroup = new PermissionGroupDto();
-   
-              
-                newGroups.Add(newGroup);
-            }
-
-            if (await userservice.SetPermissionGroupsByUserIdAsync(mapper.Map<List<PermissionGroup>>(newGroups), id)) {
-
+                await permission.CreatePermissionGroupAsync(mapper.Map<PermissionGroup>(group));
                 return Ok();
-            };
-
-            return Forbid();
-            
         }
-        */
     }
 }

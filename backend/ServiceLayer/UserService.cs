@@ -12,7 +12,6 @@ namespace ServiceLayer
 {
     public interface IUserService
     {
-        Task<bool> SetPermissionIdsByUserIdAsync(List<int> permissionGroups, long id);
 
         Task<User> FindByNameAsync(string credentialsName);
 
@@ -29,13 +28,17 @@ namespace ServiceLayer
         Task<List<User>> GetAsync();
 
         Task<User> GetByIdAsync(long id);
+        Task<List<string>> GetRolesAsync(User user);
+
+        Task<bool> DeletePermissionGroupByUserIdAsync(int GroupIdToDelete, long userId);
+        Task<bool> AddPermissionGroupByUserIdAsync(int permissionGroupId, long userId);
     }
 
     public class UserService : IUserService
     {
         private readonly IUserManager _userManager;
 
-        //TODO: fix it with di
+   
         private readonly IMailProvider mailProvider;
 
         private readonly IPermissionGroupService permissionsService;
@@ -50,6 +53,7 @@ namespace ServiceLayer
 
         public UserService(IUserManager userManager, IMailProvider mailProvider)
         {
+   
             _userManager = userManager;
             this.mailProvider = mailProvider;
         }
@@ -108,11 +112,9 @@ namespace ServiceLayer
                 foreach (PermissionGroup groups in usr.Permission)
                 {               
                     PermissionGroup permissions = await permissionsService.GetPermissionGroupByIdAsync(groups.Id);
-                    //groups.Permissions.AddRange(permissions.Permissions); //TODO Silvester fragen
                 }
             }
             return users;
-            
         }
 
         public async Task<User> FindByEmailAsync(string email)
@@ -128,6 +130,12 @@ namespace ServiceLayer
         public async Task<IdentityResult> AddToRoleAsync(User user, string role)
         {
             return await _userManager.AddToRoleAsync(user, role);
+        }
+
+        public async Task<List<string>> GetRolesAsync(User user)
+        {
+            var list = await _userManager.GetRolesAsync(user);
+            return list.ToList();
         }
 
         /// <summary>
@@ -162,79 +170,86 @@ namespace ServiceLayer
             return await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
 
+       
+        public async Task<bool> AddPermissionGroupByUserIdAsync(int permissionGroupId, long userId){
 
-        public async Task<bool> SetPermissionIdsByUserIdAsync(List<int> permissionGroups, long id)
-        {
-            List<User> users = await GetAsync();
-            List<PermissionGroup> allpermissiongroups = await permissionsService.GetAllPermissionGroupAsync();
-            User user = await GetByIdAsync(id);
-            bool adminsleft = false;
-            if (user != null)
-            {
-                if (!permissionGroups.Contains(1))
-                {
-                    foreach (User u in users)
-                    {
-                        if (user != u)
-                        {
-                            foreach (PermissionGroup group in u.Permission)
-                            {
-                                if (group.Id == 1)
-                                {
-                                    adminsleft = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (adminsleft)
-                        {
-                            break;
-                        }
+            PermissionGroup permissiongroup = await permissionsService.GetByIdAsync(permissionGroupId);
+            User user = await GetByIdAsync(userId);
+
+            if (user != null && permissiongroup != null) {
+                user.Permission.Add(permissiongroup);
+                await _userManager.UpdateAsync(user);
+
+                IList<string> permissions = await _userManager.GetRolesAsync(user);
+                foreach (Permission perm in permissiongroup.Permissions){
+                    if (!permissions.Contains(perm.Name)) {
+                        await _userManager.AddToRoleAsync(user, perm.Name);
                     }
                 }
-                else {
-                    adminsleft = true;
-                }
-
-
-                if (adminsleft == true)
-                {
-                    List<PermissionGroup> groupstodelete = new List<PermissionGroup>();
-
-                    user.Permission.ForEach(x =>
-                    {
-                        if (!permissionGroups.Contains(int.Parse(x.Id.ToString())))
-                        {
-                            groupstodelete.Add(x);
-                        }
-                    });
-
-                    groupstodelete.ForEach(x => {
-                        user.Permission.Remove(x);
-                    });
-
-
-                    permissionGroups.ForEach(x => {
-                        allpermissiongroups.ForEach(y => {
-                            if (y.Id == x)
-                            {
-                                user.Permission.Add(y);
-
-                            }
-                        });
-                    });
-
-                    
-
-                    
-                    await _userManager.UpdateAsync(user);
-                    return true;
-                }
+                return true;
             }
             return false;
         }
 
+        public async Task<bool> DeletePermissionGroupByUserIdAsync(int GroupIdToDelete, long userId) {
 
+            List<PermissionGroup> allpermissiongroups = await permissionsService.GetAllPermissionGroupAsync();
+            User modifieduser = await GetByIdAsync(userId);
+            bool adminsleft = false;
+
+            //Überprüfen ob noch ein Admin übrig bleibt -> Wegen dem Seed ist die Adminid = 1
+            if (GroupIdToDelete == 1){
+                List<User> users = await GetAsync();
+                foreach (User user in users) {
+                    if (user != modifieduser) {
+                        foreach (PermissionGroup permissionGroup in user.Permission)
+                        {
+                            if (permissionGroup.Id == 1) {
+                                adminsleft = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (GroupIdToDelete != 1 || adminsleft) {
+               
+                List<Permission> permissionstodelete = new List<Permission>();
+                List<Permission> permissionstoStay = new List<Permission>();
+                PermissionGroup permissionGroupToDelete = new PermissionGroup();
+                foreach (PermissionGroup group in modifieduser.Permission) {
+
+                    if (group.Id == GroupIdToDelete)
+                    {
+                        permissionGroupToDelete = group;
+                        foreach (Permission perm in group.Permissions)
+                        {
+                            permissionstodelete.Add(perm);
+                        }
+                    }
+                    else
+                    {
+                        foreach (Permission perm in group.Permissions)
+                        {
+                            permissionstoStay.Add(perm);
+                        }
+                    }
+
+                }
+
+                //Lösche Permission wenn sie nicht in anderer zugewiesener Permissiongroup vorkommt.
+                foreach (Permission permToDelete in permissionstodelete){
+                    if (!permissionstoStay.Contains(permToDelete)){
+                        await _userManager.RemoveRolesAsync(modifieduser, permToDelete.Name);
+                    }
+                }
+
+                modifieduser.Permission.Remove(permissionGroupToDelete);
+                await _userManager.UpdateAsync(modifieduser);
+                return true;
+            }
+            return false;
+        }
     }
 
     #region DefaultUserManager
@@ -250,10 +265,12 @@ namespace ServiceLayer
         Task<User> FindByEmailAsync(string email);
 
         Task<IdentityResult> AddToRoleAsync(User user, string role);
+        Task<IdentityResult> RemoveRolesAsync(User user, string permission);
 
         Task<IdentityResult> ChangePasswordAsync(User user, string newPassword, string currentPassword);
 
         Task<IdentityResult> UpdateAsync(User user);
+        Task<IList<string>> GetRolesAsync(User user);
 
 
         IQueryable<User> Users { get; }
@@ -276,6 +293,16 @@ namespace ServiceLayer
         public async Task<IdentityResult> CreateAsync(User user, string password)
         {
             return await _manager.CreateAsync(user, password);
+        }
+
+        public async Task<IList<string>> GetRolesAsync(User user)
+        {
+            return await _manager.GetRolesAsync(user); 
+        }
+
+        public async Task<IdentityResult> RemoveRolesAsync(User user, string permission)
+        {
+            return await _manager.RemoveFromRoleAsync(user, permission);
         }
 
         public async Task<IdentityResult> UpdateAsync(User user)

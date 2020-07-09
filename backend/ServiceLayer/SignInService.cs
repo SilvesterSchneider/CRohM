@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,7 +18,7 @@ namespace ServiceLayer
         /// Create a jwt for authorize via http header
         /// </summary>
         /// <param name="user">Create token for this user</param>
-        string CreateToken(User user);
+        string CreateToken(User user, List<string> roles);
 
         Task<SignInResult> PasswordSignInAsync(User user, string password);
     }
@@ -40,7 +41,7 @@ namespace ServiceLayer
         /// Create a jwt for authorize via http header
         /// </summary>
         /// <param name="user">Create token for this user</param>
-        public string CreateToken(User user)
+        public string CreateToken(User user,List<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
@@ -49,10 +50,17 @@ namespace ServiceLayer
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Id.ToString())
+                   
+
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+            foreach(string role in roles)
+            {
+                tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+            }
+            
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);

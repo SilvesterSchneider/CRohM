@@ -4,6 +4,7 @@ using ModelLayer;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Helper;
 using ModelLayer.Models;
+using RepositoryLayer;
 using ServiceLayer;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,21 +29,16 @@ namespace WebApi.Helper
                 };
 
                 List <PermissionGroup> allpermissionGroups =  permissionService.GetAllPermissionGroupAsync().Result;
-
+  
                 user.Permission.Add(allpermissionGroups.FirstOrDefault(x => x.Id == 1));
 
                 IdentityResult result = userService.CreateAsync(user, "@dm1n1stR4tOr").Result;
-
-                if (result.Succeeded)
-                {
-                    userService.AddToRoleAsync(user, "Admin").Wait();
-                }
             }
         }
 
         public static void SeedPermissions(IPermissionGroupService permissionGroupService, IMapper mapper) {
 
-            List<PermissionGroup> groups = permissionGroupService.Get();
+            List<PermissionGroup> groups = permissionGroupService.GetAllPermissionGroupAsync().Result;
             bool adminexists = false;
 
             foreach (PermissionGroup group in groups) {
@@ -53,23 +49,17 @@ namespace WebApi.Helper
             }
 
             if (!adminexists) {
-                permissionGroupService.CreateOrModifyPermissionGroupByIdAsync(GetAdminPermissions(mapper));
+                permissionGroupService.CreatePermissionGroupAsync(GetAdminPermissions());
             }
         }
 
-        public static PermissionGroup GetAdminPermissions(IMapper mapper) {
-            PermissionGroupDto admin = new PermissionGroupDto();
+        public static PermissionGroup GetAdminPermissions() {
+            PermissionGroup admin = new PermissionGroup();
             admin.Name = "Admin";
-            admin.id = 0;
-            for (int i = 0; i < admin.Permissions.Count(); i++)
-            {
-                admin.Permissions[i].IsEnabled = true;
-            }
+            admin.Id = 0;
+            admin.Permissions.AddRange(AllRoles.GetAllRoles());
 
-            return mapper.Map<PermissionGroup>(admin);
+            return admin;
         }
-
-
-
     }
 }

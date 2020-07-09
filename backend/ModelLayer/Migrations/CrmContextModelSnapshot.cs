@@ -275,7 +275,7 @@ namespace ModelLayer.Migrations
                     b.ToTable("OrganizationContacts");
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.Role", b =>
+            modelBuilder.Entity("ModelLayer.Models.Permission", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -294,6 +294,9 @@ namespace ModelLayer.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<long?>("PermissionGroupId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -301,15 +304,24 @@ namespace ModelLayer.Migrations
                         .HasName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("Roles");
+                    b.HasIndex("PermissionGroupId");
+
+                    b.ToTable("Permissions");
 
                     b.HasData(
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "e8a04d7d-da6e-423a-9898-988b0228af9f",
+                            ConcurrencyStamp = "1bab17b8-bce0-4e7f-b4b1-ffea06e51a9b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            ConcurrencyStamp = "e0d0a0ea-2977-44d2-a6b7-811a1fefd4c7",
+                            Name = "DeleteUser",
+                            NormalizedName = "DELETEUSER"
                         });
                 });
 
@@ -386,35 +398,6 @@ namespace ModelLayer.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ModelLayer.Permission", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Grant")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("PermissionGroupId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PermissionGroupId");
-
-                    b.ToTable("Permissions");
-                });
-
             modelBuilder.Entity("ModelLayer.PermissionGroup", b =>
                 {
                     b.Property<long>("Id")
@@ -440,7 +423,7 @@ namespace ModelLayer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
                 {
-                    b.HasOne("ModelLayer.Models.Role", null)
+                    b.HasOne("ModelLayer.Models.Permission", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -467,7 +450,7 @@ namespace ModelLayer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<long>", b =>
                 {
-                    b.HasOne("ModelLayer.Models.Role", null)
+                    b.HasOne("ModelLayer.Models.Permission", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -526,7 +509,7 @@ namespace ModelLayer.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ModelLayer.Permission", b =>
+            modelBuilder.Entity("ModelLayer.Models.Permission", b =>
                 {
                     b.HasOne("ModelLayer.PermissionGroup", null)
                         .WithMany("Permissions")

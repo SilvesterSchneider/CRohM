@@ -6,7 +6,7 @@ using ModelLayer.Models;
 
 namespace ModelLayer
 {
-    public class CrmContext : IdentityDbContext<User, Role, long>
+    public class CrmContext : IdentityDbContext<User, Permission, long>
     {
         public CrmContext(DbContextOptions<CrmContext> options) : base(options)
         {
@@ -18,16 +18,24 @@ namespace ModelLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //TODO SeedPermission
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Role>()
-                .HasData(new Role
+            modelBuilder.Entity<Permission>()
+                .HasData(new Permission
                 {
                     Id = 1,
                     Name = "Admin",
                     NormalizedName = "Admin".ToUpper()
                 });
+            modelBuilder.Entity<Permission>()
+            .HasData(new Permission
+            {
+                Id = 2,
+                Name = "DeleteUser",
+                NormalizedName = "DeleteUser".ToUpper()
+            });
 
-            modelBuilder.Entity<Role>()
+            modelBuilder.Entity<Permission>()
                 .Property(role => role.Id)
                 .ValueGeneratedOnAdd();
 
@@ -40,9 +48,9 @@ namespace ModelLayer
             {
                 entity.ToTable("Users");
             });
-            modelBuilder.Entity<Role>(entity =>
+            modelBuilder.Entity<Permission>(entity =>
             {
-                entity.ToTable("Roles");
+                entity.ToTable("Permissions");
             });
             modelBuilder.Entity<IdentityUserRole<long>>(entity =>
             {
@@ -91,6 +99,5 @@ namespace ModelLayer
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<PermissionGroup> PermissionGroups { get; set; }
 
-        public DbSet<Permission> Permissions { get; set; }
     }
 }

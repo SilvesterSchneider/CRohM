@@ -62,7 +62,6 @@ namespace ServiceLayer
             CreateMap<ContactDto, Contact>();
             CreateMap<ContactCreateDto, Contact>();
             CreateMap<PermissionGroupDto, PermissionGroup>().ReverseMap();
-            CreateMap<PermissionDto, Permission>().ReverseMap();
             CreateMap<PermissionGroupCreateDto, PermissionGroup>(); 
         }
     }

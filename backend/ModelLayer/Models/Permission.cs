@@ -1,12 +1,12 @@
-﻿using ModelLayer.Helper;
+﻿using Microsoft.AspNetCore.Identity;
+using ModelLayer.Helper;
 using ModelLayer.Models.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ModelLayer
+namespace ModelLayer.Models
 {
-    public class Permission : BaseEntity
+    public class Permission : IdentityRole<long>
     {
-        public bool IsEnabled { get; set; }
-
-        public UserRight Grant { get; set; }
-    } 
+        public UserRight UserRight;
+    }
 }

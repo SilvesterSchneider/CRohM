@@ -69,7 +69,7 @@ namespace WebApi
                 settings.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT token"));
             });
 
-            services.AddIdentity<User, Role>(options =>
+            services.AddIdentity<User, Permission>(options =>
                 {
                     //// Password settings.
                     options.Password.RequireDigit = PasswordGuidelines.RequireDigit;
@@ -157,7 +157,7 @@ namespace WebApi
             services.AddSingleton<IMailProvider, MailService>();
 
             //###########################Services#######################################
-
+            services.AddScoped<RoleManager<Permission>>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserManager, DefaultUserManager>();
             services.AddScoped<ISignInService, SignInService>();
@@ -175,7 +175,7 @@ namespace WebApi
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<IOrganizationContactRepository, OrganizationContactRepository>();
-            services.AddScoped<IPermissionGroupRepositiory, PermissionGroupRepositiory>();
+            services.AddScoped<IPermissionGroupRepositiory, PermissionGroupRepository>();
         }
     }
 }

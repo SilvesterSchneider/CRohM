@@ -1,4 +1,6 @@
-﻿using ModelLayer.Models.Base;
+﻿using Microsoft.AspNetCore.Identity;
+using ModelLayer.Models;
+using ModelLayer.Models.Base;
 using System;
 using System.Collections.Generic;
 

@@ -40,7 +40,6 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Post(UserCreateDto userToCreate)
         {
             var user = _mapper.Map<User>(userToCreate);
-
             var result = await _userService.CreateCRohMUserAsync(user);
 
             if (result.Succeeded)
@@ -53,16 +52,5 @@ namespace WebApi.Controllers
             return BadRequest();
         }
 
-        [HttpPut("{id}")]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully request")]
-        public async Task<IActionResult> SetPermissionsByUserIdAsync(List<int> permissionGroups, long id)
-        {
-            if (await _userService.SetPermissionIdsByUserIdAsync(permissionGroups, id)) {
-                return Ok();
-            }
-            
-            return Ok("Es muss mindestens ein Admin vorhanden sein.");
-           
-        }
     }
 }
