@@ -26,7 +26,6 @@ namespace WebApi.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "DeleteUser")] //TODO rausnehmen.
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
         {
@@ -37,7 +36,6 @@ namespace WebApi.Controllers
         }
         
         [HttpGet("{id}")]
-        [Authorize(Roles = "CreateUser")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
         public async Task<IActionResult> GetById(long id)

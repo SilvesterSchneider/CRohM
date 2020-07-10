@@ -32,10 +32,5 @@ namespace RepositoryLayer
         {
                return await UpdateAsync(permissionGroup);
         }
-
-        public async Task<PermissionGroup> CreateCheckedAsync(PermissionGroup permissionGroup)
-        {
-            return await CreateAsync(permissionGroup);
-        }
     } 
 }

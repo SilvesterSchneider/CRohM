@@ -14,11 +14,13 @@ using Microsoft.AspNetCore.Authorization;
 using ModelLayer.Models;
 using Microsoft.AspNetCore.Identity;
 
+// Controler Dekorieren mit = [Authorize(Roles = "CreateUser")]
+
 namespace WebApi.Controllers
 { 
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class PermissionsController : ControllerBase
     {
         

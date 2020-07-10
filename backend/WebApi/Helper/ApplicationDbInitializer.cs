@@ -42,7 +42,7 @@ namespace WebApi.Helper
             bool adminexists = false;
 
             foreach (PermissionGroup group in groups) {
-                if (group.Name == "Admin") {
+                if (group.Id == 1) {
                     adminexists = true;
                     break;
                 }

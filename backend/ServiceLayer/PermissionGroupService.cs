@@ -38,17 +38,18 @@ namespace ServiceLayer
         
         public async Task CreatePermissionGroupAsync(PermissionGroup permissionGroup) {
             PermissionGroup newPerm = new PermissionGroup();
+            newPerm.Id = 0;
             newPerm.Name = permissionGroup.Name;
             foreach (Permission perm in AllRoles.GetAllRoles()){
                 foreach (Permission permNew in permissionGroup.Permissions) {
 
                     if (perm.Name == permNew.Name){
+                        perm.Id = 0;
                         newPerm.Permissions.Add(perm);                    
                     }
                 }
             }
-
-            await CreateCheckedAsync(newPerm);
+            await CreateAsync(newPerm);
         }
 
 
@@ -63,6 +64,7 @@ namespace ServiceLayer
                     Permission role = AllRoles.GetAllRoles().FirstOrDefault(x => x.Name == r.Name);
                     if (role != null)
                     {
+                        role.Id = 0;
                         groupToModify.Permissions.Add(role);
                     }
                 }
