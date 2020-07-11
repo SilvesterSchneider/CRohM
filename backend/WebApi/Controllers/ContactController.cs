@@ -50,7 +50,6 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetById(long id)
         {
             var contact = await contactService.GetByIdAsync(id);
-
             if (contact == null)
             {
                 return NotFound();
