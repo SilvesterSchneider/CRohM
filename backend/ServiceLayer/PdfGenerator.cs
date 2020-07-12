@@ -30,8 +30,15 @@ namespace ServiceLayer
             var contactDetails = new string("");
             contactDetails += "Vorname:\t" + contact.PreName + "\n";
             contactDetails += "Name:\t" + contact.Name + "\n";
+
+            contactDetails += "Mail:\t" + contact.ContactPossibilities.Mail + "\n";
+            contactDetails += "Fax:\t" + contact.ContactPossibilities.Fax + "\n";
+            contactDetails += "PhoneNumber:\t" + contact.ContactPossibilities.PhoneNumber + "\n";
+            contactDetails += "Description:\t" + contact.ContactPossibilities.Description + "\n";
+
+            // TODO add missing details
+
             doc.Add(new Paragraph(contactDetails));
-                    // TODO add missing details
             doc.Close();
             writer.Close();
             memoryStream.Position = 0;
