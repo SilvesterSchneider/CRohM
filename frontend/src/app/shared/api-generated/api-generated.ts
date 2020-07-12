@@ -2411,7 +2411,8 @@ export interface HistoryElementCreateDto {
 
 export interface SendInfoDTO {
     delete: boolean;
-    customer?: any | undefined;
+    contactChanges?: any | undefined;
+    contact?: ContactDto | undefined;
 }
 
 export interface EducationalOpportunityDto {

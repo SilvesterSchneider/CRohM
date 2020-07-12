@@ -1,47 +1,46 @@
 ﻿using System.Collections.Generic;
-using ModelLayer.DataTransferObjects;
 using Newtonsoft.Json.Linq;
+using static System.String;
 
 namespace ServiceLayer
 {
     public interface IDataProtectionService
     {
-        List<string> MakeSomething(JObject carlist, ContactDto car);
+        string GetContactChangesForEmail(JObject contact);
     }
 
     public class DataProtectionService : IDataProtectionService
     {
-        public List<string> MakeSomething(JObject obj, ContactDto car)
+        public string GetContactChangesForEmail(JObject contact)
         {
-            return loop(null, obj);
+            var changes = RecursiveChangeChecker(null, contact);
+            return Join("", changes);
         }
 
-        private List<string> loop(string pre, JObject obj)
+        private List<string> RecursiveChangeChecker(string objectKey, JObject @object)
         {
             var list = new List<string>();
-            // TODO: hier weitermachen
-            // TODO rename this zeug
 
-            foreach (var x in obj)
+            foreach (var keyValuePair in @object)
             {
-                string name = x.Key;
-                JToken value = x.Value;
+                string key = keyValuePair.Key;
+                JToken value = keyValuePair.Value;
 
-                JObject test = value as JObject;
-                if (test != null)
+                JObject recursiveCheck = value as JObject;
+                if (recursiveCheck != null)
                 {
-                    list.AddRange(loop(name, test));
+                    list.AddRange(RecursiveChangeChecker(key, recursiveCheck));
                 }
                 else
                 {
-                    string tuple = "<li>";
-                    if (pre != null)
+                    string listItem = "<li>";
+                    if (objectKey != null)
                     {
-                        tuple += $"{GetGermanTranslation(pre)} ";
+                        listItem += $"{GetGermanTranslation(objectKey)} ";
                     }
-                    tuple += @$"({GetGermanTranslation(obj.GetValue("type").ToString())}: ""{GetGermanTranslation(obj.GetValue("data").ToString())}"")</li>";
+                    listItem += @$"({GetGermanTranslation(@object.GetValue("type").ToString())}: ""{GetGermanTranslation(@object.GetValue("data").ToString())}"")</li>";
 
-                    list.Add(tuple);
+                    list.Add(listItem);
                     break;
                 }
             }
@@ -49,7 +48,7 @@ namespace ServiceLayer
             return list;
         }
 
-        public string GetGermanTranslation(string englishKey)
+        private string GetGermanTranslation(string englishKey)
         {
             switch (englishKey)
             {

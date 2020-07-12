@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NSwag.Annotations;
 using ServiceLayer;
@@ -34,10 +35,14 @@ namespace WebApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                var bla = _dataProtectionService.MakeSomething(sendInoInfoDto.Customer, new ContactDto() { Name = "hans" });
+                var emailData = _dataProtectionService.GetContactChangesForEmail(sendInoInfoDto.ContactChanges);
 
-                var @join = String.Join("", bla);
-                _mailService.SendDataProtectionUpdateMessage("Herr Lord Superman", "Därbe", "silvester.schneider@gmail.com", @join);
+                if (sendInoInfoDto.Contact?.ContactPossibilities.Mail == null)
+                {
+                    return BadRequest("could not send message");
+                }
+
+                _mailService.SendDataProtectionUpdateMessage(sendInoInfoDto.Contact.Name, sendInoInfoDto.Contact.PreName, sendInoInfoDto.Contact.ContactPossibilities.Mail, emailData);
 
                 return Ok();
             }
@@ -62,26 +67,7 @@ namespace WebApi.Controllers
     public class SendInfoDTO
     {
         public bool Delete { get; set; }
-        public JObject Customer { get; set; }
+        public JObject ContactChanges { get; set; }
+        public ContactDto Contact { get; set; }
     }
-
-    /*
-     *{
-          type: this.compareValues(obj1, obj2),
-          data: obj1 === undefined ? obj2 : obj1
-          }*
-
-        public class ContactDto
-    {
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string PreName { get; set; }
-        public AddressDto Address { get; set; }
-        public ContactPossibilitiesDto ContactPossibilities { get; set; }
-        public List<OrganizationDto> Organizations { get; set; } = new List<OrganizationDto>();
-        public List<EventDto> Events { get; set; } = new List<EventDto>();
-        public List<HistoryElementDto> History { get; set; } = new List<HistoryElementDto>();
-    }
-     */
 }
