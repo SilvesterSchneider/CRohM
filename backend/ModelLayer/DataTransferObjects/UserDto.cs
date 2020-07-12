@@ -17,6 +17,8 @@ namespace ModelLayer.DataTransferObjects
         public string PhoneNumber { get; set; }
         public bool TwoFactorEnabled { get; set; }
         public string AccessToken { get; set; }
+        public bool UserLockEnabled { get; set; }
+        public bool hasPasswordChanged { get; set; }
         //TODO: implement endpoint for login with refresh token
         //public string RefreshToken { get; set; }
 

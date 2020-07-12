@@ -5,12 +5,14 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 using NSwag.Annotations;
 using ServiceLayer;
 
 namespace WebApi.Controllers
 {
+    //TODO: add role access control
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -50,6 +52,30 @@ namespace WebApi.Controllers
             }
 
             return BadRequest();
+        }
+
+        // put updates user with id {id} via frontend
+        [HttpPut("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
+        [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
+        public async Task<IActionResult> UpdateLockoutState(long id)
+        {
+            if (id != 1)
+            {
+                var result = await _userService.SetUserLockedAsync(id);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return Conflict();
+                }
+            }
+            else
+            {
+                return Ok();
+            }
         }
 
     }

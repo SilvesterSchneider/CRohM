@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 using WebApi.Helper;
 
@@ -62,7 +63,6 @@ namespace ServiceLayer
             }
             
             var token = tokenHandler.CreateToken(tokenDescriptor);
-
             return tokenHandler.WriteToken(token);
         }
 
@@ -90,7 +90,14 @@ namespace ServiceLayer
 
         public async Task<SignInResult> PasswordSignInAsync(User user, string password)
         {
-            return await _manager.PasswordSignInAsync(user, password, false, false);
+            if (user.Id == 1)
+            {
+                return await _manager.PasswordSignInAsync(user, password, false, false);
+            } 
+            else
+            {
+                return await _manager.PasswordSignInAsync(user, password, false, true);
+            }
         }
     }
 

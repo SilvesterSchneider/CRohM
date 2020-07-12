@@ -1,0 +1,47 @@
+version: "3.7"
+services: 
+
+  crms_stag:
+    #build: .
+    image: crohmcrms/crohm_crms:latest
+    ports:
+      - "81:80"
+      - "444:443"
+    depends_on: 
+      - db_stag
+    environment:
+      - DBServer=ops085010.cs.ohmhs.de
+      - DBPort=1434
+      - DBUser=SA
+      - DBPassword=CRohM2020
+      - DBName=CRMDB
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=444
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Crohm2020!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/crohm-selfsigned.pfx
+    volumes:
+      - ./https:/https/
+    restart: unless-stopped
+
+  db_stag:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment: 
+      ACCEPT_EULA: Y
+      # LOGIN: sa
+      SA_PASSWORD: CRohM2020
+      MSSQL_PID: Express
+      TZ: Europe/Berlin
+    ports:
+      - 1434:1433
+    volumes: 
+      - database_vol_stag:/var/opt/mssql
+    restart: unless-stopped
+
+volumes: 
+  database_vol_stag:
+    driver: local
+    driver_opts: 
+      o: bind
+      type: none
+      device: /srv/crohm/staging/database

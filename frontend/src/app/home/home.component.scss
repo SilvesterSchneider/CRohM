@@ -1,0 +1,41 @@
+.example-card {
+    max-width: 200px;
+    margin: 20px;
+    box-shadow: 0 5px 5px 3px rgb(85, 81, 81), 
+                0 6px 6px 3px rgb(77, 60, 60), 
+                0 7px 5px 0 rgb(109, 95, 95),
+                0 -3px 5px 2px rgb(109, 95, 95);
+  }
+  
+  .example-header-image {
+    background-size: cover;
+  }
+
+  .content {
+      background-color: grayscale($color: #dddddd);
+  }
+
+  .actions {
+      background-color: grayscale($color: #cf803f);
+      margin: 10px;
+  }
+
+  .text {
+      color: grayscale($color: #ffffff);
+  }
+
+  .header {
+      background-color: grayscale($color: #000000);
+      margin-left: -15px;
+  }
+
+  .button {
+      width: 130px;
+  }
+
+  .buttonMargin {
+    margin: 5px;
+  }
+  .spacer {
+      width: 100px;
+  }

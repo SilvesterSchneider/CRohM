@@ -88,6 +88,15 @@ namespace ModelLayer
                 .HasOne(sc => sc.Organization)
                 .WithMany(s => s.OrganizationContacts)
                 .HasForeignKey(sc => sc.OrganizationId);
+            modelBuilder.Entity<EventContact>().HasKey(sc => new { sc.EventId, sc.ContactId });
+            modelBuilder.Entity<EventContact>()
+                .HasOne(sc => sc.Contact)
+                .WithMany(s => s.Events)
+                .HasForeignKey(sc => sc.ContactId);
+            modelBuilder.Entity<EventContact>()
+                .HasOne(sc => sc.Event)
+                .WithMany(s => s.Contacts)
+                .HasForeignKey(sc => sc.EventId);
         }
 
         //entities
@@ -97,6 +106,11 @@ namespace ModelLayer
         public DbSet<EducationalOpportunity> EducationalOpportunities { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Organization> Organizations { get; set; }
+        public DbSet<EventContact> EventContacts { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<Participated> Participations { get; set; }
+        public DbSet<HistoryElement> History { get; set; }
+        public DbSet<ModificationEntry> ModificatonHistory { get; set; }
         public DbSet<PermissionGroup> PermissionGroups { get; set; }
 
     }

@@ -1,0 +1,152 @@
+<mat-dialog-content>
+    <div class="contactDetails" [formGroup]="contactsForm">
+        <div class="column">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>
+                        Übersicht
+                    </h5>
+                </div>
+                <div class="col-md-3">
+                    <mat-form-field>
+                        <input [readonly]="true" matInput placeholder="Vorname" formControlName="preName">
+                    </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                    <mat-form-field>
+                        <input [readonly]="true" matInput placeholder="Nachname" formControlName="name">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="column" formGroupName="address">
+                <div class="row" >
+                    <div class="col-md-12">
+                        <h5>
+                            Adressdaten
+                        </h5>
+                    </div>
+                    <div class="col-md">
+                        <mat-form-field>
+                            <input [readonly]="true" matInput placeholder="Strasse" formControlName="street">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md">
+                        <mat-form-field>
+                            <input [readonly]="true" matInput placeholder="Hausnummer" formControlName="streetNumber">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+                        <mat-form-field>
+                            <input [readonly]="true" matInput placeholder="Stadt" formControlName="city">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md">
+                        <mat-form-field>
+                            <input [readonly]="true" matInput placeholder="PLZ" formControlName="zipcode">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+                        <mat-form-field>
+                            <input [readonly]="true" matInput placeholder="Land" formControlName="country">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column" formGroupName="contactPossibilities">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>
+                        Kontaktmöglichkeiten
+                    </h5>
+                </div>
+                <div class="col-md">
+                    <mat-form-field>
+                        <input [readonly]="true" matInput placeholder="E-Mail" formControlName="mail">
+                    </mat-form-field>
+                </div>
+                <div class="col-md">
+                    <mat-form-field>
+                        <input [readonly]="true" matInput placeholder="Telefonnummer" formControlName="phoneNumber">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md">
+                    <mat-form-field>
+                        <input [readonly]="true" matInput placeholder="Faxnummer" formControlName="fax">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="contactPossibilitiesEntries.length > 0" class="col-md-12">
+        <h5>Weitere Kontaktmöglichkeiten</h5>
+        <mat-table #table [dataSource]="contactPossibilitiesEntries">
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.contactEntryName}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="kontakt">
+                <mat-header-cell *matHeaderCellDef> Kontakt </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.contactEntryValue}}
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumnsContactPossibilities"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumnsContactPossibilities;"></mat-row>
+        </mat-table>
+    </div>
+
+    <div *ngIf="organizations.length > 0" class="col-md-12">
+        <h5>Organisationszugehörigkeiten</h5>
+        <mat-table #table [dataSource]="organizations">
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.name}}
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumnsOrganizations"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumnsOrganizations;"></mat-row>
+        </mat-table>
+    </div>
+
+    <div *ngIf="events.length > 0" class="col-md-12">
+        <h5>Historie</h5>
+        <mat-table #table [dataSource]="events">
+            <ng-container matColumnDef="icon">
+                <mat-header-cell *matHeaderCellDef> Typ </mat-header-cell>
+                <mat-cell *matCellDef="let element"> 
+                    <mat-icon *ngIf="eventParticipated(element)">check_box</mat-icon>
+                    <mat-icon *ngIf="eventNotParticipated(element)">check_box_outline_blank</mat-icon>
+                    <mat-icon *ngIf="isLocalPhone(element)">local_phone</mat-icon>
+                    <mat-icon *ngIf="isNote(element)">note</mat-icon>
+                    <mat-icon *ngIf="isMail(element)">mail</mat-icon>
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="datum">
+                <mat-header-cell *matHeaderCellDef> Datum </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.date}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef> Thema </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.name}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="kommentar">
+                <mat-header-cell *matHeaderCellDef> Kommentar </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.comment}}
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+    </div>
+    <button mat-raised-button color="primary" title="Schließen" type="submit" (click)="closeDialog()">Schließen</button>
+</mat-dialog-content>

@@ -26,6 +26,8 @@ namespace WebApi.Helper
                     UserName = "admin",
                     Email = "admin@admin.com",
                     Permission = new List<PermissionGroup>()
+                    LastName = "admin",
+                    Email = "admin@admin.com"
                 };
 
                 List <PermissionGroup> allpermissionGroups =  permissionService.GetAllPermissionGroupAsync().Result;

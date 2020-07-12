@@ -30,6 +30,7 @@ describe('OsmService', () => {
     const address: AddressDto = OsmService.parseAddress(testOSM);
 
     const expected: AddressDto = {
+      id: undefined,
       country: 'Deutschland',
       city: 'Berlin',
       zipcode: '10715',
@@ -46,7 +47,7 @@ describe('OsmService', () => {
     return result.subscribe(res => {
       expect(httpServiceMock.get).toHaveBeenCalled();
 
-      expect(httpServiceMock.get).toHaveBeenCalledWith('http://photon.komoot.de/api?q=test&lang=de');
+      expect(httpServiceMock.get).toHaveBeenCalledWith('https://photon.komoot.de/api?q=test&lang=de');
       expect(res).toEqual(testOSM);
     });
   });

@@ -29,19 +29,22 @@ namespace WebApi
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
-
-            Configuration["dbName"] = "LiveDb";
-            if (env.IsDevelopment())
-            {
-                Configuration["dbName"] = "LocalDb";
-            }
         }
 
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson(options =>
+            var server = Configuration["DBServer"] ?? "localhost";
+            var port = Configuration["DBPort"] ?? "1433";
+            var user = Configuration["DBUser"] ?? "SA";
+            var password = Configuration["DBPassword"] ?? "CRohM2020";
+            var database = Configuration["DBName"] ?? "CRMDB";
+
+            var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
+            //connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -71,15 +74,18 @@ namespace WebApi
 
             services.AddIdentity<User, Permission>(options =>
                 {
-                    //// Password settings.
+                    //// Password settings
                     options.Password.RequireDigit = PasswordGuidelines.RequireDigit;
                     options.Password.RequireLowercase = PasswordGuidelines.RequireLowercase;
                     options.Password.RequireNonAlphanumeric = PasswordGuidelines.RequireNonAlphanumeric;
                     options.Password.RequireUppercase = PasswordGuidelines.RequireUppercase;
-                    options.Password.RequiredLength = PasswordGuidelines.RequiredLength;
+                    options.Password.RequiredLength = PasswordGuidelines.RequiredMinLength;
                     options.Password.RequiredUniqueChars = PasswordGuidelines.RequiredUniqueChars;
                     options.User.RequireUniqueEmail = true;
                     options.SignIn.RequireConfirmedAccount = false;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                    options.Lockout.MaxFailedAccessAttempts = 3;
+                    options.Lockout.AllowedForNewUsers = true;
                 })
                 .AddEntityFrameworkStores<CrmContext>()
                 .AddUserManager<UserManager<User>>()
@@ -87,7 +93,7 @@ namespace WebApi
 
             services.AddDbContext<CrmContext>(config =>
             {
-                config.UseSqlServer(Configuration.GetConnectionString(Configuration["dbName"]));
+                config.UseSqlServer(connectionString);
             });
 
             services.AddSpaStaticFiles(configuration =>
@@ -166,6 +172,7 @@ namespace WebApi
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();
             services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<IEventService, EventService>();
             services.AddScoped<IPermissionGroupService, PermissionGroupService>();
 
             //###########################Repositories#######################################
@@ -176,6 +183,9 @@ namespace WebApi
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<IOrganizationContactRepository, OrganizationContactRepository>();
             services.AddScoped<IPermissionGroupRepositiory, PermissionGroupRepository>();
+            services.AddScoped<IEventContactRepository, EventContactRepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IModificationEntryRepository, ModificationEntryRepository>();
         }
     }
 }

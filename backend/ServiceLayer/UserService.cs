@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using ModelLayer;
 using ModelLayer.Helper;
 using ModelLayer.Models;
@@ -32,6 +33,12 @@ namespace ServiceLayer
 
         Task<bool> DeletePermissionGroupByUserIdAsync(int GroupIdToDelete, long userId);
         Task<bool> AddPermissionGroupByUserIdAsync(int permissionGroupId, long userId);
+
+        Task<IdentityResult> SetUserLockedAsync(long id);
+
+        Task<string> GetUserNameByIdAsync(long id);
+
+        Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword);
     }
 
     public class UserService : IUserService
@@ -96,10 +103,10 @@ namespace ServiceLayer
             }
             if (userToBeUpdated != null && !string.IsNullOrEmpty(userToBeUpdated.Email))
             {
-                string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredLength, PasswordGuidelines.GetMaximumLength(),
+                string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredMinLength, PasswordGuidelines.GetMaximumLength(),
                     PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
                     PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
-                await _userManager.ChangePasswordAsync(userToBeUpdated, userToBeUpdated.PasswordHash, newPassword).ConfigureAwait(false);
+                await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
                 mailProvider.PasswordReset(newPassword, userToBeUpdated.Email);
             }
         }
@@ -163,6 +170,19 @@ namespace ServiceLayer
         public async Task<User> FindByNameAsync(string credentialsName)
         {
             return await _userManager.FindByNameAsync(credentialsName);
+        }
+
+        public async Task<IdentityResult> SetUserLockedAsync(long id)
+        {
+            User user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user != null)
+            {
+                return await _userManager.SetUserLockedAsync(user, !user.UserLockEnabled);
+            } 
+            else
+            {
+                return IdentityResult.Failed(new IdentityError());
+            }
         }
 
         public async Task<User> GetByIdAsync(long id)
@@ -252,6 +272,40 @@ namespace ServiceLayer
         }
     }
 
+        public async Task<string> GetUserNameByIdAsync(long id)
+        {
+            User userToFind = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (userToFind != null)
+            {
+                string userName = userToFind.FirstName + " " + userToFind.LastName;
+                if (string.IsNullOrEmpty(userName.Trim()))
+                {
+                    userName = "admin";
+                }
+                return userName;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        public async Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword)
+        {
+            User userToBeUpdated = Users.FirstOrDefault(x => x.Id == primKey);
+            if (userToBeUpdated != null && !string.IsNullOrEmpty(userToBeUpdated.Email))
+            {
+                await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
+                userToBeUpdated.hasPasswordChanged = true;
+                return await _userManager.UpdateUserAsync(userToBeUpdated);
+            } 
+            else
+            {
+                return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "404", Description = "Benutzer nicht gefunden!" } });
+            }
+        }
+    }
+
     #region DefaultUserManager
 
     public interface IUserManager
@@ -267,17 +321,23 @@ namespace ServiceLayer
         Task<IdentityResult> AddToRoleAsync(User user, string role);
         Task<IdentityResult> RemoveRolesAsync(User user, string permission);
 
-        Task<IdentityResult> ChangePasswordAsync(User user, string newPassword, string currentPassword);
+        Task<IdentityResult> ChangePasswordAsync(User user, string newPassword);
+
+        Task<IdentityResult> SetUserLockedAsync(User user, bool lockoutEnabled);
 
         Task<IdentityResult> UpdateAsync(User user);
         Task<IList<string>> GetRolesAsync(User user);
 
 
         IQueryable<User> Users { get; }
+
+        Task<IdentityResult> UpdateUserAsync(User user);
     }
 
     public class DefaultUserManager : IUserManager
     {
+        private const int YESTERDAY = -1;
+        private const int FUTURE_YEARS = 100;
         private readonly UserManager<User> _manager;
 
         public DefaultUserManager(UserManager<User> manager)
@@ -310,6 +370,16 @@ namespace ServiceLayer
             return await _manager.UpdateAsync(user);
         }
 
+        public async Task<IdentityResult> SetUserLockedAsync(User user, bool lockEnabled)
+        {
+            DateTime date = DateTime.Today.AddDays(YESTERDAY);
+            if (lockEnabled)
+            {
+                date = date.AddYears(FUTURE_YEARS);
+            }
+            return await _manager.SetLockoutEndDateAsync(user, date);
+        }
+
         public async Task<User> FindByNameAsync(string name)
         {
             return await _manager.FindByNameAsync(name);
@@ -325,9 +395,15 @@ namespace ServiceLayer
             return await _manager.AddToRoleAsync(user, role);
         }
 
-        public async Task<IdentityResult> ChangePasswordAsync(User user, string newPassword, string currentPassword)
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string newPassword)
         {
-            return await _manager.ChangePasswordAsync(user, currentPassword, newPassword);
+            await _manager.RemovePasswordAsync(user);
+            return await _manager.AddPasswordAsync(user, newPassword);
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _manager.UpdateAsync(user);
         }
 
         public IQueryable<User> Users => _manager.Users.Include(x => x.Permission);

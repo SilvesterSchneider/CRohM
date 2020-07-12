@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using RepositoryLayer;
 
 namespace WebApi.Controllers
 {
@@ -19,12 +20,16 @@ namespace WebApi.Controllers
     public class OrganizationController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IUserService userService;
+        private readonly IModificationEntryRepository modRepo;
         private readonly IOrganizationService _organizationService;
         private readonly ILogger _logger;
 
-        public OrganizationController(IMapper mapper, IOrganizationService organizationService, ILoggerFactory logger)
+        public OrganizationController(IMapper mapper, IOrganizationService organizationService, IUserService userService, ILoggerFactory logger, IModificationEntryRepository modRepo)
         {
             _mapper = mapper;
+            this.userService = userService;
+            this.modRepo = modRepo;
             _organizationService = organizationService;
             _logger = logger.CreateLogger(nameof(OrganizationController));
         }
@@ -58,7 +63,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> Put([FromBody]OrganizationDto organization, [FromRoute]long id)
+        public async Task<IActionResult> Put([FromBody]OrganizationDto organization, [FromRoute]long id, [FromQuery]long idOfUserChange)
         {
             if (organization == null)
             {
@@ -69,8 +74,9 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
             var mappedOrganization = _mapper.Map<Organization>(organization);
-            await _organizationService.UpdateAsync(mappedOrganization);
-
+            await _organizationService.UpdateAsyncWithAlleDependencies(mappedOrganization);
+            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
             var organizationDto = _mapper.Map<OrganizationDto>(mappedOrganization);
             return Ok(organizationDto);
         }
@@ -83,7 +89,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}/addContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> AddContact([FromRoute]long id, [FromBody]long contactId)
+        public async Task<IActionResult> AddContact([FromRoute]long id, [FromBody]long contactId, [FromQuery]long idOfUserChange)
         {
             Organization organization;
             try
@@ -97,6 +103,8 @@ namespace WebApi.Controllers
             }
 
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
+            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
             return Ok(organizationDto);
         }
 
@@ -108,7 +116,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}/removeContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> RemoveContact([FromRoute]long id, [FromBody]long contactId)
+        public async Task<IActionResult> RemoveContact([FromRoute]long id, [FromBody]long contactId, [FromQuery]long idOfUserChange)
         {
             try
             {
@@ -119,17 +127,21 @@ namespace WebApi.Controllers
                 _logger.LogWarning(e.Message);
                 return BadRequest();
             }
+            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
             return Ok();
         }
 
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(OrganizationDto), Description = "successfully created")]
-        public async Task<IActionResult> Post([FromBody]OrganizationCreateDto organizationToCreate)
+        public async Task<IActionResult> Post([FromBody]OrganizationCreateDto organizationToCreate, [FromQuery]long idOfUserChange)
         {
             Organization organization = await _organizationService.CreateAsync(_mapper.Map<Organization>(organizationToCreate));
 
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
             var uri = $"https://{Request.Host}{Request.Path}/{organizationDto.Id}";
+            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+            await modRepo.CreateNewEntryAsync(userNameOfChange, organization.Id, MODEL_TYPE.ORGANIZATION);
             return Created(uri, organizationDto);
         }
 
@@ -144,6 +156,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             await _organizationService.DeleteAsync(organization);
+            await modRepo.RemoveEntryAsync(id, MODEL_TYPE.ORGANIZATION);
             return Ok();
         }
     }

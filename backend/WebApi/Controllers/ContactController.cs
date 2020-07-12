@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,7 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
 using NSwag.Annotations;
+using RepositoryLayer;
 using ServiceLayer;
+using System.Linq;
 
 namespace WebApi.Controllers
 {
@@ -16,11 +19,17 @@ namespace WebApi.Controllers
     public class ContactController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IEventService eventService;
+        private IUserService userService;
+        private readonly IModificationEntryRepository modRepo;
         private IContactService contactService;
 
-        public ContactController(IMapper mapper, IContactService contactService)
+        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryRepository modRepo)
         {
             _mapper = mapper;
+            this.eventService = eventService;
+            this.userService = userService;
+            this.modRepo = modRepo;
             this.contactService = contactService;
         }
 
@@ -66,7 +75,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
-        public async Task<IActionResult> Put([FromBody]ContactDto contact, long id)
+        public async Task<IActionResult> Put([FromBody]ContactDto contact, [FromRoute]long id, [FromQuery]long userIdOfChange)
         {
             if (contact == null)
             {
@@ -75,6 +84,8 @@ namespace WebApi.Controllers
             var mappedContact = _mapper.Map<Contact>(contact);
             if (await contactService.UpdateAsync(mappedContact, id))
             {
+                string usernameOfModification = await userService.GetUserNameByIdAsync(userIdOfChange);
+                await modRepo.UpdateModificationAsync(usernameOfModification, id, MODEL_TYPE.CONTACT);
                 return Ok(contact);
             }
             else
@@ -86,14 +97,28 @@ namespace WebApi.Controllers
         // creates new contact in db via frontend
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(ContactDto), Description = "successfully created")]
-        public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate)
+        public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate, [FromQuery]long userIdOfChange)
         {
 
             Contact contact = await contactService.CreateAsync(_mapper.Map<Contact>(contactToCreate));
 
             var contactDto = _mapper.Map<ContactDto>(contact);
+            string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
+            await modRepo.CreateNewEntryAsync(userNameOfChange, contact.Id, MODEL_TYPE.CONTACT);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
             return Created(uri, contactDto);
+        }
+
+        // creates new contact in db via frontend
+        [HttpPost("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
+        public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id, [FromQuery]long userIdOfChange)
+        {
+
+            await contactService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
+            string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
+            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.CONTACT);
+            return Ok();
         }
 
         // deletes with id {id} contact via frontend
@@ -108,6 +133,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             await contactService.DeleteAsync(contact);
+            await modRepo.RemoveEntryAsync(id, MODEL_TYPE.CONTACT);
             return Ok();
         }
     }

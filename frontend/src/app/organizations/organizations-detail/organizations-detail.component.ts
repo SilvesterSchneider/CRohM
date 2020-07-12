@@ -1,19 +1,22 @@
-import { ElementRef, HostBinding, Component, OnInit, ViewChild, forwardRef, Input, Optional, Self,
-  ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { NgControl, FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { Subject, Observable } from 'rxjs';
+import {
+  ElementRef, HostBinding, Component, OnInit, ViewChild, forwardRef, Input, Optional, Self,
+  ChangeDetectorRef, OnDestroy
+} from '@angular/core';
+import { NgControl, FormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import {MatChipsModule} from '@angular/material/chips';
-import { MatAutocompleteTrigger, MatAutocompleteModule, MatAutocompleteSelectedEvent,
-  MatAutocomplete } from '@angular/material/autocomplete';
-import {MatFormFieldModule, MatFormFieldControl} from '@angular/material/form-field';
-import {MatCheckboxModule, MatCheckbox} from '@angular/material/checkbox';
+import {
+  MatAutocompleteTrigger
+} from '@angular/material/autocomplete';
+import { MatFormFieldControl } from '@angular/material/form-field';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
 import { OrganizationService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -37,20 +40,22 @@ export class OrganizationContactConnection {
   providers: [{ provide: MatFormFieldControl, useExisting: OrganizationsDetailComponent }]
 })
 
-export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormFieldControl<OrganizationContactConnection> {
+export class OrganizationsDetailComponent implements OnInit, OnDestroy {
   static nextId = 0;
   @ViewChild('inputTrigger', { read: MatAutocompleteTrigger }) inputTrigger: MatAutocompleteTrigger;
   @HostBinding() id = `input-ac-${OrganizationsDetailComponent.nextId++}`;
   @HostBinding('attr.aria-describedby') describedBy = '';
+  @ViewChild(ContactPossibilitiesComponent, {static: true})
+  contactPossibilitiesEntries: ContactPossibilitiesComponent;
+  contactPossibilitiesEntriesFormGroup: FormGroup;
   public selectable = true;
   items: OrganizationContactConnection[];
   selectedItems: OrganizationContactConnection[] = new Array<OrganizationContactConnection>();
   filteredItems: OrganizationContactConnection[] = new Array<OrganizationContactConnection>();
   itemsToDelete: OrganizationContactConnection[] = new Array<OrganizationContactConnection>();
   itemsToInsert: OrganizationContactConnection[] = new Array<OrganizationContactConnection>();
-  public organizationForm = this.createOrganizationForm();
+  public organizationForm: FormGroup;
   private organization: OrganizationDto;
-  private changeCallback: (input: OrganizationContactConnection[]) => void;
   itemControl = new FormControl();
   stateChanges = new Subject<void>();
   private placeholderSecond: string;
@@ -73,11 +78,9 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     private contactService: ContactService,
     private organizationService: OrganizationService,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private jwt: JwtService
   ) {
-    if (this.ngControl != null) {
-      this.ngControl.valueAccessor = this;
-    }
     fm.monitor(elRef.nativeElement, true).subscribe(origin => {
       this.focused = !!origin;
       this.stateChanges.next();
@@ -85,63 +88,60 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
   }
 
   ngOnInit() {
-    this.contactService.getAll().subscribe(y => y.forEach(x => this.filteredItems.push(
+    this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
+    this.organizationForm = this.createOrganizationForm();
+    this.contactService.getAll().subscribe(y => {
+      y.forEach(x => this.filteredItems.push(
         {
           contactId: x.id,
           selected: false,
           name: x.name,
           preName: x.preName
-        }
-      )));
-    this.items = this.filteredItems;
+        }));
+      this.items = this.filteredItems;
+      this.finishInit();
+    });
+  }
+
+  finishInit() {
     this.itemControl.valueChanges.pipe(
       startWith<string | OrganizationContactConnection[]>(''),
       map(value => typeof value === 'string' ? value : this.lastFilter),
       map(filter => this.filter(filter))
     ).subscribe();
-    this.organization = this.route.snapshot.data.contact;
-    this.organizationForm.patchValue(this.organization);
-    alert(this.organization.employees.length);
+    this.organization = this.route.snapshot.data.organization;
+
     if (this.organization.employees.length > 0) {
       this.organization.employees.forEach(x => {
-          const cont = this.filteredItems.find(y => y.contactId === x.id);
-          if (cont != null) {
-            this.toggleSelection(cont);
-          }
-        });
-      }
-    }
-    private createOrganizationForm(): FormGroup {
-      return this.fb.group({
-        name: ['', Validators.required],
-        description: [''],
-        address: this.createAddressForm(),
-        contact: this.createContactForm()
+        const cont = this.filteredItems.find(y => y.contactId === x.id);
+        if (cont != null) {
+          this.toggleSelection(cont);
+        }
       });
     }
-    private createContactForm(): FormGroup {
-      return this.fb.group({
-        phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
-        fax: ['', Validators.pattern('^0[0-9\- ]*$')],
-        mail: ['', Validators.email]
-      });
-    }
-    private createAddressForm(): FormGroup {
-      return this.fb.group({
-        country: [''],
-        street: [''],
-        zipcode: ['', Validators.pattern('^[0-9]{5}$')],
-        streetNumber: [''],
-        city: ['']
-      });
-    }
+    this.contactPossibilitiesEntries.patchExistingValuesToForm(this.organization.contact.contactEntries);
+    this.organizationForm.patchValue(this.organization);
+  }
 
-  setDescribedByIds(ids: string[]) {
-    this.describedBy = ids.join(' ');
+  private createOrganizationForm(): FormGroup {
+    return this.fb.group({
+      name: ['', Validators.required],
+      description: [''],
+      address: this.fb.control(''),
+      contact: this.createContactForm()
+    });
+  }
+  private createContactForm(): FormGroup {
+    return this.fb.group({
+      phoneNumber: ['', Validators.pattern('^0[0-9\- ]*$')],
+      fax: ['', Validators.pattern('^0[0-9\- ]*$')],
+      mail: ['', Validators.email],
+      contactEntries: this.contactPossibilitiesEntriesFormGroup
+    });
   }
 
   @Input() set value(value: any) {
-    if ( value ) {
+    if (value) {
       this.selectedItems = value;
     }
     this.stateChanges.next();
@@ -156,22 +156,6 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
   set placeholder(plh) {
     this.placeholderSecond = plh;
     this.stateChanges.next();
-  }
-
-  onContainerClick(event: MouseEvent): void {
-    throw new Error('Method not implemented.');
-  }
-
-  writeValue(value: any) {
-  }
-  registerOnChange(fn: (input: OrganizationContactConnection[]) => void) {
-    this.changeCallback = fn;
-  }
-  registerOnTouched(fn: () => void) {
-  }
-
-  clicker() {
-    this.inputTrigger.openPanel();
   }
 
   filter(filter: string): OrganizationContactConnection[] {
@@ -193,17 +177,19 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
   toggleSelectAll() {
     this.isAllSelected = !this.isAllSelected;
     const len = this.filteredItems.length;
-    if ( this.isAllSelected ) {
-      for ( let i = 0; i++; i < len ) {
+    if (this.isAllSelected) {
+      this.selectedItems = [];
+      for (let i = 0; i < len; i++) {
         this.filteredItems[i].selected = true;
+        this.selectedItems.push(this.filteredItems[i]);
       }
-      this.selectedItems = this.filteredItems;
-      this.changeCallback( this.selectedItems );
-      this.cd.markForCheck();
     } else {
+      for (let i = 0; i < len; i++) {
+        this.filteredItems[i].selected = false;
+      }
       this.selectedItems = [];
     }
-    this.changeCallback( this.selectedItems );
+    this.cd.markForCheck();
   }
 
   toggleSelection(item: OrganizationContactConnection) {
@@ -211,11 +197,8 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
     if (item.selected) {
       this.selectedItems.push(item);
     } else {
-      const i = this.selectedItems.findIndex(value => value.contactId === item.contactId );
+      const i = this.selectedItems.findIndex(value => value.contactId === item.contactId);
       this.selectedItems.splice(i, 1);
-    }
-    if (this.changeCallback) {
-      this.changeCallback( this.selectedItems );
     }
   }
 
@@ -226,39 +209,39 @@ export class OrganizationsDetailComponent implements OnInit, OnDestroy, MatFormF
 
   saveValues() {
     const idOrganization = this.organization.id;
-    const idContact = this.organization.contact.id;
     const idAddress = this.organization.address.id;
+    const idContactPossibilities = this.organization.contact.id;
     this.organization.employees.forEach(x => {
-        const findObj = this.selectedItems.find(y => y.contactId === x.id);
-        if (findObj == null) {
-          this.itemsToDelete.push({
-            contactId: x.id,
+      const findObj = this.selectedItems.find(y => y.contactId === x.id);
+      if (findObj == null) {
+        this.itemsToDelete.push({
+          contactId: x.id,
+          name: x.name,
+          preName: x.preName,
+          selected: false
+        });
+      }
+    });
+    this.selectedItems.forEach(x => {
+      const contact = this.organization.employees.find(y => y.id === x.contactId);
+      if (contact == null) {
+        this.itemsToInsert.push(
+          {
+            contactId: x.contactId,
             name: x.name,
             preName: x.preName,
             selected: false
-          });
-        }
-       });
-    this.selectedItems.forEach(x => {
-        const contact = this.organization.employees.find(y => y.id === x.contactId);
-        if (contact == null) {
-          this.itemsToInsert.push(
-            {
-              contactId: x.contactId,
-              name: x.name,
-              preName: x.preName,
-              selected: false
-            }
-          );
-        }
+          }
+        );
       }
-      );
+    }
+    );
     this.organization = this.organizationForm.value;
     this.organization.id = idOrganization;
-    this.organization.contact.id = idContact;
     this.organization.address.id = idAddress;
-    this.organizationService.put(this.organization, this.organization.id).subscribe();
-    this.itemsToDelete.forEach(x => this.organizationService.removeContact(idOrganization, x.contactId).subscribe());
-    this.itemsToInsert.forEach(x => this.organizationService.addContact(idOrganization, x.contactId).subscribe());
+    this.organization.contact.id = idContactPossibilities;
+    this.organizationService.put(this.organization, this.organization.id, this.jwt.getUserId()).subscribe();
+    this.itemsToDelete.forEach(x => this.organizationService.removeContact(idOrganization, x.contactId, this.jwt.getUserId()).subscribe());
+    this.itemsToInsert.forEach(x => this.organizationService.addContact(idOrganization, x.contactId, this.jwt.getUserId()).subscribe());
   }
 }

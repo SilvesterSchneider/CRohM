@@ -1,0 +1,47 @@
+version: "3.7"
+services: 
+
+  crms_test:
+    #build: .
+    image: crohmcrms/crohm_crms:latest
+    ports:
+      - "82:80"      
+      - "445:443"
+    depends_on: 
+      - db_test
+    environment:
+      - DBServer=ops085010.cs.ohmhs.de
+      - DBPort=1435      
+      - DBUser=SA
+      - DBPassword=CRohM2020
+      - DBName=CRMDB
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=445
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Crohm2020!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/crohm-selfsigned.pfx
+    volumes:
+      - ./https:/https/
+    restart: unless-stopped
+
+  db_test:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment: 
+      ACCEPT_EULA: Y
+      # LOGIN: sa
+      SA_PASSWORD: CRohM2020
+      MSSQL_PID: Express
+      TZ: Europe/Berlin
+    ports:
+      - 1435:1433
+    volumes: 
+      - database_vol_test:/var/opt/mssql 
+    restart: unless-stopped
+
+volumes: 
+  database_vol_test:
+    driver: local
+    driver_opts: 
+      o: bind
+      type: none
+      device: /srv/crohm/testing/database
