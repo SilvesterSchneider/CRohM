@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using ModelLayer.Helper;
 using ModelLayer.Models;
 
@@ -37,9 +36,7 @@ namespace ServiceLayer
     {
         private readonly IUserManager _userManager;
 
-        //TODO: fix it with di
         private readonly IMailProvider mailProvider;
-
         public IQueryable<User> Users => _userManager.Users;
 
         public UserService(IUserManager userManager, IMailProvider mailProvider)
@@ -59,9 +56,18 @@ namespace ServiceLayer
 
             if (result.Succeeded)
             {
-                mailProvider.Registration(user.UserName, password, user.Email);
+                string body = "<h3> Herzlich Willkommen bei CRohm </h3> " +
+                                         "<p> Sie wurden als neuer Benutzer im System angelegt.Ihnen wurden folgenden Zugangsdaten zugewiesen:</p> " +
+                                         "<p style = \"padding-left: 50px\" > Benutzername: <font size = \"3\" color = \"#0000FF\"><b> " +
+                                         user.UserName + " </b></font></p> " +
+                                         "<p style = \"padding-left: 50px\" > Passwort: <font size = \"3\" color = \"#0000FF\" ><b> " +
+                                         password + " </b></font></p> " +
+                                         "<p> Bitte ändern Sie aus Sicherheitsgründen ihr Passwort nach Ihrem ersten Login.</p> " +
+                                         "<br> " +
+                                         "<p> Mit freundlichen Grüßen,</p> " +
+                                         "<p> Ihr CRohm Team.</p>";
+                mailProvider.CreateAndSendMail(user.Email, "Zugangsdaten", body, null, "");
             }
-
             return result;
         }
 
@@ -74,23 +80,35 @@ namespace ServiceLayer
         {
             //TODO: refactor -> make unit test, return result
             //TODO: generate client class for frontend
-            User userToBeUpdated = null;
+            User user = null;
             //why iterate over user?
             foreach (User us in Users)
             {
                 if (us.Id == primKey)
                 {
-                    userToBeUpdated = us;
+                    user = us;
                     break;
                 }
             }
-            if (userToBeUpdated != null && !string.IsNullOrEmpty(userToBeUpdated.Email))
+
+            if (user != null && user.Email.Contains('@'))
             {
-                string newPassword = new PasswordGenerator(PasswordGuidelines.RequiredMinLength, PasswordGuidelines.GetMaximumLength(),
-                    PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
+                var newPassword = new PasswordGenerator(PasswordGuidelines.RequiredMinLength,
+                    PasswordGuidelines.GetMaximumLength(),
+                    PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(),
+                    PasswordGuidelines.GetAmountOfNumerics(),
                     PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
-                await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
-                mailProvider.PasswordReset(newPassword, userToBeUpdated.Email);
+                await _userManager.ChangePasswordAsync(user, newPassword);
+
+                var body = "<h3> Passwort zurückgesetzt bei CRohm </h3> " +
+                              "<p> Ihr Passwort wurde auf Ihre Anfrage zurück gesetzt.Ihr neues Passwort lautet.</p> " +
+                              "<p style = \"padding-left: 50px\" > Passwort: <font size = \"3\" color = \"#0000FF\" ><b> " + newPassword + " </b></font></p> " +
+                              "<p> Falls sie kein neues Passwort angefragt haben setzten Sie sich bitte mit Ihrem Admin in verbindung.</p> " +
+                              "<br> " +
+                              "<p> Mit freundlichen Grüßen,</p> " +
+                              "<p> Ihr CRohm Team.</p> ";
+
+                mailProvider.CreateAndSendMail(user.Email, "Ihr Passwort wurde zurückgesetzt", body, null, "");
             }
         }
 
@@ -120,12 +138,14 @@ namespace ServiceLayer
         /// <param name="firstName">the first name</param>
         /// <param name="lastName">the last name</param>
         /// <returns>the created unique username</returns>
-        public virtual async Task<string> GetUniqueUserNameAsync(string firstName, string lastName) //needs to be virtual for unit test
+        public virtual async Task<string>
+            GetUniqueUserNameAsync(string firstName, string lastName) //needs to be virtual for unit test
         {
             if (string.IsNullOrEmpty(firstName))
             {
                 throw new ArgumentNullException(nameof(firstName), "firstName can not be null");
             }
+
             if (string.IsNullOrEmpty(lastName))
             {
                 throw new ArgumentNullException(nameof(lastName), "lastName can not be null");
@@ -147,7 +167,7 @@ namespace ServiceLayer
             if (user != null)
             {
                 return await _userManager.SetUserLockedAsync(user, !user.UserLockEnabled);
-            } 
+            }
             else
             {
                 return IdentityResult.Failed(new IdentityError());
@@ -164,6 +184,7 @@ namespace ServiceLayer
                 {
                     userName = "admin";
                 }
+
                 return userName;
             }
             else
@@ -180,10 +201,11 @@ namespace ServiceLayer
                 await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
                 userToBeUpdated.hasPasswordChanged = true;
                 return await _userManager.UpdateUserAsync(userToBeUpdated);
-            } 
+            }
             else
             {
-                return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "404", Description = "Benutzer nicht gefunden!" } });
+                return IdentityResult.Failed(new IdentityError[]
+                    {new IdentityError() {Code = "404", Description = "Benutzer nicht gefunden!"}});
             }
         }
     }
@@ -239,6 +261,7 @@ namespace ServiceLayer
             {
                 date = date.AddYears(FUTURE_YEARS);
             }
+
             return await _manager.SetLockoutEndDateAsync(user, date);
         }
 

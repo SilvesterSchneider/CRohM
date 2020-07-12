@@ -99,7 +99,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate, [FromQuery]long userIdOfChange)
         {
 
-            Contact contact = await contactService.CreateAsync(_mapper.Map<Contact>(contactToCreate));
+            Contact contact = await contactService.CreateContactAsync(_mapper.Map<Contact>(contactToCreate));
 
             var contactDto = _mapper.Map<ContactDto>(contact);
             string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);

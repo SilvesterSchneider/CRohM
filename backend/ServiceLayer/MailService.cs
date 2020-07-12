@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Mail;
 
 namespace ServiceLayer
@@ -8,47 +9,49 @@ namespace ServiceLayer
     /// </summary>
     public interface IMailProvider
     {
-        /// <summary>
-        /// Send an email containing the new password for the user.
-        /// </summary>
-        /// <param name="newPassword">the new password</param>
-        /// <param name="mailAddress">the mail address to be sended to</param>
+        public bool CreateAndSendMail(string address, string subject, string body, Stream attachment,
+            string attachmentType);
         public bool PasswordReset(string newPassword, string mailAddress);
-        public bool Registration(string benutzer, string passwort, string email);
+        public bool Registration(string user, string password, string email);
     }
 
     public class MailService : IMailProvider
     {
+        public bool CreateAndSendMail(string address, string subject, string body, Stream attachment, string attachmentType)
+        {
+            return SendMail(subject, body, address, attachment, attachmentType);
+        }
 
-        public bool Registration(string benutzer, string passwort, string email)
+        // TODO refactor extract subject and body
+        public bool Registration(string user, string password, string email)
         {
             string body = "<h3> Herzlich Willkommen bei CRohm </h3> " +
                    "<p> Sie wurden als neuer Benutzer im System angelegt.Ihnen wurden folgenden Zugangsdaten zugewiesen:</p> " +
-                   "<p style = \"padding-left: 50px\" > Benutzername: <font size = \"3\" color = \"#0000FF\"><b> " + benutzer + " </b></font></p> " +
-                   "<p style = \"padding-left: 50px\" > Passwort: <font size = \"3\" color = \"#0000FF\" ><b> " + passwort + " </b></font></p> " +
+                   "<p style = \"padding-left: 50px\" > Benutzername: <font size = \"3\" color = \"#0000FF\"><b> " + user + " </b></font></p> " +
+                   "<p style = \"padding-left: 50px\" > Passwort: <font size = \"3\" color = \"#0000FF\" ><b> " + password + " </b></font></p> " +
                    "<p> Bitte ändern Sie aus Sicherheitsgründen ihr Passwort nach Ihrem ersten Login.</p> " +
                    "<br> " +
                    "<p> Mit freundlichen Grüßen,</p> " +
                    "<p> Ihr CRohm Team.</p>";
 
-            return SendMail("Zugangsdaten", body, email);
+            return SendMail("Zugangsdaten", body, email,null, "");
         }
 
-        public bool PasswordReset(string passwort, string email)
+        public bool PasswordReset(string password, string email)
         {
             string body = "<h3> Passwort zurückgesetzt bei CRohm </h3> " +
                           "<p> Ihr Passwort wurde auf Ihre Anfrage zurück gesetzt.Ihr neues Passwort lautet.</p> " +
-                          "<p style = \"padding-left: 50px\" > Passwort: <font size = \"3\" color = \"#0000FF\" ><b> " + passwort + " </b></font></p> " +
+                          "<p style = \"padding-left: 50px\" > Passwort: <font size = \"3\" color = \"#0000FF\" ><b> " + password + " </b></font></p> " +
                           "<p> Falls sie kein neues Passwort angefragt haben setzten Sie sich bitte mit Ihrem Admin in verbindung.</p> " +
                           "<br> " +
                           "<p> Mit freundlichen Grüßen,</p> " +
                           "<p> Ihr CRohm Team.</p> ";
 
-            return SendMail("Ihr Passwort wurde zurückgesetzt.", body, email);
+            return SendMail("Ihr Passwort wurde zurückgesetzt.", body, email, null, "");
 
         }
 
-        private bool SendMail(string betreff, string body, string mail)
+        private bool SendMail(string subject, string body, string mail, Stream attachment, string attachmentType)
         {
             try
             {
@@ -61,9 +64,11 @@ namespace ServiceLayer
                     msg.To.Add(new MailAddress(empf));
                 }
                 msg.From = new MailAddress("crohm_nuernberg@hotmail.com", "CRMS-Team");
-                msg.Subject = betreff;
+                msg.Subject = subject;
                 msg.Body = body;
 
+                if (attachment != null)
+                    msg.Attachments.Add(new Attachment(attachment, attachmentType));
 
                 SmtpClient client = new SmtpClient();
                 client.UseDefaultCredentials = false;
