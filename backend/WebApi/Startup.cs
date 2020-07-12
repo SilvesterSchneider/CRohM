@@ -72,7 +72,7 @@ namespace WebApi
                 settings.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT token"));
             });
 
-            services.AddIdentity<User, Role>(options =>
+            services.AddIdentity<User, Permission>(options =>
                 {
                     //// Password settings
                     options.Password.RequireDigit = PasswordGuidelines.RequireDigit;
@@ -120,11 +120,12 @@ namespace WebApi
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IUserService userService, CrmContext dataContext)
+        public void Configure(IPermissionGroupService permissionGroupService, IMapper mapper, IApplicationBuilder app, IWebHostEnvironment env, IUserService userService, CrmContext dataContext)
         {
             dataContext.Database.Migrate();
-
-            ApplicationDbInitializer.SeedUsers(userService);
+            ApplicationDbInitializer.SeedPermissions(permissionGroupService, mapper);
+            ApplicationDbInitializer.SeedUsers(userService, permissionGroupService);
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -162,7 +163,7 @@ namespace WebApi
             services.AddSingleton<IMailProvider, MailService>();
 
             //###########################Services#######################################
-
+            services.AddScoped<RoleManager<Permission>>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserManager, DefaultUserManager>();
             services.AddScoped<ISignInService, SignInService>();
@@ -172,6 +173,7 @@ namespace WebApi
             services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IPermissionGroupService, PermissionGroupService>();
 
             //###########################Repositories#######################################
 
@@ -180,6 +182,7 @@ namespace WebApi
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<IOrganizationContactRepository, OrganizationContactRepository>();
+            services.AddScoped<IPermissionGroupRepositiory, PermissionGroupRepository>();
             services.AddScoped<IEventContactRepository, EventContactRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IModificationEntryRepository, ModificationEntryRepository>();

@@ -77,7 +77,7 @@ namespace ServiceLayer
                 client.EnableSsl = true;
                 client.Send(msg);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

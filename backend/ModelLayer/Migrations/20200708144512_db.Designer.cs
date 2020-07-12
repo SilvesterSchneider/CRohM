@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ModelLayer;
 
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    partial class CrmContextModelSnapshot : ModelSnapshot
+    [Migration("20200708144512_db")]
+    partial class db
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,35 +213,6 @@ namespace ModelLayer.Migrations
                     b.ToTable("ContactPossibilities");
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.ContactPossibilitiesEntry", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ContactEntryName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactEntryValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("ContactPossibilitiesId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactPossibilitiesId");
-
-                    b.ToTable("ContactPossibilitiesEntry");
-                });
-
             modelBuilder.Entity("ModelLayer.Models.EducationalOpportunity", b =>
                 {
                     b.Property<long>("Id")
@@ -259,124 +232,6 @@ namespace ModelLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EducationalOpportunities");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.Event", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<float>("Duration")
-                        .HasColumnType("real");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Events");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.EventContact", b =>
-                {
-                    b.Property<long>("EventId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ContactId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("EventId", "ContactId");
-
-                    b.HasIndex("ContactId");
-
-                    b.ToTable("EventContacts");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("ContactId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactId");
-
-                    b.ToTable("History");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.ModificationEntry", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("DataModelId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("DataModelType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModificationType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ModificatonHistory");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>
@@ -422,36 +277,6 @@ namespace ModelLayer.Migrations
                     b.ToTable("OrganizationContacts");
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.Participated", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ContactId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("EventId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("HasParticipated")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("Participations");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.Role", b =>
             modelBuilder.Entity("ModelLayer.Models.Permission", b =>
                 {
                     b.Property<long>("Id")
@@ -489,7 +314,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "7c4bccf6-05ad-43ef-8b77-9fbaa1327f00",
+                            ConcurrencyStamp = "1bab17b8-bce0-4e7f-b4b1-ffea06e51a9b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
@@ -561,9 +386,6 @@ namespace ModelLayer.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
-
-                    b.Property<bool>("hasPasswordChanged")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -663,35 +485,6 @@ namespace ModelLayer.Migrations
                         .HasForeignKey("ContactPossibilitiesId");
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.ContactPossibilitiesEntry", b =>
-                {
-                    b.HasOne("ModelLayer.Models.ContactPossibilities", null)
-                        .WithMany("ContactEntries")
-                        .HasForeignKey("ContactPossibilitiesId");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.EventContact", b =>
-                {
-                    b.HasOne("ModelLayer.Models.Contact", "Contact")
-                        .WithMany("Events")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ModelLayer.Models.Event", "Event")
-                        .WithMany("Contacts")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
-                {
-                    b.HasOne("ModelLayer.Models.Contact", null)
-                        .WithMany("History")
-                        .HasForeignKey("ContactId");
-                });
-
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>
                 {
                     b.HasOne("ModelLayer.Models.Address", "Address")
@@ -716,13 +509,6 @@ namespace ModelLayer.Migrations
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.Participated", b =>
-                {
-                    b.HasOne("ModelLayer.Models.Event", null)
-                        .WithMany("Participated")
-                        .HasForeignKey("EventId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Permission", b =>

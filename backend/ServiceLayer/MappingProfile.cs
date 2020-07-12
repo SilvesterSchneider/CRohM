@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using ModelLayer;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
 
@@ -97,6 +98,8 @@ namespace ServiceLayer
             CreateMap<HistoryElement, HistoryElementDto>().ReverseMap();
             CreateMap<HistoryElementCreateDto, HistoryElement>();
             CreateMap<ModificationEntry, ModificationEntryDto>();
+            CreateMap<PermissionGroupDto, PermissionGroup>().ReverseMap();
+            CreateMap<PermissionGroupCreateDto, PermissionGroup>(); 
         }
     }
 }
