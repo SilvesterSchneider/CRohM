@@ -8,7 +8,7 @@ using PdfSharp.Drawing;
 namespace RepositoryLayer
 {
     class PdfGenerator
-    {
+    { /*
         // Create a new PDF document
         private PdfDocument doc = new PdfDocument();
         
@@ -32,7 +32,7 @@ namespace RepositoryLayer
         const string filename = "HelloWorld.pdf";
         document.Save(filename);
         // ...and start a viewer.
-        Process.Start(filename); 
+        Process.Start(filename);  */
     }
 }
 

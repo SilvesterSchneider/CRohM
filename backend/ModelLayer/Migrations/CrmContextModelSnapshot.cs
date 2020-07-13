@@ -166,6 +166,9 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("ContactPossibilitiesId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -483,7 +486,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "7c4bccf6-05ad-43ef-8b77-9fbaa1327f00",
+                            ConcurrencyStamp = "e1480a62-675c-405d-9bf1-837f8e0d94bf",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

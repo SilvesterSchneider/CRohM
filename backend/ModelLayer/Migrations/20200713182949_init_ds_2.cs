@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class init_password_change : Migration
+    public partial class init_ds_2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -171,7 +171,8 @@ namespace ModelLayer.Migrations
                     Description = table.Column<string>(nullable: true),
                     PreName = table.Column<string>(nullable: true),
                     AddressId = table.Column<long>(nullable: true),
-                    ContactPossibilitiesId = table.Column<long>(nullable: true)
+                    ContactPossibilitiesId = table.Column<long>(nullable: true),
+                    CreationDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -426,7 +427,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "7c4bccf6-05ad-43ef-8b77-9fbaa1327f00", "Admin", "ADMIN" });
+                values: new object[] { 1L, "e1480a62-675c-405d-9bf1-837f8e0d94bf", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
