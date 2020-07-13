@@ -1,4 +1,5 @@
 ﻿using ModelLayer.Models.Base;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,6 +13,7 @@ namespace ModelLayer.Models
         public List<EventContact> Events { get; set; } = new List<EventContact>();
         public List<OrganizationContact> OrganizationContacts { get; set; } = new List<OrganizationContact>();
         public List<HistoryElement> History { get; set; } = new List<HistoryElement>();
+        public DateTime CreationDate { get; set; }
 
         public override string ToString()
         {
