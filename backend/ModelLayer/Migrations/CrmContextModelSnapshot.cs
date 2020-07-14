@@ -451,7 +451,6 @@ namespace ModelLayer.Migrations
                     b.ToTable("Participations");
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.Role", b =>
             modelBuilder.Entity("ModelLayer.Models.Permission", b =>
                 {
                     b.Property<long>("Id")
@@ -489,14 +488,14 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "7c4bccf6-05ad-43ef-8b77-9fbaa1327f00",
+                            ConcurrencyStamp = "2d12b72a-158a-4050-8e06-e6ae84b20f34",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "e0d0a0ea-2977-44d2-a6b7-811a1fefd4c7",
+                            ConcurrencyStamp = "c8ae614b-b0ce-4a2b-8b20-57d40ec7ca90",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER"
                         });

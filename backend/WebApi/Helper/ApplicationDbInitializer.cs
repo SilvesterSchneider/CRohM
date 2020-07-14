@@ -25,16 +25,15 @@ namespace WebApi.Helper
                 {
                     UserName = "admin",
                     Email = "admin@admin.com",
-                    Permission = new List<PermissionGroup>()
-                    LastName = "admin",
-                    Email = "admin@admin.com"
+                    Permission = new List<PermissionGroup>(),
+                    LastName = "admin"
                 };
 
                 List <PermissionGroup> allpermissionGroups =  permissionService.GetAllPermissionGroupAsync().Result;
   
                 user.Permission.Add(allpermissionGroups.FirstOrDefault(x => x.Id == 1));
 
-                IdentityResult result = userService.CreateAsync(user, "@dm1n1stR4tOr").Result;
+                userService.CreateAsync(user, "@dm1n1stR4tOr").Wait();
             }
         }
 
@@ -51,7 +50,7 @@ namespace WebApi.Helper
             }
 
             if (!adminexists) {
-                permissionGroupService.CreatePermissionGroupAsync(GetAdminPermissions());
+                permissionGroupService.CreatePermissionGroupAsync(GetAdminPermissions()).Wait();
             }
         }
 
