@@ -45,7 +45,7 @@ namespace ServiceLayer
     {
         private readonly IUserManager _userManager;
 
-   
+
         private readonly IMailProvider mailProvider;
 
         private readonly IPermissionGroupService permissionsService;
@@ -60,7 +60,7 @@ namespace ServiceLayer
 
         public UserService(IUserManager userManager, IMailProvider mailProvider)
         {
-   
+
             _userManager = userManager;
             this.mailProvider = mailProvider;
         }
@@ -117,7 +117,7 @@ namespace ServiceLayer
             foreach (User usr in users)
             {
                 foreach (PermissionGroup groups in usr.Permission)
-                {               
+                {
                     PermissionGroup permissions = await permissionsService.GetPermissionGroupByIdAsync(groups.Id);
                 }
             }
@@ -178,7 +178,7 @@ namespace ServiceLayer
             if (user != null)
             {
                 return await _userManager.SetUserLockedAsync(user, !user.UserLockEnabled);
-            } 
+            }
             else
             {
                 return IdentityResult.Failed(new IdentityError());
@@ -190,19 +190,23 @@ namespace ServiceLayer
             return await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-       
-        public async Task<bool> AddPermissionGroupByUserIdAsync(int permissionGroupId, long userId){
+
+        public async Task<bool> AddPermissionGroupByUserIdAsync(int permissionGroupId, long userId)
+        {
 
             PermissionGroup permissiongroup = await permissionsService.GetByIdAsync(permissionGroupId);
             User user = await GetByIdAsync(userId);
 
-            if (user != null && permissiongroup != null) {
+            if (user != null && permissiongroup != null)
+            {
                 user.Permission.Add(permissiongroup);
                 await _userManager.UpdateAsync(user);
 
                 IList<string> permissions = await _userManager.GetRolesAsync(user);
-                foreach (Permission perm in permissiongroup.Permissions){
-                    if (!permissions.Contains(perm.Name)) {
+                foreach (Permission perm in permissiongroup.Permissions)
+                {
+                    if (!permissions.Contains(perm.Name))
+                    {
                         await _userManager.AddToRoleAsync(user, perm.Name);
                     }
                 }
@@ -211,20 +215,25 @@ namespace ServiceLayer
             return false;
         }
 
-        public async Task<bool> DeletePermissionGroupByUserIdAsync(int GroupIdToDelete, long userId) {
+        public async Task<bool> DeletePermissionGroupByUserIdAsync(int GroupIdToDelete, long userId)
+        {
 
             List<PermissionGroup> allpermissiongroups = await permissionsService.GetAllPermissionGroupAsync();
             User modifieduser = await GetByIdAsync(userId);
             bool adminsleft = false;
 
             //Überprüfen ob noch ein Admin übrig bleibt -> Wegen dem Seed ist die Adminid = 1
-            if (GroupIdToDelete == 1){
+            if (GroupIdToDelete == 1)
+            {
                 List<User> users = await GetAsync();
-                foreach (User user in users) {
-                    if (user != modifieduser) {
+                foreach (User user in users)
+                {
+                    if (user != modifieduser)
+                    {
                         foreach (PermissionGroup permissionGroup in user.Permission)
                         {
-                            if (permissionGroup.Id == 1) {
+                            if (permissionGroup.Id == 1)
+                            {
                                 adminsleft = true;
                             }
                         }
@@ -232,12 +241,14 @@ namespace ServiceLayer
                 }
             }
 
-            if (GroupIdToDelete != 1 || adminsleft) {
-               
+            if (GroupIdToDelete != 1 || adminsleft)
+            {
+
                 List<Permission> permissionstodelete = new List<Permission>();
                 List<Permission> permissionstoStay = new List<Permission>();
                 PermissionGroup permissionGroupToDelete = new PermissionGroup();
-                foreach (PermissionGroup group in modifieduser.Permission) {
+                foreach (PermissionGroup group in modifieduser.Permission)
+                {
 
                     if (group.Id == GroupIdToDelete)
                     {
@@ -258,8 +269,10 @@ namespace ServiceLayer
                 }
 
                 //Lösche Permission wenn sie nicht in anderer zugewiesener Permissiongroup vorkommt.
-                foreach (Permission permToDelete in permissionstodelete){
-                    if (!permissionstoStay.Contains(permToDelete)){
+                foreach (Permission permToDelete in permissionstodelete)
+                {
+                    if (!permissionstoStay.Contains(permToDelete))
+                    {
                         await _userManager.RemoveRolesAsync(modifieduser, permToDelete.Name);
                     }
                 }
@@ -270,7 +283,6 @@ namespace ServiceLayer
             }
             return false;
         }
-    }
 
         public async Task<string> GetUserNameByIdAsync(long id)
         {
@@ -298,7 +310,7 @@ namespace ServiceLayer
                 await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
                 userToBeUpdated.hasPasswordChanged = true;
                 return await _userManager.UpdateUserAsync(userToBeUpdated);
-            } 
+            }
             else
             {
                 return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "404", Description = "Benutzer nicht gefunden!" } });
@@ -357,7 +369,7 @@ namespace ServiceLayer
 
         public async Task<IList<string>> GetRolesAsync(User user)
         {
-            return await _manager.GetRolesAsync(user); 
+            return await _manager.GetRolesAsync(user);
         }
 
         public async Task<IdentityResult> RemoveRolesAsync(User user, string permission)
@@ -410,4 +422,5 @@ namespace ServiceLayer
     }
 
     #endregion DefaultUserManager
+
 }
