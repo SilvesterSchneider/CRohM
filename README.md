@@ -1,15 +1,14 @@
 # CRohM
-
 Backend:	1. Microsoft SQL Server Express installieren
-			1. Microsoft SQL Management Studio installieren
-			2. Visual Studio installieren
-			3. Backend projekt öffnen mit Visual Studio
-			4. Wenn nachdem das Projekt WebApi gestartet wurde, die Datenbank nicht automatisch erzeugt wurde dann
+			2. Microsoft SQL Management Studio installieren
+			3. Visual Studio installieren
+			4. Backend projekt öffnen mit Visual Studio
+			5. Wenn nachdem das Projekt WebApi gestartet wurde, die Datenbank nicht automatisch erzeugt wurde dann
 				1. Paket-Manager-Konsole aufrufen (In Search Region eingeben)
 				2. Wenn keine Migrationen im Ordner ModelLayer\Migrations vorhanden sind oder falls gelöscht werden musste weil fehlerhaft
 					1. "add-migration init" ausführen in Konsole
 				3. "update-database" ausführen in Konsole
-				
+
 Frontend:	1. Visual Studio Code installieren
 			2. Node JS installieren
 			3. Visual Studio Code starten und frontend Projekt öffnen
@@ -21,13 +20,13 @@ Frontend:	1. Visual Studio Code installieren
 			7. Browser öffnen und https://localhost:4200 öffnen
 			8. Als admin mit Passwort @dm1n1stR4tOr anmelden
 			9. Genießen!
-			
+
 ----------
 
 ## CRohM als Docker-Version (Fullstack) starten
 
 > - Docker wird sich die Abhängigkeiten vom [docker hub]([https://link](https://hub.docker.com/r/crohmcrms/crohm_crms/tags)) ziehen und Fullstack inklusive DB starten.
-> - Da jeder branch auf Git seinen eigenen Container besitzt, wird der aktuell ausgecheckte branch gezogen. 
+> - Da jeder branch auf Git seinen eigenen Container besitzt, wird der aktuell ausgecheckte branch gezogen.
 > - Die DB wird vollständig leer sein und ist nicht persistent
 
 1. Docker nach Anleitung installieren ([docker docs]([https://link](https://docs.docker.com/get-docker/)))
