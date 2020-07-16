@@ -12,14 +12,14 @@ WORKDIR /usr/src/frontend
 
 # install and cache app dependencies
 COPY frontend/package.json ./
-RUN npm install --no-fund --no-optional
-RUN npm install -g @angular/cli@latest --no-fund --no-optional
+COPY frontend/package-lock.json ./
+RUN npm ci
 
 # Copy frontend src to workdir
 COPY frontend ./
 
 # Build frontend
-RUN ng build --output-path=dist
+RUN npm run build -- --output-path=dist
 
 ### STAGE 2: Build Backend ###
 # Get sdk
@@ -52,6 +52,7 @@ RUN apk add --no-cache icu-libs
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 EXPOSE 80
+EXPOSE 443
 
 COPY --from=buildBackend /app /app
 
