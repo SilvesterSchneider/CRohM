@@ -1,0 +1,37 @@
+version: "3.7"
+services: 
+
+  crms:
+    #build: .
+    image: crohmcrms/crohm_crms:${BRANCH}
+    ports:
+      - "${HTTP_PORT}:80"
+      - "${HTTPS_PORT}:443"
+    depends_on: 
+      - db
+    environment:
+      - DBServer=db
+      - DBPort=${DB_PORT}
+      - DBUser=SA
+      - DBPassword=CRohM2020
+      - DBName=CRMDB
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Crohm2020!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/crohm-selfsigned.pfx
+    volumes:
+      - ./https:/https/
+    restart: unless-stopped  
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment: 
+      ACCEPT_EULA: Y
+      # LOGIN: sa
+      SA_PASSWORD: CRohM2020
+      MSSQL_PID: Express
+      TZ: Europe/Berlin
+    ports:
+      - ${DB_PORT}:1433
+    restart: unless-stopped
