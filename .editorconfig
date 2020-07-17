@@ -9,3 +9,6 @@ insert_final_newline = true
 
 [*.dockerignore]
 insert_final_newline = false
+
+[*.yml]
+indent_size = 2
