@@ -1,0 +1,11 @@
+name: PR_Build
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Package Checks Frontend
+      uses: Amr-Reda/npm-unused-packages-checker@v1
