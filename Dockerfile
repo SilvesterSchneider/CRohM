@@ -48,14 +48,15 @@ RUN dotnet publish -c Release -o ./app
 ### STAGE 3: Run Webserver ###
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine3.11
 
-RUN apk add --no-cache icu-libs
+RUN apk add --no-cache curl icu-libs
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
-EXPOSE 80
-EXPOSE 443
+EXPOSE ${HTTP_PORT}
+EXPOSE ${HTTPS_PORT}
 
 COPY --from=buildBackend /app /app
 
 WORKDIR /app/WebApi/app
 
+HEALTHCHECK --interval=5s --timeout=5s --start-period=5s --retries=10 CMD curl --fail --insecure https://localhost:${HTTPS_PORT}/health || exit 1
 ENTRYPOINT ["dotnet", "WebApi.dll"]

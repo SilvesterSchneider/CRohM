@@ -1,0 +1,27 @@
+.dockerignore
+.env
+**/*.DS_Store
+**/*.editorconfig
+**/*.git*
+**/*.jenkinsfile
+**/*.md
+**/*.vs*
+**/*.yml
+**/*Dockerfile
+backend/**/bin
+backend/**/obj
+backend/Coding Guidelines Backend.txt
+backend/PasswordgeneratorTest.cs
+backend/ServiceLayerTests
+backend/Tests
+Coding Guidelines Backend
+development
+frontend/coverage
+frontend/dist
+frontend/documentation
+frontend/e2e
+frontend/node_modules
+frontend/reports
+https
+misc
+TestProjects
