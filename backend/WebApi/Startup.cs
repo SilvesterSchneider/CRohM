@@ -118,6 +118,8 @@ namespace WebApi
                         ValidateAudience = false
                     };
                 });
+
+            services.AddHealthChecks();
         }
 
         public void Configure(IPermissionGroupService permissionGroupService, IMapper mapper, IApplicationBuilder app, IWebHostEnvironment env, IUserService userService, CrmContext dataContext)
@@ -125,7 +127,7 @@ namespace WebApi
             dataContext.Database.Migrate();
             ApplicationDbInitializer.SeedPermissions(permissionGroupService, mapper);
             ApplicationDbInitializer.SeedUsers(userService, permissionGroupService);
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -143,6 +145,7 @@ namespace WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
 
             app.UseStaticFiles();
