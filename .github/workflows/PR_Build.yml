@@ -3,13 +3,15 @@ on:
   pull_request:
 
 jobs:
+    container_security_scan:
+      runs-on: ubuntu-latest
+      steps:
 
-  frontend_dependencies:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check for new dependencies
-        uses: hiwelo/new-dependencies-action@1.0.1
+      - name: Container Security Scan
+        uses: azure/container-scan@v0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-         
+          image-name: crohmcrms/crohm_crms
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+       
 
