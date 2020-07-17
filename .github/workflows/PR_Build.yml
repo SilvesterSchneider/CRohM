@@ -9,3 +9,4 @@ jobs:
 
     - name: Package Checks Frontend
       uses: Amr-Reda/npm-unused-packages-checker@v1
+      working-directory: frontend
