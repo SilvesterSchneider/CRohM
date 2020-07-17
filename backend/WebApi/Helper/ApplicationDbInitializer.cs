@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using ModelLayer;
 using ModelLayer.DataTransferObjects;
@@ -26,6 +26,7 @@ namespace WebApi.Helper
                     UserName = "admin",
                     Email = "admin@admin.com",
                     Permission = new List<PermissionGroup>(),
+                    FirstName = "",
                     LastName = "admin"
                 };
 
