@@ -491,7 +491,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "ed6d3bf7-69ee-4f69-ab16-732713d46a4c",
+                            ConcurrencyStamp = "cb5f561b-6f82-457d-a507-6330922b972a",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             UserRight = 0
@@ -499,7 +499,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "d3ddf50f-2197-4c01-b6cf-b4369311f041",
+                            ConcurrencyStamp = "832f0852-3350-4f45-9b37-af6b861aab9d",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER",
                             UserRight = 0

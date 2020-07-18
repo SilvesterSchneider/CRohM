@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class init_roles_fix : Migration
+    public partial class init_adp4 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -476,12 +476,12 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 1L, "ed6d3bf7-69ee-4f69-ab16-732713d46a4c", "Admin", "ADMIN", null, 0 });
+                values: new object[] { 1L, "cb5f561b-6f82-457d-a507-6330922b972a", "Admin", "ADMIN", null, 0 });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 2L, "d3ddf50f-2197-4c01-b6cf-b4369311f041", "DeleteUser", "DELETEUSER", null, 0 });
+                values: new object[] { 2L, "832f0852-3350-4f45-9b37-af6b861aab9d", "DeleteUser", "DELETEUSER", null, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
