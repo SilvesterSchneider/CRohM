@@ -25,13 +25,13 @@ Frontend:	1. Visual Studio Code installieren
 
 ## CRohM als Docker-Version (Fullstack) starten
 
-> - Docker wird sich die Abhängigkeiten vom [docker hub]([https://link](https://hub.docker.com/r/crohmcrms/crohm_crms/tags)) ziehen und Fullstack inklusive DB starten.
+> - Docker wird sich die Abhängigkeiten vom ([docker hub](https://hub.docker.com/r/crohmcrms/crohm_crms/tags)) ziehen und Fullstack inklusive DB starten, alternativ kann der Stack lokal gebaut werden.
 > - Da jeder branch auf Git seinen eigenen Container besitzt, wird der aktuell ausgecheckte branch gezogen.
 > - Die DB wird vollständig leer sein und ist nicht persistent
 
-1. Docker nach Anleitung installieren ([docker docs]([https://link](https://docs.docker.com/get-docker/)))
+1. Docker nach Anleitung installieren ([docker docs](https://docs.docker.com/get-docker/))
 2. Datei `.env` nach eigenen Wünschen anpassen
-3. Über die Komandozeile vom root Ordner (CRohM) `sh ./misc/docker-compose-up.sh` ausführen
+3. Über die Komandozeile vom root Ordner (CRohM) `sh ./misc/docker-compose-up.sh` oder `sh ./misc/docker-compose-local-up.sh` ausführen
 4. Der Container sollte nun über die unter `.env` konfigurierten Werte erreichbar sein
 
 ----------

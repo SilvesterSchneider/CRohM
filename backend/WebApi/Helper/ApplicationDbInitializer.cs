@@ -26,6 +26,8 @@ namespace WebApi.Helper
                 {
                     UserName = "admin",
                     Email = "admin@admin.com",
+                    Permission = new List<PermissionGroup>(),
+                    FirstName = "system",
                     LastName = "admin"
                 };
                 userService.CreateAsync(user, "@dm1n1stR4tOr").Wait();

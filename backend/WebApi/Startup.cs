@@ -118,6 +118,8 @@ namespace WebApi
                         ValidateAudience = false
                     };
                 });
+
+            services.AddHealthChecks();
         }
 
         public void Configure(
@@ -132,7 +134,6 @@ namespace WebApi
             dataContext.Database.Migrate();
             ApplicationDbInitializer.SeedPermissions(permissionGroupService, mapper);
             ApplicationDbInitializer.SeedUsers(userService, permissionGroupService, userPermissionGroupRepo);
-            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -150,6 +151,7 @@ namespace WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
 
             app.UseStaticFiles();
