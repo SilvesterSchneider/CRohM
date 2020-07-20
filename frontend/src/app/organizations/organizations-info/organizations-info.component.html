@@ -134,7 +134,7 @@
             </ng-container>
             <ng-container matColumnDef="datum">
                 <mat-header-cell *matHeaderCellDef> Datum </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.date}}
+                <mat-cell *matCellDef="let element"> {{getDate(element.date)}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="name">

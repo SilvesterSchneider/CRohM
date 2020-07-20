@@ -106,7 +106,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		const dialogRef = this.dialog.open(AddHistoryComponent);
 		dialogRef.afterClosed().subscribe((y) => {
 			if (y) {
-				// this.service.postHistoryElement(y, id, this.jwt.getUserId()).subscribe(x => this.getData());
+				this.service.postHistoryElement(y, id, this.jwt.getUserId()).subscribe(x => this.getData());
 			}
 		});
 	  }

@@ -35,7 +35,7 @@ export class OrganizationsInfoComponent implements OnInit {
     if (this.organization.contact.contactEntries != null) {
       this.organization.contact.contactEntries.forEach(x => this.contactPossibilitiesEntries.push(x));
     }
-    // this.history = this.organization.history;
+    this.history = this.organization.history;
     this.organizationsForm.patchValue(this.organization);
   }
 
@@ -74,6 +74,11 @@ export class OrganizationsInfoComponent implements OnInit {
 
   isNote(element: HistoryElementDto): boolean {
     return element.type === HistoryElementType.NOTE;
+  }
+
+  getDate(date: string): string {
+    const dateUsed = new Date(date);
+    return dateUsed.getFullYear().toString() + '-' + (+dateUsed.getMonth() + 1).toString() + '-' + dateUsed.getDate().toString();
   }
 
   isMail(element: HistoryElementDto): boolean {
