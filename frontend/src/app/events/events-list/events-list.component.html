@@ -1,5 +1,25 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <span>Veranstaltungen</span>
+        <span class="spacer"></span>
+        <mat-form-field>
+            <mat-label>Suche</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
+        </mat-form-field>
+        <mat-checkbox class="button" [checked]="checkboxSelected" title="Veranstaltungen aus der Vergangenheit ausblenden" (change)="toggleSelection()">
+            Veranstaltungen aus der Vergangenheit ausblenden
+        </mat-checkbox>
+        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Veranstaltung hinzufügen" (click)="addDummyEvent()"> 
+            <mat-icon>add</mat-icon> Dummy Veranstaltung hinzufügen
+        </button>
+        <button class="button" button="submit" mat-mini-fab color="primary" (click)="addEvent()">
+            <mat-icon>add</mat-icon> 
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
 <div fxLayout="column" fxLayoutGap="100px">
-    <mat-table mat-table [dataSource]="dataSource">
+    <mat-table mat-table [dataSource]="dataSourceFiltered">
         <ng-container matColumnDef="bezeichnung">
             <mat-header-cell *matHeaderCellDef> Bezeichnung </mat-header-cell>
             <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element"> {{element.name}}
@@ -37,19 +57,3 @@
     </mat-table>
 </div>
 <br>
-
-<div fxLayout="column" fxLayoutAlign="space-around end" class="content">
-    <div class="blocks">
-        <button button="submit" mat-raised-button color="primary" title="Veranstaltung hinzufügen" (click)="addContact()"> 
-            <mat-icon>add</mat-icon> Veranstaltung hinzufügen
-        </button>
-        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Veranstaltung hinzufügen" (click)="addDummyEvent()"> 
-            <mat-icon>add</mat-icon> Dummy Veranstaltung hinzufügen
-        </button>
-    </div>
-    <div>
-        <mat-checkbox [checked]="checkboxSelected" title="Veranstaltungen aus der Vergangenheit ausblenden" (change)="toggleSelection()">
-            Veranstaltungen aus der Vergangenheit ausblenden
-        </mat-checkbox>
-    </div>
-</div>
