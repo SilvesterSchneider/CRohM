@@ -9,6 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { EventsInfoComponent } from '../events-info/events-info.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { JwtService } from 'src/app/shared/jwt.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 export class EventDtoGroup implements EventDto {
   id: number;
@@ -37,12 +38,26 @@ export class EventsListComponent implements OnInit {
   weekNumber = 0;
   isAdminUserLoggedIn = false;
   length = 0;
+  dataSourceFiltered = new MatTableDataSource<EventDtoGroup>();
 
   constructor(
     private service: EventService,
     private userService: UsersService,
     private dialog: MatDialog,
     private jwt: JwtService) {
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceFiltered.filter = filterValue.trim().toLowerCase();
+    this.dataSourceFiltered.filterPredicate = ((data, filter) => {
+      if (data.name.trim().toLowerCase().includes(filter) || data.date.trim().toLowerCase().includes(filter) ||
+        data.time.trim().toLowerCase().includes(filter)) {
+        return true;
+      } else {
+        return false;
+      }
+    });
   }
 
   ngOnInit() {
@@ -71,7 +86,7 @@ export class EventsListComponent implements OnInit {
     return (dateA.getTime() - dateB.getTime());
   }
 
-  addContact() {
+  addEvent() {
     const dialogRef = this.dialog.open(EventsAddComponent, { disableClose: true });
     dialogRef.afterClosed().subscribe(x => this.init());
   }
@@ -147,6 +162,7 @@ export class EventsListComponent implements OnInit {
         isGroupBy: false
       });
     });
+    this.dataSourceFiltered.data = this.dataSource;
   }
 
   getDate(date: string, time: string): number {
