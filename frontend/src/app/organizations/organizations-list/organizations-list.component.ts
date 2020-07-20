@@ -9,6 +9,7 @@ import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/o
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
+import { OrganizationsAddHistoryComponent } from '../organizations-add-history/organizations-add-history.component';
 
 @Component({
 	selector: 'app-organizations-list',
@@ -100,6 +101,11 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			this.getData();
 		});
 	}
+
+	addNote(id: number) {
+		const dialogRef = this.dialog.open(OrganizationsAddHistoryComponent, { data: id });
+		dialogRef.afterClosed().subscribe((y) => this.getData());
+	  }
 
 	openInfo(id: number) {
 		this.service.getById(id).subscribe(x => this.dialog.open(OrganizationsInfoComponent, { data: x }));

@@ -9,6 +9,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { OrganizationsInfoComponent } from './organizations-info/organizations-info.component';
 import { OrganizationsEditDialogComponent } from './organizations-edit-dialog/organizations-edit-dialog.component';
+import { OrganizationsAddHistoryComponent } from './organizations-add-history/organizations-add-history.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { OrganizationsEditDialogComponent } from './organizations-edit-dialog/or
     OrganizationsListComponent,
     OrganizationsDetailComponent,
     OrganizationsInfoComponent,
-	  OrganizationsEditDialogComponent
+    OrganizationsEditDialogComponent,
+    OrganizationsAddHistoryComponent
   ],
   imports: [
     CommonModule,
