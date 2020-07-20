@@ -3,27 +3,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../../app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { SharedModule } from '../../shared/shared.module';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SharedModule } from '../shared.module';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MaterialModule } from 'src/app/shared/material.module';
-import { organizationsAddHistoryComponent } from './organizations-add-history.component';
+import { AddHistoryComponent } from './add-history.component';
 
-describe('organizationsAddHistoryComponent', () => {
-  let component: organizationsAddHistoryComponent;
-  let fixture: ComponentFixture<organizationsAddHistoryComponent>;
+describe('AddHistoryComponent', () => {
+  let component: AddHistoryComponent;
+  let fixture: ComponentFixture<AddHistoryComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ organizationsAddHistoryComponent ],
+      declarations: [ AddHistoryComponent ],
       imports: [FormsModule, ReactiveFormsModule, AppRoutingModule, MaterialModule, BrowserAnimationsModule,
         HttpClientModule, SharedModule],
       providers: [{
         provide: MatDialogRef,
-        useValue: {},
-      },
-      {
-        provide: MAT_DIALOG_DATA,
         useValue: {},
       }]
     })
@@ -31,7 +26,7 @@ describe('organizationsAddHistoryComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(organizationsAddHistoryComponent);
+    fixture = TestBed.createComponent(AddHistoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -35,7 +35,7 @@ export class OrganizationsInfoComponent implements OnInit {
     if (this.organization.contact.contactEntries != null) {
       this.organization.contact.contactEntries.forEach(x => this.contactPossibilitiesEntries.push(x));
     }
-    //this.history = this.organization.history;
+    // this.history = this.organization.history;
     this.organizationsForm.patchValue(this.organization);
   }
 
