@@ -76,7 +76,7 @@ namespace WebApi.Controllers
             var mappedOrganization = _mapper.Map<Organization>(organization);
             await _organizationService.UpdateAsyncWithAlleDependencies(mappedOrganization);
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
+            await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
             var organizationDto = _mapper.Map<OrganizationDto>(mappedOrganization);
             return Ok(organizationDto);
         }
@@ -104,7 +104,7 @@ namespace WebApi.Controllers
 
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
+            await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
             return Ok(organizationDto);
         }
 
@@ -128,7 +128,7 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
+            await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
             return Ok();
         }
 

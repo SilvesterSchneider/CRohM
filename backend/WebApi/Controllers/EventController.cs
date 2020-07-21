@@ -84,7 +84,7 @@ namespace WebApi.Controllers
             }
             await eventService.ModifyEventAsync(eventToModify);
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
+            await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
             return Ok(eventToModify);
         }
 
@@ -103,7 +103,7 @@ namespace WebApi.Controllers
             if (result != null)
             {
                 string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-                await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
+                await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
                 return Ok();
             }
             else
@@ -127,7 +127,7 @@ namespace WebApi.Controllers
             if (result)
             {
                 string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-                await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
+                await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
                 return Ok();
             }
             else

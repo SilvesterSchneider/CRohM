@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Net;
 using System.Threading.Tasks;
@@ -21,15 +21,15 @@ namespace WebApi.Controllers
         private readonly IMapper _mapper;
         private readonly IEventService eventService;
         private IUserService userService;
-        private readonly IModificationEntryRepository modRepo;
+        private readonly IModificationEntryService modService;
         private IContactService contactService;
 
-        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryRepository modRepo)
+        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService)
         {
             _mapper = mapper;
             this.eventService = eventService;
             this.userService = userService;
-            this.modRepo = modRepo;
+            this.modService = modService;
             this.contactService = contactService;
         }
 
@@ -85,7 +85,7 @@ namespace WebApi.Controllers
             if (await contactService.UpdateAsync(mappedContact, id))
             {
                 string usernameOfModification = await userService.GetUserNameByIdAsync(userIdOfChange);
-                await modRepo.UpdateModificationAsync(usernameOfModification, id, MODEL_TYPE.CONTACT);
+                await modService.UpdateContactAsync(usernameOfModification, id, mappedContact);
                 return Ok(contact);
             }
             else
@@ -104,7 +104,7 @@ namespace WebApi.Controllers
 
             var contactDto = _mapper.Map<ContactDto>(contact);
             string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
-            await modRepo.CreateNewEntryAsync(userNameOfChange, contact.Id, MODEL_TYPE.CONTACT);
+            await modService.CreateNewContactEntryAsync(userNameOfChange, contact.Id);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
             return Created(uri, contactDto);
         }
@@ -117,7 +117,7 @@ namespace WebApi.Controllers
 
             await contactService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
             string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
-            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.CONTACT);
+            await modService.UpdateContactByHistoryElementAsync(userNameOfChange, id);
             return Ok();
         }
 
@@ -133,7 +133,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             await contactService.DeleteAsync(contact);
-            await modRepo.RemoveEntryAsync(id, MODEL_TYPE.CONTACT);
+            await modService.UpdateContactByDeletionAsync(id);
             return Ok();
         }
     }
