@@ -83,7 +83,9 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modService.UpdateEventsAsync(userNameOfChange, await eventService.GetByIdAsync(id), _mapper.Map<Event>(eventToModify));
+            Event oldOne = await eventService.GetEventByIdWithAllIncludesAsync(id);
+            Event newOne = _mapper.Map<Event>(eventToModify);
+            await modService.UpdateEventsAsync(userNameOfChange, oldOne, newOne);
             if (await eventService.ModifyEventAsync(eventToModify))
             {
                 await modService.CommitChanges();
