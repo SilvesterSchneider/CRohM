@@ -42,9 +42,7 @@ namespace UnitTests.ModelLayer.Helper
                 new ContactPossibilities() { Mail = "info@aa.de" }
             };
             Contact newContact = new Contact() { Id = oldContact.Id, Name = "kontakt2",
-                Address = new Address() { City = "Tübingen" },
-                ContactPossibilities =
-                new ContactPossibilities() { }
+                Address = new Address() { City = "Tübingen" }
             };
             List<ModificationEntry> listWithNewEntries;
             List<ModificationEntry> listWithDeletion;
@@ -69,6 +67,42 @@ namespace UnitTests.ModelLayer.Helper
             Assert.Equal(1, listWithDeletion[0].DataModelId);
             Assert.Equal(MODEL_TYPE.CONTACT, listWithDeletion[0].DataModelType);
             Assert.Equal(DATA_TYPE.MAIL, listWithDeletion[0].DataType);
+            Assert.True(listWithDeletion[0].IsDeleted);
+        }
+
+        [Fact]
+        public void CompareOrganizationsWorksCorrectly()
+        {
+            // Arrange
+            Organization oldOrga = new Organization() { Id = 1, Name = "orga1", Address = new Address() { City = "Nürnberg" }, Contact = new ContactPossibilities()
+                { PhoneNumber = "1222" }  };
+            Organization newOrga = new Organization() { Id = oldOrga.Id,
+                Name = "orga2",
+                Address = new Address() { City = "Tübingen" }
+            };
+            List<ModificationEntry> listWithNewEntries;
+            List<ModificationEntry> listWithDeletion;
+
+            // Act
+            ComparerForModificationEntryCreation.CompareOrganizations(oldOrga, newOrga, "ram", true, out listWithNewEntries, out listWithDeletion);
+
+            //Assert
+            Assert.Equal(2, listWithNewEntries.Count);
+            Assert.Single(listWithDeletion);
+
+            Assert.Equal(1, listWithNewEntries[0].DataModelId);
+            Assert.Equal(MODEL_TYPE.ORGANIZATION, listWithNewEntries[0].DataModelType);
+            Assert.Equal(DATA_TYPE.NAME, listWithNewEntries[0].DataType);
+            Assert.Equal("orga2", listWithNewEntries[0].ActualValue);
+
+            Assert.Equal(1, listWithNewEntries[1].DataModelId);
+            Assert.Equal(MODEL_TYPE.ORGANIZATION, listWithNewEntries[1].DataModelType);
+            Assert.Equal(DATA_TYPE.CITY, listWithNewEntries[1].DataType);
+            Assert.Equal("Tübingen", listWithNewEntries[1].ActualValue);
+
+            Assert.Equal(1, listWithDeletion[0].DataModelId);
+            Assert.Equal(MODEL_TYPE.ORGANIZATION, listWithDeletion[0].DataModelType);
+            Assert.Equal(DATA_TYPE.PHONE, listWithDeletion[0].DataType);
             Assert.True(listWithDeletion[0].IsDeleted);
         }
     }

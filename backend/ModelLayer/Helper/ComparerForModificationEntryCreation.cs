@@ -72,7 +72,7 @@ namespace ModelLayer.Helper
             {
                 listCreation.Add(GetNewModificationEntry(newContact.History.Count.ToString(), oldContact.History.Count.ToString(), newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.HISTORY_ELEMENT, userOfModification, MODIFICATION.ADDED));
             }
-            listCreation.AddRange(GetModificationsForAddressObject(oldContact.Address, newContact.Address, newContact.Id, userOfModification));
+            listCreation.AddRange(GetModificationsForAddressObject(oldContact.Address, newContact.Address, newContact.Id, userOfModification, MODEL_TYPE.CONTACT));
             GetModificationsForContactPossibilitiesObject(oldContact.ContactPossibilities, newContact.ContactPossibilities, newContact.Id, userOfModification, deleteEntries, listCreation, listDeletion, MODEL_TYPE.CONTACT);
             listWithCreation = listCreation;
             listWithDeletion = listDeletion;
@@ -99,7 +99,7 @@ namespace ModelLayer.Helper
             //   {
             //       listCreation.Add(GetNewModificationEntry(newOrga.History.Count.ToString(), oldOrga.History.Count.ToString(), newOrga.Id, MODEL_TYPE.ORGANIZATION, DATA_TYPE.HISTORY_ELEMENT, userOfModification, MODIFICATION.ADDED));
             //   }
-            listCreation.AddRange(GetModificationsForAddressObject(oldOrga.Address, newOrga.Address, newOrga.Id, userOfModification));
+            listCreation.AddRange(GetModificationsForAddressObject(oldOrga.Address, newOrga.Address, newOrga.Id, userOfModification, MODEL_TYPE.ORGANIZATION));
             GetModificationsForContactPossibilitiesObject(oldOrga.Contact, newOrga.Contact, newOrga.Id, userOfModification, deleteEntries, listCreation, listDeletion, MODEL_TYPE.ORGANIZATION);
             listWithCreation = listCreation;
             listWithDeletion = listDeletion;
@@ -199,28 +199,28 @@ namespace ModelLayer.Helper
             }
         }
 
-        private static List<ModificationEntry> GetModificationsForAddressObject(Address oldOne, Address newOne, long idOfModel, string userOfModification)
+        private static List<ModificationEntry> GetModificationsForAddressObject(Address oldOne, Address newOne, long idOfModel, string userOfModification, MODEL_TYPE modelType)
         {
             List<ModificationEntry> list = new List<ModificationEntry>();
             if (!oldOne.City.Equals(newOne.City))
             {
-                list.Add(GetNewModificationEntry(newOne.City, oldOne.City, idOfModel, MODEL_TYPE.CONTACT, DATA_TYPE.CITY, userOfModification, MODIFICATION.MODIFIED));
+                list.Add(GetNewModificationEntry(newOne.City, oldOne.City, idOfModel, modelType, DATA_TYPE.CITY, userOfModification, MODIFICATION.MODIFIED));
             }
             if (!oldOne.Country.Equals(newOne.Country))
             {
-                list.Add(GetNewModificationEntry(newOne.Country, oldOne.Country, idOfModel, MODEL_TYPE.CONTACT, DATA_TYPE.COUNTRY, userOfModification, MODIFICATION.MODIFIED));
+                list.Add(GetNewModificationEntry(newOne.Country, oldOne.Country, idOfModel, modelType, DATA_TYPE.COUNTRY, userOfModification, MODIFICATION.MODIFIED));
             }
             if (!oldOne.Street.Equals(newOne.Street))
             {
-                list.Add(GetNewModificationEntry(newOne.Street, oldOne.Street, idOfModel, MODEL_TYPE.CONTACT, DATA_TYPE.STREET, userOfModification, MODIFICATION.MODIFIED));
+                list.Add(GetNewModificationEntry(newOne.Street, oldOne.Street, idOfModel, modelType, DATA_TYPE.STREET, userOfModification, MODIFICATION.MODIFIED));
             }
             if (!oldOne.StreetNumber.Equals(newOne.StreetNumber))
             {
-                list.Add(GetNewModificationEntry(newOne.StreetNumber, oldOne.StreetNumber, idOfModel, MODEL_TYPE.CONTACT, DATA_TYPE.STREETNUMBER, userOfModification, MODIFICATION.MODIFIED));
+                list.Add(GetNewModificationEntry(newOne.StreetNumber, oldOne.StreetNumber, idOfModel, modelType, DATA_TYPE.STREETNUMBER, userOfModification, MODIFICATION.MODIFIED));
             }
             if (!oldOne.Zipcode.Equals(newOne.Zipcode))
             {
-                list.Add(GetNewModificationEntry(newOne.Zipcode, oldOne.Zipcode, idOfModel, MODEL_TYPE.CONTACT, DATA_TYPE.ZIPCODE, userOfModification, MODIFICATION.MODIFIED));
+                list.Add(GetNewModificationEntry(newOne.Zipcode, oldOne.Zipcode, idOfModel, modelType, DATA_TYPE.ZIPCODE, userOfModification, MODIFICATION.MODIFIED));
             }
             return list;
         }
