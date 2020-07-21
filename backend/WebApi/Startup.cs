@@ -177,6 +177,7 @@ namespace WebApi
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IPermissionGroupService, PermissionGroupService>();
+            services.AddScoped<IModificationEntryService, ModificationEntryService>();
 
             //###########################Repositories#######################################
 

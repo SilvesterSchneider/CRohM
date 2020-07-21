@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
@@ -17,14 +17,14 @@ namespace WebApi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUserService userService;
-        private readonly IModificationEntryRepository modRepo;
+        private readonly IModificationEntryService modService;
         private IEventService eventService;
 
-        public EventController(IMapper mapper, IEventService eventService, IModificationEntryRepository modRepo, IUserService userService)
+        public EventController(IMapper mapper, IEventService eventService, IModificationEntryService modService, IUserService userService)
         {
             this._mapper = mapper;
             this.userService = userService;
-            this.modRepo = modRepo;
+            this.modService = modService;
             this.eventService = eventService;
         }
 
@@ -82,9 +82,12 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
-            await eventService.ModifyEventAsync(eventToModify);
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
+            await modService.UpdateEventsAsync(userNameOfChange, await eventService.GetByIdAsync(id), _mapper.Map<Event>(eventToModify));
+            if (await eventService.ModifyEventAsync(eventToModify))
+            {
+                await modService.CommitChanges();
+            }
             return Ok(eventToModify);
         }
 
@@ -103,7 +106,8 @@ namespace WebApi.Controllers
             if (result != null)
             {
                 string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-                await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
+                Event eventToConsider = await eventService.GetByIdAsync(id);
+                await modService.ChangeContactsOfEvent(id, eventToConsider.Contacts.Count - 1, eventToConsider.Contacts.Count, userNameOfChange);
                 return Ok();
             }
             else
@@ -127,7 +131,8 @@ namespace WebApi.Controllers
             if (result)
             {
                 string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-                await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.EVENT);
+                Event eventToConsider = await eventService.GetByIdAsync(id);
+                await modService.ChangeContactsOfEvent(id, eventToConsider.Contacts.Count + 1, eventToConsider.Contacts.Count, userNameOfChange);
                 return Ok();
             }
             else
@@ -155,7 +160,7 @@ namespace WebApi.Controllers
                 }
                 var uri = $"https://{Request.Host}{Request.Path}/{_mapper.Map<EventDto>(newEvent).Id}";
                 string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-                await modRepo.CreateNewEntryAsync(userNameOfChange, newEvent.Id, MODEL_TYPE.EVENT);
+                await modService.CreateNewEventEntryAsync(userNameOfChange, newEvent.Id);
                 return Created(uri, eventToCreate);
             }
             return BadRequest("Fehler beim erzeugen eines Events!");
@@ -177,7 +182,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             await eventService.DeleteAsync(eventToDelete);
-            await modRepo.RemoveEntryAsync(id, MODEL_TYPE.EVENT);
+            await modService.UpdateEventByDeletionAsync(id);
             return Ok();
         }
     }

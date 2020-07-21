@@ -1,7 +1,5 @@
 using ModelLayer.Models.Base;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ModelLayer.Models
 {
@@ -22,7 +20,11 @@ namespace ModelLayer.Models
         STREETNUMBER,
         ZIPCODE,
         DESCRIPTION,
-        EMPLOYEES
+        CONTACTS,
+        DURATION,
+        DATE,
+        TIME,
+        PARTICIPATED
     }
 
     public enum MODEL_TYPE
@@ -36,7 +38,8 @@ namespace ModelLayer.Models
     {
         CREATED,
         MODIFIED,
-        DELETED
+        DELETED,
+        ADDED
     }
 
     public class ModificationEntry : BaseEntity
@@ -84,9 +87,9 @@ namespace ModelLayer.Models
                 {
                     return "Beschreibung";
                 }
-                else if (DataType == DATA_TYPE.EMPLOYEES)
+                else if (DataType == DATA_TYPE.CONTACTS)
                 {
-                    return "Mitarbeiteranzahl";
+                    return "Teilnehmeranzahl";
                 }
                 else if (DataType == DATA_TYPE.FAX)
                 {
@@ -119,6 +122,22 @@ namespace ModelLayer.Models
                 else if (DataType == DATA_TYPE.STREETNUMBER)
                 {
                     return "Hausnr.";
+                }
+                else if (DataType == DATA_TYPE.DURATION)
+                {
+                    return "Dauer";
+                }
+                else if (DataType == DATA_TYPE.DATE)
+                {
+                    return "Datum";
+                }
+                else if (DataType == DATA_TYPE.TIME)
+                {
+                    return "Uhrzeit";
+                }
+                else if (DataType == DATA_TYPE.PARTICIPATED)
+                {
+                    return "Teilnahmestatus";
                 }
                 else 
                 {

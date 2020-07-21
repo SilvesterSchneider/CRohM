@@ -81,11 +81,12 @@ namespace WebApi.Controllers
             {
                 return Conflict();
             }
+            string usernameOfModification = await userService.GetUserNameByIdAsync(userIdOfChange);
             var mappedContact = _mapper.Map<Contact>(contact);
+            await modService.UpdateContactAsync(usernameOfModification, await contactService.GetByIdAsync(id), mappedContact, true);
             if (await contactService.UpdateAsync(mappedContact, id))
             {
-                string usernameOfModification = await userService.GetUserNameByIdAsync(userIdOfChange);
-                await modService.UpdateContactAsync(usernameOfModification, id, mappedContact);
+                await modService.CommitChanges();
                 return Ok(contact);
             }
             else

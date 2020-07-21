@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using RepositoryLayer;
 
 namespace WebApi.Controllers
 {
@@ -21,15 +20,15 @@ namespace WebApi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUserService userService;
-        private readonly IModificationEntryRepository modRepo;
+        private readonly IModificationEntryService modService;
         private readonly IOrganizationService _organizationService;
         private readonly ILogger _logger;
 
-        public OrganizationController(IMapper mapper, IOrganizationService organizationService, IUserService userService, ILoggerFactory logger, IModificationEntryRepository modRepo)
+        public OrganizationController(IMapper mapper, IOrganizationService organizationService, IUserService userService, ILoggerFactory logger, IModificationEntryService modService)
         {
             _mapper = mapper;
             this.userService = userService;
-            this.modRepo = modRepo;
+            this.modService = modService;
             _organizationService = organizationService;
             _logger = logger.CreateLogger(nameof(OrganizationController));
         }
@@ -73,10 +72,13 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
-            var mappedOrganization = _mapper.Map<Organization>(organization);
-            await _organizationService.UpdateAsyncWithAlleDependencies(mappedOrganization);
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
+            var mappedOrganization = _mapper.Map<Organization>(organization);
+            await modService.UpdateOrganizationAsync(userNameOfChange, await _organizationService.GetByIdAsync(id), mappedOrganization, true);
+            if (await _organizationService.UpdateAsyncWithAlleDependencies(mappedOrganization))
+            {
+                await modService.CommitChanges();
+            }
             var organizationDto = _mapper.Map<OrganizationDto>(mappedOrganization);
             return Ok(organizationDto);
         }
@@ -104,7 +106,7 @@ namespace WebApi.Controllers
 
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
+            await modService.ChangeEmployeesOfOrganization(id, organization.OrganizationContacts.Count - 1, organization.OrganizationContacts.Count, userNameOfChange);
             return Ok(organizationDto);
         }
 
@@ -128,7 +130,8 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.SetEntriesToDeletionStateAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
+            Organization orga = await _organizationService.GetByIdAsync(id);
+            await modService.ChangeEmployeesOfOrganization(id, orga.OrganizationContacts.Count + 1, orga.OrganizationContacts.Count, userNameOfChange);
             return Ok();
         }
 
@@ -141,7 +144,7 @@ namespace WebApi.Controllers
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
             var uri = $"https://{Request.Host}{Request.Path}/{organizationDto.Id}";
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.CreateNewEntryAsync(userNameOfChange, organization.Id, MODEL_TYPE.ORGANIZATION);
+            await modService.CreateNewOrganizationEntryAsync(userNameOfChange, organization.Id);
             return Created(uri, organizationDto);
         }
 
@@ -156,7 +159,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             await _organizationService.DeleteAsync(organization);
-            await modRepo.RemoveEntryAsync(id, MODEL_TYPE.ORGANIZATION);
+            await modService.UpdateOrganizationByDeletionAsync(id);
             return Ok();
         }
     }
