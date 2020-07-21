@@ -1559,19 +1559,16 @@ export class ModificationEntryService {
     }
 
     /**
-     * @param idQuery (optional) 
+     * @param id (optional) 
      * @param modelDataType (optional) 
      * @return successfully found
      */
-    getSortedListByTypeAndId(idPath: string, idQuery?: number | undefined, modelDataType?: MODEL_TYPE | undefined): Observable<ModificationEntryDto[]> {
-        let url_ = this.baseUrl + "/api/home/{id}?";
-        if (idPath === undefined || idPath === null)
-            throw new Error("The parameter 'idPath' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + idPath));
-        if (idQuery === null)
-            throw new Error("The parameter 'idQuery' cannot be null.");
-        else if (idQuery !== undefined)
-            url_ += "id=" + encodeURIComponent("" + idQuery) + "&";
+    getSortedListByTypeAndId(id?: number | undefined, modelDataType?: MODEL_TYPE | undefined): Observable<ModificationEntryDto[]> {
+        let url_ = this.baseUrl + "/api/home/id?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
         if (modelDataType === null)
             throw new Error("The parameter 'modelDataType' cannot be null.");
         else if (modelDataType !== undefined)

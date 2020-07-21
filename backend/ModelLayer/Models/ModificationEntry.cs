@@ -45,14 +45,31 @@ namespace ModelLayer.Models
     public class ModificationEntry : BaseEntity
     {
         private string actualValue;
-
+        private string oldValue;
         public DATA_TYPE DataType { get; set; }
         public MODEL_TYPE DataModelType { get; set; }
         public long DataModelId { get; set; }
         public MODIFICATION ModificationType { get; set; }
         public string UserName { get; set; }
         public DateTime DateTime { get; set; }
-        public string OldValue { get; set; }
+
+        public string OldValue {
+            get
+            {
+                if (!IsDeleted)
+                {
+                    return oldValue;
+                }
+                else
+                {
+                    return GetDeletionInfo();
+                }
+            }
+            set
+            {
+                oldValue = value;
+            }
+        }
         public string ActualValue {
             get
             {

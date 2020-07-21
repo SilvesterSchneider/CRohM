@@ -45,7 +45,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id")]
         [Authorize]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ModificationEntryDto>), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
