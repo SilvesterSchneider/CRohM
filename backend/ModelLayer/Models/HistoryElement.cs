@@ -1,4 +1,4 @@
-﻿using ModelLayer.Models.Base;
+using ModelLayer.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,8 +14,8 @@ namespace ModelLayer.Models
 
     public class HistoryElement : BaseEntity
     {
-        public DateTime Date { get; set; }
-        public HistoryElementType Type { get; set; }
-        public string Comment { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
+        public HistoryElementType Type { get; set; } = HistoryElementType.MAIL;
+        public string Comment { get; set; } = "";
     }
 }
