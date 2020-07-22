@@ -65,30 +65,38 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.modificationEntryService.getSortedListByType(MODEL_TYPE.CONTACT).subscribe(x => {
-      const index = x.length - 1;
-      if (index > -1) {
-        this.addContact(x[0]);
-      }
-      if (index > 0) {
-        this.addContact(x[1]);
-      }
+      let modelId = -1;
+      let idx = 0;
+      x.forEach(a => {
+        if (a.dataModelId != modelId && idx < 2) {
+          modelId = a.dataModelId;
+          idx++;
+          this.addContact(a);
+        }
+      });
     });
     this.modificationEntryService.getSortedListByType(MODEL_TYPE.ORGANIZATION).subscribe(x => {
-      const index = x.length - 1;
-      if (index > -1) {
-        this.addOrganization(x[0]);
-      }
-      if (index > 0) {
-        this.addOrganization(x[1]);
-      }});
+      let modelId = -1;
+      let idx = 0;
+      x.forEach(a => {
+        if (a.dataModelId != modelId && idx < 2) {
+          modelId = a.dataModelId;
+          idx++;
+          this.addOrganization(a);
+        }
+      });
+    });
     this.modificationEntryService.getSortedListByType(MODEL_TYPE.EVENT).subscribe(x => {
-      const index = x.length - 1;
-      if (index > -1) {
-        this.addEvent(x[0]);
-      }
-      if (index > 0) {
-        this.addEvent(x[1]);
-    }});
+      let modelId = -1;
+      let idx = 0;
+      x.forEach(a => {
+        if (a.dataModelId != modelId && idx < 2) {
+          modelId = a.dataModelId;
+          idx++;
+          this.addEvent(a);
+        }
+      });
+    });
   }
 
   addEvent(entry: ModificationEntryDto) {
