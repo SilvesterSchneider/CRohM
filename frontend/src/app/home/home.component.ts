@@ -69,7 +69,7 @@ export class HomeComponent implements OnInit {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
-        if (a.dataModelId != modelId && idx < this.AMOUNT_OF_DATASETS) {
+        if (a.dataModelId !== modelId && idx < this.AMOUNT_OF_DATASETS) {
           modelId = a.dataModelId;
           idx++;
           this.addContact(a);
@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
-        if (a.dataModelId != modelId && idx < this.AMOUNT_OF_DATASETS) {
+        if (a.dataModelId !== modelId && idx < this.AMOUNT_OF_DATASETS) {
           modelId = a.dataModelId;
           idx++;
           this.addOrganization(a);
@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
-        if (a.dataModelId != modelId && idx < this.AMOUNT_OF_DATASETS) {
+        if (a.dataModelId !== modelId && idx < this.AMOUNT_OF_DATASETS) {
           modelId = a.dataModelId;
           idx++;
           this.addEvent(a);

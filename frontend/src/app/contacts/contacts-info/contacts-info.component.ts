@@ -99,7 +99,7 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
     }
     this.modService.getSortedListByTypeAndId(this.contact.id, MODEL_TYPE.CONTACT).subscribe(x => {
       x.forEach(a => {
-        if (a.dataType != DATA_TYPE.NONE) {
+        if (a.dataType !== DATA_TYPE.NONE) {
           this.dataHistory.push(a);
         }
       });
@@ -115,7 +115,7 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
     }
     this.contactsForm.patchValue(this.contact);
   }
-  
+
   getSortHistoryFunction(a: ModificationEntryDto, b: ModificationEntryDto) {
     return new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime();
   }

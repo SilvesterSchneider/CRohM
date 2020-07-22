@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ContactDto,
-  ContactPossibilitiesEntryDto, OrganizationDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, MODIFICATION, DATA_TYPE} from '../../shared/api-generated/api-generated';
+  ContactPossibilitiesEntryDto, OrganizationDto, ModificationEntryDto,
+  ModificationEntryService, MODEL_TYPE, MODIFICATION, DATA_TYPE} from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
@@ -38,7 +39,7 @@ export class OrganizationsInfoComponent implements OnInit {
     }
     this.modService.getSortedListByTypeAndId(this.organization.id, MODEL_TYPE.ORGANIZATION).subscribe(x => {
       x.forEach(a => {
-        if (a.dataType != DATA_TYPE.NONE) {
+        if (a.dataType !== DATA_TYPE.NONE) {
           this.dataHistory.push(a);
         }
       });
