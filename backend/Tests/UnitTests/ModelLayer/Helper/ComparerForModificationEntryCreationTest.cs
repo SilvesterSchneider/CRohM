@@ -1,3 +1,4 @@
+using ModelLayer.DataTransferObjects;
 using ModelLayer.Helper;
 using ModelLayer.Models;
 using System;
@@ -14,7 +15,7 @@ namespace UnitTests.ModelLayer.Helper
         {
             // Arrange
             Event oldEvent = new Event() { Id = 1, Date = DateTime.Now, Time = DateTime.Now, Name="testEvent1", Duration = 2.5f };
-            Event newEvent = new Event() { Id = oldEvent.Id, Date = oldEvent.Date, Time = oldEvent.Time, Name = "testEvent2", Duration = 3f };
+            EventDto newEvent = new EventDto() { Id = oldEvent.Id, Date = oldEvent.Date, Time = oldEvent.Time, Name = "testEvent2", Duration = 3f };
 
             // Act
             ComparerForModificationEntryCreation.CompareEvents(oldEvent, newEvent, "ram", out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion);

@@ -67,7 +67,7 @@ namespace ServiceLayer
 
         public async Task UpdateContactByHistoryElementAsync(string userNameOfChange, long id)
         {
-            await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.MODIFIED, MODEL_TYPE.CONTACT, DATA_TYPE.HISTORY_ELEMENT);
+            await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.ADDED, MODEL_TYPE.CONTACT, DATA_TYPE.HISTORY_ELEMENT);
         }
 
         public async Task UpdateOrganizationAsync(string usernameOfModification, Organization oldOrga, Organization newOrga, bool deleteEntries)
