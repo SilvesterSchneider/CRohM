@@ -11,7 +11,8 @@ import {
   ModificationEntryDto,
   ModificationEntryService,
   MODEL_TYPE,
-  MODIFICATION
+  MODIFICATION,
+  DATA_TYPE
 } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -98,7 +99,7 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
     }
     this.modService.getSortedListByTypeAndId(this.contact.id, MODEL_TYPE.CONTACT).subscribe(x => {
       x.forEach(a => {
-        if (a.modificationType == MODIFICATION.MODIFIED || a.modificationType == MODIFICATION.ADDED) {
+        if (a.dataType != DATA_TYPE.NONE) {
           this.dataHistory.push(a);
         }
       });

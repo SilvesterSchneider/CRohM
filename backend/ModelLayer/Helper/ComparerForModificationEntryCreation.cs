@@ -40,7 +40,7 @@ namespace ModelLayer.Helper
             {
                 if (newContacts.Find(a => a.Id == connection.ContactId) == null)
                 {
-                    listEntries.Add(GetNewModificationEntry("", connection.Contact.PreName + " " + connection.Contact.Name, id, MODEL_TYPE.EVENT, DATA_TYPE.CONTACTS, userOfModification, MODIFICATION.MODIFIED));
+                    listEntries.Add(GetNewModificationEntry("", connection.Contact.PreName + " " + connection.Contact.Name, id, MODEL_TYPE.EVENT, DATA_TYPE.CONTACTS, userOfModification, MODIFICATION.DELETED));
                 }
             }
             foreach (ContactDto contact in newContacts)
@@ -57,20 +57,9 @@ namespace ModelLayer.Helper
             foreach (Participated partOld in oldOnes)
             {
                 ParticipatedDto newPart = newOnes.Find(a => a.Id == partOld.Id);
-                if (newPart == null)
-                {
-                    listEntries.Add(GetNewModificationEntry("", partOld.HasParticipated.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
-                }
-                else if (newPart.HasParticipated != partOld.HasParticipated)
+                if (newPart != null && newPart.HasParticipated != partOld.HasParticipated)
                 {
                     listEntries.Add(GetNewModificationEntry(newPart.HasParticipated.ToString(), partOld.HasParticipated.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
-                }
-            }
-            foreach (ParticipatedDto partNew in newOnes)
-            {
-                if (oldOnes.Find(a => a.Id == partNew.Id) == null)
-                {
-                    listEntries.Add(GetNewModificationEntry(partNew.HasParticipated.ToString(), "", id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.ADDED));
                 }
             }
         }
@@ -110,10 +99,6 @@ namespace ModelLayer.Helper
             if (!oldOrga.Description.Equals(newOrga.Description))
             {
                 listCreation.Add(GetNewModificationEntry(newOrga.Description, oldOrga.Description, newOrga.Id, MODEL_TYPE.ORGANIZATION, DATA_TYPE.DESCRIPTION, userOfModification, MODIFICATION.MODIFIED));
-            }
-            if (oldOrga.OrganizationContacts.Count != newOrga.OrganizationContacts.Count)
-            {
-                listCreation.Add(GetNewModificationEntry(newOrga.OrganizationContacts.Count.ToString(), oldOrga.OrganizationContacts.Count.ToString(), newOrga.Id, MODEL_TYPE.ORGANIZATION, DATA_TYPE.CONTACTS, userOfModification, MODIFICATION.ADDED));
             }
             //    if (oldOrga.History.Count != newOrga.History.Count)
             //   {

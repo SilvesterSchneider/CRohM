@@ -24,7 +24,7 @@ namespace ServiceLayer
         Task UpdateOrganizationByDeletionAsync(long id);
         Task UpdateEventByDeletionAsync(long id);
         Task CommitChanges();
-        Task ChangeEmployeesOfOrganization(long id, int oldCount, int newCount, string userNameOfChange);
+        Task ChangeEmployeesOfOrganization(long id, string contactName, bool wasDeleted, string userNameOfChange);
         Task ChangeContactsOfEvent(long id, int oldCount, int newCount, string userNameOfChange);
     }
 
@@ -90,9 +90,16 @@ namespace ServiceLayer
             await CreateNewEntryAsync("", id, MODIFICATION.DELETED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.NONE);
         }
 
-        public async Task ChangeEmployeesOfOrganization(long id, int oldCount, int newCount, string userNameOfChange)
+        public async Task ChangeEmployeesOfOrganization(long id, string contactName, bool wasDeleted, string userNameOfChange)
         {
-            await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.MODIFIED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.CONTACTS, oldCount.ToString(), newCount.ToString());
+            if (wasDeleted)
+            {
+                await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.DELETED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.CONTACTS, contactName, "");
+            }
+            else
+            {
+                await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.ADDED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.CONTACTS, "", contactName);
+            }         
         }
 
         public async Task UpdateEventsAsync(string usernameOfModification, Event oldEvent, EventDto newEvent)

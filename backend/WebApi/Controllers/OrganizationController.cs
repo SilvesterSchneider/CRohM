@@ -23,10 +23,18 @@ namespace WebApi.Controllers
         private readonly IModificationEntryService modService;
         private readonly IOrganizationService _organizationService;
         private readonly ILogger _logger;
+        private IContactService contactService;
 
-        public OrganizationController(IMapper mapper, IOrganizationService organizationService, IUserService userService, ILoggerFactory logger, IModificationEntryService modService)
+        public OrganizationController(
+            IMapper mapper,
+            IOrganizationService organizationService,
+            IUserService userService,
+            ILoggerFactory logger,
+            IModificationEntryService modService,
+            IContactService contactService)
         {
             _mapper = mapper;
+            this.contactService = contactService;
             this.userService = userService;
             this.modService = modService;
             _organizationService = organizationService;
@@ -106,7 +114,13 @@ namespace WebApi.Controllers
 
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modService.ChangeEmployeesOfOrganization(id, organization.OrganizationContacts.Count - 1, organization.OrganizationContacts.Count, userNameOfChange);
+            string contactName = string.Empty;
+            Contact contact = await contactService.GetByIdAsync(contactId);
+            if (contact != null)
+            {
+                contactName = contact.PreName + " " + contact.Name;
+            }
+            await modService.ChangeEmployeesOfOrganization(id, contactName, false, userNameOfChange);
             return Ok(organizationDto);
         }
 
@@ -130,8 +144,13 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            Organization orga = await _organizationService.GetByIdAsync(id);
-            await modService.ChangeEmployeesOfOrganization(id, orga.OrganizationContacts.Count + 1, orga.OrganizationContacts.Count, userNameOfChange);
+            string contactName = string.Empty;
+            Contact contact = await contactService.GetByIdAsync(contactId);
+            if (contact != null)
+            {
+                contactName = contact.PreName + " " + contact.Name;
+            }
+            await modService.ChangeEmployeesOfOrganization(id, contactName, true , userNameOfChange);
             return Ok();
         }
 

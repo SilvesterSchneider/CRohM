@@ -1,7 +1,7 @@
 import {
   Component, OnInit, Inject
 } from '@angular/core';
-import { EventDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, MODIFICATION } from '../../shared/api-generated/api-generated';
+import { EventDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, MODIFICATION, DATA_TYPE } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -75,7 +75,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     }
     this.modService.getSortedListByTypeAndId(this.event.id, MODEL_TYPE.EVENT).subscribe(x => {
       x.forEach(a => {
-        if (a.modificationType == MODIFICATION.MODIFIED || a.modificationType == MODIFICATION.ADDED) {
+        if (a.dataType != DATA_TYPE.NONE) {
           this.dataHistory.push(a);
         }
       });

@@ -106,7 +106,7 @@ namespace ModelLayer.Models
                 }
                 else if (DataType == DATA_TYPE.CONTACTS)
                 {
-                    return "Teilnehmeranzahl";
+                    return "Teilnehmer";
                 }
                 else if (DataType == DATA_TYPE.FAX)
                 {
