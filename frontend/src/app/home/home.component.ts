@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit {
   public contacts: ContactExtended[] = new Array<ContactExtended>();
   public organizations: OrganizationExtended[] = new Array<OrganizationExtended>();
   public events: EventExtended[] = new Array<EventExtended>();
+  AMOUNT_OF_DATASETS = 2;
 
   constructor(
     private contactsService: ContactService,
@@ -68,7 +69,7 @@ export class HomeComponent implements OnInit {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
-        if (a.dataModelId != modelId && idx < 2) {
+        if (a.dataModelId != modelId && idx < this.AMOUNT_OF_DATASETS) {
           modelId = a.dataModelId;
           idx++;
           this.addContact(a);
@@ -79,7 +80,7 @@ export class HomeComponent implements OnInit {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
-        if (a.dataModelId != modelId && idx < 2) {
+        if (a.dataModelId != modelId && idx < this.AMOUNT_OF_DATASETS) {
           modelId = a.dataModelId;
           idx++;
           this.addOrganization(a);
@@ -90,7 +91,7 @@ export class HomeComponent implements OnInit {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
-        if (a.dataModelId != modelId && idx < 2) {
+        if (a.dataModelId != modelId && idx < this.AMOUNT_OF_DATASETS) {
           modelId = a.dataModelId;
           idx++;
           this.addEvent(a);
