@@ -1,6 +1,6 @@
 <mat-dialog-content>
     <div class="eventsAdd" [formGroup]="eventsForm">
-        <div class="column">
+        <div class="row">
             <div class="col-md-12">
                 <h3>
                     Veranstaltungsinformationen
@@ -56,9 +56,11 @@
             <mat-row *matRowDef="let row; columns: columnsContacts;"></mat-row>
         </mat-table>
     </div>
-    <div *ngIf="dataHistory.length > 0" class="row">
-        <h6>Datenveränderungen</h6>
-        <mat-table #table [dataSource]="dataHistory">
+    <div class="col-md-12">
+        <h6 *ngIf="dataHistory.length > 0">Datenveränderungen</h6>
+    </div>
+    <div class="col-md-12">
+        <mat-table *ngIf="dataHistory.length > 0" #table [dataSource]="dataHistory">
             <ng-container matColumnDef="datum">
                 <mat-header-cell *matHeaderCellDef> Datum </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{getDate(element.dateTime)}}
