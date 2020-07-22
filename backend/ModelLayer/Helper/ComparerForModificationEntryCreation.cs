@@ -1,3 +1,4 @@
+using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace ModelLayer.Helper
 {
     public class ComparerForModificationEntryCreation
     {
-        public static void CompareEvents(Event oldEvent, Event newEvent, string userOfModification,
+        public static void CompareEvents(Event oldEvent, EventDto newEvent, string userOfModification,
             out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion)
         {
             listWithDeletion = new List<ModificationEntry>();
@@ -32,11 +33,11 @@ namespace ModelLayer.Helper
             listWithCreation = listEntries;
         }
 
-        private static void GetParticipatedChangesOfEvent(List<Participated> oldOnes, List<Participated> newOnes, List<ModificationEntry> listEntries, string userOfModification, long id)
+        private static void GetParticipatedChangesOfEvent(List<Participated> oldOnes, List<ParticipatedDto> newOnes, List<ModificationEntry> listEntries, string userOfModification, long id)
         {
             foreach (Participated partOld in oldOnes)
             {
-                Participated newPart = newOnes.Find(a => a.Id == partOld.Id);
+                ParticipatedDto newPart = newOnes.Find(a => a.Id == partOld.Id);
                 if (newPart == null)
                 {
                     listEntries.Add(GetNewModificationEntry("", partOld.HasParticipated.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
@@ -46,7 +47,7 @@ namespace ModelLayer.Helper
                     listEntries.Add(GetNewModificationEntry(newPart.HasParticipated.ToString(), partOld.HasParticipated.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
                 }
             }
-            foreach (Participated partNew in newOnes)
+            foreach (ParticipatedDto partNew in newOnes)
             {
                 if (oldOnes.Find(a => a.Id == partNew.Id) == null)
                 {

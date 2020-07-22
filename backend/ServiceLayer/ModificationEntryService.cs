@@ -1,4 +1,5 @@
 using ModelLayer;
+using ModelLayer.DataTransferObjects;
 using ModelLayer.Helper;
 using ModelLayer.Models;
 using RepositoryLayer;
@@ -13,7 +14,7 @@ namespace ServiceLayer
     {
         Task UpdateContactAsync(string usernameOfModification, Contact oldContact, Contact newContact, bool deleteEntries);
         Task UpdateOrganizationAsync(string usernameOfModification, Organization oldOrga, Organization newOrga, bool deleteEntries);
-        Task UpdateEventsAsync(string usernameOfModification, Event oldEvent, Event newEvent);
+        Task UpdateEventsAsync(string usernameOfModification, Event oldEvent, EventDto newEvent);
         Task CreateNewContactEntryAsync(string userNameOfChange, long id);
         Task CreateNewOrganizationEntryAsync(string userNameOfChange, long id);
         Task CreateNewEventEntryAsync(string userNameOfChange, long id);
@@ -94,7 +95,7 @@ namespace ServiceLayer
             await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.MODIFIED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.CONTACTS, oldCount.ToString(), newCount.ToString());
         }
 
-        public async Task UpdateEventsAsync(string usernameOfModification, Event oldEvent, Event newEvent)
+        public async Task UpdateEventsAsync(string usernameOfModification, Event oldEvent, EventDto newEvent)
         {
             await Task.Run(() => ComparerForModificationEntryCreation.CompareEvents(oldEvent, newEvent, usernameOfModification, out listWithCreation, out listWithDeletion));
         }

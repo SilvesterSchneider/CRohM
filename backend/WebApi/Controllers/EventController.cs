@@ -84,8 +84,7 @@ namespace WebApi.Controllers
             }
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
             Event oldOne = await eventService.GetEventByIdWithAllIncludesAsync(id);
-            Event newOne = _mapper.Map<Event>(eventToModify);
-            await modService.UpdateEventsAsync(userNameOfChange, oldOne, newOne);
+            await modService.UpdateEventsAsync(userNameOfChange, oldOne, eventToModify);
             if (await eventService.ModifyEventAsync(eventToModify))
             {
                 await modService.CommitChanges();
