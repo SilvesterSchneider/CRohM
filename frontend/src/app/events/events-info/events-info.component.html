@@ -56,8 +56,8 @@
             <mat-row *matRowDef="let row; columns: columnsContacts;"></mat-row>
         </mat-table>
     </div>
-    <div *ngIf="dataHistory.length > 0" class="col-md-12">
-        <h5>Datenveränderungen</h5>
+    <div *ngIf="dataHistory.length > 0" class="row">
+        <h6>Datenveränderungen</h6>
         <mat-table #table [dataSource]="dataHistory">
             <ng-container matColumnDef="datum">
                 <mat-header-cell *matHeaderCellDef> Datum </mat-header-cell>

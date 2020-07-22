@@ -5,6 +5,7 @@ using ModelLayer.Models;
 using NSwag.Annotations;
 using RepositoryLayer;
 using ServiceLayer;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -84,6 +85,7 @@ namespace WebApi.Controllers
             }
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
             Event oldOne = await eventService.GetEventByIdWithAllIncludesAsync(id);
+            
             await modService.UpdateEventsAsync(userNameOfChange, oldOne, eventToModify);
             if (await eventService.ModifyEventAsync(eventToModify))
             {

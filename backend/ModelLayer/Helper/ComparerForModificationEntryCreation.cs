@@ -29,8 +29,27 @@ namespace ModelLayer.Helper
             {
                 listEntries.Add(GetNewModificationEntry(newEvent.Duration.ToString(), oldEvent.Duration.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DURATION, userOfModification, MODIFICATION.MODIFIED));
             }
+            GetContactsChangeOfEvents(oldEvent.Contacts, newEvent.Contacts, newEvent.Id, userOfModification, listEntries);
             GetParticipatedChangesOfEvent(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id);
             listWithCreation = listEntries;
+        }
+
+        private static void GetContactsChangeOfEvents(List<EventContact> oldContacts, List<ContactDto> newContacts, long id, string userOfModification, List<ModificationEntry> listEntries)
+        {
+            foreach (EventContact connection in oldContacts)
+            {
+                if (newContacts.Find(a => a.Id == connection.ContactId) == null)
+                {
+                    listEntries.Add(GetNewModificationEntry("", connection.Contact.PreName + " " + connection.Contact.Name, id, MODEL_TYPE.EVENT, DATA_TYPE.CONTACTS, userOfModification, MODIFICATION.MODIFIED));
+                }
+            }
+            foreach (ContactDto contact in newContacts)
+            {
+                if (oldContacts.Find(a => a.Contact.Id == contact.Id) == null)
+                {
+                    listEntries.Add(GetNewModificationEntry(contact.PreName + " " + contact.Name, "", id, MODEL_TYPE.EVENT, DATA_TYPE.CONTACTS, userOfModification, MODIFICATION.ADDED));
+                }
+            }
         }
 
         private static void GetParticipatedChangesOfEvent(List<Participated> oldOnes, List<ParticipatedDto> newOnes, List<ModificationEntry> listEntries, string userOfModification, long id)
