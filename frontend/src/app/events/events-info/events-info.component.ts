@@ -47,7 +47,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   }
 
   getSortHistoryFunction(a: ModificationEntryDto, b: ModificationEntryDto) {
-    return new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime();
+    return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
   }
 
   hasChanged() {
