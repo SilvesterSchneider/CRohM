@@ -191,6 +191,7 @@ namespace ModelLayer.Helper
                 if (string.IsNullOrEmpty(newValue) && deleteEntries)
                 {
                     listWithDeletion.Add(GetNewModificationEntry(newValue, oldValue, id, modelType, dataType, userOfModification, MODIFICATION.DELETED, -1, true));
+                    listWithCreation.Add(GetNewModificationEntry("", "", id, modelType, dataType, userOfModification, MODIFICATION.DELETED, -1, true));
                 }
                 else
                 {
@@ -225,6 +226,7 @@ namespace ModelLayer.Helper
                 if (newEntryToFind == null && deleteEntries)
                 {                    
                     listWithDeletion.Add(GetNewModificationEntry("" , entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.DELETED, (int) entryOld.Id, true));
+                    listWithCreation.Add(GetNewModificationEntry("", "", idOfModel, modelType, dataType, userOfModification, MODIFICATION.DELETED, (int) entryOld.Id, true));
                 }
                 else 
                 {
