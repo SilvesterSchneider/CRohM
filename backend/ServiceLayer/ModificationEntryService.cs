@@ -18,8 +18,8 @@ namespace ServiceLayer
         Task CreateNewContactEntryAsync(string userNameOfChange, long id);
         Task CreateNewOrganizationEntryAsync(string userNameOfChange, long id);
         Task CreateNewEventEntryAsync(string userNameOfChange, long id);
-        Task UpdateContactByHistoryElementAsync(string userNameOfChange, long id);
-        Task UpdateOrganizationByHistoryElementAsync(string userNameOfChange, long id);
+        Task UpdateContactByHistoryElementAsync(string userNameOfChange, long id, string historyElementContent);
+        Task UpdateOrganizationByHistoryElementAsync(string userNameOfChange, long id, string historyElementContent);
         Task UpdateContactByDeletionAsync(long id);
         Task UpdateOrganizationByDeletionAsync(long id);
         Task UpdateEventByDeletionAsync(long id);
@@ -32,10 +32,11 @@ namespace ServiceLayer
     {
         private List<ModificationEntry> listWithCreation;
         private List<ModificationEntry> listWithDeletion;
+        private IContactPossibilitiesEntryRepository contactPossEntriesRepo;
 
-        public ModificationEntryService(CrmContext context) : base(context)
+        public ModificationEntryService(CrmContext context, IContactPossibilitiesEntryRepository contactPossEntriesRepo) : base(context)
         {
-
+            this.contactPossEntriesRepo = contactPossEntriesRepo;
         }
 
         public async Task CreateNewContactEntryAsync(string userNameOfChange, long id)
@@ -45,7 +46,7 @@ namespace ServiceLayer
 
         public async Task UpdateContactAsync(string usernameOfModification, Contact oldContact, Contact newContact, bool deleteEntries)
         {
-            await Task.Run(() => ComparerForModificationEntryCreation.CompareContacts(oldContact, newContact, usernameOfModification, deleteEntries, out listWithCreation, out listWithDeletion));            
+            await Task.Run(() => ComparerForModificationEntryCreation.CompareContacts(oldContact, newContact, usernameOfModification, deleteEntries, out listWithCreation, out listWithDeletion, contactPossEntriesRepo.GetTotalAmountOfEntities() + 1));            
         }
 
         public async Task CommitChanges()
@@ -65,14 +66,14 @@ namespace ServiceLayer
             await CreateNewEntryAsync("", id, MODIFICATION.DELETED, MODEL_TYPE.CONTACT, DATA_TYPE.NONE);
         }
 
-        public async Task UpdateContactByHistoryElementAsync(string userNameOfChange, long id)
+        public async Task UpdateContactByHistoryElementAsync(string userNameOfChange, long id, string historyElementContent)
         {
-            await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.ADDED, MODEL_TYPE.CONTACT, DATA_TYPE.HISTORY_ELEMENT);
+            await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.ADDED, MODEL_TYPE.CONTACT, DATA_TYPE.HISTORY_ELEMENT, "", historyElementContent);
         }
 
         public async Task UpdateOrganizationAsync(string usernameOfModification, Organization oldOrga, Organization newOrga, bool deleteEntries)
         {
-            await Task.Run(() => ComparerForModificationEntryCreation.CompareOrganizations(oldOrga, newOrga, usernameOfModification, deleteEntries, out listWithCreation, out listWithDeletion));
+            await Task.Run(() => ComparerForModificationEntryCreation.CompareOrganizations(oldOrga, newOrga, usernameOfModification, deleteEntries, out listWithCreation, out listWithDeletion, contactPossEntriesRepo.GetTotalAmountOfEntities() + 1));
         }
 
         public async Task CreateNewOrganizationEntryAsync(string userNameOfChange, long id)
@@ -80,9 +81,9 @@ namespace ServiceLayer
             await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.CREATED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.NONE);
         }
 
-        public async Task UpdateOrganizationByHistoryElementAsync(string userNameOfChange, long id)
+        public async Task UpdateOrganizationByHistoryElementAsync(string userNameOfChange, long id, string historyElementContent)
         {
-            await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.ADDED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.HISTORY_ELEMENT);
+            await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.ADDED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.HISTORY_ELEMENT, "", historyElementContent);
         }
 
         public async Task UpdateOrganizationByDeletionAsync(long id)

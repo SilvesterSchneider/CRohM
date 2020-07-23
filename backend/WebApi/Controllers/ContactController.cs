@@ -11,6 +11,7 @@ using NSwag.Annotations;
 using RepositoryLayer;
 using ServiceLayer;
 using System.Linq;
+using ModelLayer.Helper;
 
 namespace WebApi.Controllers
 {
@@ -119,7 +120,7 @@ namespace WebApi.Controllers
 
             await contactService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
             string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
-            await modService.UpdateContactByHistoryElementAsync(userNameOfChange, id);
+            await modService.UpdateContactByHistoryElementAsync(userNameOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
             return Ok();
         }
 

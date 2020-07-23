@@ -65,7 +65,7 @@ namespace ModelLayer.Helper
         }
 
         public static void CompareContacts(Contact oldContact, Contact newContact, string userOfModification, bool deleteEntries,
-            out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion)
+            out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion, int nextNewId)
         {
             List<ModificationEntry> listCreation = new List<ModificationEntry>();
             List<ModificationEntry> listDeletion = new List<ModificationEntry>();
@@ -79,16 +79,16 @@ namespace ModelLayer.Helper
             }
             if (oldContact.History.Count != newContact.History.Count)
             {
-                listCreation.Add(GetNewModificationEntry(newContact.History.Count.ToString(), oldContact.History.Count.ToString(), newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.HISTORY_ELEMENT, userOfModification, MODIFICATION.ADDED));
+                listCreation.Add(GetNewModificationEntry(newContact.History[newContact.History.Count - 1].Description + ":" + newContact.History[newContact.History.Count - 1].Comment, "", newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.HISTORY_ELEMENT, userOfModification, MODIFICATION.ADDED));
             }
             listCreation.AddRange(GetModificationsForAddressObject(oldContact.Address, newContact.Address, newContact.Id, userOfModification, MODEL_TYPE.CONTACT));
-            GetModificationsForContactPossibilitiesObject(oldContact.ContactPossibilities, newContact.ContactPossibilities, newContact.Id, userOfModification, deleteEntries, listCreation, listDeletion, MODEL_TYPE.CONTACT);
+            GetModificationsForContactPossibilitiesObject(oldContact.ContactPossibilities, newContact.ContactPossibilities, newContact.Id, userOfModification, deleteEntries, listCreation, listDeletion, MODEL_TYPE.CONTACT, nextNewId);
             listWithCreation = listCreation;
             listWithDeletion = listDeletion;
         }
 
         public static void CompareOrganizations(Organization oldOrga, Organization newOrga, string userOfModification, bool deleteEntries,
-            out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion)
+            out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion, int nextNewId)
         {
             List<ModificationEntry> listCreation = new List<ModificationEntry>();
             List<ModificationEntry> listDeletion = new List<ModificationEntry>();
@@ -105,13 +105,13 @@ namespace ModelLayer.Helper
             //       listCreation.Add(GetNewModificationEntry(newOrga.History.Count.ToString(), oldOrga.History.Count.ToString(), newOrga.Id, MODEL_TYPE.ORGANIZATION, DATA_TYPE.HISTORY_ELEMENT, userOfModification, MODIFICATION.ADDED));
             //   }
             listCreation.AddRange(GetModificationsForAddressObject(oldOrga.Address, newOrga.Address, newOrga.Id, userOfModification, MODEL_TYPE.ORGANIZATION));
-            GetModificationsForContactPossibilitiesObject(oldOrga.Contact, newOrga.Contact, newOrga.Id, userOfModification, deleteEntries, listCreation, listDeletion, MODEL_TYPE.ORGANIZATION);
+            GetModificationsForContactPossibilitiesObject(oldOrga.Contact, newOrga.Contact, newOrga.Id, userOfModification, deleteEntries, listCreation, listDeletion, MODEL_TYPE.ORGANIZATION, nextNewId);
             listWithCreation = listCreation;
             listWithDeletion = listDeletion;
         }
 
         private static void GetModificationsForContactPossibilitiesObject(ContactPossibilities oldOne, ContactPossibilities newOne, long idOfModel, string userOfModification, bool deleteEntries,
-            List<ModificationEntry> listWithCreation, List<ModificationEntry> listWithDeletion, MODEL_TYPE modelType)
+            List<ModificationEntry> listWithCreation, List<ModificationEntry> listWithDeletion, MODEL_TYPE modelType, int nextNewId)
         {
             if (!oldOne.Fax.Equals(newOne.Fax))
             {
@@ -145,24 +145,23 @@ namespace ModelLayer.Helper
                     listWithCreation.Add(GetNewModificationEntry(newOne.PhoneNumber, oldOne.PhoneNumber, idOfModel, modelType, DATA_TYPE.PHONE, userOfModification, MODIFICATION.MODIFIED));
                 }
             }
-            GetModificationsForContactEntriesObject(oldOne.ContactEntries, newOne.ContactEntries, idOfModel, userOfModification, deleteEntries, listWithCreation, listWithDeletion, modelType);
+            GetModificationsForContactEntriesObject(oldOne.ContactEntries, newOne.ContactEntries, idOfModel, userOfModification, deleteEntries, listWithCreation, listWithDeletion, modelType, nextNewId);
         }
 
         private static void GetModificationsForContactEntriesObject(List<ContactPossibilitiesEntry> oldOne, List<ContactPossibilitiesEntry> newOne, long idOfModel, string userOfModification, bool deleteEntries,
-            List<ModificationEntry> listWithCreation, List<ModificationEntry> listWithDeletion, MODEL_TYPE modelType)
+            List<ModificationEntry> listWithCreation, List<ModificationEntry> listWithDeletion, MODEL_TYPE modelType, int nextNewId)
         {
-            int idx = 0;
             foreach (ContactPossibilitiesEntry entryOld in oldOne)
             {
                 DATA_TYPE dataType = DATA_TYPE.PHONE_EXTENDED;
-                if (new MailValidator().IsValid(entryOld))
+                if (new MailValidator().IsValid(entryOld.ContactEntryValue))
                 {
                     dataType = DATA_TYPE.MAIL_EXTENDED;
                 }
                 ContactPossibilitiesEntry newEntryToFind = newOne.Find(a => a.Id == entryOld.Id);
                 if (newEntryToFind == null && deleteEntries)
                 {                    
-                    listWithDeletion.Add(GetNewModificationEntry("" , entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.MODIFIED, idx, true));
+                    listWithDeletion.Add(GetNewModificationEntry("" , entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.DELETED, (int) entryOld.Id, true));
                 }
                 else 
                 {
@@ -175,31 +174,20 @@ namespace ModelLayer.Helper
                             newName = newEntryToFind.ContactEntryName;
                             newValue = newEntryToFind.ContactEntryValue;
                         }
-                        if (!newName.Equals(entryOld.ContactEntryName))
-                        {
-                            listWithCreation.Add(GetNewModificationEntry(newName, entryOld.ContactEntryName, idOfModel, modelType, dataType, userOfModification, MODIFICATION.MODIFIED, idx));
-                        }
-                        if (!newValue.Equals(entryOld.ContactEntryValue))
-                        {
-                            listWithCreation.Add(GetNewModificationEntry(newValue, entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.MODIFIED, idx));
-                        }
+                        listWithCreation.Add(GetNewModificationEntry(newName + ":" + newValue, entryOld.ContactEntryName + ":" + entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.MODIFIED, (int)entryOld.Id));
                     }                    
                 }
-                idx++;
             }
-            idx = oldOne.Count;
             foreach (ContactPossibilitiesEntry entryNew in newOne)
             { 
                 if (oldOne.Find(a => a.Id == entryNew.Id) == null)
                 {
                     DATA_TYPE dataType = DATA_TYPE.PHONE_EXTENDED;
-                    if (new MailValidator().IsValid(entryNew))
+                    if (new MailValidator().IsValid(entryNew.ContactEntryValue))
                     {
                         dataType = DATA_TYPE.MAIL_EXTENDED;
                     }
-                    listWithCreation.Add(GetNewModificationEntry(entryNew.ContactEntryName, "", idOfModel, modelType, dataType, userOfModification, MODIFICATION.ADDED, idx));
-                    listWithCreation.Add(GetNewModificationEntry(entryNew.ContactEntryValue, "", idOfModel, modelType, dataType, userOfModification, MODIFICATION.ADDED, idx));
-                    idx++;
+                    listWithCreation.Add(GetNewModificationEntry(entryNew.ContactEntryName + ":" + entryNew.ContactEntryValue, "", idOfModel, modelType, dataType, userOfModification, MODIFICATION.ADDED, nextNewId++));
                 }                
             }
         }

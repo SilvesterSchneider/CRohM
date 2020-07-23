@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using ModelLayer.Helper;
 
 namespace WebApi.Controllers
 {
