@@ -48,7 +48,7 @@ namespace UnitTests.ModelLayer.Helper
             ComparerForModificationEntryCreation.CompareContacts(oldContact, newContact, "ram", true, out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion, 0);
 
             //Assert
-            Assert.Equal(2, listWithNewEntries.Count);
+            Assert.Equal(3, listWithNewEntries.Count);
             Assert.Single(listWithDeletion);
 
             Assert.Equal(1, listWithNewEntries[0].DataModelId);
@@ -82,7 +82,7 @@ namespace UnitTests.ModelLayer.Helper
             ComparerForModificationEntryCreation.CompareOrganizations(oldOrga, newOrga, "ram", true, out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion, 0);
 
             //Assert
-            Assert.Equal(2, listWithNewEntries.Count);
+            Assert.Equal(3, listWithNewEntries.Count);
             Assert.Single(listWithDeletion);
 
             Assert.Equal(1, listWithNewEntries[0].DataModelId);
