@@ -22,25 +22,32 @@ namespace ModelLayer.Helper
         {
             listWithDeletion = new List<ModificationEntry>();
             List<ModificationEntry> listEntries = new List<ModificationEntry>();
-            if (!oldEvent.Name.Equals(newEvent.Name))
-            {
-                listEntries.Add(GetNewModificationEntry(newEvent.Name, oldEvent.Name, newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.NAME, userOfModification, MODIFICATION.MODIFIED));
-            }
-            if (!oldEvent.Date.Equals(newEvent.Date))
-            {
-                listEntries.Add(GetNewModificationEntry(newEvent.Date.ToString(), oldEvent.Date.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DATE, userOfModification, MODIFICATION.MODIFIED));
-            }
-            if (!oldEvent.Time.Equals(newEvent.Time))
-            {
-                listEntries.Add(GetNewModificationEntry(newEvent.Time.ToString(), oldEvent.Time.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.TIME, userOfModification, MODIFICATION.MODIFIED));
-            }
-            if (!oldEvent.Duration.Equals(newEvent.Duration))
-            {
-                listEntries.Add(GetNewModificationEntry(newEvent.Duration.ToString(), oldEvent.Duration.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DURATION, userOfModification, MODIFICATION.MODIFIED));
-            }
+            ComparePlainFields(listEntries, oldEvent.Name, newEvent.Name, newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.NAME, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(listEntries, oldEvent.Date.ToString(), newEvent.Date.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DATE, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(listEntries, oldEvent.Time.ToString(), newEvent.Time.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.TIME, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(listEntries, oldEvent.Duration.ToString(), newEvent.Duration.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DURATION, userOfModification, MODIFICATION.MODIFIED);
             GetContactsChangeOfEvents(oldEvent.Contacts, newEvent.Contacts, newEvent.Id, userOfModification, listEntries);
             GetParticipatedChangesOfEvent(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id);
             listWithCreation = listEntries;
+        }
+
+        /// <summary>
+        /// compare simple fields together
+        /// </summary>
+        /// <param name="listEntries">the list where to add a new modification entry if necessary</param>
+        /// <param name="oldValue">the old value</param>
+        /// <param name="newValue">the new value</param>
+        /// <param name="id">the model id</param>
+        /// <param name="modelType">the modelType</param>
+        /// <param name="dataType">the dataType</param>
+        /// <param name="userOfModification">who made this change?</param>
+        /// <param name="modification">the modification type</param>
+        private static void ComparePlainFields(List<ModificationEntry> listEntries, string oldValue, string newValue, long id, MODEL_TYPE modelType, DATA_TYPE dataType, string userOfModification, MODIFICATION modification)
+        {
+            if (!oldValue.Equals(newValue))
+            {
+                listEntries.Add(GetNewModificationEntry(newValue, oldValue, id, modelType, dataType, userOfModification, modification));
+            }
         }
 
         /// <summary>
@@ -104,14 +111,8 @@ namespace ModelLayer.Helper
         {
             List<ModificationEntry> listCreation = new List<ModificationEntry>();
             List<ModificationEntry> listDeletion = new List<ModificationEntry>();
-            if (!oldContact.Name.Equals(newContact.Name))
-            {
-                listCreation.Add(GetNewModificationEntry(newContact.Name, oldContact.Name, newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.NAME, userOfModification, MODIFICATION.MODIFIED));
-            }
-            if (!oldContact.PreName.Equals(newContact.PreName))
-            {
-                listCreation.Add(GetNewModificationEntry(newContact.PreName, oldContact.PreName, newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.PRENAME, userOfModification, MODIFICATION.MODIFIED));
-            }
+            ComparePlainFields(listCreation, oldContact.Name, newContact.Name, newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.NAME, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(listCreation, oldContact.PreName, newContact.PreName, newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.PRENAME, userOfModification, MODIFICATION.MODIFIED);         
             if (oldContact.History.Count != newContact.History.Count)
             {
                 listCreation.Add(GetNewModificationEntry(newContact.History[newContact.History.Count - 1].Description + ":" + newContact.History[newContact.History.Count - 1].Comment, "", newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.HISTORY_ELEMENT, userOfModification, MODIFICATION.ADDED));
@@ -137,14 +138,8 @@ namespace ModelLayer.Helper
         {
             List<ModificationEntry> listCreation = new List<ModificationEntry>();
             List<ModificationEntry> listDeletion = new List<ModificationEntry>();
-            if (!oldOrga.Name.Equals(newOrga.Name))
-            {
-                listCreation.Add(GetNewModificationEntry(newOrga.Name, oldOrga.Name, newOrga.Id, MODEL_TYPE.ORGANIZATION, DATA_TYPE.NAME, userOfModification, MODIFICATION.MODIFIED));
-            }
-            if (!oldOrga.Description.Equals(newOrga.Description))
-            {
-                listCreation.Add(GetNewModificationEntry(newOrga.Description, oldOrga.Description, newOrga.Id, MODEL_TYPE.ORGANIZATION, DATA_TYPE.DESCRIPTION, userOfModification, MODIFICATION.MODIFIED));
-            }
+            ComparePlainFields(listCreation, oldOrga.Name, newOrga.Name, newOrga.Id, MODEL_TYPE.ORGANIZATION, DATA_TYPE.NAME, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(listCreation, oldOrga.Description, newOrga.Description, newOrga.Id, MODEL_TYPE.ORGANIZATION, DATA_TYPE.DESCRIPTION, userOfModification, MODIFICATION.MODIFIED);
             //    if (oldOrga.History.Count != newOrga.History.Count)
             //   {
             //       listCreation.Add(GetNewModificationEntry(newOrga.History.Count.ToString(), oldOrga.History.Count.ToString(), newOrga.Id, MODEL_TYPE.ORGANIZATION, DATA_TYPE.HISTORY_ELEMENT, userOfModification, MODIFICATION.ADDED));
@@ -170,39 +165,38 @@ namespace ModelLayer.Helper
         private static void GetModificationsForContactPossibilitiesObject(ContactPossibilities oldOne, ContactPossibilities newOne, long idOfModel, string userOfModification, bool deleteEntries,
             List<ModificationEntry> listWithCreation, List<ModificationEntry> listWithDeletion, MODEL_TYPE modelType, int nextNewId)
         {
-            if (!oldOne.Fax.Equals(newOne.Fax))
-            {
-                if (string.IsNullOrEmpty(newOne.Fax) && deleteEntries)
-                {
-                    listWithDeletion.Add(GetNewModificationEntry(newOne.Fax, oldOne.Fax, idOfModel, modelType, DATA_TYPE.FAX, userOfModification, MODIFICATION.MODIFIED, -1, true));
-                } else
-                {
-                    listWithCreation.Add(GetNewModificationEntry(newOne.Fax, oldOne.Fax, idOfModel, modelType, DATA_TYPE.FAX, userOfModification, MODIFICATION.MODIFIED));
-                }                
-            }
-            if (!oldOne.Mail.Equals(newOne.Mail))
-            {
-                if (string.IsNullOrEmpty(newOne.Mail) && deleteEntries)
-                {
-                    listWithDeletion.Add(GetNewModificationEntry(newOne.Mail, oldOne.Mail, idOfModel, modelType, DATA_TYPE.MAIL, userOfModification, MODIFICATION.MODIFIED, -1, true));
-                }
-                else
-                {
-                    listWithCreation.Add(GetNewModificationEntry(newOne.Mail, oldOne.Mail, idOfModel, modelType, DATA_TYPE.MAIL, userOfModification, MODIFICATION.MODIFIED));
-                }
-            }
-            if (!oldOne.PhoneNumber.Equals(newOne.PhoneNumber))
-            {
-                if (string.IsNullOrEmpty(newOne.PhoneNumber) && deleteEntries)
-                {
-                    listWithDeletion.Add(GetNewModificationEntry(newOne.PhoneNumber, oldOne.PhoneNumber, idOfModel, modelType, DATA_TYPE.PHONE, userOfModification, MODIFICATION.MODIFIED, -1, true));
-                }
-                else
-                {
-                    listWithCreation.Add(GetNewModificationEntry(newOne.PhoneNumber, oldOne.PhoneNumber, idOfModel, modelType, DATA_TYPE.PHONE, userOfModification, MODIFICATION.MODIFIED));
-                }
-            }
+            ComparePlainDataWithDeletionOption(listWithCreation, listWithDeletion, oldOne.Fax, newOne.Fax, idOfModel, modelType, DATA_TYPE.FAX, userOfModification, deleteEntries);
+            ComparePlainDataWithDeletionOption(listWithCreation, listWithDeletion, oldOne.Mail, newOne.Mail, idOfModel, modelType, DATA_TYPE.MAIL, userOfModification, deleteEntries);
+            ComparePlainDataWithDeletionOption(listWithCreation, listWithDeletion, oldOne.PhoneNumber, newOne.PhoneNumber, idOfModel, modelType, DATA_TYPE.PHONE, userOfModification, deleteEntries);
             GetModificationsForContactEntriesObject(oldOne.ContactEntries, newOne.ContactEntries, idOfModel, userOfModification, deleteEntries, listWithCreation, listWithDeletion, modelType, nextNewId);
+        }
+
+        /// <summary>
+        /// compare two plain fields together and decide whether to create a deletion entry or a creation one
+        /// </summary>
+        /// <param name="listWithCreation">list with objects to create</param>
+        /// <param name="listWithDeletion">list with objects to delete (including all past values)</param>
+        /// <param name="oldValue">the old value</param>
+        /// <param name="newValue">the new value</param>
+        /// <param name="id">the model id</param>
+        /// <param name="modelType">the model type</param>
+        /// <param name="dataType">the data type</param>
+        /// <param name="userOfModification">who changed this?</param>
+        /// <param name="deleteEntries">should the entries be deleted including all past values if empty?</param>
+        private static void ComparePlainDataWithDeletionOption(List<ModificationEntry> listWithCreation, List<ModificationEntry> listWithDeletion, string oldValue, string newValue, long id,
+            MODEL_TYPE modelType, DATA_TYPE dataType, string userOfModification, bool deleteEntries)
+        {
+            if (!oldValue.Equals(newValue))
+            {
+                if (string.IsNullOrEmpty(newValue) && deleteEntries)
+                {
+                    listWithDeletion.Add(GetNewModificationEntry(newValue, oldValue, id, modelType, dataType, userOfModification, MODIFICATION.DELETED, -1, true));
+                }
+                else
+                {
+                    listWithCreation.Add(GetNewModificationEntry(newValue, oldValue, id, modelType, dataType, userOfModification, MODIFICATION.MODIFIED));
+                }
+            }
         }
 
         /// <summary>
@@ -243,7 +237,7 @@ namespace ModelLayer.Helper
                             newName = newEntryToFind.ContactEntryName;
                             newValue = newEntryToFind.ContactEntryValue;
                         }
-                        listWithCreation.Add(GetNewModificationEntry(newName + ":" + newValue, entryOld.ContactEntryName + ":" + entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.MODIFIED, (int)entryOld.Id));
+                        listWithCreation.Add(GetNewModificationEntry(newName + ":" + newValue, entryOld.ContactEntryName + ":" + entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.MODIFIED, (int) entryOld.Id));
                     }                    
                 }
             }
@@ -273,26 +267,11 @@ namespace ModelLayer.Helper
         private static List<ModificationEntry> GetModificationsForAddressObject(Address oldOne, Address newOne, long idOfModel, string userOfModification, MODEL_TYPE modelType)
         {
             List<ModificationEntry> list = new List<ModificationEntry>();
-            if (!oldOne.City.Equals(newOne.City))
-            {
-                list.Add(GetNewModificationEntry(newOne.City, oldOne.City, idOfModel, modelType, DATA_TYPE.CITY, userOfModification, MODIFICATION.MODIFIED));
-            }
-            if (!oldOne.Country.Equals(newOne.Country))
-            {
-                list.Add(GetNewModificationEntry(newOne.Country, oldOne.Country, idOfModel, modelType, DATA_TYPE.COUNTRY, userOfModification, MODIFICATION.MODIFIED));
-            }
-            if (!oldOne.Street.Equals(newOne.Street))
-            {
-                list.Add(GetNewModificationEntry(newOne.Street, oldOne.Street, idOfModel, modelType, DATA_TYPE.STREET, userOfModification, MODIFICATION.MODIFIED));
-            }
-            if (!oldOne.StreetNumber.Equals(newOne.StreetNumber))
-            {
-                list.Add(GetNewModificationEntry(newOne.StreetNumber, oldOne.StreetNumber, idOfModel, modelType, DATA_TYPE.STREETNUMBER, userOfModification, MODIFICATION.MODIFIED));
-            }
-            if (!oldOne.Zipcode.Equals(newOne.Zipcode))
-            {
-                list.Add(GetNewModificationEntry(newOne.Zipcode, oldOne.Zipcode, idOfModel, modelType, DATA_TYPE.ZIPCODE, userOfModification, MODIFICATION.MODIFIED));
-            }
+            ComparePlainFields(list, oldOne.City, newOne.City, idOfModel, modelType, DATA_TYPE.CITY, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(list, oldOne.Country, newOne.Country, idOfModel, modelType, DATA_TYPE.COUNTRY, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(list, oldOne.Street, newOne.Street, idOfModel, modelType, DATA_TYPE.STREET, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(list, oldOne.StreetNumber, newOne.StreetNumber, idOfModel, modelType, DATA_TYPE.STREETNUMBER, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(list, oldOne.Zipcode, newOne.Zipcode, idOfModel, modelType, DATA_TYPE.ZIPCODE, userOfModification, MODIFICATION.MODIFIED);
             return list;
         }
 
