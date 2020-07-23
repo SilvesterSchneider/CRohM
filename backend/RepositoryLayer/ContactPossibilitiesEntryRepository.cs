@@ -7,6 +7,10 @@ namespace RepositoryLayer
 {
     public interface IContactPossibilitiesEntryRepository : IBaseRepository<ContactPossibilitiesEntry>
     {
+        /// <summary>
+        /// gesamte anzahl an entities.
+        /// </summary>
+        /// <returns></returns>
         int GetTotalAmountOfEntities();
     }
 

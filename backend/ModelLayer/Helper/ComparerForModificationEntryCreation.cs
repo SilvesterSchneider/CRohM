@@ -8,6 +8,15 @@ namespace ModelLayer.Helper
 {
     public class ComparerForModificationEntryCreation
     {
+
+        /// <summary>
+        /// compare two events together
+        /// </summary>
+        /// <param name="oldEvent">the old event</param>
+        /// <param name="newEvent">the new event</param>
+        /// <param name="userOfModification">who made some changes?</param>
+        /// <param name="listWithCreation">the list with all modification entries to be created afterwards</param>
+        /// <param name="listWithDeletion">the list with all modification entries to be set up to deletion state = true</param>
         public static void CompareEvents(Event oldEvent, EventDto newEvent, string userOfModification,
             out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion)
         {
@@ -34,6 +43,14 @@ namespace ModelLayer.Helper
             listWithCreation = listEntries;
         }
 
+        /// <summary>
+        /// check whether the contacts of the list of a event have changed
+        /// </summary>
+        /// <param name="oldContacts">the old contacts of list</param>
+        /// <param name="newContacts">the new contacts of list</param>
+        /// <param name="id">the model id</param>
+        /// <param name="userOfModification">who made this change?</param>
+        /// <param name="listEntries">the list with all entries to create</param>
         private static void GetContactsChangeOfEvents(List<EventContact> oldContacts, List<ContactDto> newContacts, long id, string userOfModification, List<ModificationEntry> listEntries)
         {
             foreach (EventContact connection in oldContacts)
@@ -52,6 +69,14 @@ namespace ModelLayer.Helper
             }
         }
 
+        /// <summary>
+        /// check if the participated state have changed of an event
+        /// </summary>
+        /// <param name="oldOnes">the old participated list</param>
+        /// <param name="newOnes">the new participated list</param>
+        /// <param name="listEntries">the list with all entries to create</param>
+        /// <param name="userOfModification">who made this change?</param>
+        /// <param name="id">the model id</param>
         private static void GetParticipatedChangesOfEvent(List<Participated> oldOnes, List<ParticipatedDto> newOnes, List<ModificationEntry> listEntries, string userOfModification, long id)
         {
             foreach (Participated partOld in oldOnes)
@@ -64,6 +89,16 @@ namespace ModelLayer.Helper
             }
         }
 
+        /// <summary>
+        /// compare two contacts together.
+        /// </summary>
+        /// <param name="oldContact">the old contact</param>
+        /// <param name="newContact">the new contact</param>
+        /// <param name="userOfModification">who made a change?</param>
+        /// <param name="deleteEntries">if true, then the deleted property will be unvisible for all older ones as well, if false the older values stay</param>
+        /// <param name="listWithCreation">the list with entries which should be created afterwards</param>
+        /// <param name="listWithDeletion">the list with modification entries which should be deleted afterwards</param>
+        /// <param name="nextNewId">the next new index of modification entry of entities to consider</param>
         public static void CompareContacts(Contact oldContact, Contact newContact, string userOfModification, bool deleteEntries,
             out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion, int nextNewId)
         {
@@ -87,6 +122,16 @@ namespace ModelLayer.Helper
             listWithDeletion = listDeletion;
         }
 
+        /// <summary>
+        /// compare organizations together.
+        /// </summary>
+        /// <param name="oldOrga">the old one</param>
+        /// <param name="newOrga">the new one</param>
+        /// <param name="userOfModification">who made this change?</param>
+        /// <param name="deleteEntries">if true, then the deleted property will be unvisible for all older ones as well, if false the older values stay</param>
+        /// <param name="listWithCreation">the list with entries which should be created afterwards</param>
+        /// <param name="listWithDeletion">the list with modification entries which should be deleted afterwards</param>
+        /// <param name="nextNewId">the next new index of modification entry of entities to consider</param>
         public static void CompareOrganizations(Organization oldOrga, Organization newOrga, string userOfModification, bool deleteEntries,
             out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion, int nextNewId)
         {
@@ -110,6 +155,18 @@ namespace ModelLayer.Helper
             listWithDeletion = listDeletion;
         }
 
+        /// <summary>
+        /// check contact possibilities object for differences.
+        /// </summary>
+        /// <param name="oldOne">the old one</param>
+        /// <param name="newOne">the new one</param>
+        /// <param name="idOfModel">the id of model</param>
+        /// <param name="userOfModification">who made a change?</param>
+        /// <param name="deleteEntries">if true, then the deleted property will be unvisible for all older ones as well, if false the older values stay</param>
+        /// <param name="listWithCreation">the list with entries which should be created afterwards</param>
+        /// <param name="listWithDeletion">the list with modification entries which should be deleted afterwards</param>
+        /// <param name="nextNewId">the next new index of modification entry of entities to consider</param>
+        /// <param name="modelType">for which model type</param>
         private static void GetModificationsForContactPossibilitiesObject(ContactPossibilities oldOne, ContactPossibilities newOne, long idOfModel, string userOfModification, bool deleteEntries,
             List<ModificationEntry> listWithCreation, List<ModificationEntry> listWithDeletion, MODEL_TYPE modelType, int nextNewId)
         {
@@ -148,6 +205,18 @@ namespace ModelLayer.Helper
             GetModificationsForContactEntriesObject(oldOne.ContactEntries, newOne.ContactEntries, idOfModel, userOfModification, deleteEntries, listWithCreation, listWithDeletion, modelType, nextNewId);
         }
 
+        /// <summary>
+        /// check the contact possibilities entries for changes.
+        /// </summary>
+        /// <param name="oldOne">the old ones</param>
+        /// <param name="newOne">the new ones</param>
+        /// <param name="idOfModel">the id of model</param>
+        /// <param name="userOfModification">who made the changes?</param>
+        /// <param name="deleteEntries">if true, then the deleted property will be unvisible for all older ones as well, if false the older values stay</param>
+        /// <param name="listWithCreation">the list with entries which should be created afterwards</param>
+        /// <param name="listWithDeletion">the list with modification entries which should be deleted afterwards</param>
+        /// <param name="nextNewId">the next new index of modification entry of entities to consider</param>
+        /// <param name="modelType">for which model type</param>
         private static void GetModificationsForContactEntriesObject(List<ContactPossibilitiesEntry> oldOne, List<ContactPossibilitiesEntry> newOne, long idOfModel, string userOfModification, bool deleteEntries,
             List<ModificationEntry> listWithCreation, List<ModificationEntry> listWithDeletion, MODEL_TYPE modelType, int nextNewId)
         {
@@ -192,6 +261,15 @@ namespace ModelLayer.Helper
             }
         }
 
+        /// <summary>
+        /// compare two addresses objects together.
+        /// </summary>
+        /// <param name="oldOne">the old one</param>
+        /// <param name="newOne">the new one</param>
+        /// <param name="idOfModel">the id of model</param>
+        /// <param name="userOfModification">who made this change?</param>
+        /// <param name="modelType">the model type</param>
+        /// <returns></returns>
         private static List<ModificationEntry> GetModificationsForAddressObject(Address oldOne, Address newOne, long idOfModel, string userOfModification, MODEL_TYPE modelType)
         {
             List<ModificationEntry> list = new List<ModificationEntry>();
@@ -218,6 +296,19 @@ namespace ModelLayer.Helper
             return list;
         }
 
+        /// <summary>
+        /// create a new modification entry
+        /// </summary>
+        /// <param name="actualValue">the actual, new value</param>
+        /// <param name="oldValue">the old value</param>
+        /// <param name="idOfModel">the id of model</param>
+        /// <param name="modelType">the model type</param>
+        /// <param name="dataType">the data type</param>
+        /// <param name="userOfModification">who made the change?</param>
+        /// <param name="modification">the modification type</param>
+        /// <param name="index">the id of contact possibilities entry</param>
+        /// <param name="shouldBeDeleted">if true, then this object should not make visible its values</param>
+        /// <returns></returns>
         private static ModificationEntry GetNewModificationEntry(string actualValue, string oldValue, long idOfModel, MODEL_TYPE modelType, DATA_TYPE dataType,
             string userOfModification, MODIFICATION modification, int index = -1, bool shouldBeDeleted = false)
         {

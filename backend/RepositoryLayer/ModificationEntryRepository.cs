@@ -13,7 +13,7 @@ namespace RepositoryLayer
     public interface IModificationEntryRepository : IBaseRepository<ModificationEntry>
     {
         /// <summary>
-        /// Update the entry by new data
+        /// set entries to deletion state after a datenschutzbeauftragter cleared the field
         /// </summary>
         /// <param name="id">the id of dataset to be updated</param>
         /// <param name="dataType">the datatype to be updated</param>
@@ -44,6 +44,12 @@ namespace RepositoryLayer
         /// <returns>the sorted list</returns>
         Task<List<ModificationEntry>> GetSortedModificationEntriesByModelDataTypeAsync(MODEL_TYPE dataType);
 
+        /// <summary>
+        /// get all entries for a specific id and datatype.
+        /// </summary>
+        /// <param name="id">the model id</param>
+        /// <param name="dataType">the datatype</param>
+        /// <returns></returns>
         Task<List<ModificationEntry>> GetModificationEntriesByIdAndModelTypeAsync(long id, MODEL_TYPE dataType);
     }
 

@@ -20,13 +20,15 @@ namespace WebApi.Controllers
         private readonly IUserService userService;
         private readonly IModificationEntryService modService;
         private IEventService eventService;
+        private IContactService contactService;
 
-        public EventController(IMapper mapper, IEventService eventService, IModificationEntryService modService, IUserService userService)
+        public EventController(IMapper mapper, IEventService eventService, IModificationEntryService modService, IUserService userService, IContactService contactService)
         {
             this._mapper = mapper;
             this.userService = userService;
             this.modService = modService;
             this.eventService = eventService;
+            this.contactService = contactService;
         }
 
         /// <summary>
@@ -109,8 +111,13 @@ namespace WebApi.Controllers
             if (result != null)
             {
                 string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-                Event eventToConsider = await eventService.GetByIdAsync(id);
-                await modService.ChangeContactsOfEvent(id, eventToConsider.Contacts.Count - 1, eventToConsider.Contacts.Count, userNameOfChange);
+                string contactName = string.Empty;
+                Contact contactToUse = await contactService.GetByIdAsync(contactId);
+                if (contactToUse != null)
+                {
+                    contactName = contactToUse.PreName + " " + contactToUse.Name;
+                }
+                await modService.ChangeContactsOfEvent(id, contactName, false, userNameOfChange);
                 return Ok();
             }
             else
@@ -134,8 +141,13 @@ namespace WebApi.Controllers
             if (result)
             {
                 string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-                Event eventToConsider = await eventService.GetByIdAsync(id);
-                await modService.ChangeContactsOfEvent(id, eventToConsider.Contacts.Count + 1, eventToConsider.Contacts.Count, userNameOfChange);
+                string contactName = string.Empty;
+                Contact contactToUse = await contactService.GetByIdAsync(contactId);
+                if (contactToUse != null)
+                {
+                    contactName = contactToUse.PreName + " " + contactToUse.Name;
+                }
+                await modService.ChangeContactsOfEvent(id, contactName, true, userNameOfChange);
                 return Ok();
             }
             else

@@ -3,6 +3,9 @@ using System;
 
 namespace ModelLayer.Models
 {
+    /// <summary>
+    /// Alle feldtypen, welche grundsätzlich verändert werden können.
+    /// </summary>
     public enum DATA_TYPE
     {
         MAIL,
@@ -27,6 +30,9 @@ namespace ModelLayer.Models
         PARTICIPATED
     }
 
+    /// <summary>
+    /// Alle modelltypen für die es felder geben kann
+    /// </summary>
     public enum MODEL_TYPE
     {
         CONTACT,
@@ -34,6 +40,9 @@ namespace ModelLayer.Models
         EVENT
     }
 
+    /// <summary>
+    /// die art der veränderung.
+    /// </summary>
     public enum MODIFICATION
     {
         CREATED,
@@ -44,13 +53,28 @@ namespace ModelLayer.Models
 
     public class ModificationEntry : BaseEntity
     {
+        /// <summary>
+        /// der aktuelle, neue wert.
+        /// </summary>
         private string actualValue;
+
+        /// <summary>
+        /// der alte wert der abgeändert wurde.
+        /// </summary>
         private string oldValue;
         public DATA_TYPE DataType { get; set; }
         public MODEL_TYPE DataModelType { get; set; }
         public long DataModelId { get; set; }
         public MODIFICATION ModificationType { get; set; }
+
+        /// <summary>
+        /// der username der die veränderung herbeigeführt hat.
+        /// </summary>
         public string UserName { get; set; }
+
+        /// <summary>
+        /// zeitpunkt der veränderung.
+        /// </summary>
         public DateTime DateTime { get; set; }
 
         public string OldValue {
@@ -87,8 +111,20 @@ namespace ModelLayer.Models
                 actualValue = value;
             }
         }
+
+        /// <summary>
+        /// wurde das item nachträglich durch einen datenschutzbeauftragten gelöscht?
+        /// </summary>
         public bool IsDeleted { get; set; } = false;
+
+        /// <summary>
+        /// die id des konkreten contact possibility entry eintrags aus den erweiterten kontaktmöglichkeiten.
+        /// </summary>
         public int ExtensionIndex { get; set; } = -1;
+
+        /// <summary>
+        /// der name des feldes für die anzeige im web.
+        /// </summary>
         public string PropertyName {
             get
             {
@@ -167,6 +203,10 @@ namespace ModelLayer.Models
             }
         }
 
+        /// <summary>
+        /// wurde gelöscht info generieren in abhängigkeit des datentypes.
+        /// </summary>
+        /// <returns></returns>
         private string GetDeletionInfo()
         {
             if (DataType == DATA_TYPE.FAX)
