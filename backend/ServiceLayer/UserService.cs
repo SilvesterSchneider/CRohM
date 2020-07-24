@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
+using ModelLayer;
 using ModelLayer.Helper;
 using ModelLayer.Models;
 
@@ -12,6 +13,7 @@ namespace ServiceLayer
 {
     public interface IUserService
     {
+
         Task<User> FindByNameAsync(string credentialsName);
 
         Task<IdentityResult> CreateCRohMUserAsync(User user);
@@ -26,6 +28,12 @@ namespace ServiceLayer
 
         Task<List<User>> GetAsync();
 
+        Task<User> GetByIdAsync(long id);
+        Task<List<string>> GetRolesAsync(User user);
+
+        Task<bool> DeletePermissionGroupByUserIdAsync(int GroupIdToDelete, long userId);
+        Task<bool> AddPermissionGroupByUserIdAsync(int permissionGroupId, long userId);
+
         Task<IdentityResult> SetUserLockedAsync(long id);
 
         Task<string> GetUserNameByIdAsync(long id);
@@ -37,13 +45,22 @@ namespace ServiceLayer
     {
         private readonly IUserManager _userManager;
 
-        //TODO: fix it with di
+
         private readonly IMailProvider mailProvider;
 
+        private readonly IPermissionGroupService permissionsService;
         public IQueryable<User> Users => _userManager.Users;
+
+        public UserService(IUserManager userManager, IMailProvider mailProvider, IPermissionGroupService permissionsService)
+        {
+            this.permissionsService = permissionsService;
+            _userManager = userManager;
+            this.mailProvider = mailProvider;
+        }
 
         public UserService(IUserManager userManager, IMailProvider mailProvider)
         {
+
             _userManager = userManager;
             this.mailProvider = mailProvider;
         }
@@ -96,7 +113,15 @@ namespace ServiceLayer
 
         public async Task<List<User>> GetAsync()
         {
-            return await _userManager.Users.ToListAsync();
+            List<User> users = await _userManager.Users.ToListAsync();
+            foreach (User usr in users)
+            {
+                foreach (PermissionGroup groups in usr.Permission)
+                {
+                    PermissionGroup permissions = await permissionsService.GetPermissionGroupByIdAsync(groups.Id);
+                }
+            }
+            return users;
         }
 
         public async Task<User> FindByEmailAsync(string email)
@@ -112,6 +137,12 @@ namespace ServiceLayer
         public async Task<IdentityResult> AddToRoleAsync(User user, string role)
         {
             return await _userManager.AddToRoleAsync(user, role);
+        }
+
+        public async Task<List<string>> GetRolesAsync(User user)
+        {
+            var list = await _userManager.GetRolesAsync(user);
+            return list.ToList();
         }
 
         /// <summary>
@@ -147,11 +178,110 @@ namespace ServiceLayer
             if (user != null)
             {
                 return await _userManager.SetUserLockedAsync(user, !user.UserLockEnabled);
-            } 
+            }
             else
             {
                 return IdentityResult.Failed(new IdentityError());
             }
+        }
+
+        public async Task<User> GetByIdAsync(long id)
+        {
+            return await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+
+        public async Task<bool> AddPermissionGroupByUserIdAsync(int permissionGroupId, long userId)
+        {
+
+            PermissionGroup permissiongroup = await permissionsService.GetByIdAsync(permissionGroupId);
+            User user = await GetByIdAsync(userId);
+
+            if (user != null && permissiongroup != null)
+            {
+                user.Permission.Add(permissiongroup);
+                await _userManager.UpdateAsync(user);
+
+                IList<string> permissions = await _userManager.GetRolesAsync(user);
+                foreach (Permission perm in permissiongroup.Permissions)
+                {
+                    if (!permissions.Contains(perm.Name))
+                    {
+                        await _userManager.AddToRoleAsync(user, perm.Name);
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> DeletePermissionGroupByUserIdAsync(int GroupIdToDelete, long userId)
+        {
+
+            List<PermissionGroup> allpermissiongroups = await permissionsService.GetAllPermissionGroupAsync();
+            User modifieduser = await GetByIdAsync(userId);
+            bool adminsleft = false;
+
+            //Überprüfen ob noch ein Admin übrig bleibt -> Wegen dem Seed ist die Adminid = 1
+            if (GroupIdToDelete == 1)
+            {
+                List<User> users = await GetAsync();
+                foreach (User user in users)
+                {
+                    if (user != modifieduser)
+                    {
+                        foreach (PermissionGroup permissionGroup in user.Permission)
+                        {
+                            if (permissionGroup.Id == 1)
+                            {
+                                adminsleft = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (GroupIdToDelete != 1 || adminsleft)
+            {
+
+                List<Permission> permissionstodelete = new List<Permission>();
+                List<Permission> permissionstoStay = new List<Permission>();
+                PermissionGroup permissionGroupToDelete = new PermissionGroup();
+                foreach (PermissionGroup group in modifieduser.Permission)
+                {
+
+                    if (group.Id == GroupIdToDelete)
+                    {
+                        permissionGroupToDelete = group;
+                        foreach (Permission perm in group.Permissions)
+                        {
+                            permissionstodelete.Add(perm);
+                        }
+                    }
+                    else
+                    {
+                        foreach (Permission perm in group.Permissions)
+                        {
+                            permissionstoStay.Add(perm);
+                        }
+                    }
+
+                }
+
+                //Lösche Permission wenn sie nicht in anderer zugewiesener Permissiongroup vorkommt.
+                foreach (Permission permToDelete in permissionstodelete)
+                {
+                    if (!permissionstoStay.Contains(permToDelete))
+                    {
+                        await _userManager.RemoveRolesAsync(modifieduser, permToDelete.Name);
+                    }
+                }
+
+                modifieduser.Permission.Remove(permissionGroupToDelete);
+                await _userManager.UpdateAsync(modifieduser);
+                return true;
+            }
+            return false;
         }
 
         public async Task<string> GetUserNameByIdAsync(long id)
@@ -180,7 +310,7 @@ namespace ServiceLayer
                 await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
                 userToBeUpdated.hasPasswordChanged = true;
                 return await _userManager.UpdateUserAsync(userToBeUpdated);
-            } 
+            }
             else
             {
                 return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "404", Description = "Benutzer nicht gefunden!" } });
@@ -201,10 +331,15 @@ namespace ServiceLayer
         Task<User> FindByEmailAsync(string email);
 
         Task<IdentityResult> AddToRoleAsync(User user, string role);
+        Task<IdentityResult> RemoveRolesAsync(User user, string permission);
 
         Task<IdentityResult> ChangePasswordAsync(User user, string newPassword);
 
         Task<IdentityResult> SetUserLockedAsync(User user, bool lockoutEnabled);
+
+        Task<IdentityResult> UpdateAsync(User user);
+        Task<IList<string>> GetRolesAsync(User user);
+
 
         IQueryable<User> Users { get; }
 
@@ -230,6 +365,21 @@ namespace ServiceLayer
         public async Task<IdentityResult> CreateAsync(User user, string password)
         {
             return await _manager.CreateAsync(user, password);
+        }
+
+        public async Task<IList<string>> GetRolesAsync(User user)
+        {
+            return await _manager.GetRolesAsync(user);
+        }
+
+        public async Task<IdentityResult> RemoveRolesAsync(User user, string permission)
+        {
+            return await _manager.RemoveFromRoleAsync(user, permission);
+        }
+
+        public async Task<IdentityResult> UpdateAsync(User user)
+        {
+            return await _manager.UpdateAsync(user);
         }
 
         public async Task<IdentityResult> SetUserLockedAsync(User user, bool lockEnabled)
@@ -268,8 +418,9 @@ namespace ServiceLayer
             return await _manager.UpdateAsync(user);
         }
 
-        public IQueryable<User> Users => _manager.Users;
+        public IQueryable<User> Users => _manager.Users.Include(x => x.Permission);
     }
 
     #endregion DefaultUserManager
+
 }

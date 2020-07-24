@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using ModelLayer.Helper;
+using ModelLayer.Models.Base;
 
 namespace ModelLayer.Models
 {
@@ -24,5 +26,8 @@ namespace ModelLayer.Models
                 }
             } 
         }
+
+        public List<PermissionGroup> Permission { get; set; } = new List<PermissionGroup>();
     }
+
 }

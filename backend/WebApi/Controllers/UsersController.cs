@@ -42,7 +42,6 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Post(UserCreateDto userToCreate)
         {
             var user = _mapper.Map<User>(userToCreate);
-
             var result = await _userService.CreateCRohMUserAsync(user);
 
             if (result.Succeeded)
@@ -78,5 +77,6 @@ namespace WebApi.Controllers
                 return Ok();
             }
         }
+
     }
 }
