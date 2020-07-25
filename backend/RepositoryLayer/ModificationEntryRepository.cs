@@ -100,7 +100,7 @@ namespace RepositoryLayer
             {
                 if (entry.DataType == dataType && entry.ExtensionIndex == extensionIndex)
                 {
-                    entry.IsDeleted = true;
+                    entry.SetToDeletionState();
                     if (await UpdateAsync(entry) == null)
                     {
                         success = false;

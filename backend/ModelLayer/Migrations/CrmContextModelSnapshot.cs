@@ -374,9 +374,6 @@ namespace ModelLayer.Migrations
                     b.Property<int>("ExtensionIndex")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<int>("ModificationType")
                         .HasColumnType("int");
 
@@ -506,14 +503,14 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "1b9204df-0e30-4e79-b15f-caff229d4849",
+                            ConcurrencyStamp = "92160a9b-d473-42c5-9d19-906152461ef1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "9875e260-83d6-493c-a83d-69014cad883f",
+                            ConcurrencyStamp = "a599893c-b90d-41f9-b2c3-7aa0382bf35e",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER"
                         });

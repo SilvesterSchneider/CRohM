@@ -64,7 +64,6 @@ namespace UnitTests.ModelLayer.Helper
             Assert.Equal(1, listWithDeletion[0].DataModelId);
             Assert.Equal(MODEL_TYPE.CONTACT, listWithDeletion[0].DataModelType);
             Assert.Equal(DATA_TYPE.MAIL, listWithDeletion[0].DataType);
-            Assert.True(listWithDeletion[0].IsDeleted);
         }
 
         [Fact]
@@ -98,7 +97,6 @@ namespace UnitTests.ModelLayer.Helper
             Assert.Equal(1, listWithDeletion[0].DataModelId);
             Assert.Equal(MODEL_TYPE.ORGANIZATION, listWithDeletion[0].DataModelType);
             Assert.Equal(DATA_TYPE.PHONE, listWithDeletion[0].DataType);
-            Assert.True(listWithDeletion[0].IsDeleted);
         }
     }
 }

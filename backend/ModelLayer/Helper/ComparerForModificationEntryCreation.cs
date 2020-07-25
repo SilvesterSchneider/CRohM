@@ -190,7 +190,7 @@ namespace ModelLayer.Helper
             {
                 if (string.IsNullOrEmpty(newValue) && deleteEntries)
                 {
-                    listWithDeletion.Add(GetNewModificationEntry(newValue, oldValue, id, modelType, dataType, userOfModification, MODIFICATION.DELETED, -1, true));
+                    listWithDeletion.Add(GetNewModificationEntry(newValue, oldValue, id, modelType, dataType, userOfModification, MODIFICATION.DELETED, -1));
                     listWithCreation.Add(GetNewModificationEntry("", "", id, modelType, dataType, userOfModification, MODIFICATION.DELETED, -1, true));
                 }
                 else
@@ -225,7 +225,7 @@ namespace ModelLayer.Helper
                 ContactPossibilitiesEntry newEntryToFind = newOne.Find(a => a.Id == entryOld.Id);
                 if (newEntryToFind == null && deleteEntries)
                 {                    
-                    listWithDeletion.Add(GetNewModificationEntry("" , entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.DELETED, (int) entryOld.Id, true));
+                    listWithDeletion.Add(GetNewModificationEntry("" , entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.DELETED, (int) entryOld.Id));
                     listWithCreation.Add(GetNewModificationEntry("", "", idOfModel, modelType, dataType, userOfModification, MODIFICATION.DELETED, (int) entryOld.Id, true));
                 }
                 else 
@@ -291,11 +291,25 @@ namespace ModelLayer.Helper
         /// <param name="shouldBeDeleted">if true, then this object should not make visible its values</param>
         /// <returns></returns>
         private static ModificationEntry GetNewModificationEntry(string actualValue, string oldValue, long idOfModel, MODEL_TYPE modelType, DATA_TYPE dataType,
-            string userOfModification, MODIFICATION modification, int index = -1, bool shouldBeDeleted = false)
+            string userOfModification, MODIFICATION modification, int index = -1, bool deleteInfo = false)
         {
-            return new ModificationEntry() { ActualValue = actualValue, DataModelId = idOfModel, DataModelType = modelType, DataType = dataType,
-                DateTime = DateTime.Now, ModificationType = modification, OldValue = oldValue, UserName = userOfModification, ExtensionIndex = index,
-            IsDeleted = shouldBeDeleted };
+            ModificationEntry entry = new ModificationEntry()
+            {
+                ActualValue = actualValue,
+                DataModelId = idOfModel,
+                DataModelType = modelType,
+                DataType = dataType,
+                DateTime = DateTime.Now,
+                ModificationType = modification,
+                OldValue = oldValue,
+                UserName = userOfModification,
+                ExtensionIndex = index
+            };
+            if (deleteInfo)
+            {
+                entry.SetToDeletionState();
+            }
+            return entry;
         }
     }
 }

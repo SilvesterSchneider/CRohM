@@ -53,15 +53,6 @@ namespace ModelLayer.Models
 
     public class ModificationEntry : BaseEntity
     {
-        /// <summary>
-        /// der aktuelle, neue wert.
-        /// </summary>
-        private string actualValue;
-
-        /// <summary>
-        /// der alte wert der abgeändert wurde.
-        /// </summary>
-        private string oldValue;
         public DATA_TYPE DataType { get; set; }
         public MODEL_TYPE DataModelType { get; set; }
         public long DataModelId { get; set; }
@@ -77,45 +68,17 @@ namespace ModelLayer.Models
         /// </summary>
         public DateTime DateTime { get; set; }
 
-        public string OldValue {
-            get
-            {
-                if (!IsDeleted)
-                {
-                    return oldValue;
-                }
-                else
-                {
-                    return GetDeletionInfo();
-                }
-            }
-            set
-            {
-                oldValue = value;
-            }
-        }
-        public string ActualValue {
-            get
-            {
-                if (!IsDeleted)
-                {
-                    return actualValue;
-                }
-                else
-                {
-                    return GetDeletionInfo();
-                }
-            }
-            set
-            {
-                actualValue = value;
-            }
-        }
+        public string OldValue { get; set; } = "";
+        public string ActualValue { get; set; } = "";
 
         /// <summary>
         /// wurde das item nachträglich durch einen datenschutzbeauftragten gelöscht?
         /// </summary>
-        public bool IsDeleted { get; set; } = false;
+        public void SetToDeletionState()
+        {
+            OldValue = GetDeletionInfo();
+            ActualValue = GetDeletionInfo();
+        }
 
         /// <summary>
         /// die id des konkreten contact possibility entry eintrags aus den erweiterten kontaktmöglichkeiten.
