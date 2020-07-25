@@ -3,11 +3,13 @@ import { ContactService, OrganizationService, ContactDto, OrganizationDto, Event
   ModificationEntryService, MODEL_TYPE, MODIFICATION, ModificationEntryDto, AddressDto,
   ContactPossibilitiesDto,
   ParticipatedDto,
-  HistoryElementDto} from '../shared/api-generated/api-generated';
+  HistoryElementDto,
+  UserLoginService} from '../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts/contacts-info/contacts-info.component';
 import { EventsInfoComponent } from '../events/events-info/events-info.component';
 import { OrganizationsInfoComponent } from '../organizations/organizations-info/organizations-info.component';
+import { JwtService } from '../shared/jwt.service';
 
 export class ContactExtended implements ContactDto {
   id: number;
@@ -55,13 +57,17 @@ export class HomeComponent implements OnInit {
   public contacts: ContactExtended[] = new Array<ContactExtended>();
   public organizations: OrganizationExtended[] = new Array<OrganizationExtended>();
   public events: EventExtended[] = new Array<EventExtended>();
+  public lastLogin: string;
+  private weekDays: string[] = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
   constructor(
     private contactsService: ContactService,
     private organizationService: OrganizationService,
     private eventsService: EventService,
     private modificationEntryService: ModificationEntryService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private userLoginService: UserLoginService,
+    private jwt: JwtService) { }
 
   ngOnInit() {
     this.modificationEntryService.getSortedListByType(MODEL_TYPE.CONTACT).subscribe(x => {
@@ -89,6 +95,14 @@ export class HomeComponent implements OnInit {
       if (index > 0) {
         this.addEvent(x[1]);
     }});
+    this.userLoginService.getTheLastLoginTimeOfUserById(this.jwt.getUserId()).subscribe(x => this.lastLogin = this.getDate(x));
+  }
+
+  getDate(x: string): string {
+    const date = new Date(x);
+    return this.weekDays[date.getDay()] + ' den ' + date.getDate().toString() + '-' + (date.getMonth() + 1).toString()
+      + '-' + date.getFullYear().toString() + ' um ' + date.getHours().toString() + ':' + date.getMinutes().toString()
+      + '.' + date.getSeconds().toString() + ' Uhr';
   }
 
   addEvent(entry: ModificationEntryDto) {

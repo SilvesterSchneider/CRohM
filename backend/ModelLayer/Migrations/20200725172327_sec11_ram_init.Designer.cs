@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20200714202330_init")]
-    partial class init
+    [Migration("20200725172327_sec11_ram_init")]
+    partial class sec11_ram_init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -490,14 +490,14 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "2d12b72a-158a-4050-8e06-e6ae84b20f34",
+                            ConcurrencyStamp = "4b696ff9-f7f2-419d-91a1-5555f1274c6f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "c8ae614b-b0ce-4a2b-8b20-57d40ec7ca90",
+                            ConcurrencyStamp = "03d91fed-cf3a-4393-bfa7-eb32dd563947",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER"
                         });
@@ -577,6 +577,30 @@ namespace ModelLayer.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.UserLogin", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateTimeOfLastLogin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserLogin");
                 });
 
             modelBuilder.Entity("ModelLayer.PermissionGroup", b =>

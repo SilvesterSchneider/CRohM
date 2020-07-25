@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class init : Migration
+    public partial class sec11_ram_init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -92,6 +92,22 @@ namespace ModelLayer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ModificatonHistory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserLogin",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    UserId = table.Column<long>(nullable: false),
+                    DateTimeOfLastLogin = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLogin", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -454,12 +470,12 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId" },
-                values: new object[] { 1L, "2d12b72a-158a-4050-8e06-e6ae84b20f34", "Admin", "ADMIN", null });
+                values: new object[] { 1L, "4b696ff9-f7f2-419d-91a1-5555f1274c6f", "Admin", "ADMIN", null });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId" },
-                values: new object[] { 2L, "c8ae614b-b0ce-4a2b-8b20-57d40ec7ca90", "DeleteUser", "DELETEUSER", null });
+                values: new object[] { 2L, "03d91fed-cf3a-4393-bfa7-eb32dd563947", "DeleteUser", "DELETEUSER", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
@@ -584,6 +600,9 @@ namespace ModelLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserClaims");
+
+            migrationBuilder.DropTable(
+                name: "UserLogin");
 
             migrationBuilder.DropTable(
                 name: "UserLogins");
