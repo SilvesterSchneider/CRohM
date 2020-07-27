@@ -28,6 +28,7 @@ namespace RepositoryLayer
         public async Task<List<Contact>> GetAllContactsOfAnOrganizationAsync(long id)
         {
             Organization org = await Entities
+                .Include(t => t.Tags)
                 .Include(a => a.Contact)
                 .ThenInclude(b => b.ContactEntries)
                 .Include(x => x.OrganizationContacts)
@@ -46,6 +47,7 @@ namespace RepositoryLayer
         public override async Task<Organization> GetByIdAsync(long id)
         {
             return await Entities
+                .Include(t => t.Tags)
                 .Include(x => x.Address)
                 .Include(y => y.Contact)
                 .ThenInclude(b => b.ContactEntries)
@@ -61,12 +63,15 @@ namespace RepositoryLayer
                 .Include(y => y.Contact)
                 .ThenInclude(b => b.ContactEntries)
                 .Include(z => z.OrganizationContacts)
-                .ThenInclude(a => a.Contact).ToListAsync();
+                .ThenInclude(a => a.Contact)
+                .Include(t => t.Tags)
+                .ToListAsync();
         }
 
         public async Task<bool> UpdateAsyncWithAlleDependencies(Organization newOrganization)
         {
             Organization organization = await Entities
+                .Include(t => t.Tags)
                 .Include(x => x.Address)
                 .Include(y => y.OrganizationContacts)
                 .Include(z => z.Contact)

@@ -62,6 +62,13 @@
             </div>
         </mat-option>
     </mat-autocomplete>
+    <mat-chip-list #chipList>
+        <mat-chip (keyup.backspace)="removeTag()" *ngFor="let item of selectedTags">
+            {{ item.name }}
+        </mat-chip>
+        <input (keyup.enter)="addTag($event)" type="text" #inputTrigger placeholder="Tags definieren"
+            [matChipInputFor]="chipList" [formControl]="tagsControl">
+    </mat-chip-list>
     <div>
         <button mat-raised-button (click)="onDelete()" color="warn">Löschen</button>
         <span class="fill-remaining-space"></span>

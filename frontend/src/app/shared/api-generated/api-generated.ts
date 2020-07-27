@@ -2578,6 +2578,7 @@ export interface ContactDto {
     organizations?: OrganizationDto[] | undefined;
     events?: EventDto[] | undefined;
     history?: HistoryElementDto[] | undefined;
+    tags?: TagDto[] | undefined;
 }
 
 export interface ContactPossibilitiesDto {
@@ -2603,6 +2604,12 @@ export interface OrganizationDto {
     address?: AddressDto | undefined;
     contact?: ContactPossibilitiesDto | undefined;
     employees?: ContactDto[] | undefined;
+    tags?: TagDto[] | undefined;
+}
+
+export interface TagDto {
+    id: number;
+    name?: string | undefined;
 }
 
 export interface EventDto {
@@ -2613,6 +2620,7 @@ export interface EventDto {
     duration: number;
     contacts?: ContactDto[] | undefined;
     participated?: ParticipatedDto[] | undefined;
+    tags?: TagDto[] | undefined;
 }
 
 export interface ParticipatedDto {

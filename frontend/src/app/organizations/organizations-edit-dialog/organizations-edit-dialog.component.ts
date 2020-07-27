@@ -18,7 +18,7 @@ import { map, startWith } from 'rxjs/operators';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { OrganizationDto } from '../../shared/api-generated/api-generated';
+import { OrganizationDto, TagDto } from '../../shared/api-generated/api-generated';
 import { OrganizationService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
@@ -78,6 +78,8 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 	errorState: boolean;
 	controlType?: string;
 	autofilled?: boolean;
+	tagsControl = new FormControl();
+	selectedTags: TagDto[] = new Array<TagDto>();
 
 	constructor(
 		public dialogRef: MatDialogRef<OrganizationsEditDialogComponent>,
@@ -94,10 +96,28 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 	) {
 		super(dialogRef, dialog);
 		this.organization = data;
+		this.organization.tags.forEach(x => this.selectedTags.push(x));
 		fm.monitor(elRef.nativeElement, true).subscribe((origin) => {
 			this.focused = !!origin;
 			this.stateChanges.next();
 		});
+	}
+
+	addTag(event: Event) {
+		const value = (event.target as HTMLInputElement).value;
+		if (this.selectedTags.find(a => a.name === value) == null) {
+			this.selectedTags.push({
+				id: 0,
+				name: value
+			});
+		}
+		this.tagsControl.setValue('');
+	}
+
+	removeTag() {
+		if (this.selectedTags.length > 0) {
+			this.selectedTags.splice(this.selectedTags.length - 1, 1);
+		}
 	}
 
 	ngOnInit() {
@@ -253,6 +273,7 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 		this.organization.id = idOrganization;
 		this.organization.address.id = idAddress;
 		this.organization.contact.id = idContactPossibilities;
+		this.organization.tags = this.selectedTags;
 		this.organizationService.put(this.organization, this.organization.id, this.jwt.getUserId()).subscribe();
 		this.itemsToDelete.forEach((x) =>
 			this.organizationService.removeContact(idOrganization, x.contactId, this.jwt.getUserId()).subscribe()
