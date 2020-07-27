@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ModelLayer.Helper;
@@ -112,6 +112,6 @@ namespace ModelLayer
         public DbSet<HistoryElement> History { get; set; }
         public DbSet<ModificationEntry> ModificatonHistory { get; set; }
         public DbSet<PermissionGroup> PermissionGroups { get; set; }
-
+        public DbSet<UserDeletionCheckDate> UserDeletionCheckDate { get; set; }
     }
 }

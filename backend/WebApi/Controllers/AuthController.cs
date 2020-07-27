@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -45,7 +45,8 @@ namespace WebApi.Controllers
                     return BadRequest("Login fehlgeschlagen!");
                 }
             }
-
+            user.LastLoginDate = DateTime.Now;
+            await _userService.UpdateUserAsync(user);
             if (user.UserLockEnabled)
             {
                 return BadRequest("Benutzer ist gesperrt! Bitte den Administrator kontaktieren");

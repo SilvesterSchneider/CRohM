@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,11 +27,12 @@ namespace ServiceLayer
         Task ChangePasswordForUser(int primKey);
 
         Task<List<User>> GetAsync();
-
+        Task<List<User>> GetAllUsersAsync();
         Task<User> GetByIdAsync(long id);
         Task<List<string>> GetRolesAsync(User user);
 
         Task<bool> DeletePermissionGroupByUserIdAsync(int GroupIdToDelete, long userId);
+        Task DeleteUserAsync(User user);
         Task<bool> AddPermissionGroupByUserIdAsync(int permissionGroupId, long userId);
 
         Task<IdentityResult> SetUserLockedAsync(long id);
@@ -39,6 +40,7 @@ namespace ServiceLayer
         Task<string> GetUserNameByIdAsync(long id);
 
         Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword);
+        Task UpdateUserAsync(User user);
     }
 
     public class UserService : IUserService
@@ -316,6 +318,21 @@ namespace ServiceLayer
                 return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "404", Description = "Benutzer nicht gefunden!" } });
             }
         }
+
+        public async Task UpdateUserAsync(User user)
+        {
+            await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            return await _userManager.Users.ToListAsync();
+        }
+
+        public async Task DeleteUserAsync(User user)
+        {
+            await _userManager.DeleteUserAsync(user);
+        }
     }
 
     #region DefaultUserManager
@@ -343,6 +360,8 @@ namespace ServiceLayer
 
         IQueryable<User> Users { get; }
 
+        Task DeleteUserAsync(User user);
+
         Task<IdentityResult> UpdateUserAsync(User user);
     }
 
@@ -360,6 +379,11 @@ namespace ServiceLayer
         public async Task<IdentityResult> CreateAsync(User user)
         {
             return await _manager.CreateAsync(user);
+        }
+
+        public async Task DeleteUserAsync(User user)
+        {
+            await _manager.DeleteAsync(user);
         }
 
         public async Task<IdentityResult> CreateAsync(User user, string password)
