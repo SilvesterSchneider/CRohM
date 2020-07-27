@@ -16,7 +16,7 @@ import { OrganizationsEditDialogComponent } from './organizations-edit-dialog/or
     OrganizationsListComponent,
     OrganizationsDetailComponent,
     OrganizationsInfoComponent,
-	  OrganizationsEditDialogComponent
+    OrganizationsEditDialogComponent
   ],
   imports: [
     CommonModule,
