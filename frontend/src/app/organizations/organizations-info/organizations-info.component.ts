@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ContactDto,
-  ContactPossibilitiesEntryDto, OrganizationDto} from '../../shared/api-generated/api-generated';
+  ContactPossibilitiesEntryDto, OrganizationDto, TagDto} from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
@@ -17,12 +17,14 @@ export class OrganizationsInfoComponent implements OnInit {
   employees: ContactDto[] = new Array<ContactDto>();
   displayedColumnsEmployees = ['vorname', 'name'];
   displayedColumnsContactPossibilities = ['name', 'kontakt'];
+  tags: TagDto[] = new Array<TagDto>();
 
   constructor(
     public dialogRef: MatDialogRef<OrganizationsInfoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: OrganizationDto,
     private fb: FormBuilder) {
       this.organization = data;
+      this.tags = this.organization.tags;
     }
 
   ngOnInit(): void {

@@ -10,7 +10,7 @@ import {
   MatAutocompleteTrigger
 } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { ContactDto, EventDto, ParticipatedDto } from '../../shared/api-generated/api-generated';
+import { ContactDto, EventDto, ParticipatedDto, TagDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
@@ -61,6 +61,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   controlType?: string;
   autofilled?: boolean;
   columnsEvent: ['participated', 'prename', 'name'];
+  tagsControl = new FormControl();
+	selectedTags: TagDto[] = new Array<TagDto>();
 
   constructor(
     public dialogRef: MatDialogRef<EventsDetailComponent>,
@@ -83,11 +85,29 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       this.stateChanges.next();
     });
     this.event = data;
+    this.event.tags.forEach(x => this.selectedTags.push(x));
   }
 
   hasChanged() {
     return !this.eventsForm.pristine;
   }
+
+  addTag(event: Event) {
+		const value = (event.target as HTMLInputElement).value;
+		if (this.selectedTags.find(a => a.name === value) == null) {
+			this.selectedTags.push({
+				id: 0,
+				name: value
+			});
+		}
+		this.tagsControl.setValue('');
+	}
+
+	removeTag() {
+		if (this.selectedTags.length > 0) {
+			this.selectedTags.splice(this.selectedTags.length - 1, 1);
+		}
+	}
 
   ngOnInit() {
     this.eventsForm = this.createEventsForm();
@@ -281,6 +301,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     });
     this.event.contacts = contacts;
     this.event.participated = participants;
+    this.event.tags = this.selectedTags;
     this.eventService.put(this.event, this.event.id, this.jwt.getUserId()).subscribe(() => this.dialogRef.close());
   }
 

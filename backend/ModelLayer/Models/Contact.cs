@@ -11,6 +11,6 @@ namespace ModelLayer.Models
         public List<EventContact> Events { get; set; } = new List<EventContact>();
         public List<OrganizationContact> OrganizationContacts { get; set; } = new List<OrganizationContact>();
         public List<HistoryElement> History { get; set; } = new List<HistoryElement>();
-        public List<Tag> Tags = new List<Tag>();
+        public List<TagContact> Tags = new List<TagContact>();
     }
 }

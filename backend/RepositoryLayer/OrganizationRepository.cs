@@ -119,27 +119,27 @@ namespace RepositoryLayer
                         organization.Contact.ContactEntries.Add(entry);
                     }
                 }
-                List<Tag> tagsToAdd = new List<Tag>();
-                List<Tag> tagsToRemove = new List<Tag>();
-                foreach (Tag tag in newOrganization.Tags)
+                List<TagOrganization> tagsToAdd = new List<TagOrganization>();
+                List<TagOrganization> tagsToRemove = new List<TagOrganization>();
+                foreach (TagOrganization tag in newOrganization.Tags)
                 {
                     if (organization.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
                     {
                         tagsToAdd.Add(tag);
                     }
                 }
-                foreach (Tag tag in organization.Tags)
+                foreach (TagOrganization tag in organization.Tags)
                 {
                     if (newOrganization.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
                     {
                         tagsToRemove.Add(tag);
                     }
                 }
-                foreach (Tag tag in tagsToRemove)
+                foreach (TagOrganization tag in tagsToRemove)
                 {
                     organization.Tags.Remove(tag);
                 }
-                foreach (Tag tag in tagsToAdd)
+                foreach (TagOrganization tag in tagsToAdd)
                 {
                     organization.Tags.Add(tag);
                 }

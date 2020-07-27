@@ -85,7 +85,12 @@ namespace RepositoryLayer
 
         public async Task<Event> GetEventByIdWithAllIncludesAsync(long id)
         {
-            return await Entities.Include(y => y.Contacts).ThenInclude(z => z.Contact).Include(x => x.Participated).FirstOrDefaultAsync(x => x.Id == id);
+            return await Entities
+                .Include(t => t.Tags)
+                .Include(y => y.Contacts)
+                .ThenInclude(z => z.Contact)
+                .Include(x => x.Participated)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<bool> ModifyEventAsync(EventDto eventToModify)
@@ -137,27 +142,27 @@ namespace RepositoryLayer
                     }
                 }
 
-                List<Tag> tagsToAdd = new List<Tag>();
-                List<Tag> tagsToRemove = new List<Tag>();
+                List<TagEvent> tagsToAdd = new List<TagEvent>();
+                List<TagEvent> tagsToRemove = new List<TagEvent>();
                 foreach (TagDto tag in eventToModify.Tags)
                 {
                     if (eventExistent.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
                     {
-                        tagsToAdd.Add(new Tag() { Id=0, Name=tag.Name });
+                        tagsToAdd.Add(new TagEvent() { Id=0, Name=tag.Name });
                     }
                 }
-                foreach (Tag tag in eventExistent.Tags)
+                foreach (TagEvent tag in eventExistent.Tags)
                 {
                     if (eventToModify.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
                     {
                         tagsToRemove.Add(tag);
                     }
                 }
-                foreach (Tag tag in tagsToRemove)
+                foreach (TagEvent tag in tagsToRemove)
                 {
                     eventExistent.Tags.Remove(tag);
                 }
-                foreach (Tag tag in tagsToAdd)
+                foreach (TagEvent tag in tagsToAdd)
                 {
                     eventExistent.Tags.Add(tag);
                 }

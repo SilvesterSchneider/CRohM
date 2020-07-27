@@ -62,7 +62,7 @@
             </div>
         </mat-option>
     </mat-autocomplete>
-    <mat-chip-list #chipList>
+    <mat-chip-list class="organizationDetails" #chipList>
         <mat-chip (keyup.backspace)="removeTag()" *ngFor="let item of selectedTags">
             {{ item.name }}
         </mat-chip>

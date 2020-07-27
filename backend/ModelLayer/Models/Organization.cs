@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualBasic.CompilerServices;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ModelLayer.Models
 {
@@ -11,6 +12,6 @@ namespace ModelLayer.Models
         public Address Address { get; set; }
         public ContactPossibilities Contact { get; set; }
         public List<OrganizationContact> OrganizationContacts { get; set; } = new List<OrganizationContact>();
-        public List<Tag> Tags = new List<Tag>();
+        public List<TagOrganization> Tags { get; set; } = new List<TagOrganization>();
     }
 }

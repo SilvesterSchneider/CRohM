@@ -7,7 +7,8 @@ import {
   ParticipatedDto,
   EventService,
   HistoryElementType,
-  OrganizationDto
+  OrganizationDto,
+  TagDto
 } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -44,6 +45,7 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   displayedColumns = ['icon', 'datum', 'name', 'kommentar'];
   displayedColumnsOrganizations = ['name'];
   displayedColumnsContactPossibilities = ['name', 'kontakt'];
+  tags: TagDto[] = new Array<TagDto>();
 
   constructor(
     public dialogRef: MatDialogRef<ContactsInfoComponent>,
@@ -55,6 +57,7 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
     private eventService: EventService) {
     super(dialogRef, dialog);
     this.contact = data;
+    this.tags = this.contact.tags;
   }
 
   hasChanged() {

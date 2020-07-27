@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { ContactDto } from '../../shared/api-generated/api-generated';
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { ContactDto, TagDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
@@ -18,6 +18,8 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	contactsForm: FormGroup;
 	contact: ContactDto;
+	tagsControl = new FormControl();
+	selectedTags: TagDto[] = new Array<TagDto>();
 
 	constructor(
 		public dialogRef: MatDialogRef<ContactsEditDialogComponent>,
@@ -29,6 +31,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	) {
 		super(dialogRef, dialog);
 		this.contact = data;
+		this.contact.tags.forEach(x => this.selectedTags.push(x));
 	}
 
 	ngOnInit(): void {
@@ -36,6 +39,23 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
 		this.initForm();
 		this.contactsForm.patchValue(this.contact);
+	}
+
+	addTag(event: Event) {
+		const value = (event.target as HTMLInputElement).value;
+		if (this.selectedTags.find(a => a.name === value) == null) {
+			this.selectedTags.push({
+				id: 0,
+				name: value
+			});
+		}
+		this.tagsControl.setValue('');
+	}
+
+	removeTag() {
+		if (this.selectedTags.length > 0) {
+			this.selectedTags.splice(this.selectedTags.length - 1, 1);
+		}
 	}
 
 	initForm() {
@@ -65,6 +85,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
+		this.contact.tags = this.selectedTags;
 		this.service.put(this.contact, this.contact.id, this.jwt.getUserId()).subscribe(x => {
 			this.dialogRef.close({ delete: false, id: 0 });
 		});

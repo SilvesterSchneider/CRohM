@@ -1,7 +1,7 @@
 import {
   Component, OnInit, Inject
 } from '@angular/core';
-import { EventDto } from '../../shared/api-generated/api-generated';
+import { EventDto, TagDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -25,6 +25,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   event: EventDto;
   eventsForm: FormGroup;
   columnsContacts = ['participated', 'prename', 'name'];
+  tags: TagDto[] = new Array<TagDto>();
 
   constructor(
     public dialogRef: MatDialogRef<EventsInfoComponent>,
@@ -35,6 +36,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   ) {
     super(dialogRef, dialog);
     this.event = data;
+    this.tags = this.event.tags;
   }
 
   hasChanged() {

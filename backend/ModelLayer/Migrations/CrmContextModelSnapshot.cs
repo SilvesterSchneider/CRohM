@@ -488,20 +488,20 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "e6f78684-6374-4733-be45-15280faa96ac",
+                            ConcurrencyStamp = "5704c26b-e963-4620-8d4f-2f3755baf0dd",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "b2e41df9-02fa-4a25-8ba9-2f8e5ddfca8c",
+                            ConcurrencyStamp = "67871911-1b74-45bf-a46e-4b266df4e3fe",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER"
                         });
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.Tag", b =>
+            modelBuilder.Entity("ModelLayer.Models.TagOrganization", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -514,7 +514,12 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("OrganizationId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("Tags");
                 });
@@ -747,6 +752,13 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.PermissionGroup", null)
                         .WithMany("Permissions")
                         .HasForeignKey("PermissionGroupId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.TagOrganization", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Organization", "Organization")
+                        .WithMany("Tags")
+                        .HasForeignKey("OrganizationId");
                 });
 
             modelBuilder.Entity("ModelLayer.PermissionGroup", b =>
