@@ -1,4 +1,4 @@
-﻿using ModelLayer;
+using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer.Base;
 using System;
@@ -113,6 +113,30 @@ namespace RepositoryLayer
                     {
                         organization.Contact.ContactEntries.Add(entry);
                     }
+                }
+                List<Tag> tagsToAdd = new List<Tag>();
+                List<Tag> tagsToRemove = new List<Tag>();
+                foreach (Tag tag in newOrganization.Tags)
+                {
+                    if (organization.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        tagsToAdd.Add(tag);
+                    }
+                }
+                foreach (Tag tag in organization.Tags)
+                {
+                    if (newOrganization.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        tagsToRemove.Add(tag);
+                    }
+                }
+                foreach (Tag tag in tagsToRemove)
+                {
+                    organization.Tags.Remove(tag);
+                }
+                foreach (Tag tag in tagsToAdd)
+                {
+                    organization.Tags.Add(tag);
                 }
                 await UpdateAsync(organization);
                 return true;
