@@ -1986,6 +1986,65 @@ export class OrganizationService {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param userIdOfChange (optional) 
+     * @return successfully created
+     */
+    postHistoryElement(historyToCreate: HistoryElementCreateDto, id: number, userIdOfChange?: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/organization/{id}/historyElement?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (userIdOfChange === null)
+            throw new Error("The parameter 'userIdOfChange' cannot be null.");
+        else if (userIdOfChange !== undefined)
+            url_ += "userIdOfChange=" + encodeURIComponent("" + userIdOfChange) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(historyToCreate);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPostHistoryElement(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPostHistoryElement(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPostHistoryElement(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable({
@@ -2654,6 +2713,21 @@ export interface OrganizationDto {
     address?: AddressDto | undefined;
     contact?: ContactPossibilitiesDto | undefined;
     employees?: ContactDto[] | undefined;
+    history?: HistoryElementDto[] | undefined;
+}
+
+export interface HistoryElementDto {
+    id: number;
+    name?: string | undefined;
+    date: string;
+    type: HistoryElementType;
+    comment?: string | undefined;
+}
+
+export enum HistoryElementType {
+    MAIL = 0,
+    PHONE_CALL = 1,
+    NOTE = 2,
 }
 
 export interface EventDto {
@@ -2670,20 +2744,6 @@ export interface ParticipatedDto {
     id: number;
     contactId: number;
     hasParticipated: boolean;
-}
-
-export interface HistoryElementDto {
-    id: number;
-    name?: string | undefined;
-    date: string;
-    type: HistoryElementType;
-    comment?: string | undefined;
-}
-
-export enum HistoryElementType {
-    MAIL = 0,
-    PHONE_CALL = 1,
-    NOTE = 2,
 }
 
 export interface ContactCreateDto {
