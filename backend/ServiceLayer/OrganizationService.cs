@@ -1,4 +1,4 @@
-﻿using ModelLayer;
+using ModelLayer;
 using RepositoryLayer;
 using System;
 using System.Threading.Tasks;
@@ -23,6 +23,14 @@ namespace ServiceLayer
         /// <param name="contactId">The id of the contact which will be removed</param>
         /// <exception cref="Exception">Something not correct in workflow</exception>
         Task RemoveContactAsync(long organizationId, long contactId);
+
+        /// <summary>
+        /// Add a history element to this organization.
+        /// </summary>
+        /// <param name="id">the organization id to be considered</param>
+        /// <param name="historyElement">the history element</param>
+        /// <returns></returns>
+        Task AddHistoryElement(long id, HistoryElement historyElement);
     }
 
     public class OrganizationService : OrganizationRepository, IOrganizationService
@@ -57,6 +65,16 @@ namespace ServiceLayer
             await _organizationContactRepository.CreateAsync(organizationContact);
 
             return organization;
+        }
+
+        public async Task AddHistoryElement(long id, HistoryElement historyElement)
+        {
+            var organization = await GetByIdAsync(id);
+            if (organization != null)
+            {
+                organization.History.Add(historyElement);
+                await UpdateAsync(organization);
+            }
         }
 
         public async Task RemoveContactAsync(long organizationId, long contactId)

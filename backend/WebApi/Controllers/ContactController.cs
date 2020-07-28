@@ -43,7 +43,7 @@ namespace WebApi.Controllers
 
             return Ok(contactsDto);
         }
-
+        
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]

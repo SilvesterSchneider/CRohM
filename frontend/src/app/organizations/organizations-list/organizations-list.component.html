@@ -1,5 +1,22 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <span>Organisationen</span>
+        <span class="spacer"></span>
+        <mat-form-field>
+            <mat-label>Suche</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
+        </mat-form-field>
+        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Organisation hinzufügen" (click)="addDummyOrganization()"> 
+            <mat-icon>add</mat-icon> Dummy Organisation hinzufügen
+        </button>
+        <button class="button" button="submit" mat-mini-fab color="primary" (click)="openAddDialog()">
+            <mat-icon>add</mat-icon> 
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
 <div fxLayout="column" fxLayoutGap="100px">
-    <mat-table #table [dataSource]="organizations">
+    <mat-table #table [dataSource]="dataSource">
         <ng-container matColumnDef="Name">
             <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
@@ -23,6 +40,10 @@
         <ng-container matColumnDef="Stadt">
             <mat-header-cell *matHeaderCellDef> Stadt </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.address.city}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Land">
+            <mat-header-cell *matHeaderCellDef> Land </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.address.country}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Telefonnummer">
             <mat-header-cell *matHeaderCellDef> Telefonnummer </mat-header-cell>
@@ -58,6 +79,9 @@
                 <a (click)="openInfo(element.id)" type="button">
                     <mat-icon color="primary" title="Organisationsinformationen anzeigen" class="icon">list</mat-icon>
                 </a>
+                <a (click)="addNote(element.id)" type="button">
+                    <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
+                </a>
                 <a (click)="deleteOrganization(element.id)" type="button">
                     <mat-icon color="primary" class="icon">delete</mat-icon>
                 </a>
@@ -68,13 +92,3 @@
     </mat-table>
 </div>
 <br>
-<div fxLayout="column" fxLayoutAlign="space-around end" class="content">
-    <div class="blocks">
-        <button button (click)="openAddDialog()" mat-raised-button color="primary">
-            <mat-icon>add</mat-icon> Organisation hinzufügen
-        </button>
-        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Organisation hinzufügen" (click)="addDummyOrganization()"> 
-            <mat-icon>add</mat-icon> Dummy Organisation hinzufügen
-        </button>
-    </div>
-</div>
