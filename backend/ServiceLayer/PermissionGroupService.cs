@@ -1,4 +1,4 @@
-﻿using ModelLayer;
+using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer;
 using System;
@@ -34,9 +34,15 @@ namespace ServiceLayer
         {
             return await Entities.Include(x => x.Permissions).ToListAsync();
         }
-
         
         public async Task CreatePermissionGroupAsync(PermissionGroup permissionGroup) {
+            foreach (PermissionGroup group in Entities)
+            {
+                if (group.Name.Equals(permissionGroup.Name))
+                {
+                    return;
+                }
+            }
             PermissionGroup newPerm = new PermissionGroup();
             newPerm.Id = 0;
             newPerm.Name = permissionGroup.Name;
@@ -58,16 +64,27 @@ namespace ServiceLayer
             PermissionGroup groupToModify = await Entities.Include(x => x.Permissions).FirstOrDefaultAsync(x => x.Id == permissionGroup.Id);
             if (groupToModify != null)
             {
-                groupToModify.Permissions.Clear();
+                groupToModify.Name = permissionGroup.Name;
+                List<Permission> newPermissions = new List<Permission>();
                 foreach (Permission r in permissionGroup.Permissions)
                 {
                     Permission role = AllRoles.GetAllRoles().FirstOrDefault(x => x.Name == r.Name);
                     if (role != null)
                     {
-                        role.Id = 0;
-                        groupToModify.Permissions.Add(role);
+                        Permission alreadyExistingOne = groupToModify.Permissions.FirstOrDefault(x => x.Name == r.Name);
+                        if (alreadyExistingOne != null)
+                        {
+                            newPermissions.Add(alreadyExistingOne);
+                        }
+                        else
+                        {
+                            role.Id = 0;
+                            newPermissions.Add(role);
+                        }
                     }
                 }
+                groupToModify.Permissions = newPermissions;
+
                 await SetPermissionGroupByIdAsync(groupToModify);
             }
         }

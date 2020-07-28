@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +8,7 @@ using Microsoft.VisualBasic;
 using ModelLayer;
 using ModelLayer.Helper;
 using ModelLayer.Models;
+using RepositoryLayer;
 
 namespace ServiceLayer
 {
@@ -31,14 +32,16 @@ namespace ServiceLayer
         Task<User> GetByIdAsync(long id);
         Task<List<string>> GetRolesAsync(User user);
 
-        Task<bool> DeletePermissionGroupByUserIdAsync(int GroupIdToDelete, long userId);
-        Task<bool> AddPermissionGroupByUserIdAsync(int permissionGroupId, long userId);
+        Task<bool> DeletePermissionGroupByUserIdAsync(long groupIdToDelete, long userId);
+        Task<bool> AddPermissionGroupByUserIdAsync(long permissionGroupId, long userId);
 
         Task<IdentityResult> SetUserLockedAsync(long id);
 
         Task<string> GetUserNameByIdAsync(long id);
 
         Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword);
+
+        Task<IdentityResult> UpdateAsync(User user);
     }
 
     public class UserService : IUserService
@@ -48,12 +51,16 @@ namespace ServiceLayer
 
         private readonly IMailProvider mailProvider;
 
+        private IUserPermissionGroupRepository userPermissionGroupRepo;
+
         private readonly IPermissionGroupService permissionsService;
         public IQueryable<User> Users => _userManager.Users;
 
-        public UserService(IUserManager userManager, IMailProvider mailProvider, IPermissionGroupService permissionsService)
+        public UserService(IUserManager userManager, IMailProvider mailProvider, IPermissionGroupService permissionsService,
+            IUserPermissionGroupRepository userPermissionGroupRepo)
         {
             this.permissionsService = permissionsService;
+            this.userPermissionGroupRepo = userPermissionGroupRepo;
             _userManager = userManager;
             this.mailProvider = mailProvider;
         }
@@ -113,14 +120,14 @@ namespace ServiceLayer
 
         public async Task<List<User>> GetAsync()
         {
-            List<User> users = await _userManager.Users.ToListAsync();
-            foreach (User usr in users)
+            List<User> users = await _userManager.Users.Include(x => x.Permission).ThenInclude(y => y.PermissionGroup).ToListAsync();
+          /*  foreach (User usr in users)
             {
                 foreach (PermissionGroup groups in usr.Permission)
                 {
                     PermissionGroup permissions = await permissionsService.GetPermissionGroupByIdAsync(groups.Id);
                 }
-            }
+            } */
             return users;
         }
 
@@ -187,40 +194,58 @@ namespace ServiceLayer
 
         public async Task<User> GetByIdAsync(long id)
         {
-            return await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            return await _userManager.Users.Include(x => x.Permission).ThenInclude(y => y.PermissionGroup).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-
-        public async Task<bool> AddPermissionGroupByUserIdAsync(int permissionGroupId, long userId)
+        public async Task<bool> AddPermissionGroupByUserIdAsync(long permissionGroupId, long userId)
         {
-
             PermissionGroup permissiongroup = await permissionsService.GetByIdAsync(permissionGroupId);
             User user = await GetByIdAsync(userId);
 
             if (user != null && permissiongroup != null)
             {
-                user.Permission.Add(permissiongroup);
-                await _userManager.UpdateAsync(user);
-
-                IList<string> permissions = await _userManager.GetRolesAsync(user);
-                foreach (Permission perm in permissiongroup.Permissions)
+                foreach (UserPermissionGroup group in user.Permission)
                 {
-                    if (!permissions.Contains(perm.Name))
+                    if (group.PermissionGroupId == permissionGroupId)
                     {
-                        await _userManager.AddToRoleAsync(user, perm.Name);
+                        return true;
                     }
                 }
-                return true;
+                UserPermissionGroup newConnection = new UserPermissionGroup() { PermissionGroup = permissiongroup, User = user, UserId = userId, PermissionGroupId = permissionGroupId };
+                UserPermissionGroup savedConnection = await userPermissionGroupRepo.CreateAsync(newConnection);
+                if (savedConnection != null)
+                {
+                    user.Permission.Add(savedConnection);
+                    IdentityResult result = await _userManager.UpdateAsync(user);
+                    IList<string> permissions = await _userManager.GetRolesAsync(user);
+                    foreach (Permission perm in permissiongroup.Permissions)
+                    {
+                        if (!permissions.Contains(perm.Name))
+                        {
+                            await _userManager.AddToRoleAsync(user, perm.Name);
+                        }
+                    }
+                    if (result == IdentityResult.Success)
+                    {
+                        return true;
+                    }
+                } else
+                {
+                    return false;
+                }
             }
             return false;
         }
 
-        public async Task<bool> DeletePermissionGroupByUserIdAsync(int GroupIdToDelete, long userId)
+        public async Task<bool> DeletePermissionGroupByUserIdAsync(long GroupIdToDelete, long userId)
         {
-
-            List<PermissionGroup> allpermissiongroups = await permissionsService.GetAllPermissionGroupAsync();
             User modifieduser = await GetByIdAsync(userId);
+            UserPermissionGroup connectionToDelete = await userPermissionGroupRepo.GetUserPermissionGroupByIdAsync(GroupIdToDelete, userId);
             bool adminsleft = false;
+            if (connectionToDelete == null || modifieduser == null)
+            {
+                return false;
+            }
 
             //Überprüfen ob noch ein Admin übrig bleibt -> Wegen dem Seed ist die Adminid = 1
             if (GroupIdToDelete == 1)
@@ -230,9 +255,9 @@ namespace ServiceLayer
                 {
                     if (user != modifieduser)
                     {
-                        foreach (PermissionGroup permissionGroup in user.Permission)
+                        foreach (UserPermissionGroup connection in user.Permission)
                         {
-                            if (permissionGroup.Id == 1)
+                            if (connection.PermissionGroupId == 1)
                             {
                                 adminsleft = true;
                             }
@@ -243,22 +268,19 @@ namespace ServiceLayer
 
             if (GroupIdToDelete != 1 || adminsleft)
             {
-
                 List<Permission> permissionstodelete = new List<Permission>();
                 List<Permission> permissionstoStay = new List<Permission>();
-                PermissionGroup permissionGroupToDelete = new PermissionGroup();
-                foreach (PermissionGroup group in modifieduser.Permission)
+                foreach (UserPermissionGroup connection in modifieduser.Permission)
                 {
-
-                    if (group.Id == GroupIdToDelete)
+                    PermissionGroup group = connection.PermissionGroup;
+                    if (group != null && group.Id == GroupIdToDelete)
                     {
-                        permissionGroupToDelete = group;
                         foreach (Permission perm in group.Permissions)
                         {
                             permissionstodelete.Add(perm);
                         }
                     }
-                    else
+                    else if (group != null)
                     {
                         foreach (Permission perm in group.Permissions)
                         {
@@ -276,8 +298,8 @@ namespace ServiceLayer
                         await _userManager.RemoveRolesAsync(modifieduser, permToDelete.Name);
                     }
                 }
-
-                modifieduser.Permission.Remove(permissionGroupToDelete);
+                modifieduser.Permission.Remove(connectionToDelete);
+                await userPermissionGroupRepo.DeleteAsync(connectionToDelete);
                 await _userManager.UpdateAsync(modifieduser);
                 return true;
             }
@@ -314,6 +336,22 @@ namespace ServiceLayer
             else
             {
                 return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "404", Description = "Benutzer nicht gefunden!" } });
+            }
+        }
+
+        public async Task<IdentityResult> UpdateAsync(User user)
+        {
+            User userToUpdate = await _userManager.Users.Include(x => x.Permission).FirstOrDefaultAsync(x => x.Id == user.Id);
+            if (userToUpdate != null)
+            {
+                userToUpdate.Email = user.Email;
+                userToUpdate.FirstName = user.FirstName;
+                userToUpdate.LastName = user.LastName;
+                return await _userManager.UpdateUserAsync(userToUpdate);
+            }
+            else
+            {
+                return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "Nicht gefunden", Description = "User nicht gefunden!" } });
             }
         }
     }

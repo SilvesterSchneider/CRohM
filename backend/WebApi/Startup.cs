@@ -122,12 +122,18 @@ namespace WebApi
             services.AddHealthChecks();
         }
 
-        public void Configure(IPermissionGroupService permissionGroupService, IMapper mapper, IApplicationBuilder app, IWebHostEnvironment env, IUserService userService, CrmContext dataContext)
+        public void Configure(
+            IUserPermissionGroupRepository userPermissionGroupRepo,
+            IPermissionGroupService permissionGroupService,
+            IMapper mapper,
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IUserService userService,
+            CrmContext dataContext)
         {
             dataContext.Database.Migrate();
             ApplicationDbInitializer.SeedPermissions(permissionGroupService, mapper);
-            ApplicationDbInitializer.SeedUsers(userService, permissionGroupService);
-
+            ApplicationDbInitializer.SeedUsers(userService, permissionGroupService, userPermissionGroupRepo);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -189,6 +195,7 @@ namespace WebApi
             services.AddScoped<IEventContactRepository, EventContactRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IModificationEntryRepository, ModificationEntryRepository>();
+            services.AddScoped<IUserPermissionGroupRepository, UserPermissionGroupRepository>();
         }
     }
 }
