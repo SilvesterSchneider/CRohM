@@ -182,5 +182,17 @@ namespace WebApi.Controllers
             await modService.UpdateOrganizationByDeletionAsync(id);
             return Ok();
         }
+
+        // creates new contact in db via frontend
+        [HttpPost("{id}/historyElement")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
+        public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id, [FromQuery]long userIdOfChange)
+        {
+
+            await _organizationService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
+            string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
+            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
+            return Ok();
+        }
     }
 }

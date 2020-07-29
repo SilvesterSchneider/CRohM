@@ -1,4 +1,4 @@
-﻿using ModelLayer;
+using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer.Base;
 using System;
@@ -28,6 +28,7 @@ namespace RepositoryLayer
         public async Task<List<Contact>> GetAllContactsOfAnOrganizationAsync(long id)
         {
             Organization org = await Entities
+                .Include(d => d.History)
                 .Include(a => a.Contact)
                 .ThenInclude(b => b.ContactEntries)
                 .Include(x => x.OrganizationContacts)
@@ -51,6 +52,7 @@ namespace RepositoryLayer
                 .ThenInclude(b => b.ContactEntries)
                 .Include(z => z.OrganizationContacts)
                 .ThenInclude(a => a.Contact)
+                .Include(d => d.History)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
@@ -58,6 +60,7 @@ namespace RepositoryLayer
         {
             return Entities
                 .Include(x => x.Address)
+                .Include(d => d.History)
                 .Include(y => y.Contact)
                 .ThenInclude(b => b.ContactEntries)
                 .Include(z => z.OrganizationContacts)
@@ -68,6 +71,7 @@ namespace RepositoryLayer
         {
             Organization organization = await Entities
                 .Include(x => x.Address)
+                .Include(d => d.History)
                 .Include(y => y.OrganizationContacts)
                 .Include(z => z.Contact)
                 .ThenInclude(a => a.ContactEntries)

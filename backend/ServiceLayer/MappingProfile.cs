@@ -17,7 +17,21 @@ namespace ServiceLayer
             CreateMap<AddressCreateDto, Address>();
 
             CreateMap<EducationalOpportunity, EducationalOpportunityDto>().ReverseMap();
-            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, UserDto>()
+                .ForMember(dto => dto.Permission,
+                    expression => expression.MapFrom((user, dto) =>
+                    {
+                        if (user.Permission.Any())
+                        {
+                            return user.Permission
+                                .Select(permissionGroupToGet => permissionGroupToGet.PermissionGroup)
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<PermissionGroup>();
+                        }
+                    })).ReverseMap();
             CreateMap<UserCreateDto, User>();
 
             CreateMap<Organization, OrganizationDto>()
@@ -153,7 +167,8 @@ namespace ServiceLayer
             CreateMap<HistoryElementCreateDto, HistoryElement>();
             CreateMap<ModificationEntry, ModificationEntryDto>();
             CreateMap<PermissionGroupDto, PermissionGroup>().ReverseMap();
-            CreateMap<PermissionGroupCreateDto, PermissionGroup>(); 
+            CreateMap<PermissionGroupCreateDto, PermissionGroup>();
+            CreateMap<Permission, PermissionDto>().ReverseMap();
         }
     }
 }

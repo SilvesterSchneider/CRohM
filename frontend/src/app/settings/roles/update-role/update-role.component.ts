@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { IRoleTemp, IPermissionTemp } from '../mock-roles';
 import { Validators, FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
 import { DeleteEntryDialogComponent } from '../../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
+import { PermissionGroupDto, PermissionDto } from 'src/app/shared/api-generated/api-generated';
 
 @Component({
   selector: 'app-update-role',
@@ -11,20 +11,25 @@ import { DeleteEntryDialogComponent } from '../../../shared/form/delete-entry-di
   styleUrls: ['./update-role.component.scss']
 })
 export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogComponent> implements OnInit {
+  permissionGroup: PermissionGroupDto;
+  permissions: PermissionDto[];
   public roleForm = this.fb.group({
+    id: [''],
     name: ['', Validators.required],
     permissions: ['']
   });
   constructor(
     public dialogRef: MatDialogRef<UpdateRoleDialogComponent>,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: IUpdateRoleDialogData,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private readonly fb: FormBuilder) {
     super(dialogRef, dialog);
   }
 
   public ngOnInit(): void {
     if (this.data != null && this.data !== undefined) {
+      this.permissionGroup = this.data.role;
+      this.permissions = this.data.permissions;
       this.updateForm();
     }
   }
@@ -45,21 +50,21 @@ export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogC
 
     deleteDialogRef.afterClosed().subscribe((deleteResult) => {
       if (deleteResult.delete) {
-
-        this.dialogRef.close({ delete: true });
+        this.dialogRef.close({ delete: true, id: this.permissionGroup.id });
       }
     });
   }
 
   private updateForm(): void {
+    const permStrings: string[] = new Array<string>();
+    this.permissionGroup.permissions.forEach(a => {
+      permStrings.push(a.name);
+    });
     this.roleForm.patchValue({
-      name: this.data.role.name,
-      permissions: this.data.role.permissions
+      id: this.permissionGroup.id,
+      name: this.permissionGroup.name,
+      permissions: permStrings
     });
   }
 }
 
-export interface IUpdateRoleDialogData {
-  role: IRoleTemp;
-  permissions: IPermissionTemp[];
-}

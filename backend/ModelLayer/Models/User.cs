@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
@@ -27,7 +27,7 @@ namespace ModelLayer.Models
             } 
         }
 
-        public List<PermissionGroup> Permission { get; set; } = new List<PermissionGroup>();
+        public List<UserPermissionGroup> Permission { get; set; } = new List<UserPermissionGroup>();
     }
 
 }

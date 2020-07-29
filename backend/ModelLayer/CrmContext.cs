@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ModelLayer.Helper;
@@ -97,6 +97,15 @@ namespace ModelLayer
                 .HasOne(sc => sc.Event)
                 .WithMany(s => s.Contacts)
                 .HasForeignKey(sc => sc.EventId);
+            modelBuilder.Entity<UserPermissionGroup>().HasKey(sc => new { sc.UserId, sc.PermissionGroupId });
+            modelBuilder.Entity<UserPermissionGroup>()
+                .HasOne(sc => sc.User)
+                .WithMany(s => s.Permission)
+                .HasForeignKey(sc => sc.UserId);
+            modelBuilder.Entity<UserPermissionGroup>()
+                .HasOne(sc => sc.PermissionGroup)
+                .WithMany(s => s.User)
+                .HasForeignKey(sc => sc.PermissionGroupId);
         }
 
         //entities
@@ -112,6 +121,7 @@ namespace ModelLayer
         public DbSet<HistoryElement> History { get; set; }
         public DbSet<ModificationEntry> ModificatonHistory { get; set; }
         public DbSet<PermissionGroup> PermissionGroups { get; set; }
-
+        public DbSet<UserLogin> UserLogin { get; set; }
+        public DbSet<UserPermissionGroup> UserPermissionGroups { get; set; }
     }
 }

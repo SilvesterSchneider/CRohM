@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using AutoMapper;
@@ -25,7 +25,7 @@ namespace WebApi.Controllers
 
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully request")]
-        public async Task<IActionResult> DeletePermissionsByUserIdAsync(int permissiongroupid, long id)
+        public async Task<IActionResult> DeletePermissionsByUserIdAsync(long permissiongroupid, long id)
         {
             if (await _userService.DeletePermissionGroupByUserIdAsync(permissiongroupid, id))
             {
@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully request")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "Permission ID und UserID müssen größer 0 sein.")]
-        public async Task<IActionResult> AddPermissionsByUserIdAsync(int permissiongroupid, long id)
+        public async Task<IActionResult> AddPermissionsByUserIdAsync(long permissiongroupid, long id)
         {
             if (permissiongroupid > 0 && id > 0){
                 if (await _userService.AddPermissionGroupByUserIdAsync(permissiongroupid, id))
