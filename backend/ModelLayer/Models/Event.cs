@@ -1,4 +1,4 @@
-﻿using ModelLayer.Models.Base;
+using ModelLayer.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
