@@ -10,11 +10,11 @@ namespace WebApi.Helper
     public class UserCheckThread 
     {
         private DateTime dateTime;
-        private IUserCheckDateService<UserCheckThread> userCheckRepo;
+        private IUserCheckDateService userCheckSevice;
 
         public UserCheckThread(IUserCheckDateService userCheckSevice)
         {
-            this.userCheckRepo = userCheckSevice;
+            this.userCheckSevice = userCheckSevice;
             new Thread(new ThreadStart(CheckAction)).Start();
         }
 
@@ -24,13 +24,13 @@ namespace WebApi.Helper
             {
                 if (dateTime == null)
                 {
-                    dateTime = userCheckRepo.GetTheDateTime();
+                    dateTime = userCheckSevice.GetTheDateTime();
                 }
                 if (DateTime.Now > dateTime)
                 {
                     dateTime = dateTime.AddDays(1);
-                    userCheckRepo.UpdateAsync(dateTime).Wait();
-                    userCheckRepo.CheckAllUsersAsync();
+                    userCheckSevice.UpdateAsync(dateTime).Wait();
+                    userCheckSevice.CheckAllUsersAsync();
                 }
                 Thread.Sleep(1000 * 60 * 60);
             }
