@@ -178,7 +178,8 @@
             <ng-container matColumnDef="neuerWert">
                 <mat-header-cell *matHeaderCellDef> Neuer Wert </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.actualValue}}
-			</ng-container>
+                </mat-cell>
+            </ng-container>
 			<mat-header-row *matHeaderRowDef="displayedColumnsDataChangeHistory"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumnsDataChangeHistory;"></mat-row>
 		</mat-table>

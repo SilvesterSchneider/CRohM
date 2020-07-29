@@ -97,11 +97,6 @@ export class OrganizationsInfoComponent implements OnInit {
     return element.type === HistoryElementType.NOTE;
   }
 
-  getDate(date: string): string {
-    const dateUsed = new Date(date);
-    return dateUsed.getFullYear().toString() + '-' + (+dateUsed.getMonth() + 1).toString() + '-' + dateUsed.getDate().toString();
-  }
-
   isMail(element: HistoryElementDto): boolean {
     return element.type === HistoryElementType.MAIL;
   }
