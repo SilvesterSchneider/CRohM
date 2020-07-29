@@ -121,6 +121,7 @@ namespace ModelLayer
         public DbSet<HistoryElement> History { get; set; }
         public DbSet<ModificationEntry> ModificatonHistory { get; set; }
         public DbSet<PermissionGroup> PermissionGroups { get; set; }
+        public DbSet<UserLogin> UserLogin { get; set; }
         public DbSet<UserPermissionGroup> UserPermissionGroups { get; set; }
     }
 }

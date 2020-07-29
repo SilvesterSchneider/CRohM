@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class init_kal11 : Migration
+    public partial class ram_init_after_sec11_kal11 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -92,6 +92,36 @@ namespace ModelLayer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ModificatonHistory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PermissionGroups",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PermissionGroups", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserLogin",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    UserId = table.Column<long>(nullable: false),
+                    DateTimeOfLastLogin = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLogin", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -227,22 +257,24 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PermissionGroups",
+                name: "Permissions",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    UserId = table.Column<long>(nullable: true)
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    UserRight = table.Column<int>(nullable: false),
+                    PermissionGroupId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PermissionGroups", x => x.Id);
+                    table.PrimaryKey("PK_Permissions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PermissionGroups_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_Permissions_PermissionGroups_PermissionGroupId",
+                        column: x => x.PermissionGroupId,
+                        principalTable: "PermissionGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -282,6 +314,34 @@ namespace ModelLayer.Migrations
                     table.PrimaryKey("PK_UserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
                         name: "FK_UserLogins_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserPermissionGroups",
+                columns: table => new
+                {
+                    UserId = table.Column<long>(nullable: false),
+                    PermissionGroupId = table.Column<long>(nullable: false),
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserPermissionGroups", x => new { x.UserId, x.PermissionGroupId });
+                    table.ForeignKey(
+                        name: "FK_UserPermissionGroups_PermissionGroups_PermissionGroupId",
+                        column: x => x.PermissionGroupId,
+                        principalTable: "PermissionGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserPermissionGroups_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -392,28 +452,6 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Permissions",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PermissionGroupId = table.Column<long>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Permissions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Permissions_PermissionGroups_PermissionGroupId",
-                        column: x => x.PermissionGroupId,
-                        principalTable: "PermissionGroups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RoleClaims",
                 columns: table => new
                 {
@@ -460,13 +498,13 @@ namespace ModelLayer.Migrations
 
             migrationBuilder.InsertData(
                 table: "Permissions",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId" },
-                values: new object[] { 1L, "7b0fbe48-a9a1-4911-93da-a75cbc52d331", "Admin", "ADMIN", null });
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
+                values: new object[] { 1L, "59593497-644f-4825-956d-1cd96aa9f618", "Admin", "ADMIN", null, 0 });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId" },
-                values: new object[] { 2L, "94925e88-e936-4b9e-afa9-3adae7256109", "DeleteUser", "DELETEUSER", null });
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
+                values: new object[] { 2L, "6820b74f-b46a-4fcb-8c82-4bf190aa3320", "DeleteUser", "DELETEUSER", null, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
@@ -519,11 +557,6 @@ namespace ModelLayer.Migrations
                 column: "EventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PermissionGroups_UserId",
-                table: "PermissionGroups",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "Permissions",
                 column: "NormalizedName",
@@ -549,6 +582,11 @@ namespace ModelLayer.Migrations
                 name: "IX_UserLogins_UserId",
                 table: "UserLogins",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserPermissionGroups_PermissionGroupId",
+                table: "UserPermissionGroups",
+                column: "PermissionGroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",
@@ -598,7 +636,13 @@ namespace ModelLayer.Migrations
                 name: "UserClaims");
 
             migrationBuilder.DropTable(
+                name: "UserLogin");
+
+            migrationBuilder.DropTable(
                 name: "UserLogins");
+
+            migrationBuilder.DropTable(
+                name: "UserPermissionGroups");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");
@@ -619,6 +663,9 @@ namespace ModelLayer.Migrations
                 name: "Permissions");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "Addresses");
 
             migrationBuilder.DropTable(
@@ -626,9 +673,6 @@ namespace ModelLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "PermissionGroups");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }

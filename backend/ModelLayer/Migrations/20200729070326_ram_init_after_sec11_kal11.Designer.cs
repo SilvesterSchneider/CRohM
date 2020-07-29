@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20200720132812_init_kal11")]
-    partial class init_kal11
+    [Migration("20200729070326_ram_init_after_sec11_kal11")]
+    partial class ram_init_after_sec11_kal11
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -480,6 +480,9 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("PermissionGroupId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("UserRight")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -495,16 +498,18 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "7b0fbe48-a9a1-4911-93da-a75cbc52d331",
+                            ConcurrencyStamp = "59593497-644f-4825-956d-1cd96aa9f618",
                             Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            NormalizedName = "ADMIN",
+                            UserRight = 0
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "94925e88-e936-4b9e-afa9-3adae7256109",
+                            ConcurrencyStamp = "6820b74f-b46a-4fcb-8c82-4bf190aa3320",
                             Name = "DeleteUser",
-                            NormalizedName = "DELETEUSER"
+                            NormalizedName = "DELETEUSER",
+                            UserRight = 0
                         });
                 });
 
@@ -584,6 +589,56 @@ namespace ModelLayer.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.UserLogin", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateTimeOfLastLogin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserLogin");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.UserPermissionGroup", b =>
+                {
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PermissionGroupId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "PermissionGroupId");
+
+                    b.HasIndex("PermissionGroupId");
+
+                    b.ToTable("UserPermissionGroups");
+                });
+
             modelBuilder.Entity("ModelLayer.PermissionGroup", b =>
                 {
                     b.Property<long>("Id")
@@ -597,12 +652,7 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("PermissionGroups");
                 });
@@ -742,11 +792,19 @@ namespace ModelLayer.Migrations
                         .HasForeignKey("PermissionGroupId");
                 });
 
-            modelBuilder.Entity("ModelLayer.PermissionGroup", b =>
+            modelBuilder.Entity("ModelLayer.Models.UserPermissionGroup", b =>
                 {
-                    b.HasOne("ModelLayer.Models.User", null)
+                    b.HasOne("ModelLayer.PermissionGroup", "PermissionGroup")
+                        .WithMany("User")
+                        .HasForeignKey("PermissionGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelLayer.Models.User", "User")
                         .WithMany("Permission")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
