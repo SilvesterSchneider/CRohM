@@ -42,7 +42,7 @@ namespace WebApi
             var database = Configuration["DBName"] ?? "CRMDB";
 
             var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
-            connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
+            connectionString = "Server=.\\SQLEXPRESS01;Database=CRMDB;Trusted_Connection=True;";
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -122,12 +122,18 @@ namespace WebApi
             services.AddHealthChecks();
         }
 
-        public void Configure(IPermissionGroupService permissionGroupService, IMapper mapper, IApplicationBuilder app, IWebHostEnvironment env, IUserService userService, CrmContext dataContext)
+        public void Configure(
+            IUserPermissionGroupRepository userPermissionGroupRepo,
+            IPermissionGroupService permissionGroupService,
+            IMapper mapper,
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IUserService userService,
+            CrmContext dataContext)
         {
             dataContext.Database.Migrate();
             ApplicationDbInitializer.SeedPermissions(permissionGroupService, mapper);
-            ApplicationDbInitializer.SeedUsers(userService, permissionGroupService);
-
+            ApplicationDbInitializer.SeedUsers(userService, permissionGroupService, userPermissionGroupRepo);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -191,6 +197,7 @@ namespace WebApi
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IModificationEntryRepository, ModificationEntryRepository>();
             services.AddScoped<IUserLoginRepository, UserLoginRepository>();
+            services.AddScoped<IUserPermissionGroupRepository, UserPermissionGroupRepository>();
         }
     }
 }

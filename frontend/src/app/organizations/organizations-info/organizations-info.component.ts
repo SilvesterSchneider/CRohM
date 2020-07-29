@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ContactDto,
-  ContactPossibilitiesEntryDto, OrganizationDto} from '../../shared/api-generated/api-generated';
+  ContactPossibilitiesEntryDto, OrganizationDto, HistoryElementType, HistoryElementDto} from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
@@ -14,9 +14,11 @@ export class OrganizationsInfoComponent implements OnInit {
   organization: OrganizationDto;
   contactPossibilitiesEntries: ContactPossibilitiesEntryDto[] = new Array<ContactPossibilitiesEntryDto>();
   organizationsForm: FormGroup;
+  history: HistoryElementDto[] = new Array<HistoryElementDto>();
   employees: ContactDto[] = new Array<ContactDto>();
   displayedColumnsEmployees = ['vorname', 'name'];
   displayedColumnsContactPossibilities = ['name', 'kontakt'];
+  displayedColumnsHistory = ['icon', 'datum', 'name', 'kommentar'];
 
   constructor(
     public dialogRef: MatDialogRef<OrganizationsInfoComponent>,
@@ -33,6 +35,7 @@ export class OrganizationsInfoComponent implements OnInit {
     if (this.organization.contact.contactEntries != null) {
       this.organization.contact.contactEntries.forEach(x => this.contactPossibilitiesEntries.push(x));
     }
+    this.history = this.organization.history;
     this.organizationsForm.patchValue(this.organization);
   }
 
@@ -63,5 +66,22 @@ export class OrganizationsInfoComponent implements OnInit {
 
   closeDialog() {
     this.dialogRef.close();
+  }
+
+  isLocalPhone(element: HistoryElementDto): boolean {
+    return element.type === HistoryElementType.PHONE_CALL;
+  }
+
+  isNote(element: HistoryElementDto): boolean {
+    return element.type === HistoryElementType.NOTE;
+  }
+
+  getDate(date: string): string {
+    const dateUsed = new Date(date);
+    return dateUsed.getFullYear().toString() + '-' + (+dateUsed.getMonth() + 1).toString() + '-' + dateUsed.getDate().toString();
+  }
+
+  isMail(element: HistoryElementDto): boolean {
+    return element.type === HistoryElementType.MAIL;
   }
 }

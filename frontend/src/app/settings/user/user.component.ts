@@ -46,8 +46,15 @@ export class UserComponent implements OnInit {
   /**
    * Oeffnen des Dialogs zum Bearbeiten eines Nutzers
    */
-  openEditDialog(): void {
+  openEditDialog(userId: number): void {
+    this.usersService.get().subscribe(x => {
+        this.finalizeOpenEditDialog(x.find(a => a.id === userId));
+      });
+  }
+
+  finalizeOpenEditDialog(user: UserDto) {
     const dialogRef = this.dialog.open(EditUserDialogComponent, {
+      data: user,
       width: '400px',
       disableClose: true
     });

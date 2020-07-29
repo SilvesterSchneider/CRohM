@@ -1,4 +1,4 @@
-﻿using ModelLayer.Models.Base;
+using ModelLayer.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,5 +11,6 @@ namespace ModelLayer.Models
         public Address Address { get; set; }
         public ContactPossibilities Contact { get; set; }
         public List<OrganizationContact> OrganizationContacts { get; set; } = new List<OrganizationContact>();
+        public List<HistoryElement> History { get; set; } = new List<HistoryElement>();
     }
 }

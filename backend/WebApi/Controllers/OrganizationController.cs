@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
@@ -157,6 +157,18 @@ namespace WebApi.Controllers
             }
             await _organizationService.DeleteAsync(organization);
             await modRepo.RemoveEntryAsync(id, MODEL_TYPE.ORGANIZATION);
+            return Ok();
+        }
+
+        // creates new contact in db via frontend
+        [HttpPost("{id}/historyElement")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
+        public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id, [FromQuery]long userIdOfChange)
+        {
+
+            await _organizationService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
+            string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
+            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
             return Ok();
         }
     }

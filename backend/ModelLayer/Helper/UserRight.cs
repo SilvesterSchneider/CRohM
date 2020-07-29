@@ -1,4 +1,4 @@
-﻿using ModelLayer.Models;
+using ModelLayer.Models;
 using ModelLayer.Models.Base;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,8 @@ namespace ModelLayer.Helper
     public enum UserRight
     {
         USER_DELETE = 1,
-        USER_CREATE = 2
+        USER_CREATE = 2,
+        USER_MODIFY = 3
     }
 
     public class AllRoles {
@@ -19,8 +20,9 @@ namespace ModelLayer.Helper
         private static Dictionary<UserRight, string> GetStringValues()
         {
             Dictionary<UserRight, string> dict = new Dictionary<UserRight, string>();
-            dict.Add(UserRight.USER_CREATE, "CreateUser");
-            dict.Add(UserRight.USER_DELETE, "DeleteUser");
+            dict.Add(UserRight.USER_CREATE, "User erstellen");
+            dict.Add(UserRight.USER_DELETE, "User löschen");
+            dict.Add(UserRight.USER_MODIFY, "User bearbeiten");
             return dict;
         }
 
