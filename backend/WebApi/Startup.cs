@@ -39,9 +39,9 @@ namespace WebApi
             var port = Configuration["DBPort"] ?? "1433";
             var user = Configuration["DBUser"] ?? "SA";
             var password = Configuration["DBPassword"] ?? "CRohM2020";
-            var database = Configuration["DBName"] ?? "CRMDB";
+            var database = Configuration["DBName"] ?? "CRMDB"; 
 
-            var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
+             var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
             connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
@@ -120,9 +120,17 @@ namespace WebApi
                 });
 
             services.AddHealthChecks();
+
         }
 
-        public void Configure(IPermissionGroupService permissionGroupService, IMapper mapper, IApplicationBuilder app, IWebHostEnvironment env, IUserService userService, CrmContext dataContext)
+        public void Configure(
+            IPermissionGroupService permissionGroupService,
+            IMapper mapper,
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IUserService userService,
+            CrmContext dataContext,
+            IServiceProvider serviceProvider)
         {
             dataContext.Database.Migrate();
             ApplicationDbInitializer.SeedPermissions(permissionGroupService, mapper);
@@ -157,7 +165,7 @@ namespace WebApi
             {
                 spa.Options.SourcePath = "wwwroot";
             });
-            UserCheckThread userCheckThread = new UserCheckThread();
+            new UserCheckThread(serviceProvider.CreateScope().ServiceProvider.GetService<IUserCheckDateService>()).runThread();
         }
 
         private void AddDependencyInjection(IServiceCollection services)
@@ -178,6 +186,7 @@ namespace WebApi
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IPermissionGroupService, PermissionGroupService>();
+            services.AddScoped<IUserCheckDateService, UserCheckDateService>();
 
             //###########################Repositories#######################################
 

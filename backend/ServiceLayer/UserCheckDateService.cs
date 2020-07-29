@@ -27,7 +27,7 @@ namespace ServiceLayer
             List<User> allUsers = await userService.GetAllUsersAsync();
             foreach (User user in allUsers)
             {
-                if (user.LastLoginDate.AddYears(3) < DateTime.Now)
+                if (user.Id != 1 && user.LastLoginDate.AddYears(3) < DateTime.Now)
                 {
                     await userService.DeleteUserAsync(user);
                 }
