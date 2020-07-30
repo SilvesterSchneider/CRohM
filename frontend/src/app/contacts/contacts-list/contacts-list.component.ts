@@ -96,15 +96,17 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
   }
 
-  openEditDialog(contact: ContactDto) {
-    const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: contact, disableClose: true });
+  openEditDialog(id: number) {
+    this.service.getById(id).subscribe((x) => {
+      const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: x, disableClose: true });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result.delete) {
-        this.deleteContact(result.id);
-      }
-      this.getData();
-    });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result.delete) {
+          this.deleteContact(result.id);
+        }
+        this.getData();
+      });
+    });    
   }
 
   deleteContact(id: number) {

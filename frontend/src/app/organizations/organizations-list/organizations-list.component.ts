@@ -110,17 +110,19 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	openEditDialog(organization: OrganizationDto) {
-		const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, {
-			data: organization,
-			disableClose: true
-		});
-
-		dialogRef.afterClosed().subscribe((result) => {
-			if (result.delete) {
-				this.deleteOrganization(result.id);
-			}
-			this.getData();
+	openEditDialog(id: number) {
+		this.service.getById(id).subscribe(x => {
+			const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, {
+				data: x,
+				disableClose: true
+			});
+	
+			dialogRef.afterClosed().subscribe((result) => {
+				if (result.delete) {
+					this.deleteOrganization(result.id);
+				}
+				this.getData();
+			});
 		});
 	}
 
