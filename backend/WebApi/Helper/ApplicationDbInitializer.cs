@@ -59,9 +59,19 @@ namespace WebApi.Helper
             PermissionGroup admin = new PermissionGroup();
             admin.Name = "Admin";
             admin.Id = 0;
-            admin.Permissions.AddRange(AllRoles.GetAllRoles());
+            admin.Permissions.AddRange(AllRoles.AdminPermissions());
 
             return admin;
+        }
+
+        public static PermissionGroup GetDatenschutzBeaftragterPermissions()
+        {
+            PermissionGroup datenschutzbeauftragter = new PermissionGroup();
+            datenschutzbeauftragter.Name = "Datenschutzbeauftragter";
+            datenschutzbeauftragter.Id = 1;
+            datenschutzbeauftragter.Permissions.AddRange(AllRoles.DatenschutzBeauftragterPermissions());
+
+            return datenschutzbeauftragter;
         }
     }
 }
