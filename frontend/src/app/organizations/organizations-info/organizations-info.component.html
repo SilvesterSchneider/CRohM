@@ -120,7 +120,7 @@
             <mat-row *matRowDef="let row; columns: displayedColumnsEmployees;"></mat-row>
         </mat-table>
     </div>
-
+    
     <div *ngIf="history.length > 0" class="col-md-12">
         <h5>Historie</h5>
         <mat-table #table [dataSource]="history">
@@ -150,6 +150,39 @@
             <mat-header-row *matHeaderRowDef="displayedColumnsHistory"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumnsHistory;"></mat-row>
         </mat-table>
+    </div>
+	
+	<div *ngIf="dataHistory.length > 0" class="col-md-12">
+        <h5>Datenveränderungen</h5>
+        <mat-table #table [dataSource]="dataHistory">
+            <ng-container matColumnDef="datum">
+                <mat-header-cell *matHeaderCellDef> Datum </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{getDate(element.dateTime)}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="bearbeiter">
+                <mat-header-cell *matHeaderCellDef> Bearbeiter </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.userName}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="feldname">
+                <mat-header-cell *matHeaderCellDef> Eigenschaft </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.propertyName}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="alterWert">
+                <mat-header-cell *matHeaderCellDef> Alter Wert </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.oldValue}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="neuerWert">
+                <mat-header-cell *matHeaderCellDef> Neuer Wert </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.actualValue}}
+                </mat-cell>
+            </ng-container>
+			<mat-header-row *matHeaderRowDef="displayedColumnsDataChangeHistory"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumnsDataChangeHistory;"></mat-row>
+		</mat-table>
     </div>
     <button mat-raised-button color="primary" title="Schließen" type="submit" (click)="closeDialog()">Schließen</button>
 </mat-dialog-content>

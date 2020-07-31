@@ -336,12 +336,17 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("OrganizationId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ContactId");
+
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("History");
                 });
@@ -353,10 +358,16 @@ namespace ModelLayer.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ActualValue")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("DataModelId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("DataModelType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DataType")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateTime")
@@ -365,10 +376,19 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ExtensionIndex")
+                        .HasColumnType("int");
+
                     b.Property<int>("ModificationType")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PropertyName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -473,6 +493,9 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("PermissionGroupId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("UserRight")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -488,16 +511,18 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "4b696ff9-f7f2-419d-91a1-5555f1274c6f",
+                            ConcurrencyStamp = "98875583-07a9-474d-bcd2-35925d03425a",
                             Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            NormalizedName = "ADMIN",
+                            UserRight = 0
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "03d91fed-cf3a-4393-bfa7-eb32dd563947",
+                            ConcurrencyStamp = "7ca46360-9d9a-4c99-a279-00664af0c476",
                             Name = "DeleteUser",
-                            NormalizedName = "DELETEUSER"
+                            NormalizedName = "DELETEUSER",
+                            UserRight = 0
                         });
                 });
 
@@ -601,6 +626,32 @@ namespace ModelLayer.Migrations
                     b.ToTable("UserLogin");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.UserPermissionGroup", b =>
+                {
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PermissionGroupId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "PermissionGroupId");
+
+                    b.HasIndex("PermissionGroupId");
+
+                    b.ToTable("UserPermissionGroups");
+                });
+
             modelBuilder.Entity("ModelLayer.PermissionGroup", b =>
                 {
                     b.Property<long>("Id")
@@ -614,12 +665,7 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("PermissionGroups");
                 });
@@ -713,6 +759,10 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.Models.Contact", null)
                         .WithMany("History")
                         .HasForeignKey("ContactId");
+
+                    b.HasOne("ModelLayer.Models.Organization", null)
+                        .WithMany("History")
+                        .HasForeignKey("OrganizationId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>
@@ -755,11 +805,19 @@ namespace ModelLayer.Migrations
                         .HasForeignKey("PermissionGroupId");
                 });
 
-            modelBuilder.Entity("ModelLayer.PermissionGroup", b =>
+            modelBuilder.Entity("ModelLayer.Models.UserPermissionGroup", b =>
                 {
-                    b.HasOne("ModelLayer.Models.User", null)
+                    b.HasOne("ModelLayer.PermissionGroup", "PermissionGroup")
+                        .WithMany("User")
+                        .HasForeignKey("PermissionGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelLayer.Models.User", "User")
                         .WithMany("Permission")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
