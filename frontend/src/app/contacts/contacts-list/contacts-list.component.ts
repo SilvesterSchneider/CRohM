@@ -12,6 +12,7 @@ import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
 import { DpUpdatePopupComponent } from 'src/app/shared/data-protection/dp-update-popup/dp-update-popup.component';
 import { DataProtectionHelperService } from 'src/app/shared/data-protection';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-contacts-list',
@@ -34,7 +35,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private mediaObserver: MediaObserver,
     private readonly dataProtectionService: DataProtectionService,
-		  private readonly dsgvoService: DataProtectionHelperService,
+    private readonly dsgvoService: DataProtectionHelperService,
+    private readonly snackBar: MatSnackBar,
     private jwt: JwtService) {
       this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
       if (change[0].mqAlias !== this.currentScreenWidth) {
@@ -81,8 +83,10 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: contact, disableClose: true });
 
     dialogRef.afterClosed().subscribe((editDialogResult) => {
+
       if (editDialogResult.delete) {
-        this.deleteContact(editDialogResult.id);
+
+        this.deleteContact(contact);
       } else {
         if (editDialogResult.newContact && editDialogResult.oldContact) {
         const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
@@ -90,7 +94,11 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         dialogDSGVORef.afterClosed().subscribe(sendMessage => {
           if (sendMessage) {
             const diff = this.dsgvoService.getDiffOfObjects( editDialogResult.oldContact, editDialogResult.newContact, ['unchanged']);
-            this.dataProtectionService.sendUpdateMessage({delete: false, contactChanges: diff, contact}).subscribe();
+            this.dataProtectionService.sendUpdateMessage({delete: false, contactChanges: diff, contact}).subscribe({error: err => {
+              this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
+                duration: 2000,
+              });
+            }});
           }
         });
       }
@@ -99,21 +107,27 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteContact(id: number) {
+  deleteContact(contact: ContactDto) {
     const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
       data: 'Kontakt',
       disableClose: true
     });
 
     deleteDialogRef.afterClosed().subscribe((deleteResult) => {
+
       if (deleteResult?.delete) {
 
         const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
 
         dialogDSGVORef.afterClosed().subscribe(sendMessage => {
           if (sendMessage) {
-            this.dataProtectionService.sendDeleteMessage({delete: true, contactChanges: null, contact: null}).subscribe();
-            this.service.delete(id).subscribe(x => this.getData());
+
+            this.dataProtectionService.sendUpdateMessage({delete: true, contactChanges: null, contact}).subscribe({error: err => {
+              this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
+                duration: 3000,
+              });
+            }});
+            this.service.delete(contact.id).subscribe(x => this.getData());
           }
         });
       }
@@ -142,7 +156,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       },
       contactPossibilities: {
         fax: '01234-123' + this.length,
-        mail: 'info@test' + this.length + '.de',
+        mail: 'silvrster.schneider@gmail.com' ,
         phoneNumber: '0172-9344333' + this.length,
         contactEntries: []
       }

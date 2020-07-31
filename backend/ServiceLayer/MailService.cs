@@ -21,6 +21,8 @@ namespace ServiceLayer
         public bool Registration(string benutzer, string passwort, string email);
 
         public bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
+
+        public bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
     }
 
     public class MailService : IMailService
@@ -39,13 +41,28 @@ namespace ServiceLayer
             return SendMail("Zugangsdaten", body, email);
         }
 
-        public bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data)
+        public bool SendDataProtectionUpdateMessage(string title, string lastName, string emailAddressRecipient, string data)
         {
-            string body = $"<p>Sehr geehrte/r {title} {lastname}</p> " +
+            string body = $"<p>Sehr geehrte/r {title} {lastName}</p> " +
                           " <p> Sie hatten um Änderung bzw. Löschung von zur Ihrer Person in " +
                           "       unserem Customer Relationship Management System(CRMS) " +
                           "       gespeicherten Daten gebeten.</p> " +
                           " <p> Folgende Daten wurden geändert:</p> " +
+                          " <ul> " +
+                          data +
+                          " </ul> " +
+                          " <p> Technische Hochschule Nürnberg</p> ";
+
+            return SendMail("Mitteilung über Änderung oder Löschung von Daten", body, emailAddressRecipient);
+        }
+
+        public bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data)
+        {
+            string body = $"<p>Sehr geehrte/r {title} {lastName}</p> " +
+                          " <p> Sie hatten um Änderung bzw. Löschung von zur Ihrer Person in " +
+                          "       unserem Customer Relationship Management System(CRMS) " +
+                          "       gespeicherten Daten gebeten.</p> " +
+                          " <p> Folgende Daten wurden gelöscht:</p> " +
                           " <ul> " +
                           data +
                           " </ul> " +

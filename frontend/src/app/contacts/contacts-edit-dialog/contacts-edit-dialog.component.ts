@@ -21,6 +21,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	contact: ContactDto;
 	private oldContact: ContactDto;
 	private newContact: ContactDto;
+	private copy;
 
 	public constructor(
 		public dialogRef: MatDialogRef<ContactsEditDialogComponent>,
@@ -37,6 +38,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 
 	public ngOnInit(): void {
 		this.oldContact = this.data;
+		this.copy = (JSON.parse(JSON.stringify(this.data)));
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
 		this.initForm();
@@ -70,7 +72,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	public onApprove(): void {
 		this.newContact =  this.contactsForm.value;
 		this.contactService.put(this.contact.id, this.contactsForm.value).subscribe(x => {
-			this.dialogRef.close({ delete: false, id: 0, oldContact: this.oldContact, newContact: this.newContact });
+			this.dialogRef.close({ delete: false, id: 0, oldContact: this.copy, newContact: this.newContact });
 		});
 	}
 
