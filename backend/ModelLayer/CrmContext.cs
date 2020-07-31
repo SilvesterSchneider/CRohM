@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 
 namespace ModelLayer
 {
-    public class CrmContext : IdentityDbContext<User, Role, long>
+    public class CrmContext : IdentityDbContext<User, Permission, long>
     {
         public CrmContext(DbContextOptions<CrmContext> options) : base(options)
         {
@@ -17,16 +18,24 @@ namespace ModelLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //TODO SeedPermission
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Role>()
-                .HasData(new Role
+            modelBuilder.Entity<Permission>()
+                .HasData(new Permission
                 {
                     Id = 1,
                     Name = "Admin",
                     NormalizedName = "Admin".ToUpper()
                 });
+            modelBuilder.Entity<Permission>()
+            .HasData(new Permission
+            {
+                Id = 2,
+                Name = "DeleteUser",
+                NormalizedName = "DeleteUser".ToUpper()
+            });
 
-            modelBuilder.Entity<Role>()
+            modelBuilder.Entity<Permission>()
                 .Property(role => role.Id)
                 .ValueGeneratedOnAdd();
 
@@ -39,9 +48,9 @@ namespace ModelLayer
             {
                 entity.ToTable("Users");
             });
-            modelBuilder.Entity<Role>(entity =>
+            modelBuilder.Entity<Permission>(entity =>
             {
-                entity.ToTable("Roles");
+                entity.ToTable("Permissions");
             });
             modelBuilder.Entity<IdentityUserRole<long>>(entity =>
             {
@@ -88,6 +97,15 @@ namespace ModelLayer
                 .HasOne(sc => sc.Event)
                 .WithMany(s => s.Contacts)
                 .HasForeignKey(sc => sc.EventId);
+            modelBuilder.Entity<UserPermissionGroup>().HasKey(sc => new { sc.UserId, sc.PermissionGroupId });
+            modelBuilder.Entity<UserPermissionGroup>()
+                .HasOne(sc => sc.User)
+                .WithMany(s => s.Permission)
+                .HasForeignKey(sc => sc.UserId);
+            modelBuilder.Entity<UserPermissionGroup>()
+                .HasOne(sc => sc.PermissionGroup)
+                .WithMany(s => s.User)
+                .HasForeignKey(sc => sc.PermissionGroupId);
         }
 
         //entities
@@ -102,5 +120,8 @@ namespace ModelLayer
         public DbSet<Participated> Participations { get; set; }
         public DbSet<HistoryElement> History { get; set; }
         public DbSet<ModificationEntry> ModificatonHistory { get; set; }
+        public DbSet<PermissionGroup> PermissionGroups { get; set; }
+        public DbSet<UserLogin> UserLogin { get; set; }
+        public DbSet<UserPermissionGroup> UserPermissionGroups { get; set; }
     }
 }

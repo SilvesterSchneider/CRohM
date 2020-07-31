@@ -451,7 +451,7 @@ namespace ModelLayer.Migrations
                     b.ToTable("Participations");
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.Role", b =>
+            modelBuilder.Entity("ModelLayer.Models.Permission", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -470,6 +470,9 @@ namespace ModelLayer.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<long?>("PermissionGroupId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -477,15 +480,24 @@ namespace ModelLayer.Migrations
                         .HasName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("Roles");
+                    b.HasIndex("PermissionGroupId");
+
+                    b.ToTable("Permissions");
 
                     b.HasData(
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "7c4bccf6-05ad-43ef-8b77-9fbaa1327f00",
+                            ConcurrencyStamp = "4b696ff9-f7f2-419d-91a1-5555f1274c6f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            ConcurrencyStamp = "03d91fed-cf3a-4393-bfa7-eb32dd563947",
+                            Name = "DeleteUser",
+                            NormalizedName = "DELETEUSER"
                         });
                 });
 
@@ -565,9 +577,56 @@ namespace ModelLayer.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.UserLogin", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateTimeOfLastLogin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserLogin");
+                });
+
+            modelBuilder.Entity("ModelLayer.PermissionGroup", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PermissionGroups");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
                 {
-                    b.HasOne("ModelLayer.Models.Role", null)
+                    b.HasOne("ModelLayer.Models.Permission", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -594,7 +653,7 @@ namespace ModelLayer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<long>", b =>
                 {
-                    b.HasOne("ModelLayer.Models.Role", null)
+                    b.HasOne("ModelLayer.Models.Permission", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -687,6 +746,20 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.Models.Event", null)
                         .WithMany("Participated")
                         .HasForeignKey("EventId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.Permission", b =>
+                {
+                    b.HasOne("ModelLayer.PermissionGroup", null)
+                        .WithMany("Permissions")
+                        .HasForeignKey("PermissionGroupId");
+                });
+
+            modelBuilder.Entity("ModelLayer.PermissionGroup", b =>
+                {
+                    b.HasOne("ModelLayer.Models.User", null)
+                        .WithMany("Permission")
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

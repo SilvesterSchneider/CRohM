@@ -1,5 +1,22 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <span>Kontakte</span>
+        <span class="spacer"></span>
+        <mat-form-field>
+            <mat-label>Suche</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
+        </mat-form-field>
+        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Kontakt hinzufügen" (click)="addDummyContact()">
+            <mat-icon>add</mat-icon> Dummy Kontakt hinzufügen
+        </button>
+        <button class="button" button="submit" mat-mini-fab color="primary" (click)="openAddDialog()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
 <div fxLayout="column" fxLayoutGap="100px">
-    <mat-table #table [dataSource]="contacts">
+    <mat-table #table [dataSource]="dataSource">
         <ng-container matColumnDef="vorname">
             <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.preName}}
@@ -68,7 +85,7 @@
     <div class="blocks"><button button (click)="openAddDialog()" mat-raised-button color="primary">
             <mat-icon>add</mat-icon> Kontakt hinzufügen
         </button>
-        <button class="button"  mat-raised-button color="primary" title="Dummy Kontakt hinzufügen" (click)="addDummyContact()"> 
+        <button class="button"  mat-raised-button color="primary" title="Dummy Kontakt hinzufügen" (click)="addDummyContact()">
             <mat-icon>add</mat-icon> Dummy Kontakt hinzufügen
         </button>
     </div>

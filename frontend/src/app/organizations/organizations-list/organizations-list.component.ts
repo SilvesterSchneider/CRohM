@@ -9,6 +9,8 @@ import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/o
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
+import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
 	selector: 'app-organizations-list',
@@ -28,6 +30,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	flexMediaWatcher: Subscription;
 	length = 0;
 	isAdminUserLoggedIn = false;
+	dataSource = new MatTableDataSource<OrganizationDto>();
 
 	constructor(public dialog: MatDialog, service: OrganizationService, private userService: UsersService,
 		           private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver, private jwt: JwtService) {
@@ -39,6 +42,22 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
+
+	applyFilter(event: Event) {
+		const filterValue = (event.target as HTMLInputElement).value;
+		this.dataSource.filter = filterValue.trim().toLowerCase();
+		this.dataSource.filterPredicate = ((data, filter) => {
+		  if (data.name.trim().toLowerCase().includes(filter) || data.description.trim().toLowerCase().includes(filter) ||
+			data.address.street.trim().toLowerCase().includes(filter) || data.address.streetNumber.trim().toLowerCase().includes(filter) ||
+			data.address.zipcode.trim().toLowerCase().includes(filter) || data.address.city.trim().toLowerCase().includes(filter) ||
+			data.address.country.trim().toLowerCase().includes(filter) || data.contact.phoneNumber.trim().toLowerCase().includes(filter) ||
+			data.contact.mail.trim().toLowerCase().includes(filter) || data.contact.fax.trim().toLowerCase().includes(filter)) {
+			return true;
+		  } else {
+			return false;
+		  }
+		});
+	  }
 
 	ngOnInit(): void {
 		this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
@@ -61,6 +80,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 				'Hausnummer',
 				'PLZ',
 				'Stadt',
+				'Land',
 				'Telefonnummer',
 				'E-Mail',
 				'Faxnummer',
@@ -72,7 +92,10 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 
 	private getData() {
 		this.organizations = this.service.get();
-		this.organizations.subscribe(x => this.length = x.length);
+		this.organizations.subscribe(x => {
+			 this.length = x.length;
+			 this.dataSource.data = x;
+		});
 		this.changeDetectorRefs.detectChanges();
 		// this.organizationMock = this.orgaMock.getOrganizationsMock();
 	}
@@ -100,6 +123,15 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			this.getData();
 		});
 	}
+
+	addNote(id: number) {
+		const dialogRef = this.dialog.open(AddHistoryComponent);
+		dialogRef.afterClosed().subscribe((y) => {
+			if (y) {
+				this.service.postHistoryElement(y, id, this.jwt.getUserId()).subscribe(x => this.getData());
+			}
+		});
+	  }
 
 	openInfo(id: number) {
 		this.service.getById(id).subscribe(x => this.dialog.open(OrganizationsInfoComponent, { data: x }));

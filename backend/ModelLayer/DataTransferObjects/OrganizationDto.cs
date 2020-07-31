@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -16,6 +16,7 @@ namespace ModelLayer.DataTransferObjects
         public ContactPossibilitiesDto Contact { get; set; }
 
         public List<ContactDto> Employees { get; set; } = new List<ContactDto>();
+        public List<HistoryElementDto> History { get; set; } = new List<HistoryElementDto>();
     }
 
     public class OrganizationCreateDto

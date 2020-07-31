@@ -20,8 +20,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 		ContactsAddDialogComponent,
 		ContactsEditDialogComponent,
 		ContactsDetailComponent,
-		ContactsInfoComponent,
-		ContactsAddHistoryComponent
+		ContactsInfoComponent
 	]
 })
 export class ContactsModule {}
