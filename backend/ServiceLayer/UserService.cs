@@ -29,9 +29,11 @@ namespace ServiceLayer
         Task<List<User>> GetAsync();
 
         Task<User> GetByIdAsync(long id);
+
         Task<List<string>> GetRolesAsync(User user);
 
         Task<bool> DeletePermissionGroupByUserIdAsync(long groupIdToDelete, long userId);
+
         Task<bool> AddPermissionGroupByUserIdAsync(long permissionGroupId, long userId);
 
         Task<IdentityResult> SetUserLockedAsync(long id);
@@ -47,26 +49,26 @@ namespace ServiceLayer
     {
         private readonly IUserManager _userManager;
 
-        private readonly IMailProvider mailProvider;
+        private readonly IMailService _mailService;
 
         private IUserPermissionGroupRepository userPermissionGroupRepo;
 
         private readonly IPermissionGroupService permissionsService;
         public IQueryable<User> Users => _userManager.Users;
 
-        public UserService(IUserManager userManager, IMailProvider mailProvider, IPermissionGroupService permissionsService,
+        public UserService(IUserManager userManager, IMailService mailProvider, IPermissionGroupService permissionsService,
             IUserPermissionGroupRepository userPermissionGroupRepo)
         {
             this.permissionsService = permissionsService;
             this.userPermissionGroupRepo = userPermissionGroupRepo;
             _userManager = userManager;
-            this.mailProvider = mailProvider;
+            _mailService = mailProvider;
         }
 
-        public UserService(IUserManager userManager, IMailProvider mailProvider)
+        public UserService(IUserManager userManager, IMailService mailService)
         {
             _userManager = userManager;
-            this._mailService = mailService;
+            _mailService = mailService;
         }
 
         public async Task<IdentityResult> CreateCRohMUserAsync(User user)
@@ -80,7 +82,7 @@ namespace ServiceLayer
 
             if (result.Succeeded)
             {
-                mailProvider.Registration(user.UserName, password, user.Email);
+                _mailService.Registration(user.UserName, password, user.Email);
             }
 
             return result;
@@ -111,20 +113,20 @@ namespace ServiceLayer
                     PasswordGuidelines.GetAmountOfLowerLetters(), PasswordGuidelines.GetAmountOfUpperLetters(), PasswordGuidelines.GetAmountOfNumerics(),
                     PasswordGuidelines.GetAmountOfSpecialChars()).Generate();
                 await _userManager.ChangePasswordAsync(userToBeUpdated, newPassword);
-                mailProvider.PasswordReset(newPassword, userToBeUpdated.Email);
+                _mailService.PasswordReset(newPassword, userToBeUpdated.Email);
             }
         }
 
         public async Task<List<User>> GetAsync()
         {
             List<User> users = await _userManager.Users.Include(x => x.Permission).ThenInclude(y => y.PermissionGroup).ToListAsync();
-          /*  foreach (User usr in users)
-            {
-                foreach (PermissionGroup groups in usr.Permission)
-                {
-                    PermissionGroup permissions = await permissionsService.GetPermissionGroupByIdAsync(groups.Id);
-                }
-            } */
+            /*  foreach (User usr in users)
+              {
+                  foreach (PermissionGroup groups in usr.Permission)
+                  {
+                      PermissionGroup permissions = await permissionsService.GetPermissionGroupByIdAsync(groups.Id);
+                  }
+              } */
             return users;
         }
 
@@ -226,7 +228,8 @@ namespace ServiceLayer
                     {
                         return true;
                     }
-                } else
+                }
+                else
                 {
                     return false;
                 }
@@ -365,6 +368,7 @@ namespace ServiceLayer
         Task<User> FindByEmailAsync(string email);
 
         Task<IdentityResult> AddToRoleAsync(User user, string role);
+
         Task<IdentityResult> RemoveRolesAsync(User user, string permission);
 
         Task<IdentityResult> ChangePasswordAsync(User user, string newPassword);
@@ -372,6 +376,7 @@ namespace ServiceLayer
         Task<IdentityResult> SetUserLockedAsync(User user, bool lockoutEnabled);
 
         Task<IdentityResult> UpdateAsync(User user);
+
         Task<IList<string>> GetRolesAsync(User user);
 
         IQueryable<User> Users { get; }
