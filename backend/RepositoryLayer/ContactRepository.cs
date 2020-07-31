@@ -1,4 +1,4 @@
-﻿using ModelLayer;
+using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer.Base;
 using System;
@@ -30,7 +30,9 @@ namespace RepositoryLayer
 
     public class ContactRepository : BaseRepository<Contact>, IContactRepository
     {
-        public ContactRepository(CrmContext context) : base(context) { }
+        public ContactRepository(CrmContext context) : base(context)
+        {
+        }
 
         public async Task<List<Contact>> GetAllContactsWithAllIncludesAsync()
         {
@@ -50,14 +52,14 @@ namespace RepositoryLayer
         public override async Task<Contact> GetByIdAsync(long id)
         {
             return await Entities
-                .Include(g => g.OrganizationContacts)
-                .ThenInclude(j => j.Organization)
+                //.Include(g => g.OrganizationContacts)
+                //.ThenInclude(j => j.Organization)
                 .Include(a => a.Address)
                 .Include(x => x.History)
-                .Include(b => b.ContactPossibilities)
-                .ThenInclude(b => b.ContactEntries)
-                .Include(c => c.Events)
-                .ThenInclude(d => d.Event)
+                //.Include(b => b.ContactPossibilities)
+                //.ThenInclude(b => b.ContactEntries)
+                //.Include(c => c.Events)
+                //.ThenInclude(d => d.Event)
                 .FirstAsync(x => x.Id == id);
         }
 
@@ -105,7 +107,7 @@ namespace RepositoryLayer
                 {
                     originalContact.ContactPossibilities.ContactEntries.Remove(entry);
                 }
-                
+
                 foreach (ContactPossibilitiesEntry entry in contact.ContactPossibilities.ContactEntries)
                 {
                     if (entry.Id != 0)
@@ -120,14 +122,14 @@ namespace RepositoryLayer
                     else
                     {
                         originalContact.ContactPossibilities.ContactEntries.Add(entry);
-                    }                    
+                    }
                 }
                 originalContact.Description = contact.Description;
                 originalContact.Name = contact.Name;
                 originalContact.PreName = contact.PreName;
                 await UpdateAsync(originalContact);
                 return true;
-            } 
+            }
             else
             {
                 return false;

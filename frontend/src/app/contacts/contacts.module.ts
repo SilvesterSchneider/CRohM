@@ -9,12 +9,11 @@ import { ContactsAddDialogComponent } from './contacts-add-dialog/contacts-add-d
 import { ContactsEditDialogComponent } from './contacts-edit-dialog/contacts-edit-dialog.component';
 import { ContactsDetailComponent } from './contacts-detail/contacts-detail.component';
 import { ContactsInfoComponent } from './contacts-info/contacts-info.component';
-import { ContactsAddHistoryComponent } from './contacts-add-history/contacts-add-history.component';
 import { DataProtectionModule } from '../shared/data-protection';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
-	imports: [ SharedModule, FormsModule, ReactiveFormsModule, MaterialModule, MatDialogModule, ContactsRoutingModule,MatSnackBarModule, DataProtectionModule ],
+	imports: [ SharedModule, FormsModule, ReactiveFormsModule, MaterialModule, MatDialogModule, ContactsRoutingModule, MatSnackBarModule, DataProtectionModule ],
 	declarations: [
 		ContactsListComponent,
 		ContactsAddDialogComponent,

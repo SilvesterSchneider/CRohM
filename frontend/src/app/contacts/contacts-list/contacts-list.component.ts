@@ -178,7 +178,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       },
       contactPossibilities: {
         fax: '01234-123' + this.length,
-        mail: 'silvrster.schneider@gmail.com' ,
+        mail: 'a.b@dooodle.com' ,
         phoneNumber: '0172-9344333' + this.length,
         contactEntries: []
       }
