@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ModelLayer;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
@@ -105,7 +105,7 @@ namespace RepositoryLayer
                     if (eventToModify.Contacts.FirstOrDefault(y => y.Id == x.ContactId) == null)
                     {
                         eventContactsToDelete.Add(x);
-                    }
+                    } 
                 });
                 foreach (EventContact part in eventContactsToDelete)
                 {
@@ -127,7 +127,7 @@ namespace RepositoryLayer
                     {
                         eventExistent.Participated.Add(new Participated() { ContactId = x.ContactId, HasParticipated = x.HasParticipated });
                     }
-                });
+                }); 
                 
                 foreach (ContactDto contact in eventToModify.Contacts) 
                 {
@@ -135,7 +135,7 @@ namespace RepositoryLayer
                     {
                         await AddEventContactAsync(new EventContact() { ContactId = contact.Id, EventId = eventExistent.Id });
                     }
-                }
+                } 
 
                 await UpdateAsync(eventExistent);
                 return true;

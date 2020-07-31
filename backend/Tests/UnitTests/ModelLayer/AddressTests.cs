@@ -1,4 +1,4 @@
-﻿using ModelLayer.Models;
+using ModelLayer.Models;
 using Xunit;
 
 namespace UnitTests.ModelLayer
@@ -15,7 +15,7 @@ namespace UnitTests.ModelLayer
             sut = new Address();
 
             //Assert
-            Assert.Null(sut.City);// assume that rest of strings have same behavior
+            Assert.Equal("", sut.City);// assume that rest of strings have same behavior
         }
     }
 }
