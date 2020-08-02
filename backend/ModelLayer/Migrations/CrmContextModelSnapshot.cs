@@ -358,10 +358,16 @@ namespace ModelLayer.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ActualValue")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("DataModelId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("DataModelType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DataType")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateTime")
@@ -370,10 +376,19 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ExtensionIndex")
+                        .HasColumnType("int");
+
                     b.Property<int>("ModificationType")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PropertyName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -496,7 +511,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "11301d25-4e1c-4695-bb3a-c92e8b42b6b1",
+                            ConcurrencyStamp = "508d0833-c46a-40ec-b111-d1f220df5e19",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             UserRight = 0
@@ -504,7 +519,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "1be89160-b647-4070-9c43-34ec1188bb6f",
+                            ConcurrencyStamp = "f3cdad04-c857-4568-8097-98d2d0b83a09",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER",
                             UserRight = 0

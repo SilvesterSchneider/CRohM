@@ -106,7 +106,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         }
         this.getData();
       });
-    });    
+    });
   }
 
   deleteContact(id: number) {
@@ -152,6 +152,6 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         phoneNumber: '0172-9344333' + this.length,
         contactEntries: []
       }
-    }, this.jwt.getUserId()).subscribe(x => this.getData());
+    }).subscribe(x => this.getData());
   }
 }

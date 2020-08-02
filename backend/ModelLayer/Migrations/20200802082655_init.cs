@@ -83,11 +83,16 @@ namespace ModelLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
+                    DataType = table.Column<int>(nullable: false),
                     DataModelType = table.Column<int>(nullable: false),
                     DataModelId = table.Column<long>(nullable: false),
                     ModificationType = table.Column<int>(nullable: false),
                     UserName = table.Column<string>(nullable: true),
-                    DateTime = table.Column<DateTime>(nullable: false)
+                    DateTime = table.Column<DateTime>(nullable: false),
+                    OldValue = table.Column<string>(nullable: true),
+                    ActualValue = table.Column<string>(nullable: true),
+                    ExtensionIndex = table.Column<int>(nullable: false),
+                    PropertyName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -499,12 +504,12 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 1L, "11301d25-4e1c-4695-bb3a-c92e8b42b6b1", "Admin", "ADMIN", null, 0 });
+                values: new object[] { 1L, "508d0833-c46a-40ec-b111-d1f220df5e19", "Admin", "ADMIN", null, 0 });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 2L, "1be89160-b647-4070-9c43-34ec1188bb6f", "DeleteUser", "DELETEUSER", null, 0 });
+                values: new object[] { 2L, "f3cdad04-c857-4568-8097-98d2d0b83a09", "DeleteUser", "DELETEUSER", null, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
