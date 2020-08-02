@@ -29,9 +29,9 @@ namespace RepositoryLayer
 
         public DateTime GetTheDateTime()
         {
-            if (Entities.ToList().Count >= 0)
+            if (Entities.ToList().Any())
             {
-                return Entities.ToList()[0].DateOfLastCheck;
+                return Entities.ToList().ElementAt(0).DateOfLastCheck;
             }
             else
             {

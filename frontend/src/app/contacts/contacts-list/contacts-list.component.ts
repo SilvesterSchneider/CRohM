@@ -82,7 +82,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.contacts = this.service.getAll();
     this.contacts.subscribe(x => {
        this.length = x.length;
-       x.forEach(y => this.dataSource.data = x);
+       this.dataSource.data = x;
     });
     this.changeDetectorRefs.detectChanges();
   }
@@ -106,7 +106,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         }
         this.getData();
       });
-    });    
+    });
   }
 
   deleteContact(id: number) {
