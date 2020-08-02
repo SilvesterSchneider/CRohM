@@ -165,7 +165,7 @@ namespace WebApi
             {
                 spa.Options.SourcePath = "wwwroot";
             });
-            new UserCheckThread(serviceProvider.CreateScope().ServiceProvider.GetService<IUserCheckDateService>()).runThread();
+            new UserCheckThread(serviceProvider.CreateScope().ServiceProvider.GetService<IUserCheckDateService>()).runScheduledService().Wait();
         }
 
         private void AddDependencyInjection(IServiceCollection services)

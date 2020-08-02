@@ -1,13 +1,38 @@
+using Quartz;
+using Quartz.Impl;
 using ServiceLayer;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace WebApi.Helper
 {
     public class UserCheckThread 
     {
-        private static DateTime DEF_TIME = DateTime.MinValue;
-        private DateTime dateTime = DEF_TIME;
+        private class ExecuteJob : IJob
+        {
+            private DateTime dateTime = DateTime.MinValue;
+            private IUserCheckDateService userCheckSevice;
+
+            public async Task Execute(IJobExecutionContext context)
+            {
+                JobDataMap jobData = context.JobDetail.JobDataMap;
+                userCheckSevice = jobData.Get("service") as IUserCheckDateService;
+                await CheckAction();
+            }
+
+            private async Task CheckAction()
+            {
+                dateTime = userCheckSevice.GetTheDateTime();
+                if (DateTime.Now > dateTime)
+                {
+                    dateTime = DateTime.Now.AddDays(1);
+                    await userCheckSevice.UpdateAsync(dateTime);
+                    await userCheckSevice.CheckAllUsersAsync();
+                }
+            }
+        }
+
         private IUserCheckDateService userCheckSevice;
 
         public UserCheckThread(IUserCheckDateService userCheckSevice)
@@ -15,27 +40,33 @@ namespace WebApi.Helper
             this.userCheckSevice = userCheckSevice;
         }
 
-        public void runThread()
+        public async Task runScheduledService()
         {
-            new Thread(new ThreadStart(CheckAction)).Start();
-        }
+            // construct a scheduler factory
+            StdSchedulerFactory factory = new StdSchedulerFactory();
 
-        private void CheckAction()
-        {
-            while (true)
-            {
-                if (dateTime.Equals(DEF_TIME))
-                {
-                    dateTime = userCheckSevice.GetTheDateTime();
-                }
-                if (DateTime.Now > dateTime)
-                {
-                    dateTime = DateTime.Now.AddDays(1);
-                    userCheckSevice.UpdateAsync(dateTime).Wait();
-                    userCheckSevice.CheckAllUsersAsync();
-                }
-                Thread.Sleep(1000 * 60 * 60);
-            }
+            // get a scheduler
+            IScheduler scheduler = await factory.GetScheduler();
+            await scheduler.Start();
+            // job data map
+            JobDataMap jobData = new JobDataMap();
+            jobData.Add("service", userCheckSevice);
+            // define the job and tie it to our HelloJob class
+            IJobDetail job = JobBuilder.Create<ExecuteJob>()
+                .UsingJobData(jobData)
+                .WithIdentity("myJob", "group")
+                .Build();
+
+            // Trigger the job to run now, and then every 40 seconds
+            ITrigger trigger = TriggerBuilder.Create()
+                .WithIdentity("myTrigger", "group")
+                .StartNow()
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInHours(2)
+                    .RepeatForever())
+            .Build();
+
+            await scheduler.ScheduleJob(job, trigger);
         }
     }
 }
