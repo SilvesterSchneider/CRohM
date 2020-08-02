@@ -3,13 +3,13 @@ import { Observable, Subscription } from 'rxjs';
 import { ContactService, UsersService } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
-import { ContactsAddHistoryComponent } from '../contacts-add-history/contacts-add-history.component';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { ContactsEditDialogComponent } from '../contacts-edit-dialog/contacts-edit-dialog.component';
 import { ContactsAddDialogComponent } from '../contacts-add-dialog/contacts-add-dialog.component';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
+import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -96,15 +96,17 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
   }
 
-  openEditDialog(contact: ContactDto) {
-    const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: contact, disableClose: true });
+  openEditDialog(id: number) {
+    this.service.getById(id).subscribe((x) => {
+      const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: x, disableClose: true });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result.delete) {
-        this.deleteContact(result.id);
-      }
-      this.getData();
-    });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result.delete) {
+          this.deleteContact(result.id);
+        }
+        this.getData();
+      });
+    });    
   }
 
   deleteContact(id: number) {
@@ -121,8 +123,12 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   addNote(id: number) {
-    const dialogRef = this.dialog.open(ContactsAddHistoryComponent, { data: id });
-    dialogRef.afterClosed().subscribe((y) => this.getData());
+    const dialogRef = this.dialog.open(AddHistoryComponent);
+    dialogRef.afterClosed().subscribe((y) => {
+      if (y) {
+        this.service.postHistoryElement(y, id, this.jwt.getUserId()).subscribe(x => this.getData());
+      }
+    });
   }
 
   openInfo(id: number) {

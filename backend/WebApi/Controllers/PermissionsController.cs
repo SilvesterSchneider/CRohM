@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -58,7 +58,7 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully request")]
         public async Task<IActionResult> UpdatePermissionGroup([FromBody] PermissionGroupDto group)
         {
-            if(group.id != 1)
+            if(group.Id != 1)
             {
                 await permission.UpdatePermissionGroupByIdAsync(mapper.Map<PermissionGroup>(group));
                 return Ok();

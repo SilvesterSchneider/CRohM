@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using ModelLayer;
@@ -17,17 +17,31 @@ namespace ServiceLayer
             CreateMap<AddressCreateDto, Address>();
 
             CreateMap<EducationalOpportunity, EducationalOpportunityDto>().ReverseMap();
-            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, UserDto>()
+                .ForMember(dto => dto.Permission,
+                    expression => expression.MapFrom((user, dto) =>
+                    {
+                        if (user.Permission.Any())
+                        {
+                            return user.Permission
+                                .Select(permissionGroupToGet => permissionGroupToGet.PermissionGroup)
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<PermissionGroup>();
+                        }
+                    })).ReverseMap();
             CreateMap<UserCreateDto, User>();
 
             CreateMap<Organization, OrganizationDto>()
                 .ForMember(dto => dto.Employees,
-                    expression => expression.MapFrom((organization, dto) =>
+                    expression => expression.MapFrom((organization, organizationDto) =>
                     {
                         if (organization.OrganizationContacts.Any())
                         {
                             return organization.OrganizationContacts
-                                .Select(contact => contact.Contact)
+                                .Select(organizationContact => organizationContact.Contact)
                                 .ToList();
                         }
                         else
@@ -36,7 +50,21 @@ namespace ServiceLayer
                         }
                     }));
 
-            CreateMap<OrganizationDto, Organization>(); //TODO: check-> do we need this?
+            CreateMap<OrganizationDto, Organization>()
+                .ForMember(dto => dto.OrganizationContacts,
+                    expression => expression.MapFrom((organizationDto, organization) =>
+                    {
+                        if (organizationDto.Employees.Any())
+                        {
+                            return organizationDto.Employees
+                                .Select(innerContact => new OrganizationContact() { ContactId= innerContact.Id, OrganizationId=organizationDto.Id })
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<OrganizationContact>();
+                        }
+                    }));
 
             CreateMap<OrganizationCreateDto, Organization>();
             CreateMap<ContactPossibilitiesDto, ContactPossibilities>().ReverseMap();
@@ -45,12 +73,12 @@ namespace ServiceLayer
 
             CreateMap<Contact, ContactDto>()
                 .ForMember(dto => dto.Organizations,
-                    expression => expression.MapFrom((organization, dto) =>
+                    expression => expression.MapFrom((contact, contactDto) =>
                     {
-                        if (organization.OrganizationContacts.Any())
+                        if (contact.OrganizationContacts.Any())
                         {
-                            return organization.OrganizationContacts
-                                .Select(contact => contact.Organization)
+                            return contact.OrganizationContacts
+                                .Select(organizationContact => organizationContact.Organization)
                                 .ToList();
                         }
                         else
@@ -59,12 +87,12 @@ namespace ServiceLayer
                         }
                     }))
                 .ForMember(dto => dto.Events,
-                    expression => expression.MapFrom((events, dto) =>
+                    expression => expression.MapFrom((contact, contactDto) =>
                     {
-                        if (events.Events.Any())
+                        if (contact.Events.Any())
                         {
-                            return events.Events
-                                .Select(eventToGet => eventToGet.Event)
+                            return contact.Events
+                                .Select(innerEvent => innerEvent.Event)
                                 .ToList();
                         }
                         else
@@ -72,19 +100,46 @@ namespace ServiceLayer
                             return new List<Event>();
                         }
                     }));
-
-            CreateMap<ContactDto, Contact>();
+            CreateMap<ContactDto, Contact>()
+                .ForMember(dto => dto.OrganizationContacts,
+                    expression => expression.MapFrom((contactDto, contact) =>
+                    {
+                        if (contactDto.Organizations.Any())
+                        {
+                            return contactDto.Organizations
+                                .Select(innerOrganization => new OrganizationContact() { ContactId = contactDto.Id, OrganizationId = innerOrganization.Id })
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<OrganizationContact>();
+                        }
+                    }))
+                .ForMember(dto => dto.Events,
+                    expression => expression.MapFrom((contactDto, contact) =>
+                    {
+                        if (contactDto.Events.Any())
+                        {
+                            return contactDto.Events
+                                .Select(innerEvent => new EventContact() { ContactId = contactDto.Id, EventId = innerEvent.Id })
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<EventContact>();
+                        }
+                    }));
             CreateMap<ContactCreateDto, Contact>();
             CreateMap<ContactPossibilitiesEntryCreateDto, ContactPossibilitiesEntry>().ReverseMap();
             CreateMap<ContactPossibilitiesEntryDto, ContactPossibilitiesEntry>().ReverseMap();
             CreateMap<Event, EventDto>()
                 .ForMember(dto => dto.Contacts,
-                    expression => expression.MapFrom((contact, dto) =>
+                    expression => expression.MapFrom((modelEvent, eventDto) =>
                     {
-                        if (contact.Contacts.Any())
+                        if (modelEvent.Contacts.Any())
                         {
-                            return contact.Contacts
-                                .Select(contactToGet => contactToGet.Contact)
+                            return modelEvent.Contacts
+                                .Select(eventContact => eventContact.Contact)
                                 .ToList();
                         }
                         else
@@ -92,14 +147,28 @@ namespace ServiceLayer
                             return new List<Contact>();
                         }
                     }));
-            CreateMap<EventDto, Event>();
+            CreateMap<EventDto, Event>()
+                .ForMember(dto => dto.Contacts,
+                    expression => expression.MapFrom((eventDto, modelEvent) =>
+                    {
+                        if (eventDto.Contacts.Any())
+                        {
+                            return eventDto.Contacts
+                                .Select(innerContact => new EventContact() { ContactId = innerContact.Id, EventId = eventDto.Id })
+                                .ToList();
+                        } else
+                        {
+                            return new List<EventContact>();
+                        }                        
+                    }));
             CreateMap<EventCreateDto, Event>();
             CreateMap<Participated, ParticipatedDto>().ReverseMap();
             CreateMap<HistoryElement, HistoryElementDto>().ReverseMap();
             CreateMap<HistoryElementCreateDto, HistoryElement>();
             CreateMap<ModificationEntry, ModificationEntryDto>();
             CreateMap<PermissionGroupDto, PermissionGroup>().ReverseMap();
-            CreateMap<PermissionGroupCreateDto, PermissionGroup>(); 
+            CreateMap<PermissionGroupCreateDto, PermissionGroup>();
+            CreateMap<Permission, PermissionDto>().ReverseMap();
         }
     }
 }

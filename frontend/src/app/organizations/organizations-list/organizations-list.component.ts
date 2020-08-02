@@ -9,6 +9,7 @@ import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/o
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
+import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -109,19 +110,30 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	openEditDialog(organization: OrganizationDto) {
-		const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, {
-			data: organization,
-			disableClose: true
-		});
-
-		dialogRef.afterClosed().subscribe((result) => {
-			if (result.delete) {
-				this.deleteOrganization(result.id);
-			}
-			this.getData();
+	openEditDialog(id: number) {
+		this.service.getById(id).subscribe(x => {
+			const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, {
+				data: x,
+				disableClose: true
+			});
+	
+			dialogRef.afterClosed().subscribe((result) => {
+				if (result.delete) {
+					this.deleteOrganization(result.id);
+				}
+				this.getData();
+			});
 		});
 	}
+
+	addNote(id: number) {
+		const dialogRef = this.dialog.open(AddHistoryComponent);
+		dialogRef.afterClosed().subscribe((y) => {
+			if (y) {
+				this.service.postHistoryElement(y, id, this.jwt.getUserId()).subscribe(x => this.getData());
+			}
+		});
+	  }
 
 	openInfo(id: number) {
 		this.service.getById(id).subscribe(x => this.dialog.open(OrganizationsInfoComponent, { data: x }));

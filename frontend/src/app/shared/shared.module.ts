@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 import { ContactPossibilitiesComponent } from './contactPossibilities/contact-possibilities.component';
+import { AddHistoryComponent } from './add-history/add-history.component';
 
 @NgModule({
   imports: [
@@ -15,7 +16,7 @@ import { ContactPossibilitiesComponent } from './contactPossibilities/contact-po
     HttpClientModule,
     MaterialModule,
     FlexLayoutModule],
-  declarations: [OsmAddressComponent, ContactPossibilitiesComponent],
+  declarations: [OsmAddressComponent, ContactPossibilitiesComponent, AddHistoryComponent],
   exports: [
     CommonModule,
     FormsModule,
@@ -24,6 +25,8 @@ import { ContactPossibilitiesComponent } from './contactPossibilities/contact-po
     MaterialModule,
     FlexLayoutModule,
     OsmAddressComponent,
-    ContactPossibilitiesComponent]
+    ContactPossibilitiesComponent,
+    AddHistoryComponent
+    ]
 })
 export class SharedModule { }

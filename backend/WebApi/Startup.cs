@@ -124,6 +124,7 @@ namespace WebApi
         }
 
         public void Configure(
+            IUserPermissionGroupRepository userPermissionGroupRepo,
             IPermissionGroupService permissionGroupService,
             IMapper mapper,
             IApplicationBuilder app,
@@ -134,8 +135,7 @@ namespace WebApi
         {
             dataContext.Database.Migrate();
             ApplicationDbInitializer.SeedPermissions(permissionGroupService, mapper);
-            ApplicationDbInitializer.SeedUsers(userService, permissionGroupService);
-
+            ApplicationDbInitializer.SeedUsers(userService, permissionGroupService, userPermissionGroupRepo);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -187,6 +187,8 @@ namespace WebApi
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IPermissionGroupService, PermissionGroupService>();
             services.AddScoped<IUserCheckDateService, UserCheckDateService>();
+            services.AddScoped<IModificationEntryService, ModificationEntryService>();
+            services.AddScoped<IUserLoginService, UserLoginService>();
 
             //###########################Repositories#######################################
 
@@ -200,6 +202,9 @@ namespace WebApi
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IModificationEntryRepository, ModificationEntryRepository>();
             services.AddScoped<IUserCheckDateRepository, UserCheckDateRepository>();
+            services.AddScoped<IContactPossibilitiesEntryRepository, ContactPossibilitiesEntryRepository>();
+            services.AddScoped<IUserLoginRepository, UserLoginRepository>();
+            services.AddScoped<IUserPermissionGroupRepository, UserPermissionGroupRepository>();
         }
     }
 }
