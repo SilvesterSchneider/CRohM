@@ -488,17 +488,63 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "5704c26b-e963-4620-8d4f-2f3755baf0dd",
+                            ConcurrencyStamp = "8fc72bf4-638c-492e-9c59-da421b788b53",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "67871911-1b74-45bf-a46e-4b266df4e3fe",
+                            ConcurrencyStamp = "9e41319f-660a-4e62-84a7-25d52e248550",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER"
                         });
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.TagContact", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("ContactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("TagContacts");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.TagEvent", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("EventId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("TagEvents");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.TagOrganization", b =>
@@ -521,7 +567,7 @@ namespace ModelLayer.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("Tags");
+                    b.ToTable("TagOrganizations");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.User", b =>
@@ -752,6 +798,20 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.PermissionGroup", null)
                         .WithMany("Permissions")
                         .HasForeignKey("PermissionGroupId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.TagContact", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Contact", "Contact")
+                        .WithMany()
+                        .HasForeignKey("ContactId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.TagEvent", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.TagOrganization", b =>

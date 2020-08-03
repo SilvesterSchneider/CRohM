@@ -112,6 +112,8 @@ namespace ModelLayer
         public DbSet<HistoryElement> History { get; set; }
         public DbSet<ModificationEntry> ModificatonHistory { get; set; }
         public DbSet<PermissionGroup> PermissionGroups { get; set; }
-        public DbSet<TagOrganization> Tags { get; set; }
+        public DbSet<TagOrganization> TagOrganizations { get; set; }
+        public DbSet<TagContact> TagContacts { get; set; }
+        public DbSet<TagEvent> TagEvents { get; set; }
     }
 }

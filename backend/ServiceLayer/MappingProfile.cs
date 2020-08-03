@@ -101,6 +101,8 @@ namespace ServiceLayer
             CreateMap<PermissionGroupDto, PermissionGroup>().ReverseMap();
             CreateMap<PermissionGroupCreateDto, PermissionGroup>();
             CreateMap<TagOrganization, TagDto>().ReverseMap();
+            CreateMap<TagContact, TagDto>().ReverseMap();
+            CreateMap<TagEvent, TagDto>().ReverseMap();
         }
     }
 }
