@@ -96,6 +96,7 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 	) {
 		super(dialogRef, dialog);
 		this.organization = data;
+		alert(this.organization.name);
 		if (this.organization.tags != null && this.organization.tags.length > 0){
 			this.organization.tags.forEach(x => this.selectedTags.push(x));
 		}
@@ -156,7 +157,6 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 				}
 			});
 		}
-		alert(this.organization.name);
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.organization.contact.contactEntries);
 		this.organizationForm.patchValue(this.organization);
 	}
