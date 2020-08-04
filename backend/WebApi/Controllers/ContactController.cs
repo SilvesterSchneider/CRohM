@@ -76,13 +76,13 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
-        public async Task<IActionResult> Put([FromBody]ContactDto contact, [FromRoute]long id, [FromQuery]long userIdOfChange)
+        public async Task<IActionResult> Put([FromRoute]long id, [FromBody]ContactDto contact)
         {
             if (contact == null)
             {
                 return Conflict();
             }
-            string usernameOfModification = await userService.GetUserNameByIdAsync(userIdOfChange);
+            string usernameOfModification = await userService.GetUserNameByIdAsync(id);
 
             var mappedContact = _mapper.Map<Contact>(contact);
             await modService.UpdateContactAsync(usernameOfModification, await contactService.GetByIdAsync(id), mappedContact, true);

@@ -636,10 +636,15 @@ export class ContactService {
     }
 
     /**
+     * @param userIdOfChange (optional) 
      * @return successfully created
      */
-    post(contactToCreate: ContactCreateDto): Observable<ContactDto> {
-        let url_ = this.baseUrl + "/api/contact";
+    post(contactToCreate: ContactCreateDto, userIdOfChange?: number | undefined): Observable<ContactDto> {
+        let url_ = this.baseUrl + "/api/contact?";
+        if (userIdOfChange === null)
+            throw new Error("The parameter 'userIdOfChange' cannot be null.");
+        else if (userIdOfChange !== undefined)
+            url_ += "userIdOfChange=" + encodeURIComponent("" + userIdOfChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(contactToCreate);
