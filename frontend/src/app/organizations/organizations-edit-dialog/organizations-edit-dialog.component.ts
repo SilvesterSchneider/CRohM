@@ -97,7 +97,7 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 		super(dialogRef, dialog);
 		this.organization = data;
 		alert(this.organization.name);
-		if (this.organization.tags != null && this.organization.tags.length > 0){
+		if (this.organization.tags != null && this.organization.tags.length > 0) {
 			this.organization.tags.forEach(x => this.selectedTags.push(x));
 		}
 		fm.monitor(elRef.nativeElement, true).subscribe((origin) => {

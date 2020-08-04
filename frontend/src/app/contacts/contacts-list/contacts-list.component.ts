@@ -106,7 +106,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         }
         this.getData();
       });
-    });    
+    });
   }
 
   deleteContact(id: number) {
