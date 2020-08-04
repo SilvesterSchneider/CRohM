@@ -32,14 +32,13 @@ export class JwtService {
 
   public getUserId(): number {
     const jwt = localStorage.getItem(JwtService.LS_KEY);
+
     if (jwt != null && jwt.length > 0 && jwt.indexOf('.') < jwt.lastIndexOf('.')) {
       let text = jwt.substr(jwt.indexOf('.') + 1);
       text = text.substr(0, text.indexOf('.'));
       const decodedText = atob(text);
-      let partText = decodedText.substr(2);
-      partText = partText.substr(partText.indexOf('"') + 3);
-      const idText = partText.substr(0, partText.indexOf('"'));
-      return +idText;
+      const obj = JSON.parse(decodedText);
+      return parseInt(obj.Id, 6);
     } else {
       return 0;
     }
