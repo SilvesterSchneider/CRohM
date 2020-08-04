@@ -45,11 +45,27 @@ namespace ModelLayer.Helper
         {
             if (tagsNew.Count > tagsOld.Count)
             {
-                listEntries.Add(GetNewModificationEntry(tagsNew.Count.ToString(), tagsOld.Count.ToString(), modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.ADDED));
+                string newTags = string.Empty;
+                foreach (TagDto tag in tagsNew)
+                {
+                    if (tagsOld.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        newTags += tag.Name + " ";
+                    }
+                }
+                listEntries.Add(GetNewModificationEntry(newTags, "", modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.ADDED));
             }
             else if (tagsNew.Count < tagsOld.Count)
             {
-                listEntries.Add(GetNewModificationEntry(tagsNew.Count.ToString(), tagsOld.Count.ToString(), modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.DELETED));
+                string removedTags = string.Empty;
+                foreach (Tag tag in tagsOld)
+                {
+                    if (tagsNew.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        removedTags += tag.Name + " ";
+                    }
+                }
+                listEntries.Add(GetNewModificationEntry("", removedTags, modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.DELETED));
             }
         }
 
@@ -66,11 +82,27 @@ namespace ModelLayer.Helper
         {
             if (tagsNew.Count > tagsOld.Count)
             {
-                listEntries.Add(GetNewModificationEntry(tagsNew.Count.ToString(), tagsOld.Count.ToString(), modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.ADDED));
+                string newTags = string.Empty;
+                foreach (Tag tag in tagsNew)
+                {
+                    if (tagsOld.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        newTags += tag.Name + " ";
+                    }
+                }
+                listEntries.Add(GetNewModificationEntry(newTags, "", modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.ADDED));
             }
             else if (tagsNew.Count < tagsOld.Count)
             {
-                listEntries.Add(GetNewModificationEntry(tagsNew.Count.ToString(), tagsOld.Count.ToString(), modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.DELETED));
+                string removedTags = string.Empty;
+                foreach (Tag tag in tagsOld)
+                {
+                    if (tagsNew.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        removedTags += tag.Name + " ";
+                    }
+                }
+                listEntries.Add(GetNewModificationEntry("", removedTags, modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.DELETED));
             }
         }
 

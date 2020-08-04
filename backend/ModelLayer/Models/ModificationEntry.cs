@@ -158,7 +158,7 @@ namespace ModelLayer.Models
                 }
                 else if (DataType == DATA_TYPE.TAG)
                 {
-                    return "Anzahl Tags";
+                    return "Tags";
                 }
                 else 
                 {
