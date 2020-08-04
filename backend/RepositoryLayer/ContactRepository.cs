@@ -52,14 +52,14 @@ namespace RepositoryLayer
         public override async Task<Contact> GetByIdAsync(long id)
         {
             return await Entities
-                //.Include(g => g.OrganizationContacts)
-                //.ThenInclude(j => j.Organization)
+                .Include(g => g.OrganizationContacts)
+                .ThenInclude(j => j.Organization)
                 .Include(a => a.Address)
                 .Include(x => x.History)
-                //.Include(b => b.ContactPossibilities)
-                //.ThenInclude(b => b.ContactEntries)
-                //.Include(c => c.Events)
-                //.ThenInclude(d => d.Event)
+                .Include(b => b.ContactPossibilities)
+                .ThenInclude(b => b.ContactEntries)
+                .Include(c => c.Events)
+                .ThenInclude(d => d.Event)
                 .FirstAsync(x => x.Id == id);
         }
 
