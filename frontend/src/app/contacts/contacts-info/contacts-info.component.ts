@@ -8,7 +8,7 @@ import {
   EventService,
   HistoryElementType,
   OrganizationDto,
-  TagDto
+  TagDto,
   ModificationEntryDto,
   ModificationEntryService,
   MODEL_TYPE,
