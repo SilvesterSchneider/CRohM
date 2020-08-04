@@ -19,6 +19,6 @@ namespace ModelLayer.Models
         public List<EventContact> Contacts { get; set; } = new List<EventContact>();
         //die informationen darüber welche personen daran bereits teilgenommen haben oder nicht
         public List<Participated> Participated { get; set; } = new List<Participated>();
-        public List<TagEvent> Tags = new List<TagEvent>();
+        public List<Tag> Tags { get; set; } = new List<Tag>();
     }
 }

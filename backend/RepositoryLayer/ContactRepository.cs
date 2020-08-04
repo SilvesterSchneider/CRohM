@@ -126,27 +126,27 @@ namespace RepositoryLayer
                         originalContact.ContactPossibilities.ContactEntries.Add(entry);
                     }                    
                 }
-                List<TagContact> tagsToAdd = new List<TagContact>();
-                List<TagContact> tagsToRemove = new List<TagContact>();
-                foreach (TagContact tag in contact.Tags)
+                List<Tag> tagsToAdd = new List<Tag>();
+                List<Tag> tagsToRemove = new List<Tag>();
+                foreach (Tag tag in contact.Tags)
                 {
                     if (originalContact.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
                     {
-                        tagsToAdd.Add(new TagContact() { Id = 0, Name = tag.Name });
+                        tagsToAdd.Add(new Tag() { Id = 0, Name = tag.Name });
                     }
                 }
-                foreach (TagContact tag in originalContact.Tags)
+                foreach (Tag tag in originalContact.Tags)
                 {
                     if (contact.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
                     {
                         tagsToRemove.Add(tag);
                     }
                 }
-                foreach (TagContact tag in tagsToRemove)
+                foreach (Tag tag in tagsToRemove)
                 {
                     originalContact.Tags.Remove(tag);
                 }
-                foreach (TagContact tag in tagsToAdd)
+                foreach (Tag tag in tagsToAdd)
                 {
                     originalContact.Tags.Add(tag);
                 }

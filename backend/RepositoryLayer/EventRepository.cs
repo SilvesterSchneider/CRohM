@@ -142,27 +142,27 @@ namespace RepositoryLayer
                     }
                 }
 
-                List<TagEvent> tagsToAdd = new List<TagEvent>();
-                List<TagEvent> tagsToRemove = new List<TagEvent>();
+                List<Tag> tagsToAdd = new List<Tag>();
+                List<Tag> tagsToRemove = new List<Tag>();
                 foreach (TagDto tag in eventToModify.Tags)
                 {
                     if (eventExistent.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
                     {
-                        tagsToAdd.Add(new TagEvent() { Id=0, Name=tag.Name });
+                        tagsToAdd.Add(new Tag() { Id=0, Name=tag.Name });
                     }
                 }
-                foreach (TagEvent tag in eventExistent.Tags)
+                foreach (Tag tag in eventExistent.Tags)
                 {
                     if (eventToModify.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
                     {
                         tagsToRemove.Add(tag);
                     }
                 }
-                foreach (TagEvent tag in tagsToRemove)
+                foreach (Tag tag in tagsToRemove)
                 {
                     eventExistent.Tags.Remove(tag);
                 }
-                foreach (TagEvent tag in tagsToAdd)
+                foreach (Tag tag in tagsToAdd)
                 {
                     eventExistent.Tags.Add(tag);
                 }

@@ -5,8 +5,10 @@ using System.Text;
 
 namespace ModelLayer.Models
 {
-    public class TagContact : BaseEntity
+    public class Tag : BaseEntity
     {
         public Contact Contact { get; set; }
+        public Organization Organization { get; set; }
+        public Event Event { get; set; }
     }
 }
