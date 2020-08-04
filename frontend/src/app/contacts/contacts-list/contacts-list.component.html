@@ -61,7 +61,7 @@
         <ng-container matColumnDef="action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
-                <a (click)="openEditDialog(element.id)" type="button">
+                <a (click)="openEditDialog(element)" type="button">
                     <mat-icon color="primary" class="icon">edit</mat-icon>
                 </a>
                 <a (click)="openInfo(element.id)" type="button">
