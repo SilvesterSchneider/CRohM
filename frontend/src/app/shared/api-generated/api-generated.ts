@@ -2848,7 +2848,7 @@ export interface OrganizationDto {
     contact?: ContactPossibilitiesDto | undefined;
     employees?: ContactDto[] | undefined;
     tags?: TagDto[] | undefined;
-	history?: HistoryElementDto[] | undefined;
+    history?: HistoryElementDto[] | undefined;
 }
 
 export interface TagDto {
@@ -2857,7 +2857,7 @@ export interface TagDto {
 }
 
 export interface HistoryElementDto {
-    id: number;	
+    id: number;
     name?: string | undefined;
     date: string;
     type: HistoryElementType;
@@ -2965,6 +2965,7 @@ export enum DATA_TYPE {
     DATE = 17,
     TIME = 18,
     PARTICIPATED = 19,
+    TAG = 20,
 }
 
 export enum MODEL_TYPE {
