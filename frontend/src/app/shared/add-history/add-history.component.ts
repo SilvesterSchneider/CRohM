@@ -1,26 +1,22 @@
-import { OnInit, Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { ContactService, HistoryElementCreateDto, HistoryElementType } from 'src/app/shared/api-generated/api-generated';
+import { OnInit, Component } from '@angular/core';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { HistoryElementCreateDto, HistoryElementType } from 'src/app/shared/api-generated/api-generated';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
-import { JwtService } from 'src/app/shared/jwt.service';
+import { BaseDialogInput } from '../form/base-dialog-form/base-dialog.component';
 
 @Component({
-    selector: 'app-contacts-add-history',
-    templateUrl: './contacts-add-history.component.html',
-    styleUrls: ['./contacts-add-history.component.scss']
+    selector: 'app-add-history',
+    templateUrl: './add-history.component.html',
+    styleUrls: ['./add-history.component.scss']
 })
 
-export class ContactsAddHistoryComponent extends BaseDialogInput<ContactsAddHistoryComponent> implements OnInit {
+export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> implements OnInit {
     public types: string[] = ['E-Mail', 'Telefonanruf', 'Notiz'];
     public oppoSuitsForm: FormGroup;
     constructor(
-        public dialogRef: MatDialogRef<ContactsAddHistoryComponent>,
+        public dialogRef: MatDialogRef<AddHistoryComponent>,
         public dialog: MatDialog,
-        @Inject(MAT_DIALOG_DATA) public data: number,
-        private contactService: ContactService,
-        private fb: FormBuilder,
-        private jwt: JwtService) {
+        private fb: FormBuilder) {
         super(dialogRef, dialog);
     }
 
@@ -37,7 +33,7 @@ export class ContactsAddHistoryComponent extends BaseDialogInput<ContactsAddHist
         return !this.oppoSuitsForm.pristine;
     }
 
-    saveHistory() {
+    getObject(): HistoryElementCreateDto {
         let historyToSave: HistoryElementCreateDto;
         let typeToSave = 0;
         const typeText: string = this.oppoSuitsForm.get('type').value;
@@ -52,10 +48,10 @@ export class ContactsAddHistoryComponent extends BaseDialogInput<ContactsAddHist
             type: typeToSave,
             comment: this.oppoSuitsForm.get('comment').value,
         };
-        this.contactService.postHistoryElement(historyToSave, this.data, this.jwt.getUserId()).subscribe(x => this.dialogRef.close());
+        return historyToSave;
     }
 
-    close() {
+    public onCancel(): void {
         super.confirmDialog();
     }
 }

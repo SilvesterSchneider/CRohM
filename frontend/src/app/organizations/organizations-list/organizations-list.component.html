@@ -73,11 +73,14 @@
         <ng-container matColumnDef="Action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
-                <a (click)="openEditDialog(element)" type="button">
+                <a (click)="openEditDialog(element.id)" type="button">
                     <mat-icon color="primary" class="icon">edit</mat-icon>
                 </a>
                 <a (click)="openInfo(element.id)" type="button">
                     <mat-icon color="primary" title="Organisationsinformationen anzeigen" class="icon">list</mat-icon>
+                </a>
+                <a (click)="addNote(element.id)" type="button">
+                    <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
                 </a>
                 <a (click)="deleteOrganization(element.id)" type="button">
                     <mat-icon color="primary" class="icon">delete</mat-icon>

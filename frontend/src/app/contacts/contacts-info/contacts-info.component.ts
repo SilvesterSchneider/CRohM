@@ -9,6 +9,11 @@ import {
   HistoryElementType,
   OrganizationDto,
   TagDto
+  ModificationEntryDto,
+  ModificationEntryService,
+  MODEL_TYPE,
+  MODIFICATION,
+  DATA_TYPE
 } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -42,10 +47,12 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   contactPossibilitiesEntries: ContactPossibilitiesEntryDto[] = new Array<ContactPossibilitiesEntryDto>();
   contactsForm: FormGroup;
   events: EventDtoCustomized[] = new Array<EventDtoCustomized>();
+  dataHistory: ModificationEntryDto[] = new Array<ModificationEntryDto>();
   displayedColumns = ['icon', 'datum', 'name', 'kommentar'];
   displayedColumnsOrganizations = ['name'];
   displayedColumnsContactPossibilities = ['name', 'kontakt'];
   tags: TagDto[] = new Array<TagDto>();
+  displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
   constructor(
     public dialogRef: MatDialogRef<ContactsInfoComponent>,
@@ -54,7 +61,8 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private service: ContactService,
-    private eventService: EventService) {
+    private eventService: EventService,
+    private modService: ModificationEntryService) {
     super(dialogRef, dialog);
     this.contact = data;
     this.tags = this.contact.tags;
@@ -92,6 +100,14 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
         });
       });
     }
+    this.modService.getSortedListByTypeAndId(this.contact.id, MODEL_TYPE.CONTACT).subscribe(x => {
+      x.forEach(a => {
+        if (a.dataType !== DATA_TYPE.NONE) {
+          this.dataHistory.push(a);
+        }
+      });
+      this.dataHistory.sort(this.getSortHistoryFunction);
+    });
     this.sortEvents();
     this.initForm();
     if (this.contact.organizations != null) {
@@ -101,6 +117,10 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
       this.contact.contactPossibilities.contactEntries.forEach(x => this.contactPossibilitiesEntries.push(x));
     }
     this.contactsForm.patchValue(this.contact);
+  }
+
+  getSortHistoryFunction(a: ModificationEntryDto, b: ModificationEntryDto) {
+    return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
   }
 
   sortEvents() {

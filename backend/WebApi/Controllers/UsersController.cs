@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -52,6 +52,22 @@ namespace WebApi.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpPut]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
+        [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
+        public async Task<IActionResult> Put(UserDto userToUpdate)
+        {
+            var user = _mapper.Map<User>(userToUpdate);
+            var result = await _userService.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+
+            return Conflict();
         }
 
         // put updates user with id {id} via frontend

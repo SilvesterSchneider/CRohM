@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using ModelLayer.Helper;
@@ -10,16 +10,16 @@ namespace ModelLayer.DataTransferObjects
     public class PermissionGroupDto
     {
 
-        public long id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
 
-        public List<Permission> Permissions { get; set; } = new List<Permission>();
+        public List<PermissionDto> Permissions { get; set; } = new List<PermissionDto>();
     }
 
     public class PermissionGroupCreateDto {
         [Required(AllowEmptyStrings = false)]
         public string Name { get; set; }
-        public List<Permission> Permissions { get; set; } = new List<Permission>();
+        public List<PermissionDto> Permissions { get; set; } = new List<PermissionDto>();
     }
 }
 

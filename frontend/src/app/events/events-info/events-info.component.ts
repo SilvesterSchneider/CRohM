@@ -1,7 +1,8 @@
 import {
   Component, OnInit, Inject
 } from '@angular/core';
-import { EventDto, TagDto } from '../../shared/api-generated/api-generated';
+import { EventDto, TagDto, ModificationEntryDto, ModificationEntryService,
+  MODEL_TYPE, DATA_TYPE } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -24,8 +25,10 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   contacts: ContactDtoExtended[] = new Array<ContactDtoExtended>();
   event: EventDto;
   eventsForm: FormGroup;
+  dataHistory: ModificationEntryDto[] = new Array<ModificationEntryDto>();
   columnsContacts = ['participated', 'prename', 'name'];
   tags: TagDto[] = new Array<TagDto>();
+  displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
   constructor(
     public dialogRef: MatDialogRef<EventsInfoComponent>,
@@ -33,10 +36,20 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     @Inject(MAT_DIALOG_DATA) public data: EventDto,
     private eventService: EventService,
     private fb: FormBuilder,
+    private modService: ModificationEntryService
   ) {
     super(dialogRef, dialog);
     this.event = data;
     this.tags = this.event.tags;
+  }
+
+  getDate(date: string): string {
+    const dateUsed = new Date(date);
+    return dateUsed.getFullYear().toString() + '-' + (+dateUsed.getMonth() + 1).toString() + '-' + dateUsed.getDate().toString();
+  }
+
+  getSortHistoryFunction(a: ModificationEntryDto, b: ModificationEntryDto) {
+    return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
   }
 
   hasChanged() {
@@ -63,6 +76,14 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
         }
       });
     }
+    this.modService.getSortedListByTypeAndId(this.event.id, MODEL_TYPE.EVENT).subscribe(x => {
+      x.forEach(a => {
+        if (a.dataType !== DATA_TYPE.NONE) {
+          this.dataHistory.push(a);
+        }
+      });
+      this.dataHistory.sort(this.getSortHistoryFunction);
+    });
     this.eventsForm.patchValue(this.event);
     this.eventsForm.get('date').patchValue(this.formatDate(this.event.date));
     this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));
