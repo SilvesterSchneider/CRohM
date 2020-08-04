@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { ContactService, UsersService } from '../../shared/api-generated/api-generated';
+import { ContactService, UsersService, DataProtectionService } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
@@ -11,6 +11,9 @@ import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
 import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { DpUpdatePopupComponent } from 'src/app/shared/data-protection/dp-update-popup/dp-update-popup.component';
+import { DataProtectionHelperService } from 'src/app/shared/data-protection';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-contacts-list',
@@ -33,6 +36,9 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     private changeDetectorRefs: ChangeDetectorRef,
     private dialog: MatDialog,
     private mediaObserver: MediaObserver,
+    private readonly dataProtectionService: DataProtectionService,
+    private readonly dsgvoService: DataProtectionHelperService,
+    private readonly snackBar: MatSnackBar,
     private jwt: JwtService) {
       this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
       if (change[0].mqAlias !== this.currentScreenWidth) {
@@ -96,20 +102,33 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
   }
 
-  openEditDialog(id: number) {
-    this.service.getById(id).subscribe((x) => {
-      const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: x, disableClose: true });
+  openEditDialog(contact: ContactDto) {
+    const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: contact, disableClose: true });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result.delete) {
-          this.deleteContact(result.id);
-        }
+    dialogRef.afterClosed().subscribe((editDialogResult) => {
+      if (editDialogResult.delete) {
+        this.deleteContact(contact);
+      } else {
+        if (editDialogResult.newContact && editDialogResult.oldContact) {
+        const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
+
+        dialogDSGVORef.afterClosed().subscribe(sendMessage => {
+          if (sendMessage) {
+            const diff = this.dsgvoService.getDiffOfObjects( editDialogResult.oldContact, editDialogResult.newContact, ['unchanged']);
+            this.dataProtectionService.sendUpdateMessage({delete: false, contactChanges: diff, contact}).subscribe({error: err => {
+              this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
+                duration: 2000,
+              });
+            }});
+          }
+        });
+      }
         this.getData();
-      });
+      }
     });
   }
 
-  deleteContact(id: number) {
+  deleteContact(contact: ContactDto) {
     const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
       data: 'Kontakt',
       disableClose: true
@@ -117,7 +136,18 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
     deleteDialogRef.afterClosed().subscribe((deleteResult) => {
       if (deleteResult?.delete) {
-        this.service.delete(id).subscribe(x => this.getData());
+        const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
+
+        dialogDSGVORef.afterClosed().subscribe(sendMessage => {
+          if (sendMessage) {
+            this.dataProtectionService.sendUpdateMessage({delete: true, contactChanges: null, contact}).subscribe({error: err => {
+              this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
+                duration: 3000,
+              });
+            }});
+            this.service.delete(contact.id).subscribe(x => this.getData());
+          }
+        });
       }
     });
   }
@@ -148,7 +178,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       },
       contactPossibilities: {
         fax: '01234-123' + this.length,
-        mail: 'info@test' + this.length + '.de',
+        mail: 'silvrster.schneider@gmail.com' ,
         phoneNumber: '0172-9344333' + this.length,
         contactEntries: []
       }
