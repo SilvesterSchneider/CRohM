@@ -52,7 +52,7 @@ export class JwtService {
       text = text.substr(0, text.indexOf('.'));
       const decodedText = atob(text);
       const obj = JSON.parse(decodedText);
-      return obj.role.includes('Datenschutzbeauftragter');
+      return obj.role?.includes('Datenschutzbeauftragter');
     } else {
       return false;
     }
