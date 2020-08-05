@@ -92,3 +92,28 @@ jobs:
       with:
         name: app-dist
         path: app/*
+
+  test_docker:
+    needs: build_docker
+    runs-on: ubuntu-latest
+    steps:
+      
+    - name: Checkout
+      uses: actions/checkout@v2
+      
+    - name: Start Docker Compose
+      run: sh ./misc/docker-compose-up.sh
+    
+    - name: Wait till stack is up
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '20s'
+        
+    - name: Check if container is up
+      id: curl_output
+      run: curl --fail --insecure https://localhost/health
+    
+    
+    
+      
+        
