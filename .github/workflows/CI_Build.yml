@@ -104,11 +104,14 @@ jobs:
     - name: Start Docker Compose
       run: sh ./misc/docker-compose-up.sh
     
-    - name: Wait 20s
-      uses: jakejarvis/wait-action@master
+    - name: Wait for HTTP Response
+      uses: cygnetdigitial/wait_for_response@v2
       with:
-        time: '20s'
-        
-    - name: Get Health Status
-      id: curl_output
-      run: curl --fail --insecure https://localhost/health || exit
+        url: 'http://localhost/health'
+        responseCode: '200'
+        timeout: 300000
+        interval: 500
+
+    - name: Stop Docker Compose
+      if: always()
+      run: sh ./misc/docker-compose-down.sh
