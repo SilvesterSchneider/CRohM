@@ -109,7 +109,7 @@ jobs:
       with:
         url: 'http://localhost/health'
         responseCode: 200
-        timeout: 300000
+        timeout: 30000
         interval: 500
 
     - name: Stop Docker Compose
