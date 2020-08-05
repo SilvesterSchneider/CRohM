@@ -22,6 +22,10 @@ namespace ServiceLayer
             this.userService = userService;
         }
 
+        /// <summary>
+        /// Prüfroutine um zu checken ob der letzte Login-Zeitpunkt eines Users länger als 3 Jahre in der Vergangenheit liegt
+        /// </summary>
+        /// <returns></returns>
         public async Task CheckAllUsersAsync()
         {
             List<User> allUsers = await userService.GetAllUsersAsync();

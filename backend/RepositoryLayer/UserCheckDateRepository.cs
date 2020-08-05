@@ -22,11 +22,10 @@ namespace RepositoryLayer
 
         }
 
-        public void CheckAllTheUsers()
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Den Zeitstempel holen um zu prüfen ob die Überprüfung aller Users stattfinden soll
+        /// </summary>
+        /// <returns></returns>
         public DateTime GetTheDateTime()
         {
             if (Entities.ToList().Any())
@@ -39,6 +38,11 @@ namespace RepositoryLayer
             }
         }
 
+        /// <summary>
+        /// Den Zeitstempel in der DB aktualisieren
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
         public async Task UpdateAsync(DateTime dateTime)
         {
             if (Entities.ToList().Count >= 1)

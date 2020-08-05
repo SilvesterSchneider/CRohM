@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace WebApi.Helper
 {
+    /// <summary>
+    /// Der Check-Service der User-Login Zeitpunkte
+    /// </summary>
     public class UserCheckThread 
     {
+        /// <summary>
+        /// Der Job der von Quartz Service ausgeführt wird
+        /// </summary>
         private class ExecuteJob : IJob
         {
             private DateTime dateTime = DateTime.MinValue;
@@ -40,6 +46,10 @@ namespace WebApi.Helper
             this.userCheckSevice = userCheckSevice;
         }
 
+        /// <summary>
+        /// Starte den Quartz-Service
+        /// </summary>
+        /// <returns></returns>
         public async Task runScheduledService()
         {
             // construct a scheduler factory
