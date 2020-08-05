@@ -105,10 +105,10 @@ jobs:
       run: sh ./misc/docker-compose-up.sh
     
     - name: Wait for HTTP Response
-      uses: cygnetdigitial/wait_for_response@v2
+      uses: nev7n/wait_for_response@v1
       with:
         url: 'http://localhost/health'
-        responseCode: '200'
+        responseCode: 200
         timeout: 300000
         interval: 500
 
