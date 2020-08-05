@@ -116,7 +116,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 				data: x,
 				disableClose: true
 			});
-	
+
 			dialogRef.afterClosed().subscribe((result) => {
 				if (result.delete) {
 					this.deleteOrganization(result.id);
