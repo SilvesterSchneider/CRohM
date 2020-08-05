@@ -43,4 +43,18 @@ export class JwtService {
       return 0;
     }
   }
+
+  public isDatenschutzbeauftragter(): boolean {
+    const jwt = localStorage.getItem(JwtService.LS_KEY);
+
+    if (jwt != null && jwt.length > 0 && jwt.indexOf('.') < jwt.lastIndexOf('.')) {
+      let text = jwt.substr(jwt.indexOf('.') + 1);
+      text = text.substr(0, text.indexOf('.'));
+      const decodedText = atob(text);
+      const obj = JSON.parse(decodedText);
+      return obj.role.includes('Datenschutzbeauftragter');
+    } else {
+      return false;
+    }
+  }
 }

@@ -109,7 +109,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       if (editDialogResult.delete) {
         this.deleteContact(contact);
       } else {
-        if (editDialogResult.newContact && editDialogResult.oldContact) {
+        if (editDialogResult.newContact && editDialogResult.oldContact && this.jwt.isDatenschutzbeauftragter()) {
         const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
 
         dialogDSGVORef.afterClosed().subscribe(sendMessage => {
@@ -135,7 +135,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
 
     deleteDialogRef.afterClosed().subscribe((deleteResult) => {
-      if (deleteResult?.delete) {
+      if (deleteResult?.delete && this.jwt.isDatenschutzbeauftragter()) {
+
         const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
 
         dialogDSGVORef.afterClosed().subscribe(sendMessage => {
@@ -178,7 +179,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       },
       contactPossibilities: {
         fax: '01234-123' + this.length,
-        mail: 'silvrster.schneider@gmail.com' ,
+        mail: 'a.b@fu.com' ,
         phoneNumber: '0172-9344333' + this.length,
         contactEntries: []
       }

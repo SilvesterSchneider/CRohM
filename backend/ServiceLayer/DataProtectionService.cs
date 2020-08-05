@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using ModelLayer.Models;
 using Newtonsoft.Json;
@@ -83,7 +83,7 @@ namespace ServiceLayer
                 {
                     //create list item in html for email
                     string listItem = "<li>";
-                    if (objectKey == "id")
+                    if (objectKey == "id" || objectKey == "OrganizationContacts")
                         continue;
                     if (value.Type == JTokenType.Null)
                         continue;
@@ -109,7 +109,7 @@ namespace ServiceLayer
                                     if (cp is JObject tempCp)
                                         foreach (var keyValueCp in tempCp)
                                         {
-                                            if (keyValueCp.Key == "id")
+                                            if (keyValueCp.Key == "id" || keyValuePair2.Key == "OrganizationContacts")
                                                 continue;
                                             if (keyValueCp.Value.Type == JTokenType.Null)
                                                 continue;
@@ -124,7 +124,7 @@ namespace ServiceLayer
                                 continue;
                             }
 
-                            if (keyValuePair2.Key == "id")
+                            if (keyValuePair2.Key == "id" || keyValuePair2.Key ==  "OrganizationContacts")
                                 continue;
                             if (keyValuePair2.Value.Type == JTokenType.Null)
                                 continue;
@@ -184,7 +184,7 @@ namespace ServiceLayer
                 case "id": return "Id";
                 case "address": return "Adresse";
                 case "contactpossibilities": return "Kontaktmöglichkeiten";
-                case "events": return "Events";
+                case "events": return "Veranstaltungen";
                 case "organizations": return "Organisationen";
                 case "history": return "Historie";
                 case "contactentries": return "Kontakteinträge";

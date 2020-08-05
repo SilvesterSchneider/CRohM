@@ -78,11 +78,10 @@ export class DataProtectionHelperService {
       return this.VALUE_UNCHANGED;
     }
     if (newValue === undefined) {
-      console.log(newValue);
-      return this.VALUE_CREATED;
+      return this.VALUE_DELETED;
     }
     if (oldValue === undefined) {
-      return this.VALUE_DELETED;
+      return this.VALUE_CREATED;
     }
     return this.VALUE_UPDATED;
   }
