@@ -104,16 +104,11 @@ jobs:
     - name: Start Docker Compose
       run: sh ./misc/docker-compose-up.sh
     
-    - name: Wait till stack is up
+    - name: Wait 20s
       uses: jakejarvis/wait-action@master
       with:
         time: '20s'
         
-    - name: Check if container is up
+    - name: Get Health Status
       id: curl_output
-      run: curl --fail --insecure https://localhost/health
-    
-    
-    
-      
-        
+      run: curl --fail --insecure https://localhost/health || exit
