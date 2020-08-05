@@ -61,18 +61,18 @@ namespace WebApi.Helper
             // job data map
             JobDataMap jobData = new JobDataMap();
             jobData.Add("service", userCheckSevice);
-            // define the job and tie it to our HelloJob class
+            // define the job and tie it to our ExecuteJob class
             IJobDetail job = JobBuilder.Create<ExecuteJob>()
                 .UsingJobData(jobData)
                 .WithIdentity("myJob", "group")
                 .Build();
 
-            // Trigger the job to run now, and then every 40 seconds
+            // Trigger the job to run now, and then every 4 hours
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("myTrigger", "group")
                 .StartNow()
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInHours(2)
+                    .WithIntervalInHours(4)
                     .RepeatForever())
             .Build();
 
