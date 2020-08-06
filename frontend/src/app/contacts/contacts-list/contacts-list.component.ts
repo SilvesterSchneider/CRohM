@@ -135,8 +135,13 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
 
     deleteDialogRef.afterClosed().subscribe((deleteResult) => {
-      if (deleteResult?.delete && this.jwt.isDatenschutzbeauftragter()) {
-
+      if (deleteResult?.delete ) {
+        this.service.delete(contact.id).subscribe(x => {
+          this.service.getAll().subscribe(fu => {
+            this.dataSource.data = fu;
+           });
+        });
+        if (this.jwt.isDatenschutzbeauftragter()) {
         const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
 
         dialogDSGVORef.afterClosed().subscribe(sendMessage => {
@@ -147,8 +152,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
               });
             }});
           }
-          this.service.delete(contact.id).subscribe(x => this.getData());
-        });
+        }); }
       }
     });
   }
