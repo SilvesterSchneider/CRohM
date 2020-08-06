@@ -216,20 +216,14 @@ namespace ServiceLayer
                 if (savedConnection != null)
                 {
                     user.Permission.Add(savedConnection);
+                    var resultRole = await _userManager.AddToRoleAsync(user, permissiongroup.Name);
                     IdentityResult result = await _userManager.UpdateAsync(user);
-                    IList<string> permissions = await _userManager.GetRolesAsync(user);
-                    foreach (Permission perm in permissiongroup.Permissions)
-                    {
-                        if (!permissions.Contains(perm.Name))
-                        {
-                            await _userManager.AddToRoleAsync(user, perm.Name);
-                        }
-                    }
                     if (result == IdentityResult.Success)
                     {
                         return true;
                     }
-                } else
+                }
+                else
                 {
                     return false;
                 }
