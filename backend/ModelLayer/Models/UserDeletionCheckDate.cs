@@ -7,6 +7,6 @@ namespace ModelLayer.Models
 {
     public class UserDeletionCheckDate : BaseEntity
     {
-        public DateTime DateOfLastCheck { get; set; }
+        public DateTime DateOfNextCheck { get; set; }
     }
 }

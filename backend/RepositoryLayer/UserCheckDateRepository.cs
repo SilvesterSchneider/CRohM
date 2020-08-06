@@ -30,7 +30,7 @@ namespace RepositoryLayer
         {
             if (Entities.ToList().Any())
             {
-                return Entities.ToList().ElementAt(0).DateOfLastCheck;
+                return Entities.ToList().ElementAt(0).DateOfNextCheck;
             }
             else
             {
@@ -48,12 +48,12 @@ namespace RepositoryLayer
             if (Entities.ToList().Count >= 1)
             {
                 UserDeletionCheckDate checkDate = Entities.ToList()[0];
-                checkDate.DateOfLastCheck = dateTime;
+                checkDate.DateOfNextCheck = dateTime;
                 await UpdateAsync(checkDate);
             }
             else
             {
-                UserDeletionCheckDate checkDate = new UserDeletionCheckDate() { DateOfLastCheck = dateTime };
+                UserDeletionCheckDate checkDate = new UserDeletionCheckDate() { DateOfNextCheck = dateTime };
                 await CreateAsync(checkDate);
             }
         }

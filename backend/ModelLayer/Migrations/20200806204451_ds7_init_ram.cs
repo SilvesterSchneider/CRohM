@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class ds7_ram : Migration
+    public partial class ds7_init_ram : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -121,7 +121,7 @@ namespace ModelLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    DateOfLastCheck = table.Column<DateTime>(nullable: false)
+                    DateOfNextCheck = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -520,12 +520,12 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 1L, "06105f97-e435-4aba-be7a-a8d9fdc6772f", "Admin", "ADMIN", null, 0 });
+                values: new object[] { 1L, "d1fe0fae-11ec-4b2e-8be4-76d3f32264bf", "Admin", "ADMIN", null, 0 });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 2L, "cf8fde14-ae3c-4856-bc63-779a96bd375a", "DeleteUser", "DELETEUSER", null, 0 });
+                values: new object[] { 2L, "dddd69d1-5c60-4c79-9ff1-cc93136c0d45", "DeleteUser", "DELETEUSER", null, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",

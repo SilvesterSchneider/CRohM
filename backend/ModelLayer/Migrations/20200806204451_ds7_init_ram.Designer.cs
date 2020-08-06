@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20200802135944_ds7_ram")]
-    partial class ds7_ram
+    [Migration("20200806204451_ds7_init_ram")]
+    partial class ds7_init_ram
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -513,7 +513,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "06105f97-e435-4aba-be7a-a8d9fdc6772f",
+                            ConcurrencyStamp = "d1fe0fae-11ec-4b2e-8be4-76d3f32264bf",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             UserRight = 0
@@ -521,7 +521,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "cf8fde14-ae3c-4856-bc63-779a96bd375a",
+                            ConcurrencyStamp = "dddd69d1-5c60-4c79-9ff1-cc93136c0d45",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER",
                             UserRight = 0
@@ -614,7 +614,7 @@ namespace ModelLayer.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DateOfLastCheck")
+                    b.Property<DateTime>("DateOfNextCheck")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
