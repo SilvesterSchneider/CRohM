@@ -146,8 +146,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
                 duration: 3000,
               });
             }});
-            this.service.delete(contact.id).subscribe(x => this.getData());
           }
+          this.service.delete(contact.id).subscribe(x => this.getData());
         });
       }
     });
