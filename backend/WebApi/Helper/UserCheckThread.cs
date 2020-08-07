@@ -32,7 +32,7 @@ namespace WebApi.Helper
                 dateTime = userCheckSevice.GetTheDateTime();
                 if (DateTime.Now > dateTime)
                 {
-                    dateTime = DateTime.Now.AddMinutes(1);
+                    dateTime = DateTime.Now.AddDays(1);
                     await userCheckSevice.UpdateAsync(dateTime);
                     await userCheckSevice.CheckAllUsersAsync();
                 }
@@ -72,7 +72,7 @@ namespace WebApi.Helper
                 .WithIdentity("myTrigger", "group")
                 .StartNow()
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInMinutes(1)
+                    .WithIntervalInHours(4)
                     .RepeatForever())
             .Build();
 

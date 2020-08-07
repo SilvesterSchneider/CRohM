@@ -42,7 +42,7 @@ namespace ServiceLayer
 
         Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword);
         Task UpdateUserAsync(User user);
-
+        Task SetUserNameAsync(User user, string username);
         Task<IdentityResult> UpdateAsync(User user);
     }
 
@@ -375,6 +375,11 @@ namespace ServiceLayer
                 return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "Nicht gefunden", Description = "User nicht gefunden!" } });
             }
         }
+
+        public async Task SetUserNameAsync(User user, string username)
+        {
+            await _userManager.SetUserNameAsync(user, username);
+        }
     }
 
     #region DefaultUserManager
@@ -405,6 +410,7 @@ namespace ServiceLayer
         Task DeleteUserAsync(User user);
 
         Task<IdentityResult> UpdateUserAsync(User user);
+        Task SetUserNameAsync(User user, string username);
     }
 
     public class DefaultUserManager : IUserManager
@@ -482,6 +488,11 @@ namespace ServiceLayer
         public async Task<IdentityResult> UpdateUserAsync(User user)
         {
             return await _manager.UpdateAsync(user);
+        }
+
+        public async Task SetUserNameAsync(User user, string username)
+        {
+            await _manager.SetUserNameAsync(user, username);
         }
 
         public IQueryable<User> Users => _manager.Users.Include(x => x.Permission);
