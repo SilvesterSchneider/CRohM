@@ -42,7 +42,7 @@ namespace ServiceLayer
 
         Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword);
         Task UpdateUserAsync(User user);
-        Task SetUserNameAsync(User user, string username);
+        Task<IdentityResult> SetUserNameAsync(User user, string username);
         Task<IdentityResult> UpdateAsync(User user);
     }
 
@@ -376,9 +376,9 @@ namespace ServiceLayer
             }
         }
 
-        public async Task SetUserNameAsync(User user, string username)
+        public async Task<IdentityResult> SetUserNameAsync(User user, string username)
         {
-            await _userManager.SetUserNameAsync(user, username);
+            return await _userManager.SetUserNameAsync(user, username);
         }
     }
 
@@ -410,7 +410,7 @@ namespace ServiceLayer
         Task DeleteUserAsync(User user);
 
         Task<IdentityResult> UpdateUserAsync(User user);
-        Task SetUserNameAsync(User user, string username);
+        Task<IdentityResult> SetUserNameAsync(User user, string username);
     }
 
     public class DefaultUserManager : IUserManager
@@ -490,9 +490,9 @@ namespace ServiceLayer
             return await _manager.UpdateAsync(user);
         }
 
-        public async Task SetUserNameAsync(User user, string username)
+        public async Task<IdentityResult> SetUserNameAsync(User user, string username)
         {
-            await _manager.SetUserNameAsync(user, username);
+            return await _manager.SetUserNameAsync(user, username);
         }
 
         public IQueryable<User> Users => _manager.Users.Include(x => x.Permission);
