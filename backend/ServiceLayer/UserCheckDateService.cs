@@ -32,13 +32,14 @@ namespace ServiceLayer
             List<User> allUsers = await userService.GetAllUsersAsync();
             foreach (User user in allUsers)
             {
-                if (user.Id != 1 && !user.UserLockEnabled && user.LastLoginDate.AddYears(3) < DateTime.Now )
-                {
+                if (user.Id != 1 && !user.IsDeleted && user.LastLoginDate.AddHours(0) < DateTime.Now )
+                {                                        
+                    await userService.SetUserLockedAsync(user.Id);
+                    user.IsDeleted = true;
                     user.FirstName = DELETED_USER + user.FirstName;
                     user.LastName = DELETED_USER + user.LastName;
-                    user.UserName = DELETED_USER + user.UserName;
-                    await userService.UpdateUserAsync(user);
-                    await userService.SetUserLockedAsync(user.Id);
+                    user.Email = DELETED_USER + user.Email;
+                    await userService.UpdateUserAsync(user);                    
                 }
             }
         }
