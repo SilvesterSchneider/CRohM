@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, ElementRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { ContactDto, TagDto } from '../../shared/api-generated/api-generated';
@@ -6,6 +6,10 @@ import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
 import { JwtService } from 'src/app/shared/jwt.service';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-contacts-edit-dialog',
@@ -18,8 +22,16 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	contactsForm: FormGroup;
 	contact: ContactDto;
+
+	@ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 	tagsControl = new FormControl();
 	selectedTags: TagDto[] = new Array<TagDto>();
+	separatorKeysCodes: number[] = [ENTER, COMMA];
+	filteredTagsObservable: Observable<string[]>;
+	allTags: string[] = [ 'Lehrbeauftragter', 'Kunde', 'Politiker', 'Firma', 'Behörde', 'Bildungseinrichtung', 'Institute', 'Ministerium',
+		'Emeriti', 'Alumni'];
+	removable = true;
+	selectable = true;
 
 	constructor(
 		public dialogRef: MatDialogRef<ContactsEditDialogComponent>,
@@ -32,6 +44,8 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		super(dialogRef, dialog);
 		this.contact = data;
 		this.contact.tags.forEach(x => this.selectedTags.push(x));
+		this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(
+			map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
 	}
 
 	ngOnInit(): void {
@@ -41,9 +55,15 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.contactsForm.patchValue(this.contact);
 	}
 
+	private _filter(value: string): string[] {
+		const tagValue = value.toLowerCase();
+
+		return this.allTags.filter(tag => tag.toLowerCase().indexOf(tagValue) === 0);
+	  }
+
 	addTag(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
-		if (this.selectedTags.find(a => a.name === value) == null) {
+		if (value.length > 0 && this.selectedTags.find(a => a.name === value) == null) {
 			this.selectedTags.push({
 				id: 0,
 				name: value
@@ -57,6 +77,24 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 			this.selectedTags.splice(this.selectedTags.length - 1, 1);
 		}
 	}
+
+	remove(tag: TagDto) {
+		const index = this.selectedTags.indexOf(tag);
+		if (index >= 0) {
+			this.selectedTags.splice(index, 1);
+		}
+	}
+
+	selected(event: MatAutocompleteSelectedEvent): void {
+		if (this.selectedTags.find(a => a.name === event.option.viewValue) == null) {
+			this.selectedTags.push({
+			  id: 0,
+			  name: event.option.viewValue
+			});
+			this.tagInput.nativeElement.value = '';
+			this.tagsControl.setValue(null);
+		  }
+	  }
 
 	initForm() {
 		this.contactsForm = this.fb.group({

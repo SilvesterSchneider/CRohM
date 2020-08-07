@@ -3,11 +3,12 @@ import {
   ChangeDetectorRef, OnDestroy, Inject
 } from '@angular/core';
 import { NgControl, FormControl } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, Observable, scheduled } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FocusMonitor } from '@angular/cdk/a11y';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {
-  MatAutocompleteTrigger
+  MatAutocompleteTrigger, MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { ContactDto, EventDto, ParticipatedDto, TagDto } from '../../shared/api-generated/api-generated';
@@ -61,8 +62,16 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   controlType?: string;
   autofilled?: boolean;
   columnsEvent: ['participated', 'prename', 'name'];
-  tagsControl = new FormControl();
+
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
+	tagsControl = new FormControl();
 	selectedTags: TagDto[] = new Array<TagDto>();
+	separatorKeysCodes: number[] = [ENTER, COMMA];
+	filteredTagsObservable: Observable<string[]>;
+  allTags: string[] = [ 'Lehrbeauftragter', 'Kunde', 'Politiker', 'Firma', 'Behörde', 'Bildungseinrichtung', 'Institute', 'Ministerium',
+     'Emeriti', 'Alumni'];
+	removable = true;
+	selectableTag = true;
 
   constructor(
     public dialogRef: MatDialogRef<EventsDetailComponent>,
@@ -86,15 +95,24 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     });
     this.event = data;
     this.event.tags.forEach(x => this.selectedTags.push(x));
+    this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(
+			map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
   }
+
 
   hasChanged() {
     return !this.eventsForm.pristine;
   }
 
-  addTag(event: Event) {
+  private _filter(value: string): string[] {
+		const tagValue = value.toLowerCase();
+
+		return this.allTags.filter(tag => tag.toLowerCase().indexOf(tagValue) === 0);
+	  }
+
+	addTag(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
-		if (this.selectedTags.find(a => a.name === value) == null) {
+		if (value.length > 0 && this.selectedTags.find(a => a.name === value) == null) {
 			this.selectedTags.push({
 				id: 0,
 				name: value
@@ -108,6 +126,24 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 			this.selectedTags.splice(this.selectedTags.length - 1, 1);
 		}
 	}
+
+	remove(tag: TagDto) {
+		const index = this.selectedTags.indexOf(tag);
+		if (index >= 0) {
+			this.selectedTags.splice(index, 1);
+		}
+	}
+
+	selected(event: MatAutocompleteSelectedEvent): void {
+    if (this.selectedTags.find(a => a.name === event.option.viewValue) == null) {
+      this.selectedTags.push({
+        id: 0,
+        name: event.option.viewValue
+      });
+      this.tagInput.nativeElement.value = '';
+      this.tagsControl.setValue(null);
+    }
+  }
 
   ngOnInit() {
     this.eventsForm = this.createEventsForm();

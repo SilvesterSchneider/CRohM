@@ -62,12 +62,30 @@
         </mat-option>
     </mat-autocomplete>
     <mat-chip-list class="margin" #chipList>
-        <mat-chip (keyup.backspace)="removeTag()" *ngFor="let item of selectedTags">
-            {{ item.name }}
-        </mat-chip>
-        <input (keyup.enter)="addTag($event)" type="text" #inputTrigger placeholder="Tags definieren"
-            [matChipInputFor]="chipList" [formControl]="tagsControl">
-    </mat-chip-list>
+        <mat-chip 
+                (keyup.backspace)="removeTag()" 
+                *ngFor="let item of selectedTags" 
+                [selectable]="selectableTag"
+                [removable]="removable"
+                (removed)="remove(item)">
+                {{ item.name }}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input 
+                placeholder="Neuer tag..." 
+                #tagInput
+                [matAutocomplete]="auto"
+                #inputTrigger 
+                [matChipInputFor]="chipList" 
+                [formControl]="tagsControl"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (keyup.enter)="addTag($event)">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let item of filteredTagsObservable | async" [value]="item" >
+              {{item}}
+            </mat-option>
+          </mat-autocomplete>
     <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
         Speichern
     </button>
