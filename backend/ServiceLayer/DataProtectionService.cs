@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using ModelLayer.Models;
@@ -74,16 +75,24 @@ namespace ServiceLayer
                 JToken value = keyValuePair.Value;
 
                 //if data value is json object go recursive
-                JObject recursiveCheck = value as JObject;
-                if (recursiveCheck != null)
+                JObject recursiveCheckObj = value as JObject;
+                JArray recursiveCheckArr = value as JArray;
+                if (recursiveCheckObj != null)
                 {
-                    list.AddRange(RecursiveChangeChecker(key, recursiveCheck));
+                    list.AddRange(RecursiveChangeChecker(key, recursiveCheckObj));
+                }
+                else if (recursiveCheckArr != null)
+                {
+                    foreach (var VARIABLE in recursiveCheckArr)
+                    {
+                        list.AddRange(RecursiveChangeChecker(key, VARIABLE as JObject));
+                    }
                 }
                 else
                 {
                     //create list item in html for email
                     string listItem = "<li>";
-                    if (objectKey == "id" || objectKey == "OrganizationContacts")
+                    if (objectKey == "id")
                         continue;
                     if (value.Type == JTokenType.Null)
                         continue;
@@ -109,7 +118,7 @@ namespace ServiceLayer
                                     if (cp is JObject tempCp)
                                         foreach (var keyValueCp in tempCp)
                                         {
-                                            if (keyValueCp.Key == "id" || keyValuePair2.Key == "OrganizationContacts")
+                                            if (keyValueCp.Key == "id")
                                                 continue;
                                             if (keyValueCp.Value.Type == JTokenType.Null)
                                                 continue;
@@ -124,7 +133,7 @@ namespace ServiceLayer
                                 continue;
                             }
 
-                            if (keyValuePair2.Key == "id" || keyValuePair2.Key ==  "OrganizationContacts")
+                            if (keyValuePair2.Key == "id")
                                 continue;
                             if (keyValuePair2.Value.Type == JTokenType.Null)
                                 continue;
@@ -188,6 +197,7 @@ namespace ServiceLayer
                 case "organizations": return "Organisationen";
                 case "history": return "Historie";
                 case "contactentries": return "Kontakteinträge";
+                case "OrganizationContacts": return "Organisation in Verbindung zu Kontakt";
 
                 default: return englishKey;
             }

@@ -26,6 +26,69 @@ export class DataProtectionHelperService {
       return retVal;
     }
 
+    if (this.isArray(newObj) || this.isArray(oldObj)) {
+      if (newObj.length > 0 || oldObj.length > 0) {
+        const diffOfArrays = [];
+
+
+        const traverseArray = newObj as any[];
+        const samees = [];
+
+        traverseArray.forEach((element, i) => {
+
+          const newIndex = i;
+          const oldIndex = oldObj.findIndex(x => x.id === element.id);
+
+          if (oldIndex !== -1) {
+            samees.push({  newIndex,  oldIndex });
+          }
+
+        });
+
+        if (samees.length > 0) {
+          samees.forEach(e => {
+            const blanew =  (JSON.parse(JSON.stringify(newObj)));
+            const blaold = (JSON.parse(JSON.stringify(oldObj)));
+            diffOfArrays.push(this.getDiffOfObjects(blanew[e.newIndex], blaold[e.oldIndex], filter));
+          });
+
+        }
+        const newies = newObj.filter(({ id: id1 }) => !oldObj.some(({ id: id2 }) => id2 === id1));
+        const deletes = oldObj.filter(({ id: id1 }) => !newObj.some(({ id: id2 }) => id2 === id1));
+
+        if (newies.length > 0 || deletes.length > 0) {
+
+
+          newies.forEach(element => {
+            for (const eleKey in element) {
+              if (element[eleKey] !== undefined) {
+                const tempObj = {};
+                tempObj[eleKey] = {
+                  type: this.VALUE_CREATED,
+                  data: element[eleKey]
+                };
+                diffOfArrays.push(tempObj);
+              }
+            }
+          });
+
+          deletes.forEach(element => {
+            for (const eleKey in element) {
+              if (element[eleKey] !== undefined) {
+                const tempObj = {};
+                tempObj[eleKey] = {
+                  type: this.VALUE_DELETED,
+                  data: element[eleKey]
+                };
+                diffOfArrays.push(tempObj);
+              }
+            }
+          });
+        }
+        return diffOfArrays;
+      }
+    }
+
     const diff = {};
 
     for (const key in newObj) {
@@ -46,10 +109,8 @@ export class DataProtectionHelperService {
 
       }
       diff[key] = obj;
-
-
-
     }
+
     for (const key in oldObj) {
       if (this.isFunction(oldObj[key]) || diff[key] !== undefined) {
         continue;
