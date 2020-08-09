@@ -87,8 +87,16 @@ namespace WebApi.Controllers
             }
             string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
             Event oldOne = await eventService.GetEventByIdWithAllIncludesAsync(id);
-            
-            await modService.UpdateEventsAsync(userNameOfChange, oldOne, eventToModify);
+            List<Contact> contactsParticipated = new List<Contact>();
+            foreach (ParticipatedDto part in eventToModify.Participated)
+            {
+                Contact cont = await contactService.GetByIdAsync(part.ContactId);
+                if (cont != null)
+                {
+                    contactsParticipated.Add(cont);
+                }
+            }
+            await modService.UpdateEventsAsync(userNameOfChange, oldOne, eventToModify, contactsParticipated);
             if (await eventService.ModifyEventAsync(eventToModify))
             {
                 await modService.CommitChanges();

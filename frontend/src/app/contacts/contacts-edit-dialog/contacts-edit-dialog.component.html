@@ -42,9 +42,31 @@
             </div>
             <app-contact-possibilities></app-contact-possibilities>
         </div>
-
-        <mat-divider></mat-divider>
-
+        <mat-chip-list class="contactDetails" #chipList>
+            <mat-chip
+                (keyup.backspace)="removeTag()"
+                *ngFor="let item of selectedTags"
+                [selectable]="selectable"
+                [removable]="removable"
+                (removed)="remove(item)">
+                {{ item.name }}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input
+                placeholder="Neuer tag..."
+                #tagInput
+                [matAutocomplete]="auto"
+                #inputTrigger
+                [matChipInputFor]="chipList"
+                [formControl]="tagsControl"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (keyup.enter)="addTag($event)">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let item of filteredTagsObservable | async" [value]="item">
+              {{item}}
+            </mat-option>
+          </mat-autocomplete>
     </div>
 </div>
     <div mat-dialog-actions>

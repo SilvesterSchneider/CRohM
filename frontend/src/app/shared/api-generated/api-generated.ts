@@ -2887,6 +2887,7 @@ export interface ContactDto {
     organizations?: OrganizationDto[] | undefined;
     events?: EventDto[] | undefined;
     history?: HistoryElementDto[] | undefined;
+    tags?: TagDto[] | undefined;
 }
 
 export interface ContactPossibilitiesDto {
@@ -2912,7 +2913,13 @@ export interface OrganizationDto {
     address?: AddressDto | undefined;
     contact?: ContactPossibilitiesDto | undefined;
     employees?: ContactDto[] | undefined;
+    tags?: TagDto[] | undefined;
     history?: HistoryElementDto[] | undefined;
+}
+
+export interface TagDto {
+    id: number;
+    name?: string | undefined;
 }
 
 export interface HistoryElementDto {
@@ -2937,6 +2944,7 @@ export interface EventDto {
     duration: number;
     contacts?: ContactDto[] | undefined;
     participated?: ParticipatedDto[] | undefined;
+    tags?: TagDto[] | undefined;
 }
 
 export interface ParticipatedDto {
@@ -3029,6 +3037,7 @@ export enum DATA_TYPE {
     DATE = 17,
     TIME = 18,
     PARTICIPATED = 19,
+    TAG = 20,
 }
 
 export enum MODEL_TYPE {

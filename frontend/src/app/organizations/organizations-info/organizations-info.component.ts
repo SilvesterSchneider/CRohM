@@ -19,6 +19,7 @@ export class OrganizationsInfoComponent implements OnInit {
   employees: ContactDto[] = new Array<ContactDto>();
   displayedColumnsEmployees = ['vorname', 'name'];
   displayedColumnsContactPossibilities = ['name', 'kontakt'];
+  tags: TagDto[] = new Array<TagDto>();
   displayedColumnsHistory = ['icon', 'datum', 'name', 'kommentar'];
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
   history: HistoryElementDto[] = new Array<HistoryElementDto>();
@@ -29,6 +30,7 @@ export class OrganizationsInfoComponent implements OnInit {
     private fb: FormBuilder,
     private modService: ModificationEntryService) {
       this.organization = data;
+      this.tags = this.organization.tags;
     }
 
   ngOnInit(): void {

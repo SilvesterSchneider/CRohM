@@ -8,6 +8,7 @@ import {
   EventService,
   HistoryElementType,
   OrganizationDto,
+  TagDto,
   ModificationEntryDto,
   ModificationEntryService,
   MODEL_TYPE,
@@ -50,6 +51,7 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   displayedColumns = ['icon', 'datum', 'name', 'kommentar'];
   displayedColumnsOrganizations = ['name'];
   displayedColumnsContactPossibilities = ['name', 'kontakt'];
+  tags: TagDto[] = new Array<TagDto>();
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
   constructor(
@@ -63,6 +65,7 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
     private modService: ModificationEntryService) {
     super(dialogRef, dialog);
     this.contact = data;
+    this.tags = this.contact.tags;
   }
 
   hasChanged() {
