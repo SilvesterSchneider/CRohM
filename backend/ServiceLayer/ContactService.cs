@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer;
@@ -8,7 +8,6 @@ namespace ServiceLayer
 {
     public interface IContactService : IContactRepository
     {
-        Task<Contact> CreateContactAsync(Contact contact);
         Task AddHistoryElement(long id, HistoryElement historyElement);
 
         /// <summary>
@@ -17,6 +16,8 @@ namespace ServiceLayer
         /// <param name="id">the contact id</param>
         /// <returns>the text</returns>
         Task<string> GetContactInformationAsTextAsync(long id);
+        
+        Task SendDisclosure(long id);
     }
 
     public class ContactService : ContactRepository, IContactService
@@ -27,9 +28,9 @@ namespace ServiceLayer
             this.mailProvider = mailProvider;
         }
 
-        public async Task<Contact> CreateContactAsync(Contact contact)
+        public async Task SendDisclosure(long id)
         {
-            Contact result = await CreateAsync(contact);
+            Contact contact = await GetByIdAsync(id);
             string body = "<h3> Auskunft über gespeicherte Daten </h3> " +
                           "<p> Sehr geehrte/r Herr/Frau " + contact.Name + ",</p>" +
                           "<p Sie hatten um eine Auskunft über die zur Ihrer Person in unserem Customer Relationship Management System(CRMS) gespeicherten " +
@@ -38,7 +39,7 @@ namespace ServiceLayer
                           "<p>Technische Hochschule Nürnberg</p>";
             mailProvider.CreateAndSendMail(contact.ContactPossibilities.Mail, "Auskunft über gespeicherte Daten", body,
                 PdfGenerator.generateNewContactPdf(contact), "pdf");
-            return result;
+            return;
         }
 
         public async Task AddHistoryElement(long id, HistoryElement historyElement)

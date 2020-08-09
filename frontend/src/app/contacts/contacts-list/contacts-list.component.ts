@@ -28,7 +28,6 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<ContactDto>();
 
   constructor(
-    private userService: UsersService,
     private service: ContactService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dialog: MatDialog,
@@ -85,6 +84,12 @@ export class ContactsListComponent implements OnInit, OnDestroy {
        x.forEach(y => this.dataSource.data = x);
     });
     this.changeDetectorRefs.detectChanges();
+  }
+
+  openDisclosureDialog() {
+    // mdie todo: create dialog
+    
+		;
   }
 
   openAddDialog() {

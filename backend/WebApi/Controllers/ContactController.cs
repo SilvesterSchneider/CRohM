@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Net;
 using System.Threading.Tasks;
@@ -34,7 +34,6 @@ namespace WebApi.Controllers
             this.contactService = contactService;
         }
 
-
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
@@ -59,7 +58,6 @@ namespace WebApi.Controllers
             var contactDto = _mapper.Map<ContactDto>(contact);
             return Ok(contactDto);
         }
-
 
         [HttpGet("PartName")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
@@ -121,7 +119,16 @@ namespace WebApi.Controllers
             await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.CONTACT);
             return Ok();
         }
-
+/*
+        // sends disclosure per mail
+        [HttpGet("{id},{name}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
+        public async Task<IActionResult> SendDisclosureById([FromQuery] long id, [FromQuery] string name)
+        {
+            await contactService.SendDisclosure(id);
+            return Ok();
+        }
+*/
         // deletes with id {id} contact via frontend
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]

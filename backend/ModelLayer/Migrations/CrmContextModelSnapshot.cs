@@ -166,6 +166,9 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("ContactPossibilitiesId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -496,7 +499,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "e3c46011-497b-4cf7-a199-342cd03274a3",
+                            ConcurrencyStamp = "ca0b1ee7-c5b6-475b-99bd-e0c587efbe8a",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             UserRight = 0
@@ -504,7 +507,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "d486fc7e-641a-402f-8f5d-b87d8277cdfb",
+                            ConcurrencyStamp = "ee671e25-3f7b-4649-a09a-2c7c2f8734fb",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER",
                             UserRight = 0
