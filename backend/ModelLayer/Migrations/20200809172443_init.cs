@@ -457,6 +457,41 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    ContactId = table.Column<long>(nullable: true),
+                    OrganizationId = table.Column<long>(nullable: true),
+                    EventId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tags_Contacts_ContactId",
+                        column: x => x.ContactId,
+                        principalTable: "Contacts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tags_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tags_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RoleClaims",
                 columns: table => new
                 {
@@ -504,12 +539,12 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 1L, "508d0833-c46a-40ec-b111-d1f220df5e19", "Admin", "ADMIN", null, 0 });
+                values: new object[] { 1L, "6291bd15-26ff-49d7-a55b-7db535b3d598", "Admin", "ADMIN", null, 0 });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 2L, "f3cdad04-c857-4568-8097-98d2d0b83a09", "DeleteUser", "DELETEUSER", null, 0 });
+                values: new object[] { 2L, "0e424d75-02fb-478a-83cb-29753826eb4c", "DeleteUser", "DELETEUSER", null, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
@@ -579,6 +614,21 @@ namespace ModelLayer.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tags_ContactId",
+                table: "Tags",
+                column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_EventId",
+                table: "Tags",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_OrganizationId",
+                table: "Tags",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_UserId",
                 table: "UserClaims",
                 column: "UserId");
@@ -638,6 +688,9 @@ namespace ModelLayer.Migrations
                 name: "RoleClaims");
 
             migrationBuilder.DropTable(
+                name: "Tags");
+
+            migrationBuilder.DropTable(
                 name: "UserClaims");
 
             migrationBuilder.DropTable(
@@ -659,10 +712,10 @@ namespace ModelLayer.Migrations
                 name: "Contacts");
 
             migrationBuilder.DropTable(
-                name: "Organizations");
+                name: "Events");
 
             migrationBuilder.DropTable(
-                name: "Events");
+                name: "Organizations");
 
             migrationBuilder.DropTable(
                 name: "Permissions");
