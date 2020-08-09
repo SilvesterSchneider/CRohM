@@ -11,8 +11,7 @@ import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
 import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
-import { DpUpdatePopupComponent } from 'src/app/shared/data-protection/dp-update-popup/dp-update-popup.component';
-import { DataProtectionHelperService } from 'src/app/shared/data-protection';
+import { DataProtectionHelperService,DpUpdatePopupComponent } from 'src/app/shared/data-protection';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
