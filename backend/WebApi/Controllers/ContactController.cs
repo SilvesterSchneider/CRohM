@@ -11,6 +11,7 @@ using NSwag.Annotations;
 using RepositoryLayer;
 using ServiceLayer;
 using System.Linq;
+using System;
 
 namespace WebApi.Controllers
 {
@@ -99,8 +100,9 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate, [FromQuery]long userIdOfChange)
         {
 
-            Contact contact = await contactService.CreateContactAsync(_mapper.Map<Contact>(contactToCreate));
-
+            Contact contact = await contactService.CreateAsync(_mapper.Map<Contact>(contactToCreate));
+            contact.CreationDate = DateTime.Now;
+            await contactService.UpdateAsync(contact);
             var contactDto = _mapper.Map<ContactDto>(contact);
             string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
             await modRepo.CreateNewEntryAsync(userNameOfChange, contact.Id, MODEL_TYPE.CONTACT);
