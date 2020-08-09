@@ -166,9 +166,6 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("ContactPossibilitiesId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -361,10 +358,16 @@ namespace ModelLayer.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ActualValue")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("DataModelId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("DataModelType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DataType")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateTime")
@@ -373,10 +376,19 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ExtensionIndex")
+                        .HasColumnType("int");
+
                     b.Property<int>("ModificationType")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PropertyName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -499,7 +511,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "ca0b1ee7-c5b6-475b-99bd-e0c587efbe8a",
+                            ConcurrencyStamp = "7609404d-3f8d-4bcd-8ba2-95f9288a7e6f",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             UserRight = 0
@@ -507,11 +519,44 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "ee671e25-3f7b-4649-a09a-2c7c2f8734fb",
+                            ConcurrencyStamp = "c25fb546-71dd-44b5-b192-55c14bfbc93b",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER",
                             UserRight = 0
                         });
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.Tag", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("ContactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("EventId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("OrganizationId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.User", b =>
@@ -588,6 +633,30 @@ namespace ModelLayer.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.UserLogin", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateTimeOfLastLogin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserLogin");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.UserPermissionGroup", b =>
@@ -767,6 +836,21 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.PermissionGroup", null)
                         .WithMany("Permissions")
                         .HasForeignKey("PermissionGroupId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.Tag", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Contact", "Contact")
+                        .WithMany("Tags")
+                        .HasForeignKey("ContactId");
+
+                    b.HasOne("ModelLayer.Models.Event", "Event")
+                        .WithMany("Tags")
+                        .HasForeignKey("EventId");
+
+                    b.HasOne("ModelLayer.Models.Organization", "Organization")
+                        .WithMany("Tags")
+                        .HasForeignKey("OrganizationId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.UserPermissionGroup", b =>

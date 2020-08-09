@@ -81,7 +81,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.contacts = this.service.getAll();
     this.contacts.subscribe(x => {
        this.length = x.length;
-       x.forEach(y => this.dataSource.data = x);
+       this.dataSource.data = x;
     });
     this.changeDetectorRefs.detectChanges();
   }
@@ -101,14 +101,16 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
   }
 
-  openEditDialog(contact: ContactDto) {
-    const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: contact, disableClose: true });
+  openEditDialog(id: number) {
+    this.service.getById(id).subscribe((x) => {
+      const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: x, disableClose: true });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result.delete) {
-        this.deleteContact(result.id);
-      }
-      this.getData();
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result.delete) {
+          this.deleteContact(result.id);
+        }
+        this.getData();
+      });
     });
   }
 

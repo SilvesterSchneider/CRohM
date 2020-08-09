@@ -183,6 +183,8 @@ namespace WebApi
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IPermissionGroupService, PermissionGroupService>();
+            services.AddScoped<IModificationEntryService, ModificationEntryService>();
+            services.AddScoped<IUserLoginService, UserLoginService>();
 
             //###########################Repositories#######################################
 
@@ -195,6 +197,8 @@ namespace WebApi
             services.AddScoped<IEventContactRepository, EventContactRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IModificationEntryRepository, ModificationEntryRepository>();
+            services.AddScoped<IContactPossibilitiesEntryRepository, ContactPossibilitiesEntryRepository>();
+            services.AddScoped<IUserLoginRepository, UserLoginRepository>();
             services.AddScoped<IUserPermissionGroupRepository, UserPermissionGroupRepository>();
         }
     }

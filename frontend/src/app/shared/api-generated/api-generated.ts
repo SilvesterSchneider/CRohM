@@ -1557,6 +1557,70 @@ export class ModificationEntryService {
         }
         return _observableOf<ModificationEntryDto[]>(<any>null);
     }
+
+    /**
+     * @param id (optional) 
+     * @param modelDataType (optional) 
+     * @return successfully found
+     */
+    getSortedListByTypeAndId(id?: number | undefined, modelDataType?: MODEL_TYPE | undefined): Observable<ModificationEntryDto[]> {
+        let url_ = this.baseUrl + "/api/home/id?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (modelDataType === null)
+            throw new Error("The parameter 'modelDataType' cannot be null.");
+        else if (modelDataType !== undefined)
+            url_ += "modelDataType=" + encodeURIComponent("" + modelDataType) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSortedListByTypeAndId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSortedListByTypeAndId(<any>response_);
+                } catch (e) {
+                    return <Observable<ModificationEntryDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ModificationEntryDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetSortedListByTypeAndId(response: HttpResponseBase): Observable<ModificationEntryDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <ModificationEntryDto[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("contact not found", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ModificationEntryDto[]>(<any>null);
+    }
 }
 
 @Injectable({
@@ -2266,6 +2330,75 @@ export class PermissionsService {
 @Injectable({
     providedIn: 'root'
 })
+export class UserLoginService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param id (optional) 
+     * @return successfully found
+     */
+    getTheLastLoginTimeOfUserById(id?: number | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/UserLogin/id?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTheLastLoginTimeOfUserById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTheLastLoginTimeOfUserById(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTheLastLoginTimeOfUserById(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class UserPermissionsService {
     private http: HttpClient;
     private baseUrl: string;
@@ -2688,6 +2821,7 @@ export interface ContactDto {
     organizations?: OrganizationDto[] | undefined;
     events?: EventDto[] | undefined;
     history?: HistoryElementDto[] | undefined;
+    tags?: TagDto[] | undefined;
 }
 
 export interface ContactPossibilitiesDto {
@@ -2713,7 +2847,13 @@ export interface OrganizationDto {
     address?: AddressDto | undefined;
     contact?: ContactPossibilitiesDto | undefined;
     employees?: ContactDto[] | undefined;
+    tags?: TagDto[] | undefined;
     history?: HistoryElementDto[] | undefined;
+}
+
+export interface TagDto {
+    id: number;
+    name?: string | undefined;
 }
 
 export interface HistoryElementDto {
@@ -2738,6 +2878,7 @@ export interface EventDto {
     duration: number;
     contacts?: ContactDto[] | undefined;
     participated?: ParticipatedDto[] | undefined;
+    tags?: TagDto[] | undefined;
 }
 
 export interface ParticipatedDto {
@@ -2790,11 +2931,41 @@ export interface EventCreateDto {
 
 export interface ModificationEntryDto {
     id: number;
+    dataType: DATA_TYPE;
     dataModelType: MODEL_TYPE;
     dataModelId: number;
     modificationType: MODIFICATION;
     userName?: string | undefined;
     dateTime: string;
+    oldValue?: string | undefined;
+    actualValue?: string | undefined;
+    isDeleted: boolean;
+    extensionIndex: number;
+    propertyName?: string | undefined;
+}
+
+export enum DATA_TYPE {
+    MAIL = 0,
+    PHONE = 1,
+    FAX = 2,
+    PHONE_EXTENDED = 3,
+    MAIL_EXTENDED = 4,
+    HISTORY_ELEMENT = 5,
+    NONE = 6,
+    PRENAME = 7,
+    NAME = 8,
+    CITY = 9,
+    COUNTRY = 10,
+    STREET = 11,
+    STREETNUMBER = 12,
+    ZIPCODE = 13,
+    DESCRIPTION = 14,
+    CONTACTS = 15,
+    DURATION = 16,
+    DATE = 17,
+    TIME = 18,
+    PARTICIPATED = 19,
+    TAG = 20,
 }
 
 export enum MODEL_TYPE {
@@ -2806,6 +2977,8 @@ export enum MODEL_TYPE {
 export enum MODIFICATION {
     CREATED = 0,
     MODIFIED = 1,
+    DELETED = 2,
+    ADDED = 3,
 }
 
 export interface OrganizationCreateDto {

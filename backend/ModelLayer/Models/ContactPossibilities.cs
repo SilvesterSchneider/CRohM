@@ -1,4 +1,4 @@
-﻿using ModelLayer.Models.Base;
+using ModelLayer.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,9 +7,9 @@ namespace ModelLayer.Models
 {
     public class ContactPossibilities : BaseEntity
     {
-        public string PhoneNumber { get; set; }
-        public string Fax { get; set; }
-        public string Mail { get; set; }
+        public string PhoneNumber { get; set; } = "";
+        public string Fax { get; set; } = "";
+        public string Mail { get; set; } = "";
         public List<ContactPossibilitiesEntry> ContactEntries { get; set; } = new List<ContactPossibilitiesEntry>();
 
         public override string ToString()
