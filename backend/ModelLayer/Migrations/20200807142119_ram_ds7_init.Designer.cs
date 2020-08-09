@@ -10,8 +10,13 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.Designer.cs
     [Migration("20200807142119_ram_ds7_init")]
     partial class ram_ds7_init
+=======
+    [Migration("20200804153011_wwd12_ram_init")]
+    partial class wwd12_ram_init
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -513,7 +518,11 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.Designer.cs
                             ConcurrencyStamp = "ab37a4ab-2163-4dec-9d7e-cfd11adc6f71",
+=======
+                            ConcurrencyStamp = "7609404d-3f8d-4bcd-8ba2-95f9288a7e6f",
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.Designer.cs
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             UserRight = 0
@@ -521,13 +530,53 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 2L,
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.Designer.cs
                             ConcurrencyStamp = "661e6cda-66cb-4cb4-b190-396cc985515a",
+=======
+                            ConcurrencyStamp = "c25fb546-71dd-44b5-b192-55c14bfbc93b",
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.Designer.cs
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER",
                             UserRight = 0
                         });
                 });
 
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.Designer.cs
+=======
+            modelBuilder.Entity("ModelLayer.Models.Tag", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("ContactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("EventId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("OrganizationId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("Tags");
+                });
+
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.Designer.cs
             modelBuilder.Entity("ModelLayer.Models.User", b =>
                 {
                     b.Property<long>("Id")
@@ -552,12 +601,15 @@ namespace ModelLayer.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.Designer.cs
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("datetime2");
 
+=======
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.Designer.cs
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -610,6 +662,7 @@ namespace ModelLayer.Migrations
                     b.ToTable("Users");
                 });
 
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.Designer.cs
             modelBuilder.Entity("ModelLayer.Models.UserDeletionCheckDate", b =>
                 {
                     b.Property<long>("Id")
@@ -631,6 +684,8 @@ namespace ModelLayer.Migrations
                     b.ToTable("UserDeletionCheckDate");
                 });
 
+=======
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.Designer.cs
             modelBuilder.Entity("ModelLayer.Models.UserLogin", b =>
                 {
                     b.Property<long>("Id")
@@ -834,6 +889,24 @@ namespace ModelLayer.Migrations
                         .HasForeignKey("PermissionGroupId");
                 });
 
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.Designer.cs
+=======
+            modelBuilder.Entity("ModelLayer.Models.Tag", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Contact", "Contact")
+                        .WithMany("Tags")
+                        .HasForeignKey("ContactId");
+
+                    b.HasOne("ModelLayer.Models.Event", "Event")
+                        .WithMany("Tags")
+                        .HasForeignKey("EventId");
+
+                    b.HasOne("ModelLayer.Models.Organization", "Organization")
+                        .WithMany("Tags")
+                        .HasForeignKey("OrganizationId");
+                });
+
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.Designer.cs
             modelBuilder.Entity("ModelLayer.Models.UserPermissionGroup", b =>
                 {
                     b.HasOne("ModelLayer.PermissionGroup", "PermissionGroup")

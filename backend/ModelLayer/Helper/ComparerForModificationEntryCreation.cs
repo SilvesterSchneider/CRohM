@@ -18,7 +18,7 @@ namespace ModelLayer.Helper
         /// <param name="listWithCreation">the list with all modification entries to be created afterwards</param>
         /// <param name="listWithDeletion">the list with all modification entries to be set up to deletion state = true</param>
         public static void CompareEvents(Event oldEvent, EventDto newEvent, string userOfModification,
-            out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion)
+            out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion, List<Contact> contactsParticipated)
         {
             listWithDeletion = new List<ModificationEntry>();
             List<ModificationEntry> listEntries = new List<ModificationEntry>();
@@ -26,9 +26,84 @@ namespace ModelLayer.Helper
             ComparePlainFields(listEntries, oldEvent.Date.ToString(), newEvent.Date.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DATE, userOfModification, MODIFICATION.MODIFIED);
             ComparePlainFields(listEntries, oldEvent.Time.ToString(), newEvent.Time.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.TIME, userOfModification, MODIFICATION.MODIFIED);
             ComparePlainFields(listEntries, oldEvent.Duration.ToString(), newEvent.Duration.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DURATION, userOfModification, MODIFICATION.MODIFIED);
+            CompareTagFields(listEntries, oldEvent.Tags, newEvent.Tags, newEvent.Id, MODEL_TYPE.EVENT, userOfModification);
             GetContactsChangeOfEvents(oldEvent.Contacts, newEvent.Contacts, newEvent.Id, userOfModification, listEntries);
-            GetParticipatedChangesOfEvent(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id);
+            GetParticipatedChangesOfEvent(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id, contactsParticipated);
             listWithCreation = listEntries;
+        }
+
+        /// <summary>
+        /// Compare all tags
+        /// </summary>
+        /// <param name="listEntries"></param>
+        /// <param name="tagsOld"></param>
+        /// <param name="tagsNew"></param>
+        /// <param name="modelId"></param>
+        /// <param name="modelType"></param>
+        /// <param name="userOfModification"></param>
+        private static void CompareTagFields(List<ModificationEntry> listEntries, List<Tag> tagsOld, List<TagDto> tagsNew, long modelId, MODEL_TYPE modelType, string userOfModification)
+        {
+            if (tagsNew.Count > tagsOld.Count)
+            {
+                string newTags = string.Empty;
+                foreach (TagDto tag in tagsNew)
+                {
+                    if (tagsOld.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        newTags += tag.Name + " ";
+                    }
+                }
+                listEntries.Add(GetNewModificationEntry(newTags, "", modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.ADDED));
+            }
+            else if (tagsNew.Count < tagsOld.Count)
+            {
+                string removedTags = string.Empty;
+                foreach (Tag tag in tagsOld)
+                {
+                    if (tagsNew.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        removedTags += tag.Name + " ";
+                    }
+                }
+                listEntries.Add(GetNewModificationEntry("", removedTags, modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.DELETED));
+            }
+        }
+
+        /// <summary>
+        /// Compare all tags
+        /// </summary>
+        /// <param name="listEntries"></param>
+        /// <param name="tagsOld"></param>
+        /// <param name="tagsNew"></param>
+        /// <param name="modelId"></param>
+        /// <param name="modelType"></param>
+        /// <param name="userOfModification"></param>
+        private static void CompareTagFields(List<ModificationEntry> listEntries, List<Tag> tagsOld, List<Tag> tagsNew, long modelId, MODEL_TYPE modelType, string userOfModification)
+        {
+            if (tagsNew.Count > tagsOld.Count)
+            {
+                string newTags = string.Empty;
+                foreach (Tag tag in tagsNew)
+                {
+                    if (tagsOld.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        newTags += tag.Name + " ";
+                    }
+                }
+                listEntries.Add(GetNewModificationEntry(newTags, "", modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.ADDED));
+            }
+            else if (tagsNew.Count < tagsOld.Count)
+            {
+                string removedTags = string.Empty;
+                foreach (Tag tag in tagsOld)
+                {
+                    if (tagsNew.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        removedTags += tag.Name + " ";
+                    }
+                }
+                listEntries.Add(GetNewModificationEntry("", removedTags, modelId, modelType, DATA_TYPE.TAG, userOfModification, MODIFICATION.DELETED));
+            }
         }
 
         /// <summary>
@@ -84,14 +159,20 @@ namespace ModelLayer.Helper
         /// <param name="listEntries">the list with all entries to create</param>
         /// <param name="userOfModification">who made this change?</param>
         /// <param name="id">the model id</param>
-        private static void GetParticipatedChangesOfEvent(List<Participated> oldOnes, List<ParticipatedDto> newOnes, List<ModificationEntry> listEntries, string userOfModification, long id)
+        private static void GetParticipatedChangesOfEvent(List<Participated> oldOnes, List<ParticipatedDto> newOnes, List<ModificationEntry> listEntries, string userOfModification, long id, List<Contact> contactsParticipated)
         {
             foreach (Participated partOld in oldOnes)
             {
                 ParticipatedDto newPart = newOnes.Find(a => a.Id == partOld.Id);
                 if (newPart != null && newPart.HasParticipated != partOld.HasParticipated)
                 {
-                    listEntries.Add(GetNewModificationEntry(newPart.HasParticipated.ToString(), partOld.HasParticipated.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
+                    string contactName = string.Empty;
+                    Contact contact = contactsParticipated.Find(a => a.Id == newPart.ContactId);
+                    if (contact != null)
+                    {
+                        contactName = contact.PreName + " " + contact.Name;
+                    }
+                    listEntries.Add(GetNewModificationEntry(contactName + ":" + newPart.HasParticipated.ToString(), contactName + ":" + partOld.HasParticipated.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
                 }
             }
         }
@@ -117,6 +198,7 @@ namespace ModelLayer.Helper
             {
                 listCreation.Add(GetNewModificationEntry(newContact.History[newContact.History.Count - 1].Description + ":" + newContact.History[newContact.History.Count - 1].Comment, "", newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.HISTORY_ELEMENT, userOfModification, MODIFICATION.ADDED));
             }
+            CompareTagFields(listCreation, oldContact.Tags, newContact.Tags, newContact.Id, MODEL_TYPE.CONTACT, userOfModification);
             listCreation.AddRange(GetModificationsForAddressObject(oldContact.Address, newContact.Address, newContact.Id, userOfModification, MODEL_TYPE.CONTACT));
             GetModificationsForContactPossibilitiesObject(oldContact.ContactPossibilities, newContact.ContactPossibilities, newContact.Id, userOfModification, deleteEntries, listCreation, listDeletion, MODEL_TYPE.CONTACT, nextNewId);
             listWithCreation = listCreation;
@@ -144,6 +226,7 @@ namespace ModelLayer.Helper
             {
                 listCreation.Add(GetNewModificationEntry(newOrga.History.Count.ToString(), oldOrga.History.Count.ToString(), newOrga.Id, MODEL_TYPE.ORGANIZATION, DATA_TYPE.HISTORY_ELEMENT, userOfModification, MODIFICATION.ADDED));
             }
+            CompareTagFields(listCreation, oldOrga.Tags, newOrga.Tags, newOrga.Id, MODEL_TYPE.ORGANIZATION, userOfModification);
             listCreation.AddRange(GetModificationsForAddressObject(oldOrga.Address, newOrga.Address, newOrga.Id, userOfModification, MODEL_TYPE.ORGANIZATION));
             GetModificationsForContactPossibilitiesObject(oldOrga.Contact, newOrga.Contact, newOrga.Id, userOfModification, deleteEntries, listCreation, listDeletion, MODEL_TYPE.ORGANIZATION, nextNewId);
             listWithCreation = listCreation;

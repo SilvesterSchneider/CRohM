@@ -85,7 +85,12 @@ namespace RepositoryLayer
 
         public async Task<Event> GetEventByIdWithAllIncludesAsync(long id)
         {
-            return await Entities.Include(y => y.Contacts).ThenInclude(z => z.Contact).Include(x => x.Participated).FirstOrDefaultAsync(x => x.Id == id);
+            return await Entities
+                .Include(t => t.Tags)
+                .Include(y => y.Contacts)
+                .ThenInclude(z => z.Contact)
+                .Include(x => x.Participated)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<bool> ModifyEventAsync(EventDto eventToModify)
@@ -105,7 +110,7 @@ namespace RepositoryLayer
                     if (eventToModify.Contacts.FirstOrDefault(y => y.Id == x.ContactId) == null)
                     {
                         eventContactsToDelete.Add(x);
-                    } 
+                    }
                 });
                 foreach (EventContact part in eventContactsToDelete)
                 {
@@ -127,7 +132,7 @@ namespace RepositoryLayer
                     {
                         eventExistent.Participated.Add(new Participated() { ContactId = x.ContactId, HasParticipated = x.HasParticipated });
                     }
-                }); 
+                });
                 
                 foreach (ContactDto contact in eventToModify.Contacts) 
                 {
@@ -135,7 +140,32 @@ namespace RepositoryLayer
                     {
                         await AddEventContactAsync(new EventContact() { ContactId = contact.Id, EventId = eventExistent.Id });
                     }
-                } 
+                }
+
+                List<Tag> tagsToAdd = new List<Tag>();
+                List<Tag> tagsToRemove = new List<Tag>();
+                foreach (TagDto tag in eventToModify.Tags)
+                {
+                    if (eventExistent.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        tagsToAdd.Add(new Tag() { Id=0, Name=tag.Name });
+                    }
+                }
+                foreach (Tag tag in eventExistent.Tags)
+                {
+                    if (eventToModify.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        tagsToRemove.Add(tag);
+                    }
+                }
+                foreach (Tag tag in tagsToRemove)
+                {
+                    eventExistent.Tags.Remove(tag);
+                }
+                foreach (Tag tag in tagsToAdd)
+                {
+                    eventExistent.Tags.Add(tag);
+                }
 
                 await UpdateAsync(eventExistent);
                 return true;

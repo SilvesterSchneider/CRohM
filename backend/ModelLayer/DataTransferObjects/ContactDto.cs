@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ModelLayer.Models;
 
@@ -15,6 +15,7 @@ namespace ModelLayer.DataTransferObjects
         public List<OrganizationDto> Organizations { get; set; } = new List<OrganizationDto>();
         public List<EventDto> Events { get; set; } = new List<EventDto>();
         public List<HistoryElementDto> History { get; set; } = new List<HistoryElementDto>();
+        public List<TagDto> Tags { get; set; } = new List<TagDto>();
     }
 
     public class ContactCreateDto

@@ -3,7 +3,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.cs
     public partial class ram_ds7_init : Migration
+=======
+    public partial class wwd12_ram_init : Migration
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.cs
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -114,6 +118,7 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.cs
                 name: "UserDeletionCheckDate",
                 columns: table => new
                 {
@@ -129,6 +134,8 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+=======
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.cs
                 name: "UserLogin",
                 columns: table => new
                 {
@@ -166,9 +173,13 @@ namespace ModelLayer.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.cs
                     LastLoginDate = table.Column<DateTime>(nullable: false),
                     hasPasswordChanged = table.Column<bool>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false)
+=======
+                    hasPasswordChanged = table.Column<bool>(nullable: false)
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.cs
                 },
                 constraints: table =>
                 {
@@ -474,6 +485,44 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.cs
+=======
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    ContactId = table.Column<long>(nullable: true),
+                    OrganizationId = table.Column<long>(nullable: true),
+                    EventId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tags_Contacts_ContactId",
+                        column: x => x.ContactId,
+                        principalTable: "Contacts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tags_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tags_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.cs
                 name: "RoleClaims",
                 columns: table => new
                 {
@@ -521,12 +570,20 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.cs
                 values: new object[] { 1L, "ab37a4ab-2163-4dec-9d7e-cfd11adc6f71", "Admin", "ADMIN", null, 0 });
+=======
+                values: new object[] { 1L, "7609404d-3f8d-4bcd-8ba2-95f9288a7e6f", "Admin", "ADMIN", null, 0 });
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.cs
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.cs
                 values: new object[] { 2L, "661e6cda-66cb-4cb4-b190-396cc985515a", "DeleteUser", "DELETEUSER", null, 0 });
+=======
+                values: new object[] { 2L, "c25fb546-71dd-44b5-b192-55c14bfbc93b", "DeleteUser", "DELETEUSER", null, 0 });
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.cs
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
@@ -596,6 +653,24 @@ namespace ModelLayer.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.cs
+=======
+                name: "IX_Tags_ContactId",
+                table: "Tags",
+                column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_EventId",
+                table: "Tags",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_OrganizationId",
+                table: "Tags",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.cs
                 name: "IX_UserClaims_UserId",
                 table: "UserClaims",
                 column: "UserId");
@@ -655,10 +730,17 @@ namespace ModelLayer.Migrations
                 name: "RoleClaims");
 
             migrationBuilder.DropTable(
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.cs
                 name: "UserClaims");
 
             migrationBuilder.DropTable(
                 name: "UserDeletionCheckDate");
+=======
+                name: "Tags");
+
+            migrationBuilder.DropTable(
+                name: "UserClaims");
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.cs
 
             migrationBuilder.DropTable(
                 name: "UserLogin");
@@ -679,10 +761,17 @@ namespace ModelLayer.Migrations
                 name: "Contacts");
 
             migrationBuilder.DropTable(
+<<<<<<< HEAD:backend/ModelLayer/Migrations/20200807142119_ram_ds7_init.cs
                 name: "Organizations");
 
             migrationBuilder.DropTable(
                 name: "Events");
+=======
+                name: "Events");
+
+            migrationBuilder.DropTable(
+                name: "Organizations");
+>>>>>>> c55a7d07454a5a399b6bf55b5c93176776798f1e:backend/ModelLayer/Migrations/20200804153011_wwd12_ram_init.cs
 
             migrationBuilder.DropTable(
                 name: "Permissions");

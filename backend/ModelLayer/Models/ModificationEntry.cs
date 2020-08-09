@@ -27,7 +27,8 @@ namespace ModelLayer.Models
         DURATION,
         DATE,
         TIME,
-        PARTICIPATED
+        PARTICIPATED,
+        TAG
     }
 
     /// <summary>
@@ -154,6 +155,10 @@ namespace ModelLayer.Models
                 else if (DataType == DATA_TYPE.PARTICIPATED)
                 {
                     return "Teilnahmestatus";
+                }
+                else if (DataType == DATA_TYPE.TAG)
+                {
+                    return "Tags";
                 }
                 else 
                 {
