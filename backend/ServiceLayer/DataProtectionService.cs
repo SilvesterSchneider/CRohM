@@ -197,7 +197,7 @@ namespace ServiceLayer
                 case "organizations": return "Organisationen";
                 case "history": return "Historie";
                 case "contactentries": return "Kontakteinträge";
-                case "OrganizationContacts": return "Organisation in Verbindung zu Kontakt";
+                case "organizationcontacts": return "Organisation in Verbindung zu Kontakt";
 
                 default: return englishKey;
             }
