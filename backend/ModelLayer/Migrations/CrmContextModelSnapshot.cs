@@ -511,7 +511,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "ab37a4ab-2163-4dec-9d7e-cfd11adc6f71",
+                            ConcurrencyStamp = "63b15a77-2111-43df-8515-bdeec59e44a2",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             UserRight = 0
@@ -519,11 +519,44 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "661e6cda-66cb-4cb4-b190-396cc985515a",
+                            ConcurrencyStamp = "1e1317e0-5068-47ca-85ae-b0700bcb2a6b",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER",
                             UserRight = 0
                         });
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.Tag", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("ContactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("EventId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("OrganizationId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.User", b =>
@@ -830,6 +863,21 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.PermissionGroup", null)
                         .WithMany("Permissions")
                         .HasForeignKey("PermissionGroupId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.Tag", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Contact", "Contact")
+                        .WithMany("Tags")
+                        .HasForeignKey("ContactId");
+
+                    b.HasOne("ModelLayer.Models.Event", "Event")
+                        .WithMany("Tags")
+                        .HasForeignKey("EventId");
+
+                    b.HasOne("ModelLayer.Models.Organization", "Organization")
+                        .WithMany("Tags")
+                        .HasForeignKey("OrganizationId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.UserPermissionGroup", b =>
