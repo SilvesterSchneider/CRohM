@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using RepositoryLayer;
-using ServiceLayer;
 
 namespace WebApi
 {
@@ -13,8 +11,6 @@ namespace WebApi
         /// <param name="args">arguments when starting from console e.g.</param>
         public static void Main(string[] args)
         {
-            // TODO delete
-            PdfGenerator.generatePdf();
             CreateHostBuilder(args).Build().Run();
         }
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class init_adp4 : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -391,7 +391,8 @@ namespace ModelLayer.Migrations
                     Date = table.Column<DateTime>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     Comment = table.Column<string>(nullable: true),
-                    ContactId = table.Column<long>(nullable: true)
+                    ContactId = table.Column<long>(nullable: true),
+                    OrganizationId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -400,6 +401,12 @@ namespace ModelLayer.Migrations
                         name: "FK_History_Contacts_ContactId",
                         column: x => x.ContactId,
                         principalTable: "Contacts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_History_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -476,12 +483,12 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 1L, "cb5f561b-6f82-457d-a507-6330922b972a", "Admin", "ADMIN", null, 0 });
+                values: new object[] { 1L, "e3c46011-497b-4cf7-a199-342cd03274a3", "Admin", "ADMIN", null, 0 });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 2L, "832f0852-3350-4f45-9b37-af6b861aab9d", "DeleteUser", "DELETEUSER", null, 0 });
+                values: new object[] { 2L, "d486fc7e-641a-402f-8f5d-b87d8277cdfb", "DeleteUser", "DELETEUSER", null, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
@@ -507,6 +514,11 @@ namespace ModelLayer.Migrations
                 name: "IX_History_ContactId",
                 table: "History",
                 column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_History_OrganizationId",
+                table: "History",
+                column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrganizationContacts_ContactId",

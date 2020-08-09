@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20200718202344_init_adp4")]
-    partial class init_adp4
+    [Migration("20200809103202_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -338,12 +338,17 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("OrganizationId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ContactId");
+
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("History");
                 });
@@ -493,7 +498,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "cb5f561b-6f82-457d-a507-6330922b972a",
+                            ConcurrencyStamp = "e3c46011-497b-4cf7-a199-342cd03274a3",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             UserRight = 0
@@ -501,7 +506,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "832f0852-3350-4f45-9b37-af6b861aab9d",
+                            ConcurrencyStamp = "d486fc7e-641a-402f-8f5d-b87d8277cdfb",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER",
                             UserRight = 0
@@ -717,6 +722,10 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.Models.Contact", null)
                         .WithMany("History")
                         .HasForeignKey("ContactId");
+
+                    b.HasOne("ModelLayer.Models.Organization", null)
+                        .WithMany("History")
+                        .HasForeignKey("OrganizationId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>

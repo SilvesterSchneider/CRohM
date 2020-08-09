@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CodeDom.Compiler;
 using System.IO;
 using iText.Kernel.Pdf;
@@ -27,6 +27,7 @@ namespace ServiceLayer
             doc.Add(new Paragraph(" Folgende personenbezogene Daten sind zu Herrn/Frau " + contact.Name +
                                   " im Customer Relationship Management System(CRMS) der TH Nürnberg gespeichert.\n" + "Die Zustimmung zur Speicherung und Verarbeitung der Daten erfolgte am "
                                   + DateTime.Today.Date));
+
             var contactDetails = new string("");
             contactDetails += "Vorname:\t" + contact.PreName + "\n";
             contactDetails += "Name:\t" + contact.Name + "\n";
