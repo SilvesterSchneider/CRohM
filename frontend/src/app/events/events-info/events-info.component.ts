@@ -1,7 +1,7 @@
 import {
   Component, OnInit, Inject
 } from '@angular/core';
-import { EventDto, ModificationEntryDto, ModificationEntryService,
+import { EventDto, TagDto, ModificationEntryDto, ModificationEntryService,
   MODEL_TYPE, DATA_TYPE } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -27,6 +27,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   eventsForm: FormGroup;
   dataHistory: ModificationEntryDto[] = new Array<ModificationEntryDto>();
   columnsContacts = ['participated', 'prename', 'name'];
+  tags: TagDto[] = new Array<TagDto>();
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
   constructor(
@@ -39,6 +40,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   ) {
     super(dialogRef, dialog);
     this.event = data;
+    this.tags = this.event.tags;
   }
 
   getDate(date: string): string {

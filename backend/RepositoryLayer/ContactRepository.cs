@@ -1,4 +1,4 @@
-﻿using ModelLayer;
+using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer.Base;
 using System;
@@ -36,6 +36,7 @@ namespace RepositoryLayer
         {
             return await Entities
                 .Include(x => x.Address)
+                .Include(t => t.Tags)
                 .Include(y => y.ContactPossibilities)
                 .ThenInclude(b => b.ContactEntries)
                 .Include(x => x.OrganizationContacts)
@@ -50,6 +51,7 @@ namespace RepositoryLayer
         public override async Task<Contact> GetByIdAsync(long id)
         {
             return await Entities
+                .Include(t => t.Tags)
                 .Include(g => g.OrganizationContacts)
                 .ThenInclude(j => j.Organization)
                 .Include(a => a.Address)
@@ -64,6 +66,7 @@ namespace RepositoryLayer
         public async Task<List<Contact>> GetContactsByPartStringAsync(string name)
         {
             return await Entities
+                .Include(t => t.Tags)
                 .Where(x => x.PreName.StartsWith(name) | x.Name.StartsWith(name))
                 .Include(x => x.Address)
                 .Include(y => y.ContactPossibilities)
@@ -79,6 +82,7 @@ namespace RepositoryLayer
         {
             Contact originalContact = await Entities
                 .Include(x => x.Address)
+                .Include(t => t.Tags)
                 .Include(y => y.ContactPossibilities)
                 .ThenInclude(b => b.ContactEntries)
                 .FirstAsync(x => x.Id == id);
@@ -121,6 +125,30 @@ namespace RepositoryLayer
                     {
                         originalContact.ContactPossibilities.ContactEntries.Add(entry);
                     }                    
+                }
+                List<Tag> tagsToAdd = new List<Tag>();
+                List<Tag> tagsToRemove = new List<Tag>();
+                foreach (Tag tag in contact.Tags)
+                {
+                    if (originalContact.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        tagsToAdd.Add(new Tag() { Id = 0, Name = tag.Name });
+                    }
+                }
+                foreach (Tag tag in originalContact.Tags)
+                {
+                    if (contact.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        tagsToRemove.Add(tag);
+                    }
+                }
+                foreach (Tag tag in tagsToRemove)
+                {
+                    originalContact.Tags.Remove(tag);
+                }
+                foreach (Tag tag in tagsToAdd)
+                {
+                    originalContact.Tags.Add(tag);
                 }
                 originalContact.Description = contact.Description;
                 originalContact.Name = contact.Name;
