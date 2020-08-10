@@ -47,9 +47,9 @@ export class DataProtectionHelperService {
 
         if (samees.length > 0) {
           samees.forEach(e => {
-            const blanew =  (JSON.parse(JSON.stringify(newObj)));
-            const blaold = (JSON.parse(JSON.stringify(oldObj)));
-            diffOfArrays.push(this.getDiffOfObjects(blanew[e.newIndex], blaold[e.oldIndex], filter));
+            const newCopy =  (JSON.parse(JSON.stringify(newObj)));
+            const oldCopy = (JSON.parse(JSON.stringify(oldObj)));
+            diffOfArrays.push(this.getDiffOfObjects(newCopy[e.newIndex], oldCopy[e.oldIndex], filter));
           });
 
         }
