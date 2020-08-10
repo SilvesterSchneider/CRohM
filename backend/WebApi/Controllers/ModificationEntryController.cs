@@ -35,7 +35,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetSortedListByType(MODEL_TYPE modelDataType)
         {
             List<ModificationEntry> entries = await modificationEntryRepository.GetSortedModificationEntriesByModelDataTypeAsync(modelDataType);
-            if (entries.Any())
+            if (entries != null)
             {
                 return Ok(mapper.Map<List<ModificationEntryDto>>(entries));
             }
@@ -52,7 +52,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetSortedListByTypeAndId([FromQuery] long id, [FromQuery] MODEL_TYPE modelDataType)
         {
             List<ModificationEntry> entries = await modificationEntryRepository.GetModificationEntriesByIdAndModelTypeAsync(id, modelDataType);
-            if (entries.Any())
+            if (entries != null)
             {
                 return Ok(mapper.Map<List<ModificationEntryDto>>(entries));
             }

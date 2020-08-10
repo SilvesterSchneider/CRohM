@@ -23,6 +23,11 @@ namespace RepositoryLayer
 
         }
 
+        /// <summary>
+        /// Das letzte login datum as der DB holen
+        /// </summary>
+        /// <param name="id">id des users</param>
+        /// <returns></returns>
         public async Task<DateTime> GetTheLastLoginDateTimeForUserByIdAsync(long id)
         {
             List<UserLogin> userLogins = await Entities.Where(a => a.UserId == id).ToListAsync();
