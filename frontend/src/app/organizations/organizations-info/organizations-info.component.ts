@@ -1,8 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ContactDto,
+  ModificationEntryService, MODEL_TYPE, MODIFICATION, DATA_TYPE,
   ContactPossibilitiesEntryDto, OrganizationDto, ModificationEntryDto, TagDto,
-  ModificationEntryService, MODEL_TYPE, DATA_TYPE, HistoryElementType,
-  HistoryElementDto} from '../../shared/api-generated/api-generated';
+  HistoryElementDto,
+  HistoryElementType} from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 

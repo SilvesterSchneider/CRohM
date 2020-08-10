@@ -511,7 +511,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "7609404d-3f8d-4bcd-8ba2-95f9288a7e6f",
+                            ConcurrencyStamp = "63b15a77-2111-43df-8515-bdeec59e44a2",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             UserRight = 0
@@ -519,7 +519,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "c25fb546-71dd-44b5-b192-55c14bfbc93b",
+                            ConcurrencyStamp = "1e1317e0-5068-47ca-85ae-b0700bcb2a6b",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER",
                             UserRight = 0
@@ -583,6 +583,12 @@ namespace ModelLayer.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastLoginDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -633,6 +639,27 @@ namespace ModelLayer.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.UserDeletionCheckDate", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateOfNextCheck")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserDeletionCheckDate");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.UserLogin", b =>

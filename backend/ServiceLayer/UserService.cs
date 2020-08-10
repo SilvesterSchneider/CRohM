@@ -28,10 +28,11 @@ namespace ServiceLayer
         Task ChangePasswordForUser(int primKey);
 
         Task<List<User>> GetAsync();
-
+        Task<List<User>> GetAllUsersAsync();
         Task<User> GetByIdAsync(long id);
         Task<List<string>> GetRolesAsync(User user);
 
+        Task DeleteUserAsync(User user);
         Task<bool> DeletePermissionGroupByUserIdAsync(long groupIdToDelete, long userId);
         Task<bool> AddPermissionGroupByUserIdAsync(long permissionGroupId, long userId);
 
@@ -40,7 +41,8 @@ namespace ServiceLayer
         Task<string> GetUserNameByIdAsync(long id);
 
         Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword);
-
+        Task UpdateUserAsync(User user);
+        Task<IdentityResult> SetUserNameAsync(User user, string username);
         Task<IdentityResult> UpdateAsync(User user);
     }
 
@@ -182,13 +184,17 @@ namespace ServiceLayer
         public async Task<IdentityResult> SetUserLockedAsync(long id)
         {
             User user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
-            if (user != null)
+            if (user != null && !user.IsDeleted)
             {
                 return await _userManager.SetUserLockedAsync(user, !user.UserLockEnabled);
             }
-            else
+            else if (user == null)
             {
                 return IdentityResult.Failed(new IdentityError());
+            }
+            else
+            {
+                return IdentityResult.Success;
             }
         }
 
@@ -339,6 +345,21 @@ namespace ServiceLayer
             }
         }
 
+        public async Task UpdateUserAsync(User user)
+        {
+            await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            return await _userManager.Users.ToListAsync();
+        }
+
+        public async Task DeleteUserAsync(User user)
+        {
+            await _userManager.DeleteUserAsync(user);
+		}
+		
         public async Task<IdentityResult> UpdateAsync(User user)
         {
             User userToUpdate = await _userManager.Users.Include(x => x.Permission).FirstOrDefaultAsync(x => x.Id == user.Id);
@@ -353,6 +374,11 @@ namespace ServiceLayer
             {
                 return IdentityResult.Failed(new IdentityError[] { new IdentityError() { Code = "Nicht gefunden", Description = "User nicht gefunden!" } });
             }
+        }
+
+        public async Task<IdentityResult> SetUserNameAsync(User user, string username)
+        {
+            return await _userManager.SetUserNameAsync(user, username);
         }
     }
 
@@ -381,7 +407,10 @@ namespace ServiceLayer
 
         IQueryable<User> Users { get; }
 
+        Task DeleteUserAsync(User user);
+
         Task<IdentityResult> UpdateUserAsync(User user);
+        Task<IdentityResult> SetUserNameAsync(User user, string username);
     }
 
     public class DefaultUserManager : IUserManager
@@ -398,6 +427,11 @@ namespace ServiceLayer
         public async Task<IdentityResult> CreateAsync(User user)
         {
             return await _manager.CreateAsync(user);
+        }
+
+        public async Task DeleteUserAsync(User user)
+        {
+            await _manager.DeleteAsync(user);
         }
 
         public async Task<IdentityResult> CreateAsync(User user, string password)
@@ -454,6 +488,11 @@ namespace ServiceLayer
         public async Task<IdentityResult> UpdateUserAsync(User user)
         {
             return await _manager.UpdateAsync(user);
+        }
+
+        public async Task<IdentityResult> SetUserNameAsync(User user, string username)
+        {
+            return await _manager.SetUserNameAsync(user, username);
         }
 
         public IQueryable<User> Users => _manager.Users.Include(x => x.Permission);
