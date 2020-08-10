@@ -189,7 +189,7 @@ namespace ServiceLayer
         public async Task<IdentityResult> SetUserLockedAsync(long id)
         {
             User user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
-            if (user != null)//TODO: gelöscht
+            if (user != null && !user.IsDeleted)
             {
                 return await _userManager.SetUserLockedAsync(user, !user.UserLockEnabled);
             }

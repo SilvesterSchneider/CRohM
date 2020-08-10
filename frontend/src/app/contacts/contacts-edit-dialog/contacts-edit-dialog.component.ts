@@ -137,7 +137,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
-		this.newContact.tags = this.selectedTags;
+		this.contact.tags = this.selectedTags;
 		this.contactService.put(this.contact.id, this.contact).subscribe(x => {
 			this.dialogRef.close({ delete: false, id: 0, oldContact: this.copy, newContact: this.newContact });
 		});
