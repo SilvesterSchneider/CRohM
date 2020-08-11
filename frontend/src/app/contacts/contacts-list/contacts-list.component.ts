@@ -11,6 +11,7 @@ import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
 import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
 
 @Component({
   selector: 'app-contacts-list',
@@ -87,7 +88,12 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   openDisclosureDialog(id: number) {
-		this.service.sendDisclosureById(id).subscribe(x => this.getData());
+    const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, {
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      this.contacts = this.service.getAll();
+    });
   }
 
   openAddDialog() {

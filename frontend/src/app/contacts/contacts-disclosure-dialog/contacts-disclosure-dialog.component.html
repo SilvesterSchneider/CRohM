@@ -1,0 +1,22 @@
+<mat-dialog-content class="disclosure">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>
+                Kontaktauskunft generieren
+            </h2>
+            <p>
+                Erzeugt eine PDF-Datei mit allen im CRMS gespeicherten Daten zu gewähltem Kontakt gem. Auskunftspflicht EU-DSGVO Art. 15. Die PDF-Datei wird direkt an die E-Mail-Adresse des Kontakts gesendet.
+            </p>
+        </div>
+    </div>
+    <div>
+        <span class="fill-remaining-space"></span>
+        <button mat-raised-button color="primary" title="Abbrechen" (click)="onCancel()">
+            Abbrechen
+        </button>
+        <button mat-raised-button color="primary" title="Senden" type="submit"
+            (click)="onApprove()">
+            Senden
+        </button>
+    </div>
+</mat-dialog-content>

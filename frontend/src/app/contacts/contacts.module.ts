@@ -9,6 +9,7 @@ import { ContactsAddDialogComponent } from './contacts-add-dialog/contacts-add-d
 import { ContactsEditDialogComponent } from './contacts-edit-dialog/contacts-edit-dialog.component';
 import { ContactsDetailComponent } from './contacts-detail/contacts-detail.component';
 import { ContactsInfoComponent } from './contacts-info/contacts-info.component';
+import { ContactsDisclosureDialogComponent } from './contacts-disclosure-dialog/contacts-disclosure-dialog.component';
 
 @NgModule({
 	imports: [ SharedModule, FormsModule, ReactiveFormsModule, MaterialModule, MatDialogModule, ContactsRoutingModule ],
@@ -17,7 +18,8 @@ import { ContactsInfoComponent } from './contacts-info/contacts-info.component';
 		ContactsAddDialogComponent,
 		ContactsEditDialogComponent,
 		ContactsDetailComponent,
-		ContactsInfoComponent
+		ContactsInfoComponent,
+		ContactsDisclosureDialogComponent
 	]
 })
 export class ContactsModule {}
