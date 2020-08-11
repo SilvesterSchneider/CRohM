@@ -9,5 +9,13 @@ namespace ModelLayer.Models
     {
         public string ContactEntryName { get; set; } = "";
         public string ContactEntryValue { get; set; } = "";
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Name der Kontaktmöglichkeit: " + ContactEntryName);
+            sb.AppendLine();
+            sb.Append("Kontaktmöglichkeit: " + ContactEntryValue);
+            return sb.ToString();
+        }
     }
 }

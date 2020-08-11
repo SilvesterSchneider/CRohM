@@ -9,7 +9,7 @@ namespace ServiceLayer
     /// </summary>
     public interface IMailProvider
     {
-        public bool CreateAndSendMail(string address, string subject, string body, Stream attachment,
+        public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment,
             string attachmentType);
         public bool PasswordReset(string newPassword, string mailAddress);
         public bool Registration(string user, string password, string email);
@@ -17,9 +17,9 @@ namespace ServiceLayer
 
     public class MailService : IMailProvider
     {
-        public bool CreateAndSendMail(string address, string subject, string body, Stream attachment, string attachmentType)
+        public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
         {
-            return SendMail(subject, body, address, attachment, attachmentType);
+            return SendMail(subject, body, address, new MemoryStream(attachment), attachmentType);
         }
 
         // TODO refactor extract subject and body

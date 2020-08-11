@@ -33,12 +33,13 @@ namespace ServiceLayer
             Contact contact = await GetByIdAsync(id);
             string body = "<h3> Auskunft über gespeicherte Daten </h3> " +
                           "<p> Sehr geehrte/r Herr/Frau " + contact.Name + ",</p>" +
-                          "<p Sie hatten um eine Auskunft über die zur Ihrer Person in unserem Customer Relationship Management System(CRMS) gespeicherten " +
-                          "Daten gebeten. Im angehängten PDF - Dokument erhalten Sie die entsprechende Auskunft gem. Art. 15 EU - DSGVO.</p>" +
+                          "<p> Sie hatten um eine Auskunft über die zur Ihrer Person in unserem Customer Relationship Management System(CRMS) gespeicherten Daten gebeten. Im angehängten PDF - Dokument erhalten Sie die entsprechende Auskunft gem. Art. 15 EU - DSGVO.</p>" +
                           "<p></p>" +
                           "<p>Technische Hochschule Nürnberg</p>";
+            string pdfBody = await GetContactInformationAsTextAsync(contact.Id);
+            pdfBody = pdfBody + "";
             mailProvider.CreateAndSendMail(contact.ContactPossibilities.Mail, "Auskunft über gespeicherte Daten", body,
-                PdfGenerator.GenerateNewContactPdf(contact), "disclosure.pdf");
+                PdfGenerator.GenerateNewContactPdf(contact, pdfBody), "disclosure.pdf");
         }
 
         public async Task AddHistoryElement(long id, HistoryElement historyElement)
@@ -65,6 +66,7 @@ namespace ServiceLayer
             {
                 return string.Empty;
             }
+
             return await Task.FromResult(contact.ToString());
         }
     }
