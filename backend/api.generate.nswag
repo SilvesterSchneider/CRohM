@@ -1,10 +1,11 @@
-﻿{
+{
   "runtime": "NetCore31",
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "https://localhost:5001/swagger/v1/swagger.json",
-      "output": null
+      "url": "http://localhost:5000/swagger/v1/swagger.json",
+      "output": null,
+      "newLineBehavior": "Auto"
     }
   },
   "codeGenerators": {
@@ -42,6 +43,8 @@
       "markOptionalProperties": true,
       "generateCloneMethod": false,
       "typeStyle": "Interface",
+      "enumStyle": "Enum",
+      "useLeafType": false,
       "classTypes": [],
       "extendedClasses": [],
       "extensionCode": null,
@@ -63,7 +66,8 @@
       "enumNameGeneratorType": null,
       "serviceHost": ".",
       "serviceSchemes": null,
-      "output": "../frontend/src/app/shared/api-generated/api-generated.ts"
+      "output": "../frontend/src/app/shared/api-generated/api-generated.ts",
+      "newLineBehavior": "Auto"
     }
   }
 }

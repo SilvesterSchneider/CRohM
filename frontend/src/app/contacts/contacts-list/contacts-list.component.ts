@@ -86,10 +86,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.changeDetectorRefs.detectChanges();
   }
 
-  openDisclosureDialog() {
-    // mdie todo: create dialog
-    
-		;
+  openDisclosureDialog(id: number) {
+		this.service.sendDisclosureById(id).subscribe(x => this.getData());
   }
 
   openAddDialog() {

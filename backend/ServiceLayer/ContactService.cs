@@ -38,8 +38,7 @@ namespace ServiceLayer
                           "<p></p>" +
                           "<p>Technische Hochschule Nürnberg</p>";
             mailProvider.CreateAndSendMail(contact.ContactPossibilities.Mail, "Auskunft über gespeicherte Daten", body,
-                PdfGenerator.generateNewContactPdf(contact), "pdf");
-            return;
+                PdfGenerator.GenerateNewContactPdf(contact), "disclosure.pdf");
         }
 
         public async Task AddHistoryElement(long id, HistoryElement historyElement)
