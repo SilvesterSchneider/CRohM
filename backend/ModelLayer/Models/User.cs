@@ -11,7 +11,7 @@ namespace ModelLayer.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
+        public DateTime LastLoginDate { get; set; } = DateTime.Now;
         public bool hasPasswordChanged { get; set; } = false;
 
         public bool UserLockEnabled { get
@@ -26,6 +26,8 @@ namespace ModelLayer.Models
                 }
             } 
         }
+
+        public bool IsDeleted { get; set; } = false;
 
         public List<UserPermissionGroup> Permission { get; set; } = new List<UserPermissionGroup>();
     }

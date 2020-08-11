@@ -49,7 +49,8 @@ namespace WebApi.Controllers
                     return BadRequest("Login fehlgeschlagen!");
                 }
             }
-
+            user.LastLoginDate = DateTime.Now;
+            await _userService.UpdateUserAsync(user);
             await userLoginService.CreateAsync(new UserLogin() { DateTimeOfLastLogin = DateTime.Now, UserId = user.Id } );
 
             if (user.UserLockEnabled)
