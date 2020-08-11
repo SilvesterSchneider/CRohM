@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ContactService, ContactDto } from '../../shared/api-generated/api-generated';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
@@ -15,15 +15,16 @@ export class ContactsDisclosureDialogComponent extends BaseDialogInput<ContactsD
   constructor(
 		  public dialogRef: MatDialogRef<ContactsDisclosureDialogComponent>,
 		  public dialog: MatDialog,
-      private route: ActivatedRoute,
+		  @Inject(MAT_DIALOG_DATA) public data: ContactDto,
       private service: ContactService)
       {
       super(dialogRef, dialog);
+	  this.contact = data;
       }
 
   ngOnInit(): void {
-		this.contact = this.route.snapshot.data.contact;
   }
+
 	onApprove() {
 		this.service.sendDisclosureById(this.contact.id).subscribe(x => this.dialogRef.close());
 	}

@@ -10,13 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200809163036_init.Designer.cs
-    [Migration("20200809163036_init")]
+    [Migration("20200811201717_init")]
     partial class init
-=======
-    [Migration("20200809155448_ram_ds7_init")]
-    partial class ram_ds7_init
->>>>>>> dev:backend/ModelLayer/Migrations/20200809155448_ram_ds7_init.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -518,11 +513,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200809163036_init.Designer.cs
-                            ConcurrencyStamp = "d9b74399-13e1-4932-aa6b-5d3e48340367",
-=======
-                            ConcurrencyStamp = "63b15a77-2111-43df-8515-bdeec59e44a2",
->>>>>>> dev:backend/ModelLayer/Migrations/20200809155448_ram_ds7_init.Designer.cs
+                            ConcurrencyStamp = "c1f7d59f-ad4c-41b5-8b7b-ce0b93789ee7",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             UserRight = 0
@@ -530,11 +521,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 2L,
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200809163036_init.Designer.cs
-                            ConcurrencyStamp = "cd28ad22-1596-41f1-b75e-91da98d04b44",
-=======
-                            ConcurrencyStamp = "1e1317e0-5068-47ca-85ae-b0700bcb2a6b",
->>>>>>> dev:backend/ModelLayer/Migrations/20200809155448_ram_ds7_init.Designer.cs
+                            ConcurrencyStamp = "ce38126d-fa99-4fbc-820a-181e4a126f0f",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER",
                             UserRight = 0
@@ -598,15 +585,12 @@ namespace ModelLayer.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200809163036_init.Designer.cs
-=======
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("datetime2");
 
->>>>>>> dev:backend/ModelLayer/Migrations/20200809155448_ram_ds7_init.Designer.cs
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -659,8 +643,6 @@ namespace ModelLayer.Migrations
                     b.ToTable("Users");
                 });
 
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200809163036_init.Designer.cs
-=======
             modelBuilder.Entity("ModelLayer.Models.UserDeletionCheckDate", b =>
                 {
                     b.Property<long>("Id")
@@ -682,7 +664,6 @@ namespace ModelLayer.Migrations
                     b.ToTable("UserDeletionCheckDate");
                 });
 
->>>>>>> dev:backend/ModelLayer/Migrations/20200809155448_ram_ds7_init.Designer.cs
             modelBuilder.Entity("ModelLayer.Models.UserLogin", b =>
                 {
                     b.Property<long>("Id")

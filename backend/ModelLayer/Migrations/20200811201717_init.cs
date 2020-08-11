@@ -3,11 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200809163036_init.cs
     public partial class init : Migration
-=======
-    public partial class ram_ds7_init : Migration
->>>>>>> dev:backend/ModelLayer/Migrations/20200809155448_ram_ds7_init.cs
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -118,8 +114,6 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200809163036_init.cs
-=======
                 name: "UserDeletionCheckDate",
                 columns: table => new
                 {
@@ -135,7 +129,6 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
->>>>>>> dev:backend/ModelLayer/Migrations/20200809155448_ram_ds7_init.cs
                 name: "UserLogin",
                 columns: table => new
                 {
@@ -173,13 +166,9 @@ namespace ModelLayer.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200809163036_init.cs
-                    hasPasswordChanged = table.Column<bool>(nullable: false)
-=======
                     LastLoginDate = table.Column<DateTime>(nullable: false),
                     hasPasswordChanged = table.Column<bool>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false)
->>>>>>> dev:backend/ModelLayer/Migrations/20200809155448_ram_ds7_init.cs
                 },
                 constraints: table =>
                 {
@@ -567,20 +556,12 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200809163036_init.cs
-                values: new object[] { 1L, "d9b74399-13e1-4932-aa6b-5d3e48340367", "Admin", "ADMIN", null, 0 });
-=======
-                values: new object[] { 1L, "63b15a77-2111-43df-8515-bdeec59e44a2", "Admin", "ADMIN", null, 0 });
->>>>>>> dev:backend/ModelLayer/Migrations/20200809155448_ram_ds7_init.cs
+                values: new object[] { 1L, "c1f7d59f-ad4c-41b5-8b7b-ce0b93789ee7", "Admin", "ADMIN", null, 0 });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200809163036_init.cs
-                values: new object[] { 2L, "cd28ad22-1596-41f1-b75e-91da98d04b44", "DeleteUser", "DELETEUSER", null, 0 });
-=======
-                values: new object[] { 2L, "1e1317e0-5068-47ca-85ae-b0700bcb2a6b", "DeleteUser", "DELETEUSER", null, 0 });
->>>>>>> dev:backend/ModelLayer/Migrations/20200809155448_ram_ds7_init.cs
+                values: new object[] { 2L, "ce38126d-fa99-4fbc-820a-181e4a126f0f", "DeleteUser", "DELETEUSER", null, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
@@ -730,12 +711,9 @@ namespace ModelLayer.Migrations
                 name: "UserClaims");
 
             migrationBuilder.DropTable(
-<<<<<<< HEAD:backend/ModelLayer/Migrations/20200809163036_init.cs
-=======
                 name: "UserDeletionCheckDate");
 
             migrationBuilder.DropTable(
->>>>>>> dev:backend/ModelLayer/Migrations/20200809155448_ram_ds7_init.cs
                 name: "UserLogin");
 
             migrationBuilder.DropTable(

@@ -34,7 +34,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private mediaObserver: MediaObserver,
     private jwt: JwtService) {
-      this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
+    this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
       if (change[0].mqAlias !== this.currentScreenWidth) {
         this.currentScreenWidth = change[0].mqAlias;
         this.setupTable();
@@ -81,20 +81,21 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   private getData() {
     this.contacts = this.service.getAll();
     this.contacts.subscribe(x => {
-       this.length = x.length;
-       this.dataSource.data = x;
+      this.length = x.length;
+      this.dataSource.data = x;
     });
     this.changeDetectorRefs.detectChanges();
   }
 
   openDisclosureDialog(id: number) {
-    const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, {
-      disableClose: true
-    });
+    this.service.getById(id).subscribe((x) => {
+    const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true });
+
     dialogRef.afterClosed().subscribe((result) => {
       this.contacts = this.service.getAll();
     });
-  }
+  });
+}
 
   openAddDialog() {
     const dialogRef = this.dialog.open(ContactsAddDialogComponent, {
