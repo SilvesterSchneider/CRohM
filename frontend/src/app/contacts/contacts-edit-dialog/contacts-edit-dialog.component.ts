@@ -22,6 +22,9 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	contactsForm: FormGroup;
 	contact: ContactDto;
+	private oldContact: ContactDto;
+	private newContact: ContactDto;
+	private copy;
 
 	@ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 	tagsControl = new FormControl();
@@ -37,9 +40,9 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		public dialogRef: MatDialogRef<ContactsEditDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: ContactDto,
 		public dialog: MatDialog,
-		private fb: FormBuilder,
-		private service: ContactService,
-		private jwt: JwtService
+		private readonly fb: FormBuilder,
+		private readonly contactService: ContactService,
+		private readonly jwtService: JwtService,
 	) {
 		super(dialogRef, dialog);
 		this.contact = data;
@@ -48,7 +51,9 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 			map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
 	}
 
-	ngOnInit(): void {
+	public ngOnInit(): void {
+		this.oldContact = this.data;
+		this.copy = (JSON.parse(JSON.stringify(this.data)));
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
 		this.initForm();
@@ -99,6 +104,10 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	initForm() {
 		this.contactsForm = this.fb.group({
 			id: ['', Validators.required],
+			description: [],
+			events: [[]],
+			history: [[]],
+			organizations: [[]],
 			name: ['', Validators.required],
 			preName: ['', Validators.required],
 			address: this.fb.control(''),
@@ -108,12 +117,17 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 				// Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
 				phoneNumber: ['', Validators.pattern('^0[0-9- ]*$')],
 				fax: ['', Validators.pattern('^0[0-9- ]*$')],
+				name: [],
+				id: [],
+				description: [],
 				contactEntries: this.contactPossibilitiesEntriesFormGroup
 			})
 		});
 	}
 
-	onApprove() {
+	public onApprove(): void {
+		this.newContact =  this.contactsForm.value;
+
 		const idAddress = this.contact.address.id;
 		const idContactPossibilities = this.contact.contactPossibilities.id;
 		const newContact: ContactDto = this.contactsForm.value;
@@ -124,20 +138,22 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
 		this.contact.tags = this.selectedTags;
-		this.service.put(this.contact, this.contact.id, this.jwt.getUserId()).subscribe(x => {
-			this.dialogRef.close({ delete: false, id: 0 });
+
+		this.newContact.tags = this.selectedTags;
+		this.contactService.put(this.contact.id, this.contact).subscribe(x => {
+			this.dialogRef.close({ delete: false, id: 0, oldContact: this.copy, newContact: this.newContact });
 		});
 	}
 
-	onCancel() {
+	public onCancel(): void {
 		super.confirmDialog({ delete: false, id: 0 });
 	}
 
-	onDelete() {
+	public onDelete(): void {
 		super.confirmDialog({ delete: true, id: this.contact.id });
 	}
 
-	hasChanged(): boolean {
+	public hasChanged(): boolean {
 		return !this.contactsForm.pristine;
 	}
 }

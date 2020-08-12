@@ -1,11 +1,9 @@
-<mat-dialog-content>
+  <h1 mat-dialog-title  id="title">Kontakt bearbeiten</h1>
+  <div mat-dialog-content>
+
     <div class="contactDetails" [formGroup]="contactsForm">
+
         <div class="row">
-            <div class="col-md-12">
-                <h3>
-                    Kontakt bearbeiten
-                </h3>
-            </div>
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput placeholder="Vorname" formControlName="preName">
@@ -18,8 +16,14 @@
             </div>
         </div>
 
+        <mat-divider></mat-divider>
+
+        <!-- Adresse -->
         <app-osm-address formControlName="address"></app-osm-address>
 
+        <mat-divider></mat-divider>
+
+        <!-- Kontaktmöglichkeiten -->
         <div class="row" formGroupName="contactPossibilities">
             <div class="col-md-3">
                 <mat-form-field>
@@ -39,32 +43,33 @@
             <app-contact-possibilities></app-contact-possibilities>
         </div>
         <mat-chip-list class="contactDetails" #chipList>
-            <mat-chip 
-                (keyup.backspace)="removeTag()" 
-                *ngFor="let item of selectedTags" 
+            <mat-chip
+                (keyup.backspace)="removeTag()"
+                *ngFor="let item of selectedTags"
                 [selectable]="selectable"
                 [removable]="removable"
                 (removed)="remove(item)">
                 {{ item.name }}
                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
             </mat-chip>
-            <input 
-                placeholder="Neuer tag..." 
+            <input
+                placeholder="Neuer tag..."
                 #tagInput
                 [matAutocomplete]="auto"
-                #inputTrigger 
-                [matChipInputFor]="chipList" 
+                #inputTrigger
+                [matChipInputFor]="chipList"
                 [formControl]="tagsControl"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 (keyup.enter)="addTag($event)">
         </mat-chip-list>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-            <mat-option *ngFor="let item of filteredTagsObservable | async" [value]="item" >
+            <mat-option *ngFor="let item of filteredTagsObservable | async" [value]="item">
               {{item}}
             </mat-option>
           </mat-autocomplete>
     </div>
-    <div>
+</div>
+    <div mat-dialog-actions>
         <button mat-raised-button (click)="onDelete()" color="warn">Löschen</button>
         <span class="fill-remaining-space"></span>
         <button mat-raised-button color="primary" title="Abbrechen" (click)="onCancel()">
@@ -75,4 +80,3 @@
             Speichern
         </button>
     </div>
-</mat-dialog-content>

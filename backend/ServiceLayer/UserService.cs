@@ -14,7 +14,6 @@ namespace ServiceLayer
 {
     public interface IUserService
     {
-
         Task<User> FindByNameAsync(string credentialsName);
 
         Task<IdentityResult> CreateCRohMUserAsync(User user);
@@ -28,12 +27,17 @@ namespace ServiceLayer
         Task ChangePasswordForUser(int primKey);
 
         Task<List<User>> GetAsync();
+
         Task<List<User>> GetAllUsersAsync();
+
         Task<User> GetByIdAsync(long id);
+
         Task<List<string>> GetRolesAsync(User user);
 
         Task DeleteUserAsync(User user);
+
         Task<bool> DeletePermissionGroupByUserIdAsync(long groupIdToDelete, long userId);
+
         Task<bool> AddPermissionGroupByUserIdAsync(long permissionGroupId, long userId);
 
         Task<IdentityResult> SetUserLockedAsync(long id);
@@ -41,8 +45,11 @@ namespace ServiceLayer
         Task<string> GetUserNameByIdAsync(long id);
 
         Task<IdentityResult> ChangePasswordForUserAsync(long primKey, string newPassword);
+
         Task UpdateUserAsync(User user);
+
         Task<IdentityResult> SetUserNameAsync(User user, string username);
+
         Task<IdentityResult> UpdateAsync(User user);
     }
 
@@ -50,15 +57,14 @@ namespace ServiceLayer
     {
         private readonly IUserManager _userManager;
 
-
-        private readonly IMailProvider mailProvider;
+        private readonly IMailService mailProvider;
 
         private IUserPermissionGroupRepository userPermissionGroupRepo;
 
         private readonly IPermissionGroupService permissionsService;
         public IQueryable<User> Users => _userManager.Users;
 
-        public UserService(IUserManager userManager, IMailProvider mailProvider, IPermissionGroupService permissionsService,
+        public UserService(IUserManager userManager, IMailService mailProvider, IPermissionGroupService permissionsService,
             IUserPermissionGroupRepository userPermissionGroupRepo)
         {
             this.permissionsService = permissionsService;
@@ -67,9 +73,8 @@ namespace ServiceLayer
             this.mailProvider = mailProvider;
         }
 
-        public UserService(IUserManager userManager, IMailProvider mailProvider)
+        public UserService(IUserManager userManager, IMailService mailProvider)
         {
-
             _userManager = userManager;
             this.mailProvider = mailProvider;
         }
@@ -123,13 +128,13 @@ namespace ServiceLayer
         public async Task<List<User>> GetAsync()
         {
             List<User> users = await _userManager.Users.Include(x => x.Permission).ThenInclude(y => y.PermissionGroup).ToListAsync();
-          /*  foreach (User usr in users)
-            {
-                foreach (PermissionGroup groups in usr.Permission)
-                {
-                    PermissionGroup permissions = await permissionsService.GetPermissionGroupByIdAsync(groups.Id);
-                }
-            } */
+            /*  foreach (User usr in users)
+              {
+                  foreach (PermissionGroup groups in usr.Permission)
+                  {
+                      PermissionGroup permissions = await permissionsService.GetPermissionGroupByIdAsync(groups.Id);
+                  }
+              } */
             return users;
         }
 
@@ -235,7 +240,8 @@ namespace ServiceLayer
                     {
                         return true;
                     }
-                } else
+                }
+                else
                 {
                     return false;
                 }
@@ -293,7 +299,6 @@ namespace ServiceLayer
                             permissionstoStay.Add(perm);
                         }
                     }
-
                 }
 
                 //Lösche Permission wenn sie nicht in anderer zugewiesener Permissiongroup vorkommt.
@@ -358,8 +363,8 @@ namespace ServiceLayer
         public async Task DeleteUserAsync(User user)
         {
             await _userManager.DeleteUserAsync(user);
-		}
-		
+        }
+
         public async Task<IdentityResult> UpdateAsync(User user)
         {
             User userToUpdate = await _userManager.Users.Include(x => x.Permission).FirstOrDefaultAsync(x => x.Id == user.Id);
@@ -395,6 +400,7 @@ namespace ServiceLayer
         Task<User> FindByEmailAsync(string email);
 
         Task<IdentityResult> AddToRoleAsync(User user, string role);
+
         Task<IdentityResult> RemoveRolesAsync(User user, string permission);
 
         Task<IdentityResult> ChangePasswordAsync(User user, string newPassword);
@@ -402,14 +408,15 @@ namespace ServiceLayer
         Task<IdentityResult> SetUserLockedAsync(User user, bool lockoutEnabled);
 
         Task<IdentityResult> UpdateAsync(User user);
-        Task<IList<string>> GetRolesAsync(User user);
 
+        Task<IList<string>> GetRolesAsync(User user);
 
         IQueryable<User> Users { get; }
 
         Task DeleteUserAsync(User user);
 
         Task<IdentityResult> UpdateUserAsync(User user);
+
         Task<IdentityResult> SetUserNameAsync(User user, string username);
     }
 
@@ -499,5 +506,4 @@ namespace ServiceLayer
     }
 
     #endregion DefaultUserManager
-
 }

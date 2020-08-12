@@ -30,7 +30,9 @@ namespace RepositoryLayer
 
     public class ContactRepository : BaseRepository<Contact>, IContactRepository
     {
-        public ContactRepository(CrmContext context) : base(context) { }
+        public ContactRepository(CrmContext context) : base(context)
+        {
+        }
 
         public async Task<List<Contact>> GetAllContactsWithAllIncludesAsync()
         {
@@ -109,7 +111,7 @@ namespace RepositoryLayer
                 {
                     originalContact.ContactPossibilities.ContactEntries.Remove(entry);
                 }
-                
+
                 foreach (ContactPossibilitiesEntry entry in contact.ContactPossibilities.ContactEntries)
                 {
                     if (entry.Id != 0)
@@ -124,7 +126,7 @@ namespace RepositoryLayer
                     else
                     {
                         originalContact.ContactPossibilities.ContactEntries.Add(entry);
-                    }                    
+                    }
                 }
                 List<Tag> tagsToAdd = new List<Tag>();
                 List<Tag> tagsToRemove = new List<Tag>();
@@ -155,7 +157,7 @@ namespace RepositoryLayer
                 originalContact.PreName = contact.PreName;
                 await UpdateAsync(originalContact);
                 return true;
-            } 
+            }
             else
             {
                 return false;

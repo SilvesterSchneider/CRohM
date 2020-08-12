@@ -16,14 +16,15 @@ namespace ServiceLayer
         /// <param name="id">the contact id</param>
         /// <returns>the text</returns>
         Task<string> GetContactInformationAsTextAsync(long id);
-        
+
         Task SendDisclosure(long id);
     }
 
     public class ContactService : ContactRepository, IContactService
     {
-        private readonly IMailProvider mailProvider;
-        public ContactService(CrmContext context, IMailProvider mailProvider) : base(context)
+        private readonly IMailService mailProvider;
+
+        public ContactService(CrmContext context, IMailService mailProvider) : base(context)
         {
             this.mailProvider = mailProvider;
         }

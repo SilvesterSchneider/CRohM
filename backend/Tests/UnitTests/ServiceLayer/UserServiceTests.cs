@@ -16,7 +16,7 @@ namespace UnitTests.ServiceLayer
         public void CreateCRohMUserAsync_WorksCorrectly()
         {
             // Arrange
-            var mockMailProvider = new Mock<IMailProvider>();
+            var mockMailProvider = new Mock<IMailService>();
             var mockUserManager = new Mock<IUserManager>();
             mockUserManager.Setup(manager => manager.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
@@ -38,7 +38,7 @@ namespace UnitTests.ServiceLayer
         {
             // Arrange
             var mockUserManager = new Mock<IUserManager>();
-            var mockMailProvider = new Mock<IMailProvider>();
+            var mockMailProvider = new Mock<IMailService>();
             var sut = new UserService(mockUserManager.Object, mockMailProvider.Object);
 
             var users = new List<User>()
@@ -64,7 +64,7 @@ namespace UnitTests.ServiceLayer
         {
             // Arrange
             var mockUserManager = new Mock<IUserManager>();
-            var mockMailProvider = new Mock<IMailProvider>();
+            var mockMailProvider = new Mock<IMailService>();
             var sut = new UserService(mockUserManager.Object, mockMailProvider.Object);
 
             var users = new List<User>()

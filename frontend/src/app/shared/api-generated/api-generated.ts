@@ -752,18 +752,13 @@ export class ContactService {
     }
 
     /**
-     * @param userIdOfChange (optional) 
      * @return successfully updated
      */
-    put(contact: ContactDto, id: number, userIdOfChange?: number | undefined): Observable<ContactDto> {
-        let url_ = this.baseUrl + "/api/contact/{id}?";
+    put(id: number, contact: ContactDto): Observable<ContactDto> {
+        let url_ = this.baseUrl + "/api/contact/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (userIdOfChange === null)
-            throw new Error("The parameter 'userIdOfChange' cannot be null.");
-        else if (userIdOfChange !== undefined)
-            url_ += "userIdOfChange=" + encodeURIComponent("" + userIdOfChange) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(contact);
@@ -1022,6 +1017,77 @@ export class ContactService {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class DataProtectionService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @return successfully send message
+     */
+    sendUpdateMessage(sendInoInfoDto: SendInfoDTO): Observable<void> {
+        let url_ = this.baseUrl + "/api/DataProtection";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(sendInoInfoDto);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSendUpdateMessage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSendUpdateMessage(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSendUpdateMessage(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            result400 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("not successful", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return _observableOf<void>(<any>null);
             }));
@@ -2962,6 +3028,12 @@ export interface HistoryElementCreateDto {
     date: string;
     type: HistoryElementType;
     comment: string;
+}
+
+export interface SendInfoDTO {
+    delete: boolean;
+    contactChanges?: any | undefined;
+    contact: ContactDto;
 }
 
 export interface EducationalOpportunityDto {

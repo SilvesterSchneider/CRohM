@@ -1,3 +1,5 @@
+// Copyright (C) Christ Electronic Systems GmbH
+
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Net;
@@ -34,7 +36,6 @@ namespace WebApi.Controllers
             this.contactService = contactService;
         }
 
-
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
@@ -44,7 +45,7 @@ namespace WebApi.Controllers
 
             return Ok(contactsDto);
         }
-        
+
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
@@ -75,13 +76,13 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
-        public async Task<IActionResult> Put([FromBody]ContactDto contact, [FromRoute]long id, [FromQuery]long userIdOfChange)
+        public async Task<IActionResult> Put([FromRoute]long id, [FromBody]ContactDto contact)
         {
             if (contact == null)
             {
                 return Conflict();
             }
-            string usernameOfModification = await userService.GetUserNameByIdAsync(userIdOfChange);
+            string usernameOfModification = await userService.GetUserNameByIdAsync(id);
 
             var mappedContact = _mapper.Map<Contact>(contact);
             await modService.UpdateContactAsync(usernameOfModification, await contactService.GetByIdAsync(id), mappedContact, true);
@@ -101,7 +102,6 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.Created, typeof(ContactDto), Description = "successfully created")]
         public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate, [FromQuery]long userIdOfChange)
         {
-
             Contact contact = await contactService.CreateAsync(_mapper.Map<Contact>(contactToCreate));
 
             var contactDto = _mapper.Map<ContactDto>(contact);
@@ -116,7 +116,6 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
         public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id, [FromQuery]long userIdOfChange)
         {
-
             await contactService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
             string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
             await modService.UpdateContactByHistoryElementAsync(userNameOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);

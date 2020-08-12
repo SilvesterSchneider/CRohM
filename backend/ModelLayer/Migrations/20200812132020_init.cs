@@ -556,12 +556,12 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 1L, "c1f7d59f-ad4c-41b5-8b7b-ce0b93789ee7", "Admin", "ADMIN", null, 0 });
+                values: new object[] { 1L, "9d4165eb-e7c4-4d63-8b7b-d8e871b87634", "Admin", "ADMIN", null, 0 });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 2L, "ce38126d-fa99-4fbc-820a-181e4a126f0f", "DeleteUser", "DELETEUSER", null, 0 });
+                values: new object[] { 2L, "6847b131-bc03-4364-94db-252acd9d0a28", "DeleteUser", "DELETEUSER", null, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
