@@ -4,6 +4,7 @@ import { CreateRoleDialogComponent } from './create-role/create-role.component';
 import { UpdateRoleDialogComponent } from './update-role/update-role.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { PermissionGroupDto, PermissionDto, PermissionsService } from 'src/app/shared/api-generated/api-generated';
+import { MatTableDataSource } from '@angular/material/table';
 
 interface LooseTableObject {
   [key: string]: any;
@@ -20,6 +21,7 @@ export class RolesComponent implements OnInit {
   permissionGroups: PermissionGroupDto[] = new Array<PermissionGroupDto>();
   permissions: PermissionDto[] = new Array<PermissionDto>();
   public displayedColumns: string[] = ['permission'];
+  public dataSource = new MatTableDataSource();
 
   constructor(public dialog: MatDialog, private permissionService: PermissionsService) { }
 
@@ -129,6 +131,11 @@ export class RolesComponent implements OnInit {
     this.permissionGroups.forEach(role => {
       this.displayedColumns.push(role.name);
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }
 

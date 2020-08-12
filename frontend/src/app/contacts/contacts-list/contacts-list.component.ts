@@ -11,6 +11,7 @@ import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
 import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
 
 @Component({
   selector: 'app-contacts-list',
@@ -28,13 +29,12 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<ContactDto>();
 
   constructor(
-    private userService: UsersService,
     private service: ContactService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dialog: MatDialog,
     private mediaObserver: MediaObserver,
     private jwt: JwtService) {
-      this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
+    this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
       if (change[0].mqAlias !== this.currentScreenWidth) {
         this.currentScreenWidth = change[0].mqAlias;
         this.setupTable();
@@ -81,11 +81,21 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   private getData() {
     this.contacts = this.service.getAll();
     this.contacts.subscribe(x => {
-       this.length = x.length;
-       this.dataSource.data = x;
+      this.length = x.length;
+      this.dataSource.data = x;
     });
     this.changeDetectorRefs.detectChanges();
   }
+
+  openDisclosureDialog(id: number) {
+    this.service.getById(id).subscribe((x) => {
+    const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.contacts = this.service.getAll();
+    });
+  });
+}
 
   openAddDialog() {
     const dialogRef = this.dialog.open(ContactsAddDialogComponent, {

@@ -6,7 +6,7 @@
             <form >
             <mat-form-field>
               <mat-label>Suche</mat-label>
-              <input matInput placeholder="User..." >
+              <input matInput (keyup)="applyFilter($event)" placeholder="Rolle..." >
             </mat-form-field>
           </form>
         </div>
@@ -18,7 +18,7 @@
     </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-table [dataSource]="tableData" class="mat-elevation-z8">
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <ng-container *ngFor="let col of displayedColumns" >
     <ng-container matColumnDef="{{col}}" >        

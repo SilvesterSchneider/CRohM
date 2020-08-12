@@ -7,6 +7,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="IKVM" Version="8.1.5717" />
+    <PackageReference Include="itext7" Version="7.1.11" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
   </ItemGroup>
 
@@ -16,6 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="itext.io">
+      <HintPath>C:\Users\Markus\Downloads\lib\net40\itext.io.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.kernel">
+      <HintPath>C:\Users\Markus\Downloads\lib\net40\itext.kernel.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.layout">
+      <HintPath>C:\Users\Markus\Downloads\lib\net40\itext.layout.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNetCore.Authentication.Abstractions">
       <HintPath>packages\Microsoft.AspNetCore.Authentication.Abstractions.dll</HintPath>
       <Private>true</Private>

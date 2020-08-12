@@ -61,7 +61,6 @@ namespace WebApi.Controllers
             return Ok(contactDto);
         }
 
-
         [HttpGet("PartName")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get([FromQuery]string name)
@@ -121,6 +120,15 @@ namespace WebApi.Controllers
             await contactService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
             string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
             await modService.UpdateContactByHistoryElementAsync(userNameOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
+            return Ok();
+        }
+
+        // sends disclosure per mail
+        [HttpPost("{id}/disclosure")] // template ^= zusammen mit basis ganz oben -> pfad für http request
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
+        public async Task<IActionResult> SendDisclosureById([FromRoute] long id)
+        {
+            await contactService.SendDisclosure(id);
             return Ok();
         }
 

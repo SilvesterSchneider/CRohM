@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class ram_ds7_init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -556,12 +556,12 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 1L, "63b15a77-2111-43df-8515-bdeec59e44a2", "Admin", "ADMIN", null, 0 });
+                values: new object[] { 1L, "c1f7d59f-ad4c-41b5-8b7b-ce0b93789ee7", "Admin", "ADMIN", null, 0 });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 2L, "1e1317e0-5068-47ca-85ae-b0700bcb2a6b", "DeleteUser", "DELETEUSER", null, 0 });
+                values: new object[] { 2L, "ce38126d-fa99-4fbc-820a-181e4a126f0f", "DeleteUser", "DELETEUSER", null, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
