@@ -1,3 +1,5 @@
+// Copyright (C) Christ Electronic Systems GmbH
+
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Net;
@@ -34,7 +36,6 @@ namespace WebApi.Controllers
             this.contactService = contactService;
         }
 
-
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
@@ -44,7 +45,7 @@ namespace WebApi.Controllers
 
             return Ok(contactsDto);
         }
-        
+
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
@@ -60,7 +61,6 @@ namespace WebApi.Controllers
             var contactDto = _mapper.Map<ContactDto>(contact);
             return Ok(contactDto);
         }
-
 
         [HttpGet("PartName")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
@@ -102,7 +102,6 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.Created, typeof(ContactDto), Description = "successfully created")]
         public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate, [FromQuery]long userIdOfChange)
         {
-
             Contact contact = await contactService.CreateAsync(_mapper.Map<Contact>(contactToCreate));
 
             var contactDto = _mapper.Map<ContactDto>(contact);
@@ -117,10 +116,18 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
         public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id, [FromQuery]long userIdOfChange)
         {
-
             await contactService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
             string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
             await modService.UpdateContactByHistoryElementAsync(userNameOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
+            return Ok();
+        }
+
+        // sends disclosure per mail
+        [HttpPost("{id}/disclosure")] // template ^= zusammen mit basis ganz oben -> pfad für http request
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
+        public async Task<IActionResult> SendDisclosureById([FromRoute] long id)
+        {
+            await contactService.SendDisclosure(id);
             return Ok();
         }
 
