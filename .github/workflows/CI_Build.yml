@@ -79,7 +79,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         image_name: crohmcrms/crohm_crms
-        image_tag: sha-${GITHUB_SHA::7}
+        #image_tag: ${{ GITHUB_REF##*/ }},sha-${{ GITHUB_SHA::7 }}
 
   build_app:
     needs: [build_frontend, build_backend]
