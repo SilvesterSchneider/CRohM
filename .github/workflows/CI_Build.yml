@@ -3,68 +3,68 @@ on:
   push:
 
 jobs:
-  build_frontend:
-    runs-on: windows-latest
-    steps:
+  # build_frontend:
+  #   runs-on: windows-latest
+  #   steps:
 
-    - name: Checkout
-      uses: actions/checkout@v2
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12'
+  #   - name: Setup Node.js
+  #     uses: actions/setup-node@v1
+  #     with:
+  #       node-version: '12'
 
-    - name: Get NPM Cache Directory
-      id: npm-cache
-      run: |
-        echo "::set-output name=dir::$(npm config get cache)"
+  #   - name: Get NPM Cache Directory
+  #     id: npm-cache
+  #     run: |
+  #       echo "::set-output name=dir::$(npm config get cache)"
 
-    - name: NPM Cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ steps.npm-cache.outputs.dir }}
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+  #   - name: NPM Cache
+  #     uses: actions/cache@v2
+  #     with:
+  #       path: ${{ steps.npm-cache.outputs.dir }}
+  #       key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+  #       restore-keys: |
+  #         ${{ runner.os }}-node-
 
-    - name: Install Dependencies
-      run: |
-        cd frontend
-        npm ci
+  #   - name: Install Dependencies
+  #     run: |
+  #       cd frontend
+  #       npm ci
 
-    - name: Build
-      run: |
-        cd frontend
-        npm run build -- --output-path=dist
+  #   - name: Build
+  #     run: |
+  #       cd frontend
+  #       npm run build -- --output-path=dist
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: frontend-dist
-        path: frontend/dist/*
+  #   - name: Upload Artifact
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: frontend-dist
+  #       path: frontend/dist/*
 
-  build_backend:
-    runs-on: windows-latest
-    steps:
+  # build_backend:
+  #   runs-on: windows-latest
+  #   steps:
 
-    - name: Checkout
-      uses: actions/checkout@v2
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
 
-    - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v1.5.0
+  #   - name: Setup .NET Core SDK
+  #     uses: actions/setup-dotnet@v1.5.0
 
-    - name: Install Dependencies
-      run: dotnet restore ./backend/WebApi/WebApi.csproj
+  #   - name: Install Dependencies
+  #     run: dotnet restore ./backend/WebApi/WebApi.csproj
 
-    - name: Build
-      run: dotnet publish ./backend/WebApi/WebApi.csproj -c Release -o ./backend-dist
+  #   - name: Build
+  #     run: dotnet publish ./backend/WebApi/WebApi.csproj -c Release -o ./backend-dist
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: backend-dist
-        path: backend-dist/*
+  #   - name: Upload Artifact
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: backend-dist
+  #       path: backend-dist/*
 
   build_docker:
     runs-on: ubuntu-latest
@@ -75,15 +75,13 @@ jobs:
 
     - name: Test env
       env:
-        BRANCH_NAME_RAW: ${{ github.ref }}
-        BRANCH_NAME: ${env.GITHUB_REF##*/}
-        SHA7_RAW: ${{ github.sha }}
-        SHA7: ${GITHUB_SHA::7}
+        BRANCH_NAME: "${env.GITHUB_REF##*/}"
+        SHA7: "sha-${GITHUB_SHA::7}"
       run: |
         echo "${GITHUB_REF##*/}"
+        echo "sha-${GITHUB_SHA::7}"
+        echo "$BRANCH_NAME"
         echo "$SHA7"
-        echo "$BRANCH_NAME_RAW"
-        echo "$SHA7_RAW"
 
 #    - name: Build and Push
 #      uses: whoan/docker-build-with-cache-action@v5
@@ -96,77 +94,77 @@ jobs:
 #        image_name: crohmcrms/crohm_crms
 #        image_tag: $BRANCH_NAME,$SHA7
 
-  build_app:
-    needs: [build_frontend, build_backend]
-    runs-on: windows-latest
-    steps:
+  # build_app:
+  #   needs: [build_frontend, build_backend]
+  #   runs-on: windows-latest
+  #   steps:
 
-    - name: Download Backend Artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: backend-dist
-        path: app
+  #   - name: Download Backend Artifact
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: backend-dist
+  #       path: app
 
-    - name: Download Frontend Artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: frontend-dist
-        path: app/wwwroot
+  #   - name: Download Frontend Artifact
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: frontend-dist
+  #       path: app/wwwroot
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: app-dist
-        path: app/*
+  #   - name: Upload Artifact
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: app-dist
+  #       path: app/*
 
-  test_integration:
-    needs: build_docker
-    runs-on: ubuntu-latest
-    steps:
+  # test_integration:
+  #   needs: build_docker
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-    - name: Checkout
-      uses: actions/checkout@v2
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12'
+  #   - name: Setup Node.js
+  #     uses: actions/setup-node@v1
+  #     with:
+  #       node-version: '12'
 
-    - name: NPM Cache
-      uses: actions/cache@v2
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+  #   - name: NPM Cache
+  #     uses: actions/cache@v2
+  #     with:
+  #       path: ~/.npm
+  #       key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+  #       restore-keys: |
+  #         ${{ runner.os }}-node-
 
-    - name: Install Integration Test Dependencies
-      run: |
-        cd tests
-        npm ci
+  #   - name: Install Integration Test Dependencies
+  #     run: |
+  #       cd tests
+  #       npm ci
 
-    - name: Start Server
-      run: sh ./misc/docker-compose-up.sh
+  #   - name: Start Server
+  #     run: sh ./misc/docker-compose-up.sh
 
-    - name: Waiting for Server
-      run: sh ./misc/wait-for-server.sh
+  #   - name: Waiting for Server
+  #     run: sh ./misc/wait-for-server.sh
 
-    - name: Cypress run
-      uses: cypress-io/github-action@v2
-      with:
-        working-directory: tests
+  #   - name: Cypress run
+  #     uses: cypress-io/github-action@v2
+  #     with:
+  #       working-directory: tests
 
-    - name: Stop Server
-      run: sh ./misc/docker-compose-down.sh
+  #   - name: Stop Server
+  #     run: sh ./misc/docker-compose-down.sh
 
-    - name: Upload Screenshot Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: test_integration_screenshots
-        path: tests/screenshots/*
+  #   - name: Upload Screenshot Artifacts
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: test_integration_screenshots
+  #       path: tests/screenshots/*
 
-    - name: Upload Video Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: test_integration_videos
-        path: tests/videos/*
+  #   - name: Upload Video Artifacts
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: test_integration_videos
+  #       path: tests/videos/*
