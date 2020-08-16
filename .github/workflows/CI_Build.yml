@@ -95,7 +95,7 @@ jobs:
 
   integration_test:
     needs: build_docker
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
 
     - name: Checkout
@@ -117,7 +117,7 @@ jobs:
 
     - name: Waiting for Service
       run: sh ./misc/wait-for-server.sh
-  
+
     - name: Cypress run
       uses: cypress-io/github-action@v2
       with:
