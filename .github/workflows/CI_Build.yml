@@ -122,15 +122,15 @@ jobs:
       with:
         node-version: '12'
 
-    - name: NPM Cache
-      uses: actions/cache@v2
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+    # - name: NPM Cache
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ~/.npm
+    #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-node-
 
-    - name: Install Integration Test Dependencies
+    - name: Install Dependencies
       run: |
         cd tests
         npm ci
@@ -141,7 +141,7 @@ jobs:
     - name: Waiting for Server
       run: sh ./misc/wait-for-server.sh
 
-    - name: Cypress run
+    - name: Test
       uses: cypress-io/github-action@v2
       with:
         working-directory: tests
