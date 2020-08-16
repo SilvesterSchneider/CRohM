@@ -7,4 +7,3 @@ describe('Login', () => {
       cy.get('.mat-button-wrapper').click();
     })
   })
-  
