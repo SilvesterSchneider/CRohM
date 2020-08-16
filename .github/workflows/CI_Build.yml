@@ -110,7 +110,6 @@ jobs:
         node-version: '12'
 
     - name: Install Integration Test Dependencies
-      working-directory: tests
       run: |
         cd tests
         npm ci
