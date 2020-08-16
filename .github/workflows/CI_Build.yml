@@ -84,7 +84,7 @@ jobs:
         echo "$SHA7"
         echo $BRANCH_NAME
         echo $SHA7
-        echo "::set-output name={BRANCH_NAME}::$(echo "${GITHUB_REF##*/}")"
+        echo "::set-output name=BRANCH_NAME::$(echo "${GITHUB_REF##*/}")"
         echo {{ env.BRANCH_NAME }}
 #        echo "::set-output name={SHA7}::$(echo "sha-${GITHUB_SHA::7}")"
 
