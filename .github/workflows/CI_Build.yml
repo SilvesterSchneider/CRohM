@@ -82,8 +82,8 @@ jobs:
         echo "sha-${GITHUB_SHA::7}"
         echo "$BRANCH_NAME"
         echo "$SHA7"
-        echo ${{ env.BRANCH_NAME }}
-        echo ${{ env.SHA7 }}
+        echo $BRANCH_NAME
+        echo $SHA7
 
     # - name: Build and Push
     #   uses: whoan/docker-build-with-cache-action@v5
