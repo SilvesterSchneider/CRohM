@@ -3,56 +3,56 @@ on:
   push:
 
 jobs:
-  build_frontend:
-    runs-on: windows-latest
-    steps:
-
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12'
-
-    - name: Install Dependencies
-      run: |
-        cd frontend
-        npm ci
-
-    - name: Build
-      run: |
-        cd frontend
-        npm run build -- --output-path=dist
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: frontend-dist
-        path: frontend/dist/*
-
-  build_backend:
-    runs-on: windows-latest
-    steps:
-
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v1.5.0
-
-    - name: Install Dependencies
-      run: dotnet restore ./backend/WebApi/WebApi.csproj
-
-    - name: Build
-      run: dotnet publish ./backend/WebApi/WebApi.csproj -c Release -o ./backend-dist
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: backend-dist
-        path: backend-dist/*
-
+#  build_frontend:
+#    runs-on: windows-latest
+#    steps:
+#
+#    - name: Checkout
+#      uses: actions/checkout@v2
+#
+#    - name: Setup Node.js
+#      uses: actions/setup-node@v1
+#      with:
+#        node-version: '12'
+#
+#    - name: Install Dependencies
+#      run: |
+#        cd frontend
+#        npm ci
+#
+#    - name: Build
+#      run: |
+#        cd frontend
+#        npm run build -- --output-path=dist
+#
+#    - name: Upload Artifact
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: frontend-dist
+#        path: frontend/dist/*
+#
+#  build_backend:
+#    runs-on: windows-latest
+#    steps:
+#
+#    - name: Checkout
+#      uses: actions/checkout@v2
+#
+#    - name: Setup .NET Core SDK
+#      uses: actions/setup-dotnet@v1.5.0
+#
+#    - name: Install Dependencies
+#      run: dotnet restore ./backend/WebApi/WebApi.csproj
+#
+#    - name: Build
+#      run: dotnet publish ./backend/WebApi/WebApi.csproj -c Release -o ./backend-dist
+#
+#    - name: Upload Artifact
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: backend-dist
+#        path: backend-dist/*
+#
   build_docker:
     runs-on: ubuntu-latest
     steps:
@@ -69,26 +69,44 @@ jobs:
         repository: crohmcrms/crohm_crms
         tag_with_ref: true
         tag_with_sha: true
+#
+#  build_app:
+#    needs: [build_frontend, build_backend]
+#    runs-on: windows-latest
+#    steps:
+#
+#    - name: Download Backend Artifact
+#      uses: actions/download-artifact@v2
+#      with:
+#        name: backend-dist
+#        path: app
+#
+#    - name: Download Frontend Artifact
+#      uses: actions/download-artifact@v2
+#      with:
+#        name: frontend-dist
+#        path: app/wwwroot
+#
+#    - name: Upload Artifact
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: app-dist
+#        path: app/*
 
-  build_app:
-    needs: [build_frontend, build_backend]
+  integration_test:
+    needs: build_docker
     runs-on: windows-latest
     steps:
 
-    - name: Download Backend Artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: backend-dist
-        path: app
+    - name: Checkout
+      uses: actions/checkout@v2
 
-    - name: Download Frontend Artifact
-      uses: actions/download-artifact@v2
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
       with:
-        name: frontend-dist
-        path: app/wwwroot
+        node-version: '12'
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: app-dist
-        path: app/*
+    - name: Install Dependencies
+      run: |
+        cd tests
+        npm ci
