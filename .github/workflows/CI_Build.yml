@@ -76,7 +76,7 @@ jobs:
     - name: Set env
       id: SET_ENV
       run: |
-        echo "${GITHUB_REF##*/}""
+        echo "${GITHUB_REF##*/}"
         echo "sha-${GITHUB_SHA::7}"
         echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF##*/})"
 
