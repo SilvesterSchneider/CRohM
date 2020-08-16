@@ -75,9 +75,9 @@ jobs:
 
     - name: Test env
       env:
-        BRANCH_NAME_RAW: ${{ github.ref }}
+        BRANCH_NAME_RAW: ${{ github.ref##*/ }}
         BRANCH_NAME: ${env.GITHUB_REF##*/}
-        SHA7_RAW: ${{ github.sha }}
+        SHA7_RAW: ${{ github.sha::7 }}
         SHA7: ${GITHUB_SHA::7}
       run: |
         echo "$BRANCH_NAME"
