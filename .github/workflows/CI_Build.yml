@@ -107,6 +107,7 @@ jobs:
         node-version: '12'
 
     - name: Install Integration Test Dependencies
+      working-directory: tests
       run: |
         cd tests
         npm ci
@@ -116,3 +117,8 @@ jobs:
 
     - name: Waiting for Service
       run: sh ./misc/wait-for-server.sh
+  
+    - name: Cypress run
+      uses: cypress-io/github-action@v2
+      with:
+        working-directory: tests
