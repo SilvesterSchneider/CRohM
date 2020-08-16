@@ -73,16 +73,24 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Build and Push
-      uses: whoan/docker-build-with-cache-action@v5
+    - name: Test env
       env:
         BRANCH_NAME: ${GITHUB_REF##*/}
-        SHA: ${GITHUB_SHA::7}
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        image_name: crohmcrms/crohm_crms
-        image_tag: $BRANCH_NAME,$SHA
+        SHA7: ${GITHUB_SHA::7}
+      run: |
+        echo "$BRANCH_NAME"
+        echo "$SHA7"
+
+#    - name: Build and Push
+#      uses: whoan/docker-build-with-cache-action@v5
+#      env:
+#        BRANCH_NAME: ${GITHUB_REF##*/}
+#        SHA7: ${GITHUB_SHA::7}
+#      with:
+#        username: ${{ secrets.DOCKER_USERNAME }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
+#        image_name: crohmcrms/crohm_crms
+#        image_tag: $BRANCH_NAME,$SHA7
 
   build_app:
     needs: [build_frontend, build_backend]
