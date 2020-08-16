@@ -73,22 +73,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Test env
-      env:
-        BRANCH_NAME: "${env.GITHUB_REF##*/}"
-        SHA7: "sha-${GITHUB_SHA::7}"
+    - name: Set env
+      id: SET_ENV
       run: |
         echo "${GITHUB_REF##*/}""
         echo "sha-${GITHUB_SHA::7}"
-        echo "$BRANCH_NAME"
-        echo "$SHA7"
-        echo $BRANCH_NAME
-        echo $SHA7
         echo "::set-output name=BRANCH_NAME::$(echo "${GITHUB_REF##*/}")"
-        echo {{ env.BRANCH_NAME }}
-#        echo "::set-output name={SHA7}::$(echo "sha-${GITHUB_SHA::7}")"
 
-#        echo {{ env.SHA7 }}
+    - name: Get env
+      run: |
+        echo "${{ steps.SET_ENV.outputs.BRANCH_NAME }}"
 
     # - name: Build and Push
     #   uses: whoan/docker-build-with-cache-action@v5
