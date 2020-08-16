@@ -60,6 +60,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Init Cache
+      uses: satackey/action-docker-layer-caching@v0.0.8
+
     - name: Build and Push
       uses: docker/build-push-action@v1
       with:
