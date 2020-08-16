@@ -60,7 +60,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Init Cache
+    - name: Docker Cache
       uses: satackey/action-docker-layer-caching@v0.0.8
 
     - name: Build and Push
@@ -96,7 +96,7 @@ jobs:
 #        name: app-dist
 #        path: app/*
 
-  integration_test:
+  test_integration:
     needs: build_docker
     runs-on: ubuntu-latest
     steps:
