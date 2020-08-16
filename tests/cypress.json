@@ -1,0 +1,9 @@
+{
+    "baseUrl": "https://localhost",
+    "fixturesFolder": "fixtures",
+    "integrationFolder": "integration",
+    "screenshotsFolder": "screenshots",
+    "videosFolder": "videos",
+    "pluginsFile": "plugins/index.js",
+    "supportFile": "support/index.js"
+}
