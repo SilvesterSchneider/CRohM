@@ -78,12 +78,16 @@ jobs:
         BRANCH_NAME: "${env.GITHUB_REF##*/}"
         SHA7: "sha-${GITHUB_SHA::7}"
       run: |
-        echo "${GITHUB_REF##*/}"
+        echo "${GITHUB_REF##*/}""
         echo "sha-${GITHUB_SHA::7}"
         echo "$BRANCH_NAME"
         echo "$SHA7"
         echo $BRANCH_NAME
         echo $SHA7
+        echo "::set-output name={BRANCH_NAME}::$(echo "${GITHUB_REF##*/}")"
+        echo "::set-output name={SHA7}::$(echo "sha-${GITHUB_SHA::7}")"
+        echo {{ env.BRANCH_NAME }}
+        echo {{ env.SHA7 }}
 
     # - name: Build and Push
     #   uses: whoan/docker-build-with-cache-action@v5
