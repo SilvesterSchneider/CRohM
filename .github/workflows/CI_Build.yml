@@ -106,7 +106,13 @@ jobs:
       with:
         node-version: '12'
 
-    - name: Install Dependencies
+    - name: Install Integration Test Dependencies
       run: |
         cd tests
         npm ci
+
+    - name: Start Server for Testing
+      run: sh ./misc/docker-compose-up.sh
+
+    - name: Waiting for Service
+      run: sh ./misc/wait-for-server.sh
