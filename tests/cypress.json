@@ -5,5 +5,9 @@
     "screenshotsFolder": "screenshots",
     "videosFolder": "videos",
     "pluginsFile": "plugins/index.js",
-    "supportFile": "support/index.js"
+    "supportFile": "support/index.js",
+    "reporter": "junit",
+    "reporterOptions": {
+        "mochaFile": "reports/cypress.xml"
+    }
 }

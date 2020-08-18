@@ -136,6 +136,7 @@ jobs:
         npm ci
 
     - name: Start Server
+      id: test_integration_start_server
       run: sh ./misc/docker-compose-up.sh
 
     - name: Waiting for Server
@@ -146,7 +147,13 @@ jobs:
       with:
         working-directory: tests
 
+    - name: Collect Report
+      uses: shyim/junit-report-annotations-action@0.2.0
+      with:
+        path: tests/reports/cypress.xml
+
     - name: Stop Server
+      if: ${{ steps.test_integration_start_server.conclusion == "success" }}
       run: sh ./misc/docker-compose-down.sh
 
     - name: Upload Screenshot Artifacts
