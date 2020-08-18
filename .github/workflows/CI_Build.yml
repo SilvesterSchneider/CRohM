@@ -138,18 +138,18 @@ jobs:
         path: tests/reports/cypress.xml
 
     - name: Stop Server
-      if: always()
+      if: ${{ always() }}
       run: sh ./misc/docker-compose-down.sh
 
     - name: Upload Screenshot Artifacts
-      if: always()
+      if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
         name: test_integration_screenshots
         path: tests/screenshots/*
 
     - name: Upload Video Artifacts
-      if: always()
+      if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
         name: test_integration_videos
