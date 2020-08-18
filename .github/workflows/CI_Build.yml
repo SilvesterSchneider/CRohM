@@ -121,21 +121,7 @@ jobs:
       with:
         node-version: '12'
 
-    # - name: NPM Cache
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ~/.npm
-    #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-node-
-
-    - name: Install Dependencies
-      run: |
-        cd tests
-        npm ci
-
     - name: Start Server
-      id: test_integration_start_server
       run: sh ./misc/docker-compose-up.sh
 
     - name: Waiting for Server
@@ -152,16 +138,18 @@ jobs:
         path: tests/reports/cypress.xml
 
     - name: Stop Server
-      if: steps.test_integration_start_server.conclusion == 'success'
+      if: always()
       run: sh ./misc/docker-compose-down.sh
 
     - name: Upload Screenshot Artifacts
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: test_integration_screenshots
         path: tests/screenshots/*
 
     - name: Upload Video Artifacts
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: test_integration_videos
