@@ -133,10 +133,10 @@ jobs:
     #     node-version: '12'
 
     - name: Start Server
-      run: sh ./misc/docker-compose-up.sh
+      run: bash ./misc/docker-compose-up.sh
 
     - name: Waiting for Server
-      run: sh ./misc/wait-for-server.sh
+      run: bash ./misc/wait-for-server.sh
 
     - name: Test
       uses: cypress-io/github-action@v2
@@ -148,11 +148,20 @@ jobs:
       uses: shyim/junit-report-annotations-action@0.2.0
       with:
         accessToken: ${{ secrets.GITHUB_TOKEN }}
+        jobName: 'test_integration'
+        path: tests/reports/cypress.xml
+
+    - name: Collect Report
+      if: ${{ always() }}
+      uses: ashley-taylor/junit-report-annotations-action@1.3
+      with:
+        accessToken: ${{ secrets.GITHUB_TOKEN }}
+        name: 'test_integration'
         path: tests/reports/cypress.xml
 
     - name: Stop Server
       if: ${{ always() }}
-      run: sh ./misc/docker-compose-down.sh
+      run: bash ./misc/docker-compose-down.sh
 
     - name: Upload Screenshot Artifacts
       if: ${{ always() }}

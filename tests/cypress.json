@@ -6,7 +6,7 @@
     "videosFolder": "videos",
     "pluginsFile": "plugins/index.js",
     "supportFile": "support/index.js",
-    "reporter": "junit",
+    "reporter": "cypress-junit-reporter",
     "reporterOptions": {
         "mochaFile": "reports/cypress.xml"
     }
