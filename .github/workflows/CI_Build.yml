@@ -133,6 +133,7 @@ jobs:
         working-directory: tests
 
     - name: Collect Report
+      if: ${{ always() }}
       uses: shyim/junit-report-annotations-action@0.2.0
       with:
         path: tests/reports/cypress.xml
