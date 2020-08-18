@@ -9,18 +9,21 @@ describe('Login', () => {
         // Wait for cookie storage
         cy.wait(1000);
 
+
+        cy.get('body').then(($body) => {
         // Get change password form
-        if (cy.contains('Passwort festlegen'))
-        {
-            // Change password
-            cy.get('#change-password').type('@dm1n1stR4tOr')
+            if ($body.find('#change-password-form'))
+            {
+                // Change password
+                cy.get('#change-password').type('@dm1n1stR4tOr')
 
-            // Accept new password
-            cy.get('#change-button').click();
+                // Accept new password
+                cy.get('#change-button').click();
 
-            // Proof successfull login
-            proofSuccesLogin();
-        }
+                // Proof successfull login
+                proofSuccesLogin();
+            }
+        })
     });
 
     it('does not accept wrong password', () => {
