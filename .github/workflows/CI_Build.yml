@@ -17,8 +17,7 @@ jobs:
 
     - name: Get NPM Cache Directory
       id: npm-cache
-      run: |
-        echo "::set-output name=dir::$(npm config get cache)"
+      run: echo "::set-output name=dir::$(npm config get cache)"
 
     - name: NPM Cache
       uses: actions/cache@v2
@@ -153,7 +152,7 @@ jobs:
         path: tests/reports/cypress.xml
 
     - name: Stop Server
-      if: ${{ steps.test_integration_start_server.conclusion == "success" }}
+      if: steps.test_integration_start_server.conclusion == 'success'
       run: sh ./misc/docker-compose-down.sh
 
     - name: Upload Screenshot Artifacts
