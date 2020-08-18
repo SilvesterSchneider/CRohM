@@ -155,7 +155,7 @@ jobs:
       if: ${{ always() }}
       uses: ashley-taylor/junit-report-annotations-action@1.3
       with:
-        accessToken: ${{ secrets.GITHUB_TOKEN }}
+        access-token: ${{ secrets.GITHUB_TOKEN }}
         name: 'test_integration'
         path: tests/reports/cypress.xml
 
