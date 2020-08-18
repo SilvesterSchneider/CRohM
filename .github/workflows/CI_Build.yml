@@ -127,10 +127,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12'
+    # - name: Setup Node.js
+    #   uses: actions/setup-node@v1
+    #   with:
+    #     node-version: '12'
 
     - name: Start Server
       run: sh ./misc/docker-compose-up.sh
@@ -147,7 +147,7 @@ jobs:
       if: ${{ always() }}
       uses: shyim/junit-report-annotations-action@0.2.0
       with:
-        access-token: ${{ secrets.GITHUB_TOKEN }}
+        accessToken: ${{ secrets.GITHUB_TOKEN }}
         path: tests/reports/cypress.xml
 
     - name: Stop Server
