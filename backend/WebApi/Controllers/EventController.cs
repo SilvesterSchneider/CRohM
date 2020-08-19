@@ -75,7 +75,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(EventDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> Put([FromBody]EventDto eventToModify, [FromRoute]long id, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> Put([FromBody]EventDto eventToModify, [FromRoute]long id)
         {
             if (eventToModify == null)
             {
@@ -85,7 +85,7 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
-            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             Event oldOne = await eventService.GetEventByIdWithAllIncludesAsync(id);
             List<Contact> contactsParticipated = new List<Contact>();
             foreach (ParticipatedDto part in eventToModify.Participated)
@@ -96,7 +96,7 @@ namespace WebApi.Controllers
                     contactsParticipated.Add(cont);
                 }
             }
-            await modService.UpdateEventsAsync(userNameOfChange, oldOne, eventToModify, contactsParticipated);
+            await modService.UpdateEventsAsync(userOfChange, oldOne, eventToModify, contactsParticipated);
             if (await eventService.ModifyEventAsync(eventToModify))
             {
                 await modService.CommitChanges();
@@ -113,19 +113,19 @@ namespace WebApi.Controllers
         [HttpPut("{id}/addContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
-        public async Task<IActionResult> AddContact([FromRoute]long id, [FromBody]long contactId, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> AddContact([FromRoute]long id, [FromBody]long contactId)
         {
             EventContact result = await eventService.AddEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
             if (result != null)
             {
-                string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+                User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
                 string contactName = string.Empty;
                 Contact contactToUse = await contactService.GetByIdAsync(contactId);
                 if (contactToUse != null)
                 {
                     contactName = contactToUse.PreName + " " + contactToUse.Name;
                 }
-                await modService.ChangeContactsOfEvent(id, contactName, false, userNameOfChange);
+                await modService.ChangeContactsOfEvent(id, contactName, false, userOfChange);
                 return Ok();
             }
             else
@@ -143,19 +143,19 @@ namespace WebApi.Controllers
         [HttpPut("{id}/removeContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
-        public async Task<IActionResult> RemoveContact([FromRoute]long id, [FromBody]long contactId, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> RemoveContact([FromRoute]long id, [FromBody]long contactId)
         {
             bool result = await eventService.RemoveEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
             if (result)
             {
-                string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+                User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
                 string contactName = string.Empty;
                 Contact contactToUse = await contactService.GetByIdAsync(contactId);
                 if (contactToUse != null)
                 {
                     contactName = contactToUse.PreName + " " + contactToUse.Name;
                 }
-                await modService.ChangeContactsOfEvent(id, contactName, true, userNameOfChange);
+                await modService.ChangeContactsOfEvent(id, contactName, true, userOfChange);
                 return Ok();
             }
             else
@@ -172,7 +172,7 @@ namespace WebApi.Controllers
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(void), Description = "successfully created")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
-        public async Task<IActionResult> Post([FromBody]EventCreateDto eventToCreate, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> Post([FromBody]EventCreateDto eventToCreate)
         {
             Event newEvent = await eventService.CreateNewEventAsync(eventToCreate);
             if (newEvent != null)
@@ -182,8 +182,8 @@ namespace WebApi.Controllers
                     await eventService.AddEventContactAsync(new EventContact() { ContactId = contactId, EventId = newEvent.Id });
                 }
                 var uri = $"https://{Request.Host}{Request.Path}/{_mapper.Map<EventDto>(newEvent).Id}";
-                string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-                await modService.CreateNewEventEntryAsync(userNameOfChange, newEvent.Id);
+                User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+                await modService.CreateNewEventEntryAsync(userOfChange, newEvent.Id);
                 return Created(uri, eventToCreate);
             }
             return BadRequest("Fehler beim erzeugen eines Events!");

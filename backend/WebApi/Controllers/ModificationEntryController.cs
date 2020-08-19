@@ -15,7 +15,7 @@ using ServiceLayer;
 
 namespace WebApi.Controllers
 {
-    [Route("api/home")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ModificationEntryController : ControllerBase
     {

@@ -13,7 +13,8 @@ import {
   ModificationEntryService,
   MODEL_TYPE,
   MODIFICATION,
-  DATA_TYPE
+  DATA_TYPE,
+  UserDto
 } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -151,6 +152,10 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   getDate(date: string): string {
     const dateUsed = new Date(date);
     return dateUsed.getFullYear().toString() + '-' + (+dateUsed.getMonth() + 1).toString() + '-' + dateUsed.getDate().toString();
+  }
+
+  getUsername(user: UserDto) {
+    return user ? `${user.firstName} ${user.lastName}` : 'Benutzer gelöscht';
   }
 
   initForm() {

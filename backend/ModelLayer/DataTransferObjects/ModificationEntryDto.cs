@@ -12,7 +12,7 @@ namespace ModelLayer.DataTransferObjects
         public MODEL_TYPE DataModelType { get; set; }
         public long DataModelId { get; set; }
         public MODIFICATION ModificationType { get; set; }
-        public string UserName { get; set; }
+        public UserDto User { get; set; }
         public DateTime DateTime { get; set; }
         public string OldValue { get; set; }
         public string ActualValue { get; set; }

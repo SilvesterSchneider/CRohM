@@ -14,7 +14,6 @@ import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
-import { JwtService } from 'src/app/shared/jwt.service';
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -74,8 +73,7 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     private contactService: ContactService,
     private eventService: EventService,
     private fb: FormBuilder,
-    public dialog: MatDialog,
-    private jwt: JwtService
+    public dialog: MatDialog
   ) {
     super(dialogRef, dialog);
     if (this.ngControl != null) {
@@ -210,7 +208,7 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     const eventToSave: EventCreateDto = this.eventsForm.value;
     eventToSave.contacts = new Array<number>();
     this.selectedItems.forEach(x => eventToSave.contacts.push(x.contactId));
-    this.eventService.post(eventToSave, this.jwt.getUserId()).subscribe(() => this.dialogRef.close());
+    this.eventService.post(eventToSave).subscribe(() => this.dialogRef.close());
   }
 
   exit() {

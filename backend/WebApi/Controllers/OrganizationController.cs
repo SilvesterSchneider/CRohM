@@ -71,7 +71,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> Put([FromBody]OrganizationDto organization, [FromRoute]long id, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> Put([FromBody]OrganizationDto organization, [FromRoute]long id)
         {
             if (organization == null)
             {
@@ -81,9 +81,9 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
-            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             var mappedOrganization = _mapper.Map<Organization>(organization);
-            await modService.UpdateOrganizationAsync(userNameOfChange, await _organizationService.GetByIdAsync(id), mappedOrganization, true);
+            await modService.UpdateOrganizationAsync(userOfChange, await _organizationService.GetByIdAsync(id), mappedOrganization, true);
             if (await _organizationService.UpdateAsyncWithAlleDependencies(mappedOrganization))
             {
                 await modService.CommitChanges();
@@ -100,7 +100,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}/addContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> AddContact([FromRoute]long id, [FromBody]long contactId, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> AddContact([FromRoute]long id, [FromBody]long contactId)
         {
             Organization organization;
             try
@@ -114,14 +114,14 @@ namespace WebApi.Controllers
             }
 
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
-            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             string contactName = string.Empty;
             Contact contact = await contactService.GetByIdAsync(contactId);
             if (contact != null)
             {
                 contactName = contact.PreName + " " + contact.Name;
             }
-            await modService.ChangeEmployeesOfOrganization(id, contactName, false, userNameOfChange);
+            await modService.ChangeEmployeesOfOrganization(id, contactName, false, userOfChange);
             return Ok(organizationDto);
         }
 
@@ -133,7 +133,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}/removeContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> RemoveContact([FromRoute]long id, [FromBody]long contactId, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> RemoveContact([FromRoute]long id, [FromBody]long contactId)
         {
             try
             {
@@ -144,27 +144,27 @@ namespace WebApi.Controllers
                 _logger.LogWarning(e.Message);
                 return BadRequest();
             }
-            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             string contactName = string.Empty;
             Contact contact = await contactService.GetByIdAsync(contactId);
             if (contact != null)
             {
                 contactName = contact.PreName + " " + contact.Name;
             }
-            await modService.ChangeEmployeesOfOrganization(id, contactName, true , userNameOfChange);
+            await modService.ChangeEmployeesOfOrganization(id, contactName, true , userOfChange);
             return Ok();
         }
 
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(OrganizationDto), Description = "successfully created")]
-        public async Task<IActionResult> Post([FromBody]OrganizationCreateDto organizationToCreate, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> Post([FromBody]OrganizationCreateDto organizationToCreate)
         {
             Organization organization = await _organizationService.CreateAsync(_mapper.Map<Organization>(organizationToCreate));
 
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
             var uri = $"https://{Request.Host}{Request.Path}/{organizationDto.Id}";
-            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modService.CreateNewOrganizationEntryAsync(userNameOfChange, organization.Id);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            await modService.CreateNewOrganizationEntryAsync(userOfChange, organization.Id);
             return Created(uri, organizationDto);
         }
 
@@ -186,11 +186,11 @@ namespace WebApi.Controllers
         // creates new contact in db via frontend
         [HttpPost("{id}/historyElement")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
-        public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id, [FromQuery]long userIdOfChange)
+        public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id)
         { 
             await _organizationService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
-            string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
-            await modService.UpdateOrganizationByHistoryElementAsync(userNameOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            await modService.UpdateOrganizationByHistoryElementAsync(userOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
             return Ok();
         }
     }

@@ -17,10 +17,12 @@ namespace ServiceLayer
     {
         private const string DELETED_USER = "Gelöschter User: ";
         private IUserService userService;
+        private IModificationEntryService modificationEntryService;
 
-        public UserCheckDateService(CrmContext context, IUserService userService) : base(context)
+        public UserCheckDateService(CrmContext context, IUserService userService, IModificationEntryService modificationEntryService) : base(context)
         {
             this.userService = userService;
+            this.modificationEntryService = modificationEntryService;
         }
 
         /// <summary>
@@ -32,15 +34,12 @@ namespace ServiceLayer
             List<User> allUsers = await userService.GetAllUsersAsync();
             foreach (User user in allUsers)
             {
-                if (user.Id != 1 && !user.IsDeleted && user.LastLoginDate.AddYears(3) < DateTime.Now )
-                {                                        
-                    await userService.SetUserLockedAsync(user.Id);
-                    var result = await userService.SetUserNameAsync(user, DELETED_USER.Replace(" ", "_").Replace(":", "_").Replace("ö", "oe") + user.UserName);
-                    user.IsDeleted = true;
-                    user.FirstName = DELETED_USER + user.FirstName;
-                    user.LastName = DELETED_USER + user.LastName;
-                    user.Email = DELETED_USER + user.Email;
-                    await userService.UpdateUserAsync(user);                    
+                if (user.Id != 1 && !user.IsDeleted && user.LastLoginDate.AddYears(3) < DateTime.Now)
+                {
+
+                    await modificationEntryService.RemoveUserForeignKeys(user);
+                    await userService.DeleteUserAsync(user);
+
                 }
             }
         }

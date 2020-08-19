@@ -32,7 +32,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	isAdminUserLoggedIn = false;
 	dataSource = new MatTableDataSource<OrganizationDto>();
 
-	constructor(public dialog: MatDialog, service: OrganizationService, private userService: UsersService,
+	constructor(public dialog: MatDialog, service: OrganizationService,
 		           private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver, private jwt: JwtService) {
 		this.service = service;
 		this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
@@ -130,7 +130,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		const dialogRef = this.dialog.open(AddHistoryComponent);
 		dialogRef.afterClosed().subscribe((y) => {
 			if (y) {
-				this.service.postHistoryElement(y, id, this.jwt.getUserId()).subscribe(x => this.getData());
+				this.service.postHistoryElement(y, id).subscribe(x => this.getData());
 			}
 		});
 	  }
@@ -170,6 +170,6 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			mail: 'info@testorga' + this.length + '.de',
 			phoneNumber: '02342-234234' + this.length
 		  }
-		}, this.jwt.getUserId()).subscribe(x => this.getData());
+		}).subscribe(x => this.getData());
 	}
 }

@@ -27,7 +27,7 @@ namespace RepositoryLayer
         /// <param name="dataType">the data type of the changed model</param>
         /// <returns></returns>
         Task<IdentityResult> CreateNewEntryAsync(
-            string userName,
+            User user,
             long dataModelId,
             MODIFICATION modificationType,
             MODEL_TYPE modelType,
@@ -51,6 +51,14 @@ namespace RepositoryLayer
         /// <param name="dataType">the datatype</param>
         /// <returns></returns>
         Task<List<ModificationEntry>> GetModificationEntriesByIdAndModelTypeAsync(long id, MODEL_TYPE dataType);
+
+
+        /// <summary>
+        /// To be able to delete a user, the foreign key relation in ModificationEntry needs to be set to null 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Task<List<ModificationEntry>> RemoveUserForeignKeys(User user);
     }
 
     public class ModificationEntryRepository : BaseRepository<ModificationEntry>, IModificationEntryRepository
@@ -61,7 +69,7 @@ namespace RepositoryLayer
         }
 
         public async Task<IdentityResult> CreateNewEntryAsync(
-            string userName,
+            User user,
             long dataModelId,
             MODIFICATION modificationType,
             MODEL_TYPE modelType,
@@ -76,7 +84,7 @@ namespace RepositoryLayer
                 DateTime = DateTime.Now,
                 DataModelType = modelType,
                 ModificationType = modificationType,
-                UserName = userName,
+                User = user,
                 ActualValue = actualValue,
                 DataType = dataType,
                 ExtensionIndex = extensionIndex,
@@ -85,7 +93,7 @@ namespace RepositoryLayer
             if (await CreateAsync(entry) != null)
             {
                 return IdentityResult.Success;
-            } 
+            }
             else
             {
                 return IdentityResult.Failed();
@@ -114,7 +122,7 @@ namespace RepositoryLayer
             else
             {
                 return IdentityResult.Failed();
-            }            
+            }
         }
 
         public async Task<List<ModificationEntry>> GetSortedModificationEntriesByModelDataTypeAsync(MODEL_TYPE dataType)
@@ -135,7 +143,18 @@ namespace RepositoryLayer
 
         public async Task<List<ModificationEntry>> GetModificationEntriesByIdAndModelTypeAsync(long id, MODEL_TYPE dataType)
         {
-            return await Entities.Where(x => x.DataModelId == id && x.DataModelType == dataType).ToListAsync();
+            return await Entities
+                .Include(x => x.User)
+                .Where(x => x.DataModelId == id && x.DataModelType == dataType).ToListAsync();
         }
+
+        public async Task<List<ModificationEntry>> RemoveUserForeignKeys(User user)
+        {
+            List<ModificationEntry> entities = await Entities.Where(entry => entry.User == user).ToListAsync();
+            entities.ForEach(entry => entry.User = null);
+
+            return await this.UpdateRangeAsync(entities);
+        }
+
     }
 }
