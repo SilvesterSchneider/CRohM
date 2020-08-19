@@ -5,8 +5,8 @@ Cypress is used as frontend testing tool for testing Crohm's functionality.
 
 1. Run `npm install` when running the tests for the first time
 2. Tests are run against the baseurl `https://localhost`. If your local configuration is different, the url can be adjusted in the `cypress.json` file
-3. Run `npx cypress run` to run Cypress tests from the CLI without the GUI
-or use `npx cypress open` to open Cypress in the interactive GUI
+3. Run `npx cypress run` or `npm run test` to run Cypress tests from the CLI without the GUI
+or use `npx cypress open` or `npm run debug` to open Cypress in the interactive GUI and have the possibility to debug test cases
 
 # Write tests
 
