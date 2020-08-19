@@ -58,5 +58,5 @@ COPY --from=buildBackend /app /app
 
 WORKDIR /app/WebApi/app
 
-HEALTHCHECK --interval=5s --timeout=5s --start-period=5s --retries=10 CMD curl --fail --insecure https://localhost:${HTTPS_PORT}/health || exit 1
+HEALTHCHECK --interval=5s --timeout=5s --start-period=5s --retries=10 CMD curl --silent --fail --insecure https://localhost:${HTTPS_PORT}/health || exit 1
 ENTRYPOINT ["dotnet", "WebApi.dll"]
