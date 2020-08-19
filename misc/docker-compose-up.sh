@@ -1,7 +1,6 @@
 #!/bin/sh
 
 echo
-echo
 echo "Starting docker-stack..."
 
 export CROHM_BRANCH=$(git branch --show-current)
