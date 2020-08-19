@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "cypress:open": "cypress open"
+    "debug": "cypress open",
+    "test": "cypress run"
   },
   "dependencies": {
     "typescript": "^3.9.7"
