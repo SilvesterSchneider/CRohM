@@ -1,5 +1,7 @@
 .dockerignore
 .env
+.github
+.vscode
 **/*.DS_Store
 **/*.editorconfig
 **/*.git*
@@ -25,3 +27,4 @@ frontend/reports
 https
 misc
 TestProjects
+tests

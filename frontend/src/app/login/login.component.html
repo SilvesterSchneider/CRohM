@@ -3,16 +3,16 @@
         <mat-card-title>Login</mat-card-title>
         <mat-card-content fxLayout="column">
             <mat-form-field>
-                <input (keyup.enter)="loginWithProof()" matInput type="text" [formControl]="userNameOrEmail" placeholder="Benutzername oder Email">
+                <input (keyup.enter)="loginWithProof()" matInput type="text" [formControl]="userNameOrEmail" id="login-user" placeholder="Benutzername oder Email">
             </mat-form-field>
             <mat-form-field>
-                <input (keyup.enter)="loginWithProof()" matInput type="password" [formControl]="password" placeholder="Passwort">
+                <input (keyup.enter)="loginWithProof()" matInput type="password" [formControl]="password" id="login-password" placeholder="Passwort">
             </mat-form-field>
-            <mat-error *ngIf="errorText">{{ errorText }}</mat-error>
+            <mat-error id="login-error" *ngIf="errorText">{{ errorText }}</mat-error>
         </mat-card-content>
         <mat-card-actions>
             <button [disabled]="userNameOrEmail.invalid || password.invalid" (click)="login()" mat-flat-button
-                color="primary">
+                color="primary" id="login-button">
                 Login </button>
         </mat-card-actions>
     </mat-card>
