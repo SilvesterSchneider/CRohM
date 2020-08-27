@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Quartz;
 using Quartz.Impl;
 using ServiceLayer;
@@ -19,11 +20,13 @@ namespace WebApi.Helper
         {
             private DateTime dateTime = DateTime.MinValue;
             private IUserCheckDateService userCheckSevice;
+            private TimeSpan addToCheckDate;
 
             public async Task Execute(IJobExecutionContext context)
             {
                 JobDataMap jobData = context.JobDetail.JobDataMap;
                 userCheckSevice = jobData.Get("service") as IUserCheckDateService;
+                addToCheckDate = jobData.GetTimeSpanValue("addToCheckDate");
                 await CheckAction();
             }
 
@@ -32,7 +35,7 @@ namespace WebApi.Helper
                 dateTime = userCheckSevice.GetTheDateTime();
                 if (DateTime.Now > dateTime)
                 {
-                    dateTime = DateTime.Now.AddDays(1);
+                    dateTime = DateTime.Now.AddDays(addToCheckDate.TotalDays);
                     await userCheckSevice.UpdateAsync(dateTime);
                     await userCheckSevice.CheckAllUsersAsync();
                 }
@@ -40,10 +43,13 @@ namespace WebApi.Helper
         }
 
         private IUserCheckDateService userCheckSevice;
+        private IConfiguration Configuration;
 
-        public UserCheckThread(IUserCheckDateService userCheckSevice)
+
+        public UserCheckThread(IUserCheckDateService userCheckSevice, IConfiguration configuration)
         {
             this.userCheckSevice = userCheckSevice;
+            this.Configuration = configuration;
         }
 
         /// <summary>
@@ -61,18 +67,26 @@ namespace WebApi.Helper
             // job data map
             JobDataMap jobData = new JobDataMap();
             jobData.Add("service", userCheckSevice);
+
+            TimeSpan addToCheckDate = TimeSpan.FromDays(1);
+            TimeSpan.TryParse(Configuration["DeleteInactiveUsers:AddToCheckDate"], out addToCheckDate);
+            jobData.Add("addToCheckDate", addToCheckDate);
+
             // define the job and tie it to our ExecuteJob class
             IJobDetail job = JobBuilder.Create<ExecuteJob>()
                 .UsingJobData(jobData)
                 .WithIdentity("myJob", "group")
                 .Build();
 
-            // Trigger the job to run now, and then every 4 hours
+            TimeSpan schedule = TimeSpan.FromHours(4);
+            TimeSpan.TryParse(Configuration["DeleteInactiveUsers:ScheduleInterval"], out schedule);
+
+            // Trigger the job to run now, and then every x hours (see configuration)
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("myTrigger", "group")
                 .StartNow()
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInHours(4)
+                    .WithInterval(schedule)
                     .RepeatForever())
             .Build();
 

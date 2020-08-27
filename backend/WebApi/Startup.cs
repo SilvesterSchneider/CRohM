@@ -131,7 +131,8 @@ namespace WebApi
             IWebHostEnvironment env,
             IUserService userService,
             CrmContext dataContext,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            IConfiguration configuration)
         {
             dataContext.Database.Migrate();
             ApplicationDbInitializer.SeedPermissions(permissionGroupService, mapper);
@@ -165,7 +166,7 @@ namespace WebApi
             {
                 spa.Options.SourcePath = "wwwroot";
             });
-            new UserCheckThread(serviceProvider.CreateScope().ServiceProvider.GetService<IUserCheckDateService>()).runScheduledService().Wait();
+            new UserCheckThread(serviceProvider.CreateScope().ServiceProvider.GetService<IUserCheckDateService>(), configuration).runScheduledService().Wait();
         }
 
         private void AddDependencyInjection(IServiceCollection services)

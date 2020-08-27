@@ -153,7 +153,13 @@ namespace RepositoryLayer
             List<ModificationEntry> entities = await Entities.Where(entry => entry.User == user).ToListAsync();
             entities.ForEach(entry => entry.User = null);
 
-            return await this.UpdateRangeAsync(entities);
+            if (entities.Count > 0)
+            {
+                return await this.UpdateRangeAsync(entities);
+
+            }
+
+            return new List<ModificationEntry>();
         }
 
     }
