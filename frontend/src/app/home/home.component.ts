@@ -164,15 +164,15 @@ export class HomeComponent implements OnInit {
     }));
   }
 
-  openContactDetails(contact: ContactDto) {
-    this.dialog.open(ContactsInfoComponent, {data: contact});
+  openContactDetails(contactId: number) {
+    this.contactsService.getById(contactId).subscribe(x => this.dialog.open(ContactsInfoComponent, {data: x}));
   }
 
-  openOrganizationDetails(organization: OrganizationDto) {
-    this.dialog.open(OrganizationsInfoComponent, {data: organization});
+  openOrganizationDetails(organizationId: number) {
+    this.organizationService.getById(organizationId).subscribe(x => this.dialog.open(OrganizationsInfoComponent, {data: x}));
   }
 
-  openEventDetails(event: EventDto) {
-    this.dialog.open(EventsInfoComponent, {data: event});
+  openEventDetails(eventId: number) {
+    this.eventsService.getById(eventId).subscribe(x => this.dialog.open(EventsInfoComponent, {data: x}));
   }
 }

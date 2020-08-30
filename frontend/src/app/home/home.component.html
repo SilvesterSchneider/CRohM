@@ -35,7 +35,7 @@
                 </mat-card-content>
                 <mat-card-actions class="actions">
                     <div class="buttonMargin">
-                        <button class="button" (click)="openContactDetails(contact)" mat-raised-button color="primary">Details anzeigen</button>
+                        <button class="button" (click)="openContactDetails(contact.id)" mat-raised-button color="primary">Details anzeigen</button>
                     </div>
                     <div class="buttonMargin">
                         <button class="button" routerLink="contacts" mat-raised-button color="primary">Öffne Übersicht</button>
@@ -75,7 +75,7 @@
                 </mat-card-content>
                 <mat-card-actions class="actions">
                     <div class="buttonMargin">
-                        <button class="button" (click)="openOrganizationDetails(organization)" mat-raised-button color="primary">Details anzeigen</button>
+                        <button class="button" (click)="openOrganizationDetails(organization.id)" mat-raised-button color="primary">Details anzeigen</button>
                     </div>
                     <div class="buttonMargin">
                         <button class="button" routerLink="organizations" mat-raised-button color="primary">Öffne Übersicht</button>
@@ -115,7 +115,7 @@
                 </mat-card-content>
                 <mat-card-actions class="actions">
                     <div class="buttonMargin">
-                        <button class="button" (click)="openEventDetails(event)" mat-raised-button color="primary">Details anzeigen</button>
+                        <button class="button" (click)="openEventDetails(event.id)" mat-raised-button color="primary">Details anzeigen</button>
                     </div>
                     <div class="buttonMargin">
                         <button class="button" routerLink="events" mat-raised-button color="primary">Öffne Übersicht</button>
