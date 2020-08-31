@@ -9,26 +9,26 @@ updates:
     directory: "/frontend/"
     schedule:
       interval: "daily"
-    default_reviewers:
+    reviewers:
       - "Pantastisch"
       
   - package-ecosystem: "nuget"
     directory: "/backend/"
     schedule:
       interval: "daily"
-    default_reviewers:
+    reviewers:
       - "Pantastisch"
       
   - package-ecosystem: "npm"
     directory: "/tests/"
     schedule:
       interval: "daily"
-    default_reviewers:
+    reviewers:
       - "Pantastisch"
       
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
-    default_reviewers:
+    reviewers:
       - "Pantastisch"
