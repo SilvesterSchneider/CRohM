@@ -32,3 +32,10 @@ updates:
       interval: "daily"
     reviewers:
       - "Pantastisch"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "Pantastisch"
