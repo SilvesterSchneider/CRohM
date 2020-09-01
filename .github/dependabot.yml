@@ -11,6 +11,11 @@ updates:
       interval: "daily"
     reviewers:
       - "Pantastisch"
+    open-pull-requests-limit: 50
+    labels:
+      - "npm"
+      - "dependencies"
+      - "frontend"
       
   - package-ecosystem: "nuget"
     directory: "/backend/"
@@ -18,6 +23,11 @@ updates:
       interval: "daily"
     reviewers:
       - "Pantastisch"
+    open-pull-requests-limit: 50
+    labels:
+      - ".NET"
+      - "dependencies"
+      - "backend"
       
   - package-ecosystem: "npm"
     directory: "/tests/"
@@ -25,6 +35,11 @@ updates:
       interval: "daily"
     reviewers:
       - "Pantastisch"
+    open-pull-requests-limit: 50
+    labels:
+      - "npm"
+      - "dependencies"
+      - "backend"
       
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -32,6 +47,11 @@ updates:
       interval: "daily"
     reviewers:
       - "Pantastisch"
+    open-pull-requests-limit: 50
+    labels:
+      - "github-actions"
+      - "dependencies"
+      - "devops"
 
   - package-ecosystem: "docker"
     directory: "/"
@@ -39,3 +59,8 @@ updates:
       interval: "daily"
     reviewers:
       - "Pantastisch"
+    open-pull-requests-limit: 50
+    labels:
+      - "docker"
+      - "dependencies"
+      - "devops"
