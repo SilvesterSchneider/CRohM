@@ -39,7 +39,7 @@ updates:
     labels:
       - "npm"
       - "dependencies"
-      - "backend"
+      - "tests"
       
   - package-ecosystem: "github-actions"
     directory: "/"
