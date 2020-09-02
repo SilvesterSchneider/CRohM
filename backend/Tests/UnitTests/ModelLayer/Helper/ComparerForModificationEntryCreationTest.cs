@@ -18,7 +18,7 @@ namespace UnitTests.ModelLayer.Helper
             EventDto newEvent = new EventDto() { Id = oldEvent.Id, Date = oldEvent.Date, Time = oldEvent.Time, Name = "testEvent2", Duration = 3f };
 
             // Act
-            ComparerForModificationEntryCreation.CompareEvents(oldEvent, newEvent, "ram", out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion, new List<Contact>());
+            ComparerForModificationEntryCreation.CompareEvents(oldEvent, newEvent, null, out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion, new List<Contact>());
 
             //Assert
             Assert.Equal(2, listWithNewEntries.Count);
@@ -45,7 +45,7 @@ namespace UnitTests.ModelLayer.Helper
             };
 
             // Act
-            ComparerForModificationEntryCreation.CompareContacts(oldContact, newContact, "ram", true, out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion, 0);
+            ComparerForModificationEntryCreation.CompareContacts(oldContact, newContact, null, true, out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion, 0);
 
             //Assert
             Assert.Equal(3, listWithNewEntries.Count);
@@ -78,7 +78,7 @@ namespace UnitTests.ModelLayer.Helper
             };
 
             // Act
-            ComparerForModificationEntryCreation.CompareOrganizations(oldOrga, newOrga, "ram", true, out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion, 0);
+            ComparerForModificationEntryCreation.CompareOrganizations(oldOrga, newOrga, null, true, out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion, 0);
 
             //Assert
             Assert.Equal(3, listWithNewEntries.Count);

@@ -1,33 +1,14 @@
+import { doLogin } from '../../shared/login';
+
+function visitAndCheck(url: string) {
+    // Navigate to url (baseUrl from cypress.json is used as base)
+    cy.visit(url);
+
+    // Validate that url equals baseUrl/login
+    cy.url().should('equal', Cypress.config().baseUrl + '/login');
+}
+
 describe('Login Tests', () => {
-
-    function doLogin(username: string, password: string) {
-        // Navigate to login page (baseUrl from cypress.json is used as base)
-        cy.visit('/login');
-
-        // Click input with id 'login-user'
-        cy.get('#login-user').click();
-
-        // Type 'admin' into username field
-        cy.get('#login-user').type(username);
-
-        // Type password into password field
-        cy.get('#login-password').type(password);
-
-        // Click login button
-        cy.get('#login-button').click();
-
-        // Wait for cookie storage
-        cy.wait(1000);
-    }
-
-    function visitAndCheck(url: string) {
-        // Navigate to url (baseUrl from cypress.json is used as base)
-        cy.visit(url);
-
-        // Validate that url equals baseUrl/login
-        cy.url().should('equal', Cypress.config().baseUrl + '/login');
-    }
-
     beforeEach(() => {
         // Delete all cookies
         cy.clearCookies();
@@ -46,7 +27,7 @@ describe('Login Tests', () => {
         cy.url().then(($url) => {
             if ($url.match(Cypress.config().baseUrl + '/login')) {
                 // Change password
-                cy.get('#change-password').type('@dm1n1stR4tOr')
+                cy.get('#change-password').type('@dm1n1stR4tOr');
 
                 // Accept new password
                 cy.get('#change-button').click();
@@ -89,3 +70,5 @@ describe('Login Tests', () => {
         visitAndCheck('/settings');
     });
 });
+
+

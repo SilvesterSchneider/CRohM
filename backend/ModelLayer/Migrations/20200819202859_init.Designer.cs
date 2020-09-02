@@ -10,7 +10,7 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20200812132020_init")]
+    [Migration("20200819202859_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -393,10 +393,12 @@ namespace ModelLayer.Migrations
                     b.Property<string>("PropertyName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ModificatonHistory");
                 });
@@ -513,7 +515,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "9d4165eb-e7c4-4d63-8b7b-d8e871b87634",
+                            ConcurrencyStamp = "af2353d9-864e-42fa-b50f-207f2a4e15d0",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             UserRight = 0
@@ -521,7 +523,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "6847b131-bc03-4364-94db-252acd9d0a28",
+                            ConcurrencyStamp = "899ee32f-a27f-4664-985f-a2ac45b78bbd",
                             Name = "DeleteUser",
                             NormalizedName = "DELETEUSER",
                             UserRight = 0
@@ -825,6 +827,13 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.Models.Organization", null)
                         .WithMany("History")
                         .HasForeignKey("OrganizationId");
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.ModificationEntry", b =>
+                {
+                    b.HasOne("ModelLayer.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Organization", b =>

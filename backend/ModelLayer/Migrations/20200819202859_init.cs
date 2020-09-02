@@ -76,30 +76,6 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ModificatonHistory",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    DataType = table.Column<int>(nullable: false),
-                    DataModelType = table.Column<int>(nullable: false),
-                    DataModelId = table.Column<long>(nullable: false),
-                    ModificationType = table.Column<int>(nullable: false),
-                    UserName = table.Column<string>(nullable: true),
-                    DateTime = table.Column<DateTime>(nullable: false),
-                    OldValue = table.Column<string>(nullable: true),
-                    ActualValue = table.Column<string>(nullable: true),
-                    ExtensionIndex = table.Column<int>(nullable: false),
-                    PropertyName = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ModificatonHistory", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PermissionGroups",
                 columns: table => new
                 {
@@ -297,6 +273,36 @@ namespace ModelLayer.Migrations
                         name: "FK_Permissions_PermissionGroups_PermissionGroupId",
                         column: x => x.PermissionGroupId,
                         principalTable: "PermissionGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ModificatonHistory",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    DataType = table.Column<int>(nullable: false),
+                    DataModelType = table.Column<int>(nullable: false),
+                    DataModelId = table.Column<long>(nullable: false),
+                    ModificationType = table.Column<int>(nullable: false),
+                    UserId = table.Column<long>(nullable: true),
+                    DateTime = table.Column<DateTime>(nullable: false),
+                    OldValue = table.Column<string>(nullable: true),
+                    ActualValue = table.Column<string>(nullable: true),
+                    ExtensionIndex = table.Column<int>(nullable: false),
+                    PropertyName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModificatonHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ModificatonHistory_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -556,12 +562,12 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 1L, "9d4165eb-e7c4-4d63-8b7b-d8e871b87634", "Admin", "ADMIN", null, 0 });
+                values: new object[] { 1L, "af2353d9-864e-42fa-b50f-207f2a4e15d0", "Admin", "ADMIN", null, 0 });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName", "PermissionGroupId", "UserRight" },
-                values: new object[] { 2L, "6847b131-bc03-4364-94db-252acd9d0a28", "DeleteUser", "DELETEUSER", null, 0 });
+                values: new object[] { 2L, "899ee32f-a27f-4664-985f-a2ac45b78bbd", "DeleteUser", "DELETEUSER", null, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactPossibilitiesEntry_ContactPossibilitiesId",
@@ -592,6 +598,11 @@ namespace ModelLayer.Migrations
                 name: "IX_History_OrganizationId",
                 table: "History",
                 column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModificatonHistory_UserId",
+                table: "ModificatonHistory",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrganizationContacts_ContactId",

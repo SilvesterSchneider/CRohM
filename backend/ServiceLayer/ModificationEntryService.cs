@@ -20,7 +20,7 @@ namespace ServiceLayer
         /// <param name="newContact">the new contact</param>
         /// <param name="deleteEntries">should all the entries be really deleted after it was removed?</param>
         /// <returns></returns>
-        Task UpdateContactAsync(string usernameOfModification, Contact oldContact, Contact newContact, bool deleteEntries);
+        Task UpdateContactAsync(User usernameOfModification, Contact oldContact, Contact newContact, bool deleteEntries);
 
         /// <summary>
         /// update a specific organization.
@@ -30,7 +30,7 @@ namespace ServiceLayer
         /// <param name="newOrga">new organization</param>
         /// <param name="deleteEntries">should all the entries be really deleted after it was removed?</param>
         /// <returns></returns>
-        Task UpdateOrganizationAsync(string usernameOfModification, Organization oldOrga, Organization newOrga, bool deleteEntries);
+        Task UpdateOrganizationAsync(User usernameOfModification, Organization oldOrga, Organization newOrga, bool deleteEntries);
 
         /// <summary>
         /// Update a event
@@ -39,7 +39,7 @@ namespace ServiceLayer
         /// <param name="oldEvent">old event</param>
         /// <param name="newEvent">new event</param>
         /// <returns></returns>
-        Task UpdateEventsAsync(string usernameOfModification, Event oldEvent, EventDto newEvent, List<Contact> contactsParticipated);
+        Task UpdateEventsAsync(User usernameOfModification, Event oldEvent, EventDto newEvent, List<Contact> contactsParticipated);
 
         /// <summary>
         /// creates a new modification entry just for insertion of a new contact
@@ -47,7 +47,7 @@ namespace ServiceLayer
         /// <param name="userNameOfChange">who created it?</param>
         /// <param name="id">the id of new model</param>
         /// <returns></returns>
-        Task CreateNewContactEntryAsync(string userNameOfChange, long id);
+        Task CreateNewContactEntryAsync(User userNameOfChange, long id);
 
         /// <summary>
         /// creates a new modification entry just for insertion of a new organization
@@ -55,7 +55,7 @@ namespace ServiceLayer
         /// <param name="userNameOfChange">who created it?</param>
         /// <param name="id">the id of new model</param>
         /// <returns></returns>
-        Task CreateNewOrganizationEntryAsync(string userNameOfChange, long id);
+        Task CreateNewOrganizationEntryAsync(User userNameOfChange, long id);
 
         /// <summary>
         /// creates a new modification entry just for insertion of a new event
@@ -63,7 +63,7 @@ namespace ServiceLayer
         /// <param name="userNameOfChange">who created it?</param>
         /// <param name="id">the id of new model</param>
         /// <returns></returns>
-        Task CreateNewEventEntryAsync(string userNameOfChange, long id);
+        Task CreateNewEventEntryAsync(User userNameOfChange, long id);
 
         /// <summary>
         /// create a modification entry for the info that a history element was added to a contact
@@ -72,7 +72,7 @@ namespace ServiceLayer
         /// <param name="id">the id of new model</param>
         /// <param name="historyElementContent">the new content of history element</param>
         /// <returns></returns>
-        Task UpdateContactByHistoryElementAsync(string userNameOfChange, long id, string historyElementContent);
+        Task UpdateContactByHistoryElementAsync(User userNameOfChange, long id, string historyElementContent);
 
         /// <summary>
         /// create a modification entry for the info that a history element was added to a organization
@@ -81,7 +81,7 @@ namespace ServiceLayer
         /// <param name="id">the id of new model</param>
         /// <param name="historyElementContent">the new content of history element</param>
         /// <returns></returns>
-        Task UpdateOrganizationByHistoryElementAsync(string userNameOfChange, long id, string historyElementContent);
+        Task UpdateOrganizationByHistoryElementAsync(User userNameOfChange, long id, string historyElementContent);
 
         /// <summary>
         /// creates a new modification entry as info that a contact was deleted
@@ -119,7 +119,7 @@ namespace ServiceLayer
         /// <param name="wasDeleted">if true, then he/she was deleted, otherwise he/she was added</param>
         /// <param name="userNameOfChange">who made this change?</param>
         /// <returns></returns>
-        Task ChangeEmployeesOfOrganization(long id, string contactName, bool wasDeleted, string userNameOfChange);
+        Task ChangeEmployeesOfOrganization(long id, string contactName, bool wasDeleted, User userNameOfChange);
 
         /// <summary>
         /// create a modification entry for the info that the invited contact list of events have changed
@@ -129,7 +129,7 @@ namespace ServiceLayer
         /// <param name="wasDeleted">if true, then he/she was deleted, otherwise he/she was added</param>
         /// <param name="userNameOfChange">who made this change?</param>
         /// <returns></returns>
-        Task ChangeContactsOfEvent(long id, string contactName, bool wasDeleted, string userNameOfChange);
+        Task ChangeContactsOfEvent(long id, string contactName, bool wasDeleted, User userNameOfChange);
     }
 
     public class ModificationEntryService : ModificationEntryRepository, IModificationEntryService
@@ -143,12 +143,12 @@ namespace ServiceLayer
             this.contactPossEntriesRepo = contactPossEntriesRepo;
         }
 
-        public async Task CreateNewContactEntryAsync(string userNameOfChange, long id)
+        public async Task CreateNewContactEntryAsync(User userNameOfChange, long id)
         {
             await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.CREATED, MODEL_TYPE.CONTACT, DATA_TYPE.NONE);
         }
 
-        public async Task UpdateContactAsync(string usernameOfModification, Contact oldContact, Contact newContact, bool deleteEntries)
+        public async Task UpdateContactAsync(User usernameOfModification, Contact oldContact, Contact newContact, bool deleteEntries)
         {
             await Task.Run(() => ComparerForModificationEntryCreation.CompareContacts(oldContact, newContact, usernameOfModification, deleteEntries, out listWithCreation, out listWithDeletion, contactPossEntriesRepo.GetTotalAmountOfEntities() + 1));            
         }
@@ -167,55 +167,55 @@ namespace ServiceLayer
 
         public async Task UpdateContactByDeletionAsync(long id)
         {
-            await CreateNewEntryAsync("", id, MODIFICATION.DELETED, MODEL_TYPE.CONTACT, DATA_TYPE.NONE);
+            await CreateNewEntryAsync(null, id, MODIFICATION.DELETED, MODEL_TYPE.CONTACT, DATA_TYPE.NONE);
         }
 
-        public async Task UpdateContactByHistoryElementAsync(string userNameOfChange, long id, string historyElementContent)
+        public async Task UpdateContactByHistoryElementAsync(User userNameOfChange, long id, string historyElementContent)
         {
             await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.ADDED, MODEL_TYPE.CONTACT, DATA_TYPE.HISTORY_ELEMENT, "", historyElementContent);
         }
 
-        public async Task UpdateOrganizationAsync(string usernameOfModification, Organization oldOrga, Organization newOrga, bool deleteEntries)
+        public async Task UpdateOrganizationAsync(User usernameOfModification, Organization oldOrga, Organization newOrga, bool deleteEntries)
         {
             await Task.Run(() => ComparerForModificationEntryCreation.CompareOrganizations(oldOrga, newOrga, usernameOfModification, deleteEntries, out listWithCreation, out listWithDeletion, contactPossEntriesRepo.GetTotalAmountOfEntities() + 1));
         }
 
-        public async Task CreateNewOrganizationEntryAsync(string userNameOfChange, long id)
+        public async Task CreateNewOrganizationEntryAsync(User userNameOfChange, long id)
         {
             await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.CREATED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.NONE);
         }
 
-        public async Task UpdateOrganizationByHistoryElementAsync(string userNameOfChange, long id, string historyElementContent)
+        public async Task UpdateOrganizationByHistoryElementAsync(User userNameOfChange, long id, string historyElementContent)
         {
             await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.ADDED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.HISTORY_ELEMENT, "", historyElementContent);
         }
 
         public async Task UpdateOrganizationByDeletionAsync(long id)
         {
-            await CreateNewEntryAsync("", id, MODIFICATION.DELETED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.NONE);
+            await CreateNewEntryAsync(null, id, MODIFICATION.DELETED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.NONE);
         }
 
-        public async Task UpdateEventsAsync(string usernameOfModification, Event oldEvent, EventDto newEvent, List<Contact> contactsParticipated)
+        public async Task UpdateEventsAsync(User usernameOfModification, Event oldEvent, EventDto newEvent, List<Contact> contactsParticipated)
         {
             await Task.Run(() => ComparerForModificationEntryCreation.CompareEvents(oldEvent, newEvent, usernameOfModification, out listWithCreation, out listWithDeletion, contactsParticipated));
         }
 
-        public async Task CreateNewEventEntryAsync(string userNameOfChange, long id)
+        public async Task CreateNewEventEntryAsync(User userNameOfChange, long id)
         {
             await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.CREATED, MODEL_TYPE.EVENT, DATA_TYPE.NONE);
         }
 
         public async Task UpdateEventByDeletionAsync(long id)
         {
-            await CreateNewEntryAsync("", id, MODIFICATION.DELETED, MODEL_TYPE.EVENT, DATA_TYPE.NONE);
+            await CreateNewEntryAsync(null, id, MODIFICATION.DELETED, MODEL_TYPE.EVENT, DATA_TYPE.NONE);
         }
 
-        public async Task ChangeContactsOfEvent(long id, string contactName, bool wasDeleted, string userNameOfChange)
+        public async Task ChangeContactsOfEvent(long id, string contactName, bool wasDeleted, User userNameOfChange)
         {
             await ChangeContactsOfSource(id, contactName, wasDeleted, userNameOfChange, MODEL_TYPE.EVENT);
         }
 
-        public async Task ChangeEmployeesOfOrganization(long id, string contactName, bool wasDeleted, string userNameOfChange)
+        public async Task ChangeEmployeesOfOrganization(long id, string contactName, bool wasDeleted, User userNameOfChange)
         {
             await ChangeContactsOfSource(id, contactName, wasDeleted, userNameOfChange, MODEL_TYPE.ORGANIZATION);
         }
@@ -229,7 +229,7 @@ namespace ServiceLayer
         /// <param name="userNameOfChange">who modified this?</param>
         /// <param name="modelType">the model type to consider</param>
         /// <returns></returns>
-        private async Task ChangeContactsOfSource(long id, string contactName, bool wasDeleted, string userNameOfChange, MODEL_TYPE modelType)
+        private async Task ChangeContactsOfSource(long id, string contactName, bool wasDeleted, User userNameOfChange, MODEL_TYPE modelType)
         {
             if (wasDeleted)
             {

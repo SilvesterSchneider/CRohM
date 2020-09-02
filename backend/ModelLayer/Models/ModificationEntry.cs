@@ -60,9 +60,9 @@ namespace ModelLayer.Models
         public MODIFICATION ModificationType { get; set; }
 
         /// <summary>
-        /// der username der die veränderung herbeigeführt hat.
+        /// der user der die veränderung herbeigeführt hat.
         /// </summary>
-        public string UserName { get; set; }
+        public User User { get; set; }
 
         /// <summary>
         /// zeitpunkt der veränderung.

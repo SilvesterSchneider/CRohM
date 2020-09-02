@@ -82,10 +82,10 @@ namespace WebApi.Controllers
             {
                 return Conflict();
             }
-            string usernameOfModification = await userService.GetUserNameByIdAsync(id);
+            User userOfModification = await userService.FindByNameAsync(User.Identity.Name);
 
             var mappedContact = _mapper.Map<Contact>(contact);
-            await modService.UpdateContactAsync(usernameOfModification, await contactService.GetByIdAsync(id), mappedContact, true);
+            await modService.UpdateContactAsync(userOfModification, await contactService.GetByIdAsync(id), mappedContact, true);
             if (await contactService.UpdateAsync(mappedContact, id))
             {
                 await modService.CommitChanges();
@@ -100,13 +100,13 @@ namespace WebApi.Controllers
         // creates new contact in db via frontend
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(ContactDto), Description = "successfully created")]
-        public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate, [FromQuery]long userIdOfChange)
+        public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate)
         {
             Contact contact = await contactService.CreateAsync(_mapper.Map<Contact>(contactToCreate));
 
             var contactDto = _mapper.Map<ContactDto>(contact);
-            string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
-            await modService.CreateNewContactEntryAsync(userNameOfChange, contact.Id);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            await modService.CreateNewContactEntryAsync(userOfChange, contact.Id);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
             return Created(uri, contactDto);
         }
@@ -114,11 +114,11 @@ namespace WebApi.Controllers
         // creates new contact in db via frontend
         [HttpPost("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
-        public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id, [FromQuery]long userIdOfChange)
+        public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id)
         {
             await contactService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
-            string userNameOfChange = await userService.GetUserNameByIdAsync(userIdOfChange);
-            await modService.UpdateContactByHistoryElementAsync(userNameOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            await modService.UpdateContactByHistoryElementAsync(userOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
             return Ok();
         }
 

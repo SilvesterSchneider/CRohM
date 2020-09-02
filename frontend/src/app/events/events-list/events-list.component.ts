@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ModuleWithComponentFactories } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EventService, ParticipatedDto, ContactDto, UsersService } from '../../shared/api-generated/api-generated';
+import { EventService, ParticipatedDto, ContactDto } from '../../shared/api-generated/api-generated';
 import { EventDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { EventsAddComponent } from '../events-add/events-add.component';
@@ -42,7 +42,6 @@ export class EventsListComponent implements OnInit {
 
   constructor(
     private service: EventService,
-    private userService: UsersService,
     private dialog: MatDialog,
     private jwt: JwtService) {
   }
@@ -191,7 +190,7 @@ export class EventsListComponent implements OnInit {
       contacts: [],
       date: '2020-' + (new Date(Date.now()).getMonth() + 2) + '-' + (this.length + 1) % 30,
       time: '20:' + this.length % 59
-    }, this.jwt.getUserId()).subscribe(x => this.init());
+    }).subscribe(x => this.init());
   }
 
   getWeekNumber(date: Date): number {
