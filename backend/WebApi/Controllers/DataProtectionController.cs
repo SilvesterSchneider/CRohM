@@ -54,6 +54,20 @@ namespace WebApi.Controllers
 
             return BadRequest("");
         }
+
+        [HttpGet("officer")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(object), Description = "successful request")]
+        public async Task<IActionResult> IsThereAnyDataProtectionOfficerInTheSystem()
+        {
+            //liste an officer vllt? nur bool ist doch scheiße
+            await Task.Delay(1);
+            var isThereOne = false;
+            var b = new
+            {
+                isThereOne
+            };
+            return Ok(b);
+        }
     }
 
     public class SendInfoDTO

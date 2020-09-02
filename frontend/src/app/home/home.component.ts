@@ -4,7 +4,8 @@ import { ContactService, OrganizationService, ContactDto, OrganizationDto, Event
   ContactPossibilitiesDto,
   ParticipatedDto,
   HistoryElementDto,
-  UserLoginService} from '../shared/api-generated/api-generated';
+  UserLoginService,
+  DataProtectionService} from '../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts/contacts-info/contacts-info.component';
 import { EventsInfoComponent } from '../events/events-info/events-info.component';
@@ -73,14 +74,19 @@ export class HomeComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly userLoginService: UserLoginService,
     private readonly jwt: JwtService,
-    private readonly route: ActivatedRoute ) { }
+    private readonly route: ActivatedRoute,
+    private readonly dataProtectionService: DataProtectionService ) { }
 
 
   public ngOnInit(): void {
 
      this.checkIfComingFromLogin().then(isLogin => {
        if (isLogin){
-         this.dialog.open(DpDisclaimerDialogComponent);
+        this.dataProtectionService.isThereAnyDataProtectionOfficerInTheSystem()
+        .pipe(filter(data => data.isThereOne))
+        .subscribe(() =>
+          this.dialog.open(DpDisclaimerDialogComponent)
+        );
        }
      });
 
