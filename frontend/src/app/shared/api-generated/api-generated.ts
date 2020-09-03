@@ -1092,7 +1092,7 @@ export class DataProtectionService {
     /**
      * @return successful request
      */
-    isThereAnyDataProtectionOfficerInTheSystem(): Observable<any> {
+    isThereAnyDataProtectionOfficerInTheSystem(): Observable<boolean> {
         let url_ = this.baseUrl + "/api/DataProtection/officer";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1111,14 +1111,14 @@ export class DataProtectionService {
                 try {
                     return this.processIsThereAnyDataProtectionOfficerInTheSystem(<any>response_);
                 } catch (e) {
-                    return <Observable<any>><any>_observableThrow(e);
+                    return <Observable<boolean>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<any>><any>_observableThrow(response_);
+                return <Observable<boolean>><any>_observableThrow(response_);
         }));
     }
 
-    protected processIsThereAnyDataProtectionOfficerInTheSystem(response: HttpResponseBase): Observable<any> {
+    protected processIsThereAnyDataProtectionOfficerInTheSystem(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1128,7 +1128,7 @@ export class DataProtectionService {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <any>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <boolean>JSON.parse(_responseText, this.jsonParseReviver);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1136,7 +1136,7 @@ export class DataProtectionService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<any>(<any>null);
+        return _observableOf<boolean>(<any>null);
     }
 }
 

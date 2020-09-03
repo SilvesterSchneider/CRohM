@@ -83,7 +83,7 @@ export class HomeComponent implements OnInit {
      this.checkIfComingFromLogin().then(isLogin => {
        if (isLogin){
         this.dataProtectionService.isThereAnyDataProtectionOfficerInTheSystem()
-        .pipe(filter(data => data.isThereOne))
+        .pipe(filter(isThereAnyDataProtectionOfficer => !isThereAnyDataProtectionOfficer))
         .subscribe(() =>
           this.dialog.open(DpDisclaimerDialogComponent)
         );

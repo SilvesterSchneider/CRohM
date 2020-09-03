@@ -16,12 +16,16 @@ namespace WebApi.Controllers
     public class DataProtectionController : ControllerBase
     {
         private readonly IMailService _mailService;
+        private readonly IPermissionGroupService _permissionGroupService;
         private readonly IDataProtectionService _dataProtectionService;
 
-        public DataProtectionController(IMailService mailService, IDataProtectionService dataProtectionService)
+        public DataProtectionController(IMailService mailService,
+            IDataProtectionService dataProtectionService,
+            IPermissionGroupService permissionGroupService)
         {
             _mailService = mailService;
             _dataProtectionService = dataProtectionService;
+            _permissionGroupService = permissionGroupService;
         }
 
         [HttpPost]
@@ -56,17 +60,12 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("officer")]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(object), Description = "successful request")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successful request")]
         public async Task<IActionResult> IsThereAnyDataProtectionOfficerInTheSystem()
         {
-            //liste an officer vllt? nur bool ist doch scheiße
-            await Task.Delay(1);
-            var isThereOne = false;
-            var b = new
-            {
-                isThereOne
-            };
-            return Ok(b);
+            bool isThereAnyDataProtectionOfficer = await _permissionGroupService.IsThereAnyDataProtectionOfficerAsync();
+
+            return Ok(isThereAnyDataProtectionOfficer);
         }
     }
 
