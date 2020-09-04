@@ -1,5 +1,3 @@
-
-
   <div mat-dialog-title>
     <span id="title">Rolle erstellen</span>
   </div>
@@ -15,7 +13,7 @@
     <mat-form-field class="full-width">
       <mat-label>Berechtigungen</mat-label>
       <mat-select formControlName="permissions" multiple>
-          <mat-option *ngFor="let permission of data.permissions" [value]="permission.name" >{{permission.name}}</mat-option>
+          <mat-option *ngFor="let permission of data.permissions" [value]="permission" >{{permission}}</mat-option>
         </mat-select>
     </mat-form-field>
   

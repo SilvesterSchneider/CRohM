@@ -72,9 +72,9 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
-        public async Task<IActionResult> ChangeUserRoles(long userId, [FromBody] List<string> rolesToUpdate)
+        public async Task<IActionResult> ChangeUserRoles(long id, [FromBody] List<string> rolesToUpdate)
         {
-            var resut = await userService.UpdateAllRolesAsync(userId, rolesToUpdate);
+            var resut = await userService.UpdateAllRolesAsync(id, rolesToUpdate);
             if (resut == IdentityResult.Success)
             {
                 return Ok();

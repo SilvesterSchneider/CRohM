@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Validators, FormControl, FormBuilder } from '@angular/forms';
-import { UsersService, PermissionsService, PermissionGroupDto, UserPermissionsService } from '../../../shared/api-generated/api-generated';
+import { UsersService, RoleDto, RoleService } from '../../../shared/api-generated/api-generated';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
 
@@ -29,22 +29,21 @@ export class AddUserDialogComponent extends BaseDialogInput<AddUserDialogCompone
         { value: 'group_low', viewValue: 'Eingeschränkt' }
     ]; */
     groupPermission = new FormControl();
-    permissionGroups: PermissionGroupDto[] = new Array<PermissionGroupDto>();
+    permissionGroups: RoleDto[] = new Array<RoleDto>();
 
     constructor(
         private readonly fb: FormBuilder,
         private readonly usersService: UsersService,
         public dialogRef: MatDialogRef<AddUserDialogComponent>,
         public dialog: MatDialog,
-        private permissionService: PermissionsService,
-        private userPermissions: UserPermissionsService
+        private permissionService: RoleService
     ) {
         super(dialogRef, dialog);
         this.initPermissions();
     }
 
     initPermissions() {
-        this.permissionService.getAllPermissionGroups().subscribe(x => this.permissionGroups = x);
+        this.permissionService.get().subscribe(x => this.permissionGroups = x);
     }
 
     hasChanged() {
@@ -65,14 +64,18 @@ export class AddUserDialogComponent extends BaseDialogInput<AddUserDialogCompone
     addPermissionsForUser(id: number) {
         if (this.groupPermission.value && this.groupPermission.value.length > 0) {
             let idx = 0;
+            const groupToAdd: string[] = new Array<string>();
             for (idx = 0; idx < this.groupPermission.value.length; idx++) {
                 if (this.permissionGroups == null || this.permissionGroups.length === 0) {
                     break;
                 }
-                const group: PermissionGroupDto = this.permissionGroups.find(y => y.name === this.groupPermission.value[idx]);
+                const group: RoleDto = this.permissionGroups.find(y => y.name === this.groupPermission.value[idx]);
                 if (group) {
-                    this.userPermissions.addPermissionsByUserId(id, group.id).subscribe();
+                    groupToAdd.push(group.name);
                 }
+            }
+            if (groupToAdd.length > 0) {
+                this.permissionService.changeUserRoles(id, groupToAdd).subscribe();
             }
         }
     }

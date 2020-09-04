@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { Validators, FormControl, FormBuilder } from '@angular/forms';
-import { UsersService, PermissionGroupDto, UserDto,
-    PermissionsService, UserPermissionsService } from '../../../shared/api-generated/api-generated';
+import { UsersService, RoleDto, UserDto,
+    RoleService } from '../../../shared/api-generated/api-generated';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
 
@@ -21,11 +21,11 @@ export class EditUserDialogComponent extends BaseDialogInput<EditUserDialogCompo
         lastName: ['', Validators.required]
     });
 
-    oldPermissionGroups: PermissionGroupDto[] = new Array<PermissionGroupDto>();
+    oldPermissionGroups: string[] = new Array<string>();
 
     // Gruppenberechtigungen
     // TODO: Liste aus Backend laden
-    permissionGroups: PermissionGroupDto[] = new Array<PermissionGroupDto>();
+    permissionGroups: RoleDto[] = new Array<RoleDto>();
     /*[
         { value: 'group_adm', viewValue: 'Administrator' },
         { value: 'group_dat', viewValue: 'Datenschutzbeauftragter' },
@@ -42,18 +42,17 @@ export class EditUserDialogComponent extends BaseDialogInput<EditUserDialogCompo
         public dialogRef: MatDialogRef<EditUserDialogComponent>,
         public dialog: MatDialog,
         @Inject(MAT_DIALOG_DATA) public data: UserDto,
-        private permissionService: PermissionsService,
-        private userPermissions: UserPermissionsService
+        private permissionService: RoleService
     ) {
         super(dialogRef, dialog);
-        this.oldPermissionGroups = data.permission;
         this.oldId = data.id;
         this.userForm.patchValue(this.data);
         this.initPermissions();
     }
 
     initPermissions() {
-        this.permissionService.getAllPermissionGroups().subscribe(x => {
+        this.usersService.getAllRolesForUser(this.data.id).subscribe(x => this.oldPermissionGroups = x);
+        this.permissionService.get().subscribe(x => {
             this.permissionGroups = x;
             this.preselectPermissions();
             }
@@ -61,9 +60,9 @@ export class EditUserDialogComponent extends BaseDialogInput<EditUserDialogCompo
     }
 
     preselectPermissions() {
-        if (this.data.permission != null && this.data.permission.length > 0) {
+        if (this.oldPermissionGroups != null && this.oldPermissionGroups.length > 0) {
             const textArray: string[] = new Array<string>();
-            this.data.permission.forEach(x => textArray.push(x.name));
+            this.oldPermissionGroups.forEach(x => textArray.push(x));
             this.groupPermission.patchValue(textArray);
         }
     }
@@ -91,20 +90,6 @@ export class EditUserDialogComponent extends BaseDialogInput<EditUserDialogCompo
                 groupsToSave.push(this.groupPermission.value[idx]);
             }
         }
-        groupsToSave.forEach(x => {
-            const group: PermissionGroupDto = this.oldPermissionGroups.find(a => a.name === x);
-            if (typeof group === undefined || group == null) {
-                const groupToSave: PermissionGroupDto = this.permissionGroups.find(a => a.name === x);
-                if (groupToSave != null) {
-                    this.userPermissions.addPermissionsByUserId(id, groupToSave.id).subscribe();
-                }
-            }
-        });
-        this.oldPermissionGroups.forEach(x => {
-            const groupToDelete: string = groupsToSave.find(a => a === x.name);
-            if (typeof groupToDelete === undefined || groupToDelete == null) {
-                this.userPermissions.deletePermissionsByUserId(id, x.id).subscribe();
-            }
-        });
+        this.permissionService.changeUserRoles(this.data.id, groupsToSave).subscribe();
     }
 }

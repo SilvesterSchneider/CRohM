@@ -94,5 +94,17 @@ namespace WebApi.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(List<string>), Description = "successfully found")]
+        public async Task<IActionResult> GetAllRolesForUser(long id)
+        {
+            User user = await _userService.GetByIdAsync(id);
+            List<string> roles = new List<string>();
+            if (user != null)
+            {
+                roles = await _userService.GetRolesAsync(user);
+            }
+            return Ok(roles);
+        }
     }
 }
