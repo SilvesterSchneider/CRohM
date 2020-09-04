@@ -32,16 +32,11 @@ export class RolesComponent implements OnInit {
   fillFieldsWithData() {
     this.permissionService.get().subscribe(x => {
         this.permissionGroups = x;
-        this.permissions = new Array<string>();
-        this.permissionGroups.forEach(y => {
-            y.claims.forEach(z => {
-                if (!this.permissions.find(a => a === z)) {
-                  this.permissions.push(z);
-                }
-              });
-          });
-        this.createDynamicColums();
-        this.createTableData();
+        this.permissionService.getAllClaims(1).subscribe(y => {
+          this.permissions = y;
+          this.createDynamicColums();
+          this.createTableData();
+        });
       });
   }
 
@@ -124,6 +119,7 @@ export class RolesComponent implements OnInit {
       });
       this.tableData.push(temp);
     });
+    this.dataSource.data = this.tableData;
   }
 
   private createDynamicColums() {

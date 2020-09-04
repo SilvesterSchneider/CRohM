@@ -7,7 +7,13 @@ namespace ModelLayer.Helper
 {
     public class RoleClaims
     {
-        public static readonly string[] CLAIMS =
+        public static readonly string[] DEFAULT_GROUPS =
+        {
+            "Admin",
+            "Datenschutzbeauftragter"
+        };
+
+        public static readonly string[] ALL_CLAIMS =
         {
             "Werte lesen",
             "Werte schreiben",
@@ -24,7 +30,7 @@ namespace ModelLayer.Helper
         private static List<Claim> GetAllPredefinedClaims()
         {
             List<Claim> list = new List<Claim>();
-            foreach (string claim in CLAIMS)
+            foreach (string claim in ALL_CLAIMS)
             {
                 list.Add(new Claim(claim, claim));
             }

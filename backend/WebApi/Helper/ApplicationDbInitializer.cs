@@ -34,7 +34,7 @@ namespace WebApi.Helper
                 IdentityResult result = userService.CreateAsync(user, "@dm1n1stR4tOr").Result;
                 if (result.Succeeded)
                 {
-                    userService.AddToRoleAsync(user, "Admin").Wait();
+                    userService.AddToRoleAsync(user, RoleClaims.DEFAULT_GROUPS[0]).Wait();
                 }
             }
             userAdmin = userService.FindByEmailAsync("admin@admin.com").Result;
@@ -53,20 +53,25 @@ namespace WebApi.Helper
 
         public static void SeedRoles(IRoleService roleService)
         {
-            Role role = roleService.FindRoleByNameAsync("Admin").Result;
-            if (role == null)
+            foreach (string roleToCreate in RoleClaims.DEFAULT_GROUPS)
             {
-                roleService.CreateAsync(new Role() { Name = "Admin" }).Wait();
-            }
-            role = roleService.FindRoleByNameAsync("Admin").Result;
-            List<Claim> allClaims = RoleClaims.GetAllClaims();
-            if (role != null && roleService.GetClaimsAsync(role).Result.Count != allClaims.Count)
-            {
-                foreach (Claim claim in RoleClaims.GetAllClaims())
+                Role role = roleService.FindRoleByNameAsync(roleToCreate).Result;
+                if (role == null)
                 {
-                    roleService.AddClaimAsync(role, claim).Wait();
+                    roleService.CreateAsync(new Role() { Name = roleToCreate }).Wait();
+                }
+                role = roleService.FindRoleByNameAsync(roleToCreate).Result;
+                List<Claim> allClaims = RoleClaims.GetAllClaims();
+                if (role != null && ((role.Name.Equals(RoleClaims.DEFAULT_GROUPS[0]) && roleService.GetClaimsAsync(role).Result.Count !=
+                    allClaims.Count) || (roleService.GetClaimsAsync(role).Result.Count == 0)))
+                {
+                    foreach (Claim claim in RoleClaims.GetAllClaims())
+                    {
+                        roleService.AddClaimAsync(role, claim).Wait();
+                    }
                 }
             }
+            
         }
     }
 }

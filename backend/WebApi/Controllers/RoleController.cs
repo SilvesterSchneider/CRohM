@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 using NSwag.Annotations;
 using ServiceLayer;
@@ -37,6 +39,18 @@ namespace WebApi.Controllers
             return Ok(roles);
         }
 
+        [HttpGet("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(List<string>), Description = "successfully found")]
+        public async Task<IActionResult> GetAllClaims(long id)
+        {
+            List<string> list = new List<string>();
+            foreach (Claim claim in await Task.FromResult(RoleClaims.GetAllClaims()))
+            {
+                list.Add(claim.Value);
+            }
+            return Ok(list);
+        }
+
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(RoleDto), Description = "successfully created")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "unsuccessfully request")]
@@ -58,6 +72,10 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
         public async Task<IActionResult> Put(RoleDto roleToUpdate)
         {
+            if (roleToUpdate.Name.Equals(RoleClaims.DEFAULT_GROUPS[0]))
+            {
+                return Ok();
+            }
             var resut = await roleService.UpdateRoleWithClaimsAsync(roleToUpdate);
             if (resut == IdentityResult.Success)
             {
@@ -90,6 +108,10 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
         public async Task<IActionResult> Delete(long id)
         {
+            if (id == 1)
+            {
+                return Ok(); ;
+            }
             Role roleToDelete = await roleService.FindRoleByIdAsync(id);
             if (roleToDelete == null)
             {
