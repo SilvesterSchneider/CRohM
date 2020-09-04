@@ -10,7 +10,7 @@
     <mat-form-field *ngIf="permissions != null && permissions.length > 0" class="full-width">
       <mat-label>Berechtigungen</mat-label>
       <mat-select formControlName="permissions" multiple>
-        <mat-option *ngFor="let permission of permissions" [value]="permission.name">{{permission.name}}</mat-option>
+        <mat-option *ngFor="let permission of permissions" [value]="permission">{{permission}}</mat-option>
       </mat-select>
     </mat-form-field>
 

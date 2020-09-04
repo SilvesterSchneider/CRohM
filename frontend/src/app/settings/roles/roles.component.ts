@@ -89,7 +89,7 @@ export class RolesComponent implements OnInit {
 
           deleteDialogRef.afterClosed().subscribe(deleteResult => {
             if (deleteResult.delete) {
-              this.permissionService.deletePermissionGroup(result.id).subscribe(x => this.fillFieldsWithData());
+              this.permissionService.delete(result.id).subscribe(x => this.fillFieldsWithData());
             }
           });
         } else {
@@ -115,10 +115,10 @@ export class RolesComponent implements OnInit {
     this.tableData = [];
     this.permissions.forEach(perm => {
       const temp: LooseTableObject = {};
-      temp.permission = perm.name;
+      temp.permission = perm;
       this.permissionGroups.forEach(role => {
         temp[role.name] = false;
-        if (role.permissions.find(a => a.name === perm.name)) {
+        if (role.claims.find(a => a === perm)) {
           temp[role.name] = true;
         }
       });
