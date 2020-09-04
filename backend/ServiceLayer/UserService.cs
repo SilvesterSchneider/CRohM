@@ -473,3 +473,4 @@ namespace ServiceLayer
 
     #endregion DefaultUserManager
 }
+
