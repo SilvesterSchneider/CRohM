@@ -9,6 +9,7 @@ using ServiceLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace WebApi.Helper
 {
@@ -18,9 +19,10 @@ namespace WebApi.Helper
         /// Seeding database with admin user and password admin. Also add role 'Admin'
         /// </summary>
         /// <param name="userService">Service to include user</param>
-        public static void SeedUsers(IUserService userService, IPermissionGroupService permissionService, IUserPermissionGroupRepository userPermissionGroupRepo)
+        public static void SeedUsers(IUserService userService)
         {
-            if (userService.FindByEmailAsync("admin@admin.com").Result == null)
+            User userAdmin = userService.FindByEmailAsync("admin@admin.com").Result;
+            if (userAdmin == null)
             {
                 User user = new User
                 {
@@ -29,88 +31,42 @@ namespace WebApi.Helper
                     FirstName = "system",
                     LastName = "admin"
                 };
-                userService.CreateAsync(user, "@dm1n1stR4tOr").Wait();
-                User admin = userService.GetByIdAsync(1).Result;
-                PermissionGroup permissionGroup = permissionService.GetPermissionGroupByIdAsync(1).Result;
-                UserPermissionGroup connection = new UserPermissionGroup() { User=admin, UserId=1, PermissionGroup=permissionGroup, PermissionGroupId=1 };
-                userPermissionGroupRepo.CreateAsync(connection).Wait();
-                UserPermissionGroup result = userPermissionGroupRepo.GetUserPermissionGroupByIdAsync(1, 1).Result;
-                admin.Permission.Add(result);
-                userService.UpdateAsync(admin).Wait();
-            }
-        }
-
-        public static void SeedPermissions(IPermissionGroupService permissionGroupService, IMapper mapper) {
-
-            List<PermissionGroup> groups = permissionGroupService.GetAllPermissionGroupAsync().Result;
-            PermissionGroup adminGroup = null;
-            foreach (PermissionGroup group in groups) {
-                if (group.Id == 1) {
-                    adminGroup = group;
-                    break;
+                IdentityResult result = userService.CreateAsync(user, "@dm1n1stR4tOr").Result;
+                if (result.Succeeded)
+                {
+                    userService.AddToRoleAsync(user, "Admin").Wait();
                 }
             }
-
-            if (adminGroup == null) {
-                permissionGroupService.CreatePermissionGroupAsync(GetAdminPermissions()).Wait();
-            }
-            else
+            userAdmin = userService.FindByEmailAsync("admin@admin.com").Result;
+            if (userAdmin != null)
             {
-                bool allPermissionsAvailable = true;
-                bool namingOk = true;
-                List<Permission> actualPermissions = AllRoles.GetAllRoles();
-                foreach (Permission permToCheck in actualPermissions)
+                List<Claim> allClaims = RoleClaims.GetAllClaims();
+                if (userService.GetClaimsAsync(userAdmin).Result.Count != allClaims.Count)
                 {
-                    Permission permissionToCheck = adminGroup.Permissions.FirstOrDefault(a => a.UserRight == permToCheck.UserRight);
-                    if (permissionToCheck == null)                        
+                    foreach (Claim claim in allClaims)
                     {
-                        allPermissionsAvailable = false;
-                    }
-                    if (permissionToCheck != null && !permissionToCheck.Name.Equals(permToCheck.Name))
-                    {
-                        namingOk = false;
-                    }
-                }
-                if (actualPermissions.Count != adminGroup.Permissions.Count)
-                {
-                    allPermissionsAvailable = false;
-                }
-                if (!allPermissionsAvailable || !namingOk)
-                {
-                    if (!allPermissionsAvailable)
-                    {
-                        adminGroup.Permissions = actualPermissions;
-                        permissionGroupService.UpdatePermissionGroupByIdAsync(adminGroup).Wait();
-                    }
-                    if (!namingOk)
-                    {
-                        List<PermissionGroup> allGroups = permissionGroupService.GetAllPermissionGroupAsync().Result;
-                        foreach (PermissionGroup groupToCheck in allGroups)
-                        {
-                            List<Permission> permissions = new List<Permission>();
-                            foreach (Permission oldPermission in groupToCheck.Permissions)
-                            {
-                                Permission newPermission = actualPermissions.FirstOrDefault(a => a.UserRight == oldPermission.UserRight);
-                                if (newPermission != null)
-                                {
-                                    permissions.Add(newPermission);
-                                }
-                            }
-                            groupToCheck.Permissions = permissions;
-                            permissionGroupService.UpdatePermissionGroupByIdAsync(groupToCheck).Wait();
-                        }
+                        userService.AddClaimAsync(userAdmin, claim).Wait();
                     }
                 }
             }
         }
 
-        public static PermissionGroup GetAdminPermissions() {
-            PermissionGroup admin = new PermissionGroup();
-            admin.Name = "Admin";
-            admin.Id = 0;
-            admin.Permissions.AddRange(AllRoles.GetAllRoles());
-
-            return admin;
+        public static void SeedRoles(IRoleService roleService)
+        {
+            Role role = roleService.FindRoleByNameAsync("Admin").Result;
+            if (role == null)
+            {
+                roleService.CreateAsync(new Role() { Name = "Admin" }).Wait();
+            }
+            role = roleService.FindRoleByNameAsync("Admin").Result;
+            List<Claim> allClaims = RoleClaims.GetAllClaims();
+            if (role != null && roleService.GetClaimsAsync(role).Result.Count != allClaims.Count)
+            {
+                foreach (Claim claim in RoleClaims.GetAllClaims())
+                {
+                    roleService.AddClaimAsync(role, claim).Wait();
+                }
+            }
         }
     }
 }
