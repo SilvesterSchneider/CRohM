@@ -16,14 +16,14 @@ export class ContactsDisclosureDialogComponent extends BaseDialogInput<ContactsD
 		  public dialogRef: MatDialogRef<ContactsDisclosureDialogComponent>,
 		  public dialog: MatDialog,
 		  @Inject(MAT_DIALOG_DATA) public data: ContactDto,
-      private service: ContactService)
-      {
-      super(dialogRef, dialog);
-	  this.contact = data;
-      }
+		  private service: ContactService)
+	{
+	super(dialogRef, dialog);
+	this.contact = data;
+	}
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 	onApprove() {
 		this.service.sendDisclosureById(this.contact.id).subscribe(x => this.dialogRef.close());
