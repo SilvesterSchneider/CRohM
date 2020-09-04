@@ -84,5 +84,26 @@ namespace WebApi.Controllers
                 return Conflict();
             }
         }
+
+        [HttpDelete("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            Role roleToDelete = await roleService.FindRoleByIdAsync(id);
+            if (roleToDelete == null)
+            {
+                return NotFound();
+            }
+            IdentityResult result = await roleService.DeleteAsync(roleToDelete);
+            if (result == IdentityResult.Success)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }

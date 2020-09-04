@@ -3,7 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import { CreateRoleDialogComponent } from './create-role/create-role.component';
 import { UpdateRoleDialogComponent } from './update-role/update-role.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
-import { PermissionGroupDto, PermissionDto, PermissionsService } from 'src/app/shared/api-generated/api-generated';
+import { RoleDto, RoleService } from 'src/app/shared/api-generated/api-generated';
 import { MatTableDataSource } from '@angular/material/table';
 
 interface LooseTableObject {
@@ -18,24 +18,24 @@ interface LooseTableObject {
 export class RolesComponent implements OnInit {
 
   public tableData: LooseTableObject[] = [];
-  permissionGroups: PermissionGroupDto[] = new Array<PermissionGroupDto>();
-  permissions: PermissionDto[] = new Array<PermissionDto>();
+  permissionGroups: RoleDto[] = new Array<RoleDto>();
+  permissions: string[] = new Array<string>();
   public displayedColumns: string[] = ['permission'];
   public dataSource = new MatTableDataSource();
 
-  constructor(public dialog: MatDialog, private permissionService: PermissionsService) { }
+  constructor(public dialog: MatDialog, private permissionService: RoleService) { }
 
   public ngOnInit(): void {
     this.fillFieldsWithData();
   }
 
   fillFieldsWithData() {
-    this.permissionService.getAllPermissionGroups().subscribe(x => {
+    this.permissionService.get().subscribe(x => {
         this.permissionGroups = x;
-        this.permissions = new Array<PermissionDto>();
+        this.permissions = new Array<string>();
         this.permissionGroups.forEach(y => {
-            y.permissions.forEach(z => {
-                if (!this.permissions.find(a => a.name === z.name)) {
+            y.claims.forEach(z => {
+                if (!this.permissions.find(a => a === z)) {
                   this.permissions.push(z);
                 }
               });
@@ -53,19 +53,19 @@ export class RolesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const permissionsToCreate: PermissionDto[] = new Array<PermissionDto>();
+        const permissionsToCreate: string[] = new Array<string>();
         result.permissions.forEach(element => {
-          const perm: PermissionDto = this.permissions.find(a => a.name === element);
+          const perm: string = this.permissions.find(a => a === element);
           if (perm != null) {
             permissionsToCreate.push(perm);
           }
         });
-        const group: PermissionGroupDto = {
+        const group: RoleDto = {
           id: 0,
           name: result.name,
-          permissions: permissionsToCreate
+          claims: permissionsToCreate
         };
-        this.permissionService.createPermissionGroup(group).subscribe(x => this.fillFieldsWithData());
+        this.permissionService.post(group).subscribe(x => this.fillFieldsWithData());
       }
     });
   }
@@ -93,19 +93,19 @@ export class RolesComponent implements OnInit {
             }
           });
         } else {
-          const permissionsToUpdate: PermissionDto[] = new Array<PermissionDto>();
+          const permissionsToUpdate: string[] = new Array<string>();
           result.permissions.forEach(element => {
-            const perm: PermissionDto = this.permissions.find(a => a.name === element);
+            const perm: string = this.permissions.find(a => a === element);
             if (perm != null) {
               permissionsToUpdate.push(perm);
             }
           });
-          const groupToUpdate: PermissionGroupDto = {
+          const groupToUpdate: RoleDto = {
               id: result.id,
               name: result.name,
-              permissions: permissionsToUpdate
+              claims: permissionsToUpdate
           };
-          this.permissionService.updatePermissionGroup(groupToUpdate).subscribe(x => this.fillFieldsWithData());
+          this.permissionService.put(groupToUpdate).subscribe(x => this.fillFieldsWithData());
         }
       }
     });
