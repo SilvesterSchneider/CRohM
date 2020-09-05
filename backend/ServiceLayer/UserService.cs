@@ -297,6 +297,17 @@ namespace ServiceLayer
             {
                 return IdentityResult.Failed(new IdentityError() { Code = "301", Description = "User not found!" });
             }
+            List<Claim> claimsToHave = new List<Claim>();
+            foreach (string role in roles)
+            {
+                foreach (Claim claimToHave in await roleService.GetClaimsAsync(await roleService.FindRoleByNameAsync(role)))
+                {
+                    if (!claimsToHave.Contains(claimToHave))
+                    {
+                        claimsToHave.Add(claimToHave);
+                    }
+                }
+            }
             List<string> existingRoles = await GetRolesAsync(user);
             List<string> rolesToDelete = new List<string>();
             foreach (string roleToDelete in existingRoles)
@@ -311,7 +322,10 @@ namespace ServiceLayer
                 await RemoveRoleFromUser(user, roleToDelete);
                 foreach (Claim claimToDelete in await roleService.GetClaimsAsync(await roleService.FindRoleByNameAsync(roleToDelete)))
                 {
-                    await RemoveClaimAsync(user, claimToDelete);
+                    if (!claimsToHave.Contains(claimToDelete))
+                    {
+                        await RemoveClaimAsync(user, claimToDelete);
+                    }
                 }
             }
             List<string> rolesToAdd = new List<string>();
