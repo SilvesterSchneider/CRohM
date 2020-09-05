@@ -152,7 +152,6 @@ namespace ServiceLayer
             CreateMap<HistoryElement, HistoryElementDto>().ReverseMap();
             CreateMap<HistoryElementCreateDto, HistoryElement>();
             CreateMap<ModificationEntry, ModificationEntryDto>();
-            CreateMap<Role, RoleDto>().ReverseMap();
             CreateMap<Tag, TagDto>().ReverseMap();
         }
     }

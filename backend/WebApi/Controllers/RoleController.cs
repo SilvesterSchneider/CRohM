@@ -20,13 +20,11 @@ namespace WebApi.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly IMapper _mapper;
         private IRoleService roleService;
         private IUserService userService;
 
-        public RoleController(IMapper _mapper, IRoleService roleService, IUserService userService)
+        public RoleController(IRoleService roleService, IUserService userService)
         {
-            this._mapper = _mapper;
             this.userService = userService;
             this.roleService = roleService;
         }
