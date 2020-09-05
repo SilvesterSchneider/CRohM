@@ -12,7 +12,7 @@
   
     <mat-form-field class="full-width">
       <mat-label>Berechtigungen</mat-label>
-      <mat-select formControlName="permissions" multiple>
+      <mat-select id="permissionSelectionUpdate" formControlName="permissions" multiple>
           <mat-option *ngFor="let permission of data.permissions" [value]="permission" >{{permission}}</mat-option>
         </mat-select>
     </mat-form-field>
@@ -23,5 +23,5 @@
     <button mat-raised-button (click)="onDelete()" color="warn">Löschen</button> 
   <span class="fill-remaining-space"></span>
     <button mat-raised-button (click)="onCancle()">Abbrechen</button>
-    <button mat-raised-button [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid" color="primary">Speichern</button>
+    <button id="saveUpdateRole" mat-raised-button [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid" color="primary">Speichern</button>
   </div>

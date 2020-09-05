@@ -4,12 +4,12 @@
 
     <mat-form-field class="full-width">
       <mat-label>Name</mat-label>
-      <input matInput placeholder="Name" formControlName="name">
+      <input id="roleNameInputField" matInput placeholder="Name" formControlName="name">
     </mat-form-field>
 
     <mat-form-field *ngIf="permissions != null && permissions.length > 0" class="full-width">
       <mat-label>Berechtigungen</mat-label>
-      <mat-select formControlName="permissions" multiple>
+      <mat-select id="permissionSelection" formControlName="permissions" multiple>
         <mat-option *ngFor="let permission of permissions" [value]="permission">{{permission}}</mat-option>
       </mat-select>
     </mat-form-field>
@@ -19,6 +19,6 @@
 <div mat-dialog-actions>
   <span class="fill-remaining-space"></span>
   <button mat-raised-button (click)="onCancel()">Abbrechen</button>
-  <button mat-raised-button [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid"
+  <button id="saveRoleButton" mat-raised-button [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid"
     color="primary">Speichern</button>
 </div>
