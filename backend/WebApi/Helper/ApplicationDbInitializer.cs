@@ -62,10 +62,16 @@ namespace WebApi.Helper
                 }
                 role = roleService.FindRoleByNameAsync(roleToCreate).Result;
                 List<Claim> allClaims = RoleClaims.GetAllClaims();
-                if (role != null && ((role.Name.Equals(RoleClaims.DEFAULT_GROUPS[0]) && roleService.GetClaimsAsync(role).Result.Count !=
-                    allClaims.Count) || (roleService.GetClaimsAsync(role).Result.Count == 0)))
+                if (role != null && role.Name.Equals(RoleClaims.DEFAULT_GROUPS[0]) && roleService.GetClaimsAsync(role).Result.Count != allClaims.Count)
                 {
-                    foreach (Claim claim in RoleClaims.GetAllClaims())
+                    foreach (Claim claim in allClaims)
+                    {
+                        roleService.AddClaimAsync(role, claim).Wait();
+                    }
+                }
+                else if (role != null && role.Name.Equals(RoleClaims.DEFAULT_GROUPS[1]) && roleService.GetClaimsAsync(role).Result.Count == 0)
+                {
+                    foreach (Claim claim in RoleClaims.GetAllDsgvoClaims())
                     {
                         roleService.AddClaimAsync(role, claim).Wait();
                     }
