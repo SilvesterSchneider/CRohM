@@ -51,12 +51,14 @@ export class EditUserDialogComponent extends BaseDialogInput<EditUserDialogCompo
     }
 
     initPermissions() {
-        this.usersService.getAllRolesForUser(this.data.id).subscribe(x => this.oldPermissionGroups = x);
-        this.permissionService.get().subscribe(x => {
-            this.permissionGroups = x;
-            this.preselectPermissions();
-            }
-        );
+        this.usersService.getAllRolesForUser(this.data.id).subscribe(x => {
+            this.oldPermissionGroups = x;
+            this.permissionService.get().subscribe(y => {
+                this.permissionGroups = y;
+                this.preselectPermissions();
+                }
+            );
+        });
     }
 
     preselectPermissions() {

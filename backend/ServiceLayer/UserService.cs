@@ -58,6 +58,8 @@ namespace ServiceLayer
         Task<IdentityResult> UpdateAsync(User user);
 
         Task<IdentityResult> UpdateAllRolesAsync(long userId, List<string> roles);
+
+        Task<bool> IsDatenschutzbeauftragter(long userId);
     }
 
     public class UserService : IUserService
@@ -329,6 +331,17 @@ namespace ServiceLayer
                 }
             }
             return IdentityResult.Success;
+        }
+
+        public async Task<bool> IsDatenschutzbeauftragter(long userId)
+        {
+            User user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null)
+            {
+                return false;
+            }
+            List<string> roles = await GetRolesAsync(user);
+            return roles.Contains(RoleClaims.DEFAULT_GROUPS[1]);
         }
     }
 
