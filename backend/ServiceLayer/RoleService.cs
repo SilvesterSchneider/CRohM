@@ -140,6 +140,12 @@ namespace ServiceLayer
             {
                 return IdentityResult.Failed(new IdentityError() { Code="301", Description="Role not found!" });
             }
+            if (!roleToUpdate.Name.Equals(role.Name))
+            {
+                roleToUpdate.Name = role.Name;
+                await UpdateAsync(roleToUpdate);
+            }
+            
             List<Claim> claimsToDelete = new List<Claim>();
             IList<Claim> existingClaims = await GetClaimsAsync(roleToUpdate);
             foreach (Claim existingClaim in existingClaims)
