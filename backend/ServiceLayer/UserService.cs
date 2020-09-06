@@ -308,6 +308,10 @@ namespace ServiceLayer
             {
                 return IdentityResult.Failed(new IdentityError() { Code = "301", Description = "User not found!" });
             }
+            if (user.Id == 1 && !roles.Contains(RoleClaims.DEFAULT_GROUPS[0]))
+            {
+                roles.Add(RoleClaims.DEFAULT_GROUPS[0]);
+            }
             List<Claim> claimsToHave = new List<Claim>();
             foreach (string role in roles)
             {
