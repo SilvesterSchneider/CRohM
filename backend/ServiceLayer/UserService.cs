@@ -57,8 +57,19 @@ namespace ServiceLayer
 
         Task<IdentityResult> UpdateAsync(User user);
 
+        /// <summary>
+        /// Update all roles of a user
+        /// </summary>
+        /// <param name="userId">the user id</param>
+        /// <param name="roles">all roles to be assigned</param>
+        /// <returns></returns>
         Task<IdentityResult> UpdateAllRolesAsync(long userId, List<string> roles);
 
+        /// <summary>
+        /// Determines whether a user is a datenschutzbeauftragter or not
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <returns>true if it is a datenschutzbeauftragter, otherwise false</returns>
         Task<bool> IsDatenschutzbeauftragter(long userId);
     }
 

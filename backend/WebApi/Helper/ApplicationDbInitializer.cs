@@ -51,6 +51,10 @@ namespace WebApi.Helper
             }
         }
 
+        /// <summary>
+        /// Erzeugen aller standart rollen (Admin und Datenschutzbeauftragter)
+        /// </summary>
+        /// <param name="roleService">rollen service</param>
         public static void SeedRoles(IRoleService roleService)
         {
             foreach (string roleToCreate in RoleClaims.DEFAULT_GROUPS)

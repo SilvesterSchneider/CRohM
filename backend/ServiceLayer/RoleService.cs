@@ -14,17 +14,88 @@ namespace ServiceLayer
 {
     public interface IRoleService
     {
+        /// <summary>
+        /// Create a new role with all its containing claíms.
+        /// </summary>
+        /// <param name="role">the dto role object from front end</param>
+        /// <returns>result</returns>
         Task<IdentityResult> CreateWithClaimsAsync(RoleDto role);
+
+        /// <summary>
+        /// Create a new role
+        /// </summary>
+        /// <param name="role">the new role to be created</param>
+        /// <returns>result</returns>
         Task<IdentityResult> CreateAsync(Role role);
+
+        /// <summary>
+        /// Get all roles as list
+        /// </summary>
+        /// <returns>list with roles</returns>
         Task<List<Role>> GetAllRolesAsync();
+
+        /// <summary>
+        /// Get all roles with all its claíms as dto object list
+        /// </summary>
+        /// <returns>list with dto objects for front end</returns>
         Task<List<RoleDto>> GetAllRolesWithAllClaimsAsync();
+
+        /// <summary>
+        /// Delete a role
+        /// </summary>
+        /// <param name="role">the role to be deleted</param>
+        /// <returns>result</returns>
         Task<IdentityResult> DeleteAsync(Role role);
+
+        /// <summary>
+        /// Update a role
+        /// </summary>
+        /// <param name="role">the role to be updated</param>
+        /// <returns>result</returns>
         Task<IdentityResult> UpdateAsync(Role role);
+
+        /// <summary>
+        /// Update a role with all its claims
+        /// </summary>
+        /// <param name="role">the role dto object from front end</param>
+        /// <returns>result</returns>
         Task<IdentityResult> UpdateRoleWithClaimsAsync(RoleDto role);
+
+        /// <summary>
+        /// Add a claim to a role
+        /// </summary>
+        /// <param name="role">role</param>
+        /// <param name="claim">claim</param>
+        /// <returns>result</returns>
         Task<IdentityResult> AddClaimAsync(Role role, Claim claim);
+
+        /// <summary>
+        /// Get all claims of a role
+        /// </summary>
+        /// <param name="role">role</param>
+        /// <returns>list with all claims</returns>
         Task<IList<Claim>> GetClaimsAsync(Role role);
+
+        /// <summary>
+        /// Remove a claim from role
+        /// </summary>
+        /// <param name="role">role</param>
+        /// <param name="claim">claim</param>
+        /// <returns>result</returns>
         Task<IdentityResult> RemoveClaimAsync(Role role, Claim claim);
+
+        /// <summary>
+        /// Find a role by its name
+        /// </summary>
+        /// <param name="roleName">role name</param>
+        /// <returns>role</returns>
         Task<Role> FindRoleByNameAsync(string roleName);
+
+        /// <summary>
+        /// Find a role by its id
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns>role</returns>
         Task<Role> FindRoleByIdAsync(long id);
     }
 
