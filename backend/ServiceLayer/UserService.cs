@@ -70,7 +70,7 @@ namespace ServiceLayer
         /// </summary>
         /// <param name="userId">user id</param>
         /// <returns>true if it is a datenschutzbeauftragter, otherwise false</returns>
-        Task<bool> IsDatenschutzbeauftragter(long userId);
+        Task<bool> IsDataSecurityEngineer(long userId);
     }
 
     public class UserService : IUserService
@@ -308,9 +308,9 @@ namespace ServiceLayer
             {
                 return IdentityResult.Failed(new IdentityError() { Code = "301", Description = "User not found!" });
             }
-            if (user.Id == 1 && !roles.Contains(RoleClaims.DEFAULT_GROUPS[0]))
+            if (user.Id == 1 && !roles.Contains(RoleClaims.ADMIN_GROUP))
             {
-                roles.Add(RoleClaims.DEFAULT_GROUPS[0]);
+                roles.Add(RoleClaims.ADMIN_GROUP);
             }
             List<Claim> claimsToHave = new List<Claim>();
             foreach (string role in roles)
@@ -362,7 +362,7 @@ namespace ServiceLayer
             return IdentityResult.Success;
         }
 
-        public async Task<bool> IsDatenschutzbeauftragter(long userId)
+        public async Task<bool> IsDataSecurityEngineer(long userId)
         {
             User user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (user == null)
@@ -370,7 +370,7 @@ namespace ServiceLayer
                 return false;
             }
             List<string> roles = await GetRolesAsync(user);
-            return roles.Contains(RoleClaims.DEFAULT_GROUPS[1]);
+            return roles.Contains(RoleClaims.DATA_SECURITY_ENGINEER_GROUP);
         }
     }
 

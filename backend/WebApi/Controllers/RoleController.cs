@@ -70,7 +70,7 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
         public async Task<IActionResult> Put(RoleDto roleToUpdate)
         {
-            if (roleToUpdate.Name.Equals(RoleClaims.DEFAULT_GROUPS[0]))
+            if (roleToUpdate.Name.Equals(RoleClaims.ADMIN_GROUP))
             {
                 return Ok();
             }

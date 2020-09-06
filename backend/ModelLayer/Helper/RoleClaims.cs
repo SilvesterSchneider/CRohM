@@ -8,12 +8,22 @@ namespace ModelLayer.Helper
     public class RoleClaims
     {
         /// <summary>
+        /// The admin role
+        /// </summary>
+        public static readonly string ADMIN_GROUP = "Admin";
+
+        /// <summary>
+        /// datenschutzbeauftragter rolle
+        /// </summary>
+        public static readonly string DATA_SECURITY_ENGINEER_GROUP = "Datenschutzbeauftragter";
+
+        /// <summary>
         /// The default role groups to be added on system startup
         /// </summary>
         public static readonly string[] DEFAULT_GROUPS =
         {
-            "Admin",
-            "Datenschutzbeauftragter"
+            ADMIN_GROUP,
+            DATA_SECURITY_ENGINEER_GROUP
         };
 
         /// <summary>

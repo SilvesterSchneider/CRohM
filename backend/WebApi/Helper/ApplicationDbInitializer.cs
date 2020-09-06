@@ -34,7 +34,7 @@ namespace WebApi.Helper
                 IdentityResult result = userService.CreateAsync(user, "@dm1n1stR4tOr").Result;
                 if (result.Succeeded)
                 {
-                    userService.AddToRoleAsync(user, RoleClaims.DEFAULT_GROUPS[0]).Wait();
+                    userService.AddToRoleAsync(user, RoleClaims.ADMIN_GROUP).Wait();
                 }
             }
             userAdmin = userService.FindByEmailAsync("admin@admin.com").Result;
@@ -66,14 +66,14 @@ namespace WebApi.Helper
                 }
                 role = roleService.FindRoleByNameAsync(roleToCreate).Result;
                 List<Claim> allClaims = RoleClaims.GetAllClaims();
-                if (role != null && role.Name.Equals(RoleClaims.DEFAULT_GROUPS[0]) && roleService.GetClaimsAsync(role).Result.Count != allClaims.Count)
+                if (role != null && role.Name.Equals(RoleClaims.ADMIN_GROUP) && roleService.GetClaimsAsync(role).Result.Count != allClaims.Count)
                 {
                     foreach (Claim claim in allClaims)
                     {
                         roleService.AddClaimAsync(role, claim).Wait();
                     }
                 }
-                else if (role != null && role.Name.Equals(RoleClaims.DEFAULT_GROUPS[1]) && roleService.GetClaimsAsync(role).Result.Count == 0)
+                else if (role != null && role.Name.Equals(RoleClaims.DATA_SECURITY_ENGINEER_GROUP) && roleService.GetClaimsAsync(role).Result.Count == 0)
                 {
                     foreach (Claim claim in RoleClaims.GetAllDsgvoClaims())
                     {
