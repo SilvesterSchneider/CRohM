@@ -7,12 +7,18 @@ namespace ModelLayer.Helper
 {
     public class RoleClaims
     {
+        /// <summary>
+        /// The default role groups to be added on system startup
+        /// </summary>
         public static readonly string[] DEFAULT_GROUPS =
         {
             "Admin",
             "Datenschutzbeauftragter"
         };
 
+        /// <summary>
+        /// all contact related claims
+        /// </summary>
         public static readonly string[] CONTACT_CLAIMS =
         {
             "Anlegen eines Kontakts",
@@ -20,6 +26,9 @@ namespace ModelLayer.Helper
             "Löschen eines Kontakts"
         };
 
+        /// <summary>
+        /// all organisations related claims
+        /// </summary>
         public static readonly string[] ORGANISATION_CLAIMS =
         {
             "Anlegen einer Organisation",
@@ -28,6 +37,9 @@ namespace ModelLayer.Helper
             "Löschen einer Organisation"
         };
 
+        /// <summary>
+        /// all calendar related claims
+        /// </summary>
         public static readonly string[] CALENDAR_CLAIMS =
         {
             "Hinzufügen eines Historieneintrags bei Kontakt oder Organisation",
@@ -36,12 +48,18 @@ namespace ModelLayer.Helper
             "Löschen einer Veranstaltung"
         };
 
+        /// <summary>
+        /// all dsgvo related claims
+        /// </summary>
         public static readonly string[] DSGVO_CLAIMS =
         {
             "Auskunft gegenüber eines Kontakts zu dessen Daten",
             "Mitteilung an einen Kontakt nach Löschung oder Änderung"
         };
 
+        /// <summary>
+        /// all admin related claims
+        /// </summary>
         public static readonly string[] ADMIN_CLAIMS =
         {
             "Anlegen eines Benutzers",
@@ -51,6 +69,9 @@ namespace ModelLayer.Helper
             "Einsehen und Überarbeiten des Rollenkonzepts"
         };
 
+        /// <summary>
+        /// all claims of the system
+        /// </summary>
         public static readonly string[] ALL_CLAIMS = GetAllClaimsAsArray();
 
         private static string[] GetAllClaimsAsArray()
@@ -86,11 +107,19 @@ namespace ModelLayer.Helper
             return list;
         }
 
+        /// <summary>
+        /// Get all claims of this system
+        /// </summary>
+        /// <returns>list with claims</returns>
         public static List<Claim> GetAllClaims()
         {
             return new List<Claim>(allClaims);
         }
 
+        /// <summary>
+        /// Get all dsgvo related claims
+        /// </summary>
+        /// <returns>list with claims</returns>
         public static List<Claim> GetAllDsgvoClaims()
         {
             return new List<Claim>(dsgvoClaims);
