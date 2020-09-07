@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
@@ -39,7 +39,7 @@ namespace UnitTests.ServiceLayer
             // Arrange
             var mockUserManager = new Mock<IUserManager>();
             var mockMailProvider = new Mock<IMailService>();
-            var sut = new UserService(mockUserManager.Object, mockMailProvider.Object);
+            var sut = new UserService(mockUserManager.Object, mockMailProvider.Object, null);
 
             var users = new List<User>()
             {
@@ -65,7 +65,7 @@ namespace UnitTests.ServiceLayer
             // Arrange
             var mockUserManager = new Mock<IUserManager>();
             var mockMailProvider = new Mock<IMailService>();
-            var sut = new UserService(mockUserManager.Object, mockMailProvider.Object);
+            var sut = new UserService(mockUserManager.Object, mockMailProvider.Object, null);
 
             var users = new List<User>()
             {

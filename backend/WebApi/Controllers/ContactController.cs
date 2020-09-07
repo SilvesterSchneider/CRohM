@@ -85,7 +85,7 @@ namespace WebApi.Controllers
             User userOfModification = await userService.FindByNameAsync(User.Identity.Name);
 
             var mappedContact = _mapper.Map<Contact>(contact);
-            await modService.UpdateContactAsync(userOfModification, await contactService.GetByIdAsync(id), mappedContact, true);
+            await modService.UpdateContactAsync(userOfModification, await contactService.GetByIdAsync(id), mappedContact, await userService.IsDataSecurityEngineer(userOfModification.Id));
             if (await contactService.UpdateAsync(mappedContact, id))
             {
                 await modService.CommitChanges();

@@ -83,7 +83,7 @@ namespace WebApi.Controllers
             }
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             var mappedOrganization = _mapper.Map<Organization>(organization);
-            await modService.UpdateOrganizationAsync(userOfChange, await _organizationService.GetByIdAsync(id), mappedOrganization, true);
+            await modService.UpdateOrganizationAsync(userOfChange, await _organizationService.GetByIdAsync(id), mappedOrganization, await userService.IsDataSecurityEngineer(userOfChange.Id));
             if (await _organizationService.UpdateAsyncWithAlleDependencies(mappedOrganization))
             {
                 await modService.CommitChanges();

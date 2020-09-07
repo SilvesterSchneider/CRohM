@@ -11,14 +11,14 @@
           </form>
         </div>
         <div>
-            <button mat-fab color="accent" (click)="openCreateDialog()">
+            <button id="createRoleButton" mat-fab color="accent" (click)="openCreateDialog()">
                 <mat-icon>add</mat-icon>
               </button>
         </div>
     </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<mat-table id="rolesTable" [dataSource]="dataSource" class="mat-elevation-z8">
 
     <ng-container *ngFor="let col of displayedColumns" >
     <ng-container matColumnDef="{{col}}" >        
@@ -33,7 +33,7 @@
 
         <!-- remaining columnes -->
         <ng-container *ngIf="col != 'permission'">
-            <mat-header-cell *matHeaderCellDef (click)="openUpdateDialog(col)">  {{col}} </mat-header-cell>
+            <mat-header-cell id="updateRoleField" *matHeaderCellDef (click)="openUpdateDialog(col)">  {{col}} </mat-header-cell>
             <mat-cell *matCellDef="let element "> 
                 <mat-icon *ngIf=element[col] >clear</mat-icon>
             </mat-cell>
