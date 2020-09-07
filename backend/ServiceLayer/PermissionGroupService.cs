@@ -110,7 +110,7 @@ namespace ServiceLayer
             return await Entities
                 .Include(group => group.User)
                 .ThenInclude(upg => upg.User)
-                .Where(group => group.Name == "Datenschutzbeauftragter")
+                .Where(group => string.Equals(group.Name, "Datenschutzbeauftragter"))
                 .AnyAsync(group => group.User.Any());
         }
     }
