@@ -38,7 +38,7 @@ describe('Login Tests', () => {
         cy.getCookie('.AspNetCore.Identity.Application').should('exist');
 
         // Validate that url equals baseUrl
-        cy.url().should('equal', Cypress.config().baseUrl + '/');
+        cy.url().should('equal', Cypress.config().baseUrl + '/?from=login');
 
         // Validate that the correct page is displayed by checking the title
         cy.contains('CRohM - Customer Relationship Management System').should('exist');
