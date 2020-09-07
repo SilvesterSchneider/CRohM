@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -16,16 +17,16 @@ namespace WebApi.Controllers
     public class DataProtectionController : ControllerBase
     {
         private readonly IMailService _mailService;
-        private readonly IPermissionGroupService _permissionGroupService;
+
+        private readonly IUserService _userService;
         private readonly IDataProtectionService _dataProtectionService;
 
         public DataProtectionController(IMailService mailService,
-            IDataProtectionService dataProtectionService,
-            IPermissionGroupService permissionGroupService)
+            IDataProtectionService dataProtectionService, IUserService userService)
         {
             _mailService = mailService;
             _dataProtectionService = dataProtectionService;
-            _permissionGroupService = permissionGroupService;
+            _userService = userService;
         }
 
         [HttpPost]
@@ -60,12 +61,18 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("officer")]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successful request")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "at least one data protection officer")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "no data protection officer found")]
         public async Task<IActionResult> IsThereAnyDataProtectionOfficerInTheSystem()
         {
-            bool isThereAnyDataProtectionOfficer = await _permissionGroupService.IsThereAnyDataProtectionOfficerAsync();
+            var users = await _userService.GetUsersInRoleAsync("Datenschutzbeauftragter");
 
-            return Ok(isThereAnyDataProtectionOfficer);
+            if (users.Any())
+            {
+                return Ok();
+            }
+
+            return NotFound();
         }
     }
 

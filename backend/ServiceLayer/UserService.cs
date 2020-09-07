@@ -71,6 +71,13 @@ namespace ServiceLayer
         /// <param name="userId">user id</param>
         /// <returns>true if it is a datenschutzbeauftragter, otherwise false</returns>
         Task<bool> IsDataSecurityEngineer(long userId);
+
+        /// <summary>
+        /// Returns all user with specific role
+        /// </summary>
+        /// <param name="roleName">Role name which will be searched for</param>
+        /// <returns>List of users</returns>
+        Task<List<User>> GetUsersInRoleAsync(string roleName);
     }
 
     public class UserService : IUserService
@@ -372,6 +379,12 @@ namespace ServiceLayer
             List<string> roles = await GetRolesAsync(user);
             return roles.Contains(RoleClaims.DATA_SECURITY_ENGINEER_GROUP);
         }
+
+        public async Task<List<User>> GetUsersInRoleAsync(string roleName)
+        {
+            IList<User> usersInRoleAsync = await _userManager.GetUsersInRoleAsync(roleName);
+            return usersInRoleAsync.ToList();
+        }
     }
 
     #region DefaultUserManager
@@ -411,6 +424,8 @@ namespace ServiceLayer
         Task<IdentityResult> UpdateUserAsync(User user);
 
         Task<IdentityResult> SetUserNameAsync(User user, string username);
+
+        Task<IList<User>> GetUsersInRoleAsync(string roleName);
     }
 
     public class DefaultUserManager : IUserManager
@@ -495,6 +510,11 @@ namespace ServiceLayer
             return await _manager.SetUserNameAsync(user, username);
         }
 
+        public async Task<IList<User>> GetUsersInRoleAsync(string roleName)
+        {
+            return await _manager.GetUsersInRoleAsync(roleName);
+        }
+
         public async Task<IList<Claim>> GetClaimsAsync(User user)
         {
             return await _manager.GetClaimsAsync(user);
@@ -515,4 +535,3 @@ namespace ServiceLayer
 
     #endregion DefaultUserManager
 }
-

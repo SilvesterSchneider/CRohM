@@ -83,10 +83,8 @@ export class HomeComponent implements OnInit {
      this.checkIfComingFromLogin().then(isLogin => {
        if (isLogin){
         this.dataProtectionService.isThereAnyDataProtectionOfficerInTheSystem()
-        .pipe(filter(isThereAnyDataProtectionOfficer => !isThereAnyDataProtectionOfficer))
-        .subscribe(() =>
-          this.dialog.open(DpDisclaimerDialogComponent)
-        );
+        .subscribe({next: () => {}, error: () =>
+        this.dialog.open(DpDisclaimerDialogComponent)});
        }
      });
 
@@ -166,7 +164,7 @@ export class HomeComponent implements OnInit {
             id: event.id,
             contacts: event.contacts,
             participated: event.participated,
-            userName: entry.userName,
+            userName: entry.user?.userName,
             created: entry.modificationType === MODIFICATION.CREATED
           });
         }
@@ -182,7 +180,7 @@ export class HomeComponent implements OnInit {
             name: y.name,
             id: y.id,
             employees: y.employees,
-            userName: entry.userName,
+            userName: entry.user?.userName,
             created: entry.modificationType === MODIFICATION.CREATED
           });
         }
@@ -201,7 +199,7 @@ export class HomeComponent implements OnInit {
         events: y.events,
         history: y.history,
         organizations: y.organizations,
-        userName: entry.userName,
+        userName: entry.user?.userName,
         created: entry.modificationType === MODIFICATION.CREATED
     }));
   }
