@@ -1,6 +1,6 @@
 
 
-  <div mat-dialog-title>
+  <div mat-dialog-title id="dataProtectionOfficeDisclaimer">
     <span id="title">Warnmeldung</span>
   </div>
   <div mat-dialog-content>
@@ -11,6 +11,6 @@
   <div mat-dialog-actions>   
     
   <span class="fill-remaining-space"></span>
-    <button mat-raised-button [matDialogClose]="false" >Ignorieren</button>
-    <button mat-raised-button (click)="onResolve()" color="primary">Jetzt einen bestimmen</button>
+    <button mat-raised-button [matDialogClose]="false" id="ignoreButton" >Ignorieren</button>
+    <button mat-raised-button (click)="onResolve()" color="primary" id="resolveButton">Jetzt einen bestimmen</button>
   </div>
