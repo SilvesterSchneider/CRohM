@@ -34,9 +34,6 @@ describe('Login Tests', () => {
             }
         });
 
-        // Validate that JSON Webtoken has been saved
-        cy.getCookie('.AspNetCore.Identity.Application').should('exist');
-
         // Validate that url equals baseUrl
         cy.url().should('equal', Cypress.config().baseUrl + '/?from=login');
 
@@ -47,9 +44,6 @@ describe('Login Tests', () => {
     it('should not accept a wrong password', () => {
         // Login with credentials admin/wrongpassword
         doLogin('admin', 'wrongpassword');
-
-        // Validate that no JSON Webtoken has been issued
-        cy.getCookie('.AspNetCore.Identity.Application').should('not.exist');
 
         // Validate that url equals baseUrl/login
         cy.url().should('equal', Cypress.config().baseUrl + '/login');
