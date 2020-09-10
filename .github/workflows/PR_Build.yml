@@ -10,13 +10,13 @@ jobs:
     - name: Hello
       run: echo "Hello"
 
-  # container_security_scan:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: Container Security Scan
-  #     uses: azure/container-scan@v0
-  #     with:
-  #       image-name: crohmcrms/crohm_crms
-  #       username: ${{ secrets.DOCKER_USERNAME }}
-  #       password: ${{ secrets.DOCKER_PASSWORD }}
+  container_security_scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Container Security Scan
+      uses: azure/container-scan@v0
+      with:
+        image-name: crohmcrms/crohm_crms
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
