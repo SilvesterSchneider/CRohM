@@ -11,6 +11,7 @@ updates:
       interval: "weekly"
       time: "09:00"
       timezone: "Europe/Berlin"
+      day: "saturday"
     reviewers:
       - "Pantastisch"
     assignees:
@@ -27,6 +28,7 @@ updates:
       interval: "weekly"
       time: "09:00"
       timezone: "Europe/Berlin"
+      day: "saturday"
     reviewers:
       - "Pantastisch"
     assignees:
@@ -43,6 +45,7 @@ updates:
       interval: "weekly"
       time: "09:00"
       timezone: "Europe/Berlin"
+      day: "saturday"
     reviewers:
       - "Pantastisch"
     assignees:
@@ -59,6 +62,7 @@ updates:
       interval: "weekly"
       time: "09:00"
       timezone: "Europe/Berlin"
+      day: "saturday"
     reviewers:
       - "Pantastisch"
     assignees:
@@ -75,6 +79,7 @@ updates:
       interval: "weekly"
       time: "09:00"
       timezone: "Europe/Berlin"
+      day: "saturday"
     reviewers:
       - "Pantastisch"
     assignees:
