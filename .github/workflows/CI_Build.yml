@@ -82,7 +82,6 @@ jobs:
         tag_with_ref: true
         tag_with_sha: true
 
-
   build_app:
     needs: [build_frontend, build_backend]
     runs-on: windows-latest
