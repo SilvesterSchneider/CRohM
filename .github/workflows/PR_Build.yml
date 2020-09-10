@@ -55,5 +55,8 @@ jobs:
 
       - name: Test var
         env:
-          GITHUB_CONTEXT: ${{ github.head_ref }}
-        run: echo "$GITHUB_CONTEXT"
+          BRANCH_NAME: ${{ github.head_ref }}
+          SHA7: ${{ github.sha }}
+        run: |
+          echo "$BRANCH_NAME"
+          echo "$SHA7"
