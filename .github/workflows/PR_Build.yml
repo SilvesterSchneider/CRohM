@@ -56,7 +56,7 @@ jobs:
       - name: Test var
         env:
           BRANCH_NAME: ${{ github.head_ref }}
-          SHA7: sha-${{ github.sha }}
+          SHA: ${{ github.sha }}
         run: |
           echo "$BRANCH_NAME"
-          echo "${SHA7::7}"
+          echo "sha-${ SHA::7 }"
