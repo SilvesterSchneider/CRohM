@@ -59,4 +59,4 @@ jobs:
           SHA: ${{ github.sha }}
         run: |
           echo "$BRANCH_NAME"
-          echo "sha-${ SHA::7 }"
+          echo sha-${SHA::7}
