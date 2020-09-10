@@ -29,6 +29,8 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successful")]
         public async Task<IActionResult> test()
         {
+            await Task.Yield();
+
             return Ok();
         }
 
