@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ModelLayer.Helper
 {
-    public class RoleClaims
+    public static class RoleClaims
     {
         /// <summary>
         /// The admin role
@@ -96,7 +96,15 @@ namespace ModelLayer.Helper
         }
 
         private static List<Claim> dsgvoClaims = GetAllDsgvoClaimsInternally();
+        private static List<Claim> adminClaims = GetAllAdminClaimsInternally();
         private static List<Claim> allClaims = GetAllPredefinedClaims();
+
+        private static List<Claim> GetAllAdminClaimsInternally()
+        {
+            List<Claim> list = new List<Claim>();
+            list.AddRange(GetClaimListForStringArray(ADMIN_CLAIMS));
+            return list;
+        }
 
         private static List<Claim> GetAllDsgvoClaimsInternally()
         {
@@ -135,6 +143,15 @@ namespace ModelLayer.Helper
             return new List<Claim>(dsgvoClaims);
         }
 
+        /// <summary>
+        /// Get all admin related claims
+        /// </summary>
+        /// <returns>list with claims</returns>
+        public static List<Claim> GetAllAdminClaims()
+        {
+            return new List<Claim>(adminClaims);
+        }
+
         private static List<Claim> GetAllPredefinedClaims()
         {
             List<Claim> list = new List<Claim>();
@@ -142,7 +159,7 @@ namespace ModelLayer.Helper
             list.AddRange(dsgvoClaims);
             list.AddRange(GetClaimListForStringArray(ORGANISATION_CLAIMS));
             list.AddRange(GetClaimListForStringArray(CALENDAR_CLAIMS));
-            list.AddRange(GetClaimListForStringArray(ADMIN_CLAIMS));
+            list.AddRange(adminClaims);
             return list;
         }
     }

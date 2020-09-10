@@ -196,6 +196,13 @@ namespace ServiceLayer
 
         public async Task<IdentityResult> RemoveClaimAsync(Role role, Claim claim)
         {
+            if ((role.Id == 1 && RoleClaims.GetAllAdminClaims().FirstOrDefault(x => x.Type.Equals(claim.Type)) != null &&
+                RoleClaims.GetAllAdminClaims().FirstOrDefault(x => x.Value.Equals(claim.Value)) != null) ||
+                role.Id == 2 && RoleClaims.GetAllDsgvoClaims().FirstOrDefault(x => x.Type.Equals(claim.Type)) != null &&
+                RoleClaims.GetAllDsgvoClaims().FirstOrDefault(x => x.Value.Equals(claim.Value)) != null)
+            {
+                return IdentityResult.Success;
+            }
             return await manager.RemoveClaimAsync(role, claim);
         }
 
