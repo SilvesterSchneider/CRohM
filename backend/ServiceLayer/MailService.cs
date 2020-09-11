@@ -1,24 +1,36 @@
-﻿using System;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace ServiceLayer
 {
     /// <summary>
     /// This is the interface for later usage of the mail provider.
     /// </summary>
-    public interface IMailProvider
+    public interface IMailService
     {
-        /// <summary>
-        /// Send an email containing the new password for the user.
-        /// </summary>
-        /// <param name="newPassword">the new password</param>
-        /// <param name="mailAddress">the mail address to be sended to</param>
+        public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment,
+            string attachmentType);
+
         public bool PasswordReset(string newPassword, string mailAddress);
+
         public bool Registration(string benutzer, string passwort, string email);
+
+        public bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
+
+        public bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
     }
 
-    public class MailService : IMailProvider
+    public class MailService : IMailService
     {
+        public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
+        {
+            return SendMail(subject, body, address, new MemoryStream(attachment), attachmentType);
+        }
 
         public bool Registration(string benutzer, string passwort, string email)
         {
@@ -31,7 +43,37 @@ namespace ServiceLayer
                    "<p> Mit freundlichen Grüßen,</p> " +
                    "<p> Ihr CRohm Team.</p>";
 
-            return SendMail("Zugangsdaten", body, email);
+            return SendMail("Zugangsdaten", body, email, null, "");
+        }
+
+        public bool SendDataProtectionUpdateMessage(string title, string lastName, string emailAddressRecipient, string data)
+        {
+            string body = $"<p>Sehr geehrte/r {title} {lastName}</p> " +
+                          " <p> Sie hatten um Änderung bzw. Löschung von zur Ihrer Person in " +
+                          "       unserem Customer Relationship Management System(CRMS) " +
+                          "       gespeicherten Daten gebeten.</p> " +
+                          " <p> Folgende Daten wurden geändert:</p> " +
+                          " <ul> " +
+                          data +
+                          " </ul> " +
+                          " <p> Technische Hochschule Nürnberg</p> ";
+
+            return SendMail("Mitteilung über Änderung oder Löschung von Daten", body, emailAddressRecipient, null, "");
+        }
+
+        public bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data)
+        {
+            string body = $"<p>Sehr geehrte/r {title} {lastName}</p> " +
+                          " <p> Sie hatten um Änderung bzw. Löschung von zur Ihrer Person in " +
+                          "       unserem Customer Relationship Management System(CRMS) " +
+                          "       gespeicherten Daten gebeten.</p> " +
+                          " <p> Folgende Daten wurden gelöscht:</p> " +
+                          " <ul> " +
+                          data +
+                          " </ul> " +
+                          " <p> Technische Hochschule Nürnberg</p> ";
+
+            return SendMail("Mitteilung über Änderung oder Löschung von Daten", body, emailAddressRecipient, null, "");
         }
 
         public bool PasswordReset(string passwort, string email)
@@ -44,16 +86,15 @@ namespace ServiceLayer
                           "<p> Mit freundlichen Grüßen,</p> " +
                           "<p> Ihr CRohm Team.</p> ";
 
-            return SendMail("Ihr Passwort wurde zurückgesetzt.", body, email);
-
+            return SendMail("Ihr Passwort wurde zurückgesetzt.", body, email, null, "");
         }
 
-        private bool SendMail(string betreff, string body, string mail)
+        private bool SendMail(string subject, string body, string emailAddressRecipient, Stream attachment, string attachmentType)
         {
             try
             {
                 MailMessage msg = new MailMessage();
-                string[] str = new string[] { mail };
+                string[] str = new string[] { emailAddressRecipient };
                 msg.IsBodyHtml = true;
                 //Empfänger hinzufügen
                 foreach (string empf in str)
@@ -61,9 +102,11 @@ namespace ServiceLayer
                     msg.To.Add(new MailAddress(empf));
                 }
                 msg.From = new MailAddress("crohm_nuernberg@hotmail.com", "CRMS-Team");
-                msg.Subject = betreff;
+                msg.Subject = subject;
                 msg.Body = body;
 
+                if (attachment != null)
+                    msg.Attachments.Add(new Attachment(attachment, attachmentType));
 
                 SmtpClient client = new SmtpClient();
                 client.UseDefaultCredentials = false;
@@ -77,8 +120,10 @@ namespace ServiceLayer
                 client.EnableSsl = true;
                 client.Send(msg);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
                 return false;
             }
             return true;

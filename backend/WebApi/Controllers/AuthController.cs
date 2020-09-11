@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Helper;
+using ModelLayer.Models;
 using NSwag.Annotations;
 using ServiceLayer;
 
@@ -19,15 +20,18 @@ namespace WebApi.Controllers
         private readonly ISignInService _signInService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private IUserLoginService userLoginService;
 
         public AuthController(
             ISignInService signInService,
             IUserService userService,
-            IMapper mapper)
+            IMapper mapper,
+            IUserLoginService userLoginService)
         {
             _signInService = signInService;
             _userService = userService;
             _mapper = mapper;
+            this.userLoginService = userLoginService;
         }
 
         [HttpPost]
@@ -45,6 +49,9 @@ namespace WebApi.Controllers
                     return BadRequest("Login fehlgeschlagen!");
                 }
             }
+            user.LastLoginDate = DateTime.Now;
+            await _userService.UpdateUserAsync(user);
+            await userLoginService.CreateAsync(new UserLogin() { DateTimeOfLastLogin = DateTime.Now, UserId = user.Id } );
 
             if (user.UserLockEnabled)
             {

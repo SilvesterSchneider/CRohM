@@ -61,6 +61,6 @@ export class ContactsDetailComponent implements OnInit {
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
-		this.service.put(this.contact, this.contact.id, this.jwt.getUserId()).subscribe();
+		this.service.put(this.contact.id, this.contact ).subscribe();
 	}
 }

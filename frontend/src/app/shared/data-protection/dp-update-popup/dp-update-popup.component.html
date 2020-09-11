@@ -1,0 +1,16 @@
+
+
+  <div mat-dialog-title>
+    <span id="title">Mitteilung senden</span>
+  </div>
+  <div mat-dialog-content>
+    Sie haben als Datenschutzbeauftragter Daten des Kontakts geändert bzw. 
+    gelöscht. Möchten Sie die gem. Art. 19 EU-DSGVO notwendige Mitteilung 
+    darüber per E-Mail an den Kontakt senden?    
+    </div>
+  <div mat-dialog-actions>   
+    
+  <span class="fill-remaining-space"></span>
+    <button mat-raised-button [matDialogClose]="false">Nein</button>
+    <button mat-raised-button [matDialogClose]="true" color="primary">Ja, E-Mail automatisch senden</button>
+  </div>

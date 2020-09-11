@@ -11,21 +11,20 @@ import {
 	OnDestroy,
 	Inject
 } from '@angular/core';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { NgControl, FormControl } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatAutocompleteTrigger, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { OrganizationDto } from '../../shared/api-generated/api-generated';
+import { OrganizationDto, TagDto } from '../../shared/api-generated/api-generated';
 import { OrganizationService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
-import { JwtService } from 'src/app/shared/jwt.service';
 
 export class ItemList {
 	constructor(public item: string, public selected?: boolean) {
@@ -78,6 +77,15 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 	errorState: boolean;
 	controlType?: string;
 	autofilled?: boolean;
+	@ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
+	tagsControl = new FormControl();
+	selectedTags: TagDto[] = new Array<TagDto>();
+	separatorKeysCodes: number[] = [ENTER, COMMA];
+	filteredTagsObservable: Observable<string[]>;
+	allTags: string[] = [ 'Lehrbeauftragter', 'Kunde', 'Politiker', 'Firma', 'Behörde', 'Bildungseinrichtung', 'Institute', 'Ministerium',
+		 'Emeriti', 'Alumni'];
+	removable = true;
+	selectableTag = true;
 
 	constructor(
 		public dialogRef: MatDialogRef<OrganizationsEditDialogComponent>,
@@ -89,16 +97,61 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 		private cd: ChangeDetectorRef,
 		private contactService: ContactService,
 		private organizationService: OrganizationService,
-		private fb: FormBuilder,
-		private jwt: JwtService
+		private fb: FormBuilder
 	) {
 		super(dialogRef, dialog);
 		this.organization = data;
+		if (this.organization.tags != null && this.organization.tags.length > 0) {
+			this.organization.tags.forEach(x => this.selectedTags.push(x));
+		}
 		fm.monitor(elRef.nativeElement, true).subscribe((origin) => {
 			this.focused = !!origin;
 			this.stateChanges.next();
 		});
+		this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(
+			map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
 	}
+
+	private _filter(value: string): string[] {
+		const tagValue = value.toLowerCase();
+
+		return this.allTags.filter(tag => tag.toLowerCase().indexOf(tagValue) === 0);
+	  }
+
+	addTag(event: Event) {
+		const value = (event.target as HTMLInputElement).value;
+		if (value.length > 0 && this.selectedTags.find(a => a.name === value) == null) {
+			this.selectedTags.push({
+				id: 0,
+				name: value
+			});
+		}
+		this.tagsControl.setValue('');
+	}
+
+	removeTag() {
+		if (this.selectedTags.length > 0) {
+			this.selectedTags.splice(this.selectedTags.length - 1, 1);
+		}
+	}
+
+	remove(tag: TagDto) {
+		const index = this.selectedTags.indexOf(tag);
+		if (index >= 0) {
+			this.selectedTags.splice(index, 1);
+		}
+	}
+
+	selected(event: MatAutocompleteSelectedEvent): void {
+		if (this.selectedTags.find(a => a.name === event.option.viewValue) == null) {
+			this.selectedTags.push({
+			  id: 0,
+			  name: event.option.viewValue
+			});
+			this.tagInput.nativeElement.value = '';
+			this.tagsControl.setValue(null);
+		  }
+	  }
 
 	ngOnInit() {
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
@@ -253,11 +306,12 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 		this.organization.id = idOrganization;
 		this.organization.address.id = idAddress;
 		this.organization.contact.id = idContactPossibilities;
-		this.organizationService.put(this.organization, this.organization.id, this.jwt.getUserId()).subscribe();
+		this.organization.tags = this.selectedTags;
+		this.organizationService.put(this.organization, this.organization.id).subscribe();
 		this.itemsToDelete.forEach((x) =>
-			this.organizationService.removeContact(idOrganization, x.contactId, this.jwt.getUserId()).subscribe()
+			this.organizationService.removeContact(idOrganization, x.contactId).subscribe()
 		);
-		this.itemsToInsert.forEach((x) => this.organizationService.addContact(idOrganization, x.contactId, this.jwt.getUserId()).subscribe());
+		this.itemsToInsert.forEach((x) => this.organizationService.addContact(idOrganization, x.contactId).subscribe());
 		this.dialogRef.close({ delete: false, id: 0 });
 	}
 

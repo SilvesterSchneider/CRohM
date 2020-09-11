@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,7 +15,7 @@ using ServiceLayer;
 
 namespace WebApi.Controllers
 {
-    [Route("api/home")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ModificationEntryController : ControllerBase
     {
@@ -34,8 +34,25 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
         public async Task<IActionResult> GetSortedListByType(MODEL_TYPE modelDataType)
         {
-            List<ModificationEntry> entries = await modificationEntryRepository.GetSortedModificationEntriesByTypeAsync(modelDataType);
-            if (entries.Any())
+            List<ModificationEntry> entries = await modificationEntryRepository.GetSortedModificationEntriesByModelDataTypeAsync(modelDataType);
+            if (entries != null)
+            {
+                return Ok(mapper.Map<List<ModificationEntryDto>>(entries));
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet("id")]
+        [Authorize]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(List<ModificationEntryDto>), Description = "successfully found")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
+        public async Task<IActionResult> GetSortedListByTypeAndId([FromQuery] long id, [FromQuery] MODEL_TYPE modelDataType)
+        {
+            List<ModificationEntry> entries = await modificationEntryRepository.GetModificationEntriesByIdAndModelTypeAsync(id, modelDataType);
+            if (entries != null)
             {
                 return Ok(mapper.Map<List<ModificationEntryDto>>(entries));
             }

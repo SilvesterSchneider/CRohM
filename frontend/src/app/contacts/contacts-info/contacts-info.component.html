@@ -7,54 +7,40 @@
                         Übersicht
                     </h5>
                 </div>
-                <div class="col-md-3">
-                    <mat-form-field>
-                        <input [readonly]="true" matInput placeholder="Vorname" formControlName="preName">
-                    </mat-form-field>
-                </div>
-                <div class="col-md-3">
-                    <mat-form-field>
-                        <input [readonly]="true" matInput placeholder="Nachname" formControlName="name">
-                    </mat-form-field>
-                </div>
+                <mat-form-field class="col-md-6">
+                    <input [readonly]="true" matInput placeholder="Vorname" formControlName="preName">
+                </mat-form-field>
+                <mat-form-field class="col-md-6">
+                    <input [readonly]="true" matInput placeholder="Nachname" formControlName="name">
+                </mat-form-field>
             </div>
 
             <div class="column" formGroupName="address">
-                <div class="row" >
+                <div class="row">
                     <div class="col-md-12">
                         <h5>
                             Adressdaten
                         </h5>
                     </div>
-                    <div class="col-md">
-                        <mat-form-field>
-                            <input [readonly]="true" matInput placeholder="Strasse" formControlName="street">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md">
-                        <mat-form-field>
-                            <input [readonly]="true" matInput placeholder="Hausnummer" formControlName="streetNumber">
-                        </mat-form-field>
-                    </div>
+                    <mat-form-field class="col-md-6">
+                        <input [readonly]="true" matInput placeholder="Strasse" formControlName="street">
+                    </mat-form-field>
+                    <mat-form-field class="col-md-6">
+                        <input [readonly]="true" matInput placeholder="Hausnummer" formControlName="streetNumber">
+                    </mat-form-field>
                 </div>
                 <div class="row">
-                    <div class="col-md">
-                        <mat-form-field>
-                            <input [readonly]="true" matInput placeholder="Stadt" formControlName="city">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md">
-                        <mat-form-field>
-                            <input [readonly]="true" matInput placeholder="PLZ" formControlName="zipcode">
-                        </mat-form-field>
-                    </div>
+                    <mat-form-field class="col-md-6">
+                        <input [readonly]="true" matInput placeholder="Stadt" formControlName="city">
+                    </mat-form-field>
+                    <mat-form-field class="col-md-6">
+                        <input [readonly]="true" matInput placeholder="PLZ" formControlName="zipcode">
+                    </mat-form-field>
                 </div>
                 <div class="row">
-                    <div class="col-md">
-                        <mat-form-field>
-                            <input [readonly]="true" matInput placeholder="Land" formControlName="country">
-                        </mat-form-field>
-                    </div>
+                    <mat-form-field class="col-md-12">
+                        <input [readonly]="true" matInput placeholder="Land" formControlName="country">
+                    </mat-form-field>
                 </div>
             </div>
         </div>
@@ -65,23 +51,17 @@
                         Kontaktmöglichkeiten
                     </h5>
                 </div>
-                <div class="col-md">
-                    <mat-form-field>
-                        <input [readonly]="true" matInput placeholder="E-Mail" formControlName="mail">
-                    </mat-form-field>
-                </div>
-                <div class="col-md">
-                    <mat-form-field>
-                        <input [readonly]="true" matInput placeholder="Telefonnummer" formControlName="phoneNumber">
-                    </mat-form-field>
-                </div>
+                <mat-form-field class="col-md-6">
+                    <input [readonly]="true" matInput placeholder="E-Mail" formControlName="mail">
+                </mat-form-field>
+                <mat-form-field class="col-md-6">
+                    <input [readonly]="true" matInput placeholder="Telefonnummer" formControlName="phoneNumber">
+                </mat-form-field>
             </div>
             <div class="row">
-                <div class="col-md">
-                    <mat-form-field>
-                        <input [readonly]="true" matInput placeholder="Faxnummer" formControlName="fax">
-                    </mat-form-field>
-                </div>
+                <mat-form-field class="col-md-6">
+                    <input [readonly]="true" matInput placeholder="Faxnummer" formControlName="fax">
+                </mat-form-field>
             </div>
         </div>
     </div>
@@ -121,7 +101,7 @@
         <mat-table #table [dataSource]="events">
             <ng-container matColumnDef="icon">
                 <mat-header-cell *matHeaderCellDef> Typ </mat-header-cell>
-                <mat-cell *matCellDef="let element"> 
+                <mat-cell *matCellDef="let element">
                     <mat-icon *ngIf="eventParticipated(element)">check_box</mat-icon>
                     <mat-icon *ngIf="eventNotParticipated(element)">check_box_outline_blank</mat-icon>
                     <mat-icon *ngIf="isLocalPhone(element)">local_phone</mat-icon>
@@ -148,5 +128,51 @@
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </mat-table>
     </div>
-    <button mat-raised-button color="primary" title="Schließen" type="submit" (click)="closeDialog()">Schließen</button>
+    <div *ngIf="dataHistory.length > 0" class="col-md-12">
+        <h5>Datenveränderungen</h5>
+        <mat-table #table [dataSource]="dataHistory">
+            <ng-container matColumnDef="datum">
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> Datum </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{getDate(element.dateTime)}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="bearbeiter">
+                <mat-header-cell fxFlex="20%"  *matHeaderCellDef> Bearbeiter </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{getUsername(element.user)}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="feldname">
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> Eigenschaft </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.propertyName}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="alterWert">
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> Alter Wert </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.oldValue}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="neuerWert">
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> Neuer Wert </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.actualValue}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="kommentar">
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> Kommentar </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.comment}}
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumnsDataChangeHistory"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumnsDataChangeHistory;"></mat-row>
+        </mat-table>
+    </div>
+    <div *ngIf="tags.length > 0" class="col-md-12">
+        <h5>Tags</h5>
+        <mat-chip-list #chipList>
+            <mat-chip *ngFor="let item of tags">
+                {{ item.name }}
+            </mat-chip>
+        </mat-chip-list>
+    </div>
+    <button class="contactDetails" mat-raised-button color="primary" title="Schließen" type="submit"
+        (click)="closeDialog()">Schließen</button>
 </mat-dialog-content>

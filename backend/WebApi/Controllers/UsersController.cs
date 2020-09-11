@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -36,6 +36,7 @@ namespace WebApi.Controllers
             return Ok(_mapper.Map<List<UserDto>>(users));
         }
 
+        //[ClaimsAuthorization(ClaimType = "Anlegen eines Benutzers", ClaimValue = "Anlegen eines Benutzers")]
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(UserDto), Description = "successfully created")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "unsuccessfully request")]
@@ -54,6 +55,28 @@ namespace WebApi.Controllers
             return BadRequest();
         }
 
+        //[ClaimsAuthorization(ClaimType = "Zuweisung einer neuen Rolle zu einem Benutzer",
+        //                     ClaimValue = "Zuweisung einer neuen Rolle zu einem Benutzer")]
+        [HttpPut]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
+        [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
+        public async Task<IActionResult> Put(UserDto userToUpdate)
+        {
+            var user = _mapper.Map<User>(userToUpdate);
+            var result = await _userService.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+
+            return Conflict();
+        }
+
+        //[ClaimsAuthorization(ClaimType =  "Rücksetzen eines Passworts eines Benutzers",
+        //                     ClaimValue =  "Rücksetzen eines Passworts eines Benutzers")]
+        //[ClaimsAuthorization(ClaimType = "Zuweisung einer neuen Rolle zu einem Benutzer",
+        //                     ClaimValue = "Zuweisung einer neuen Rolle zu einem Benutzer")]
         // put updates user with id {id} via frontend
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]

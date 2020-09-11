@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2019 Christ Electronic System GmbH -->
+<!-- All Rights Reserved. -->
 <mat-toolbar>
     <mat-toolbar-row>
         <span>Kontakte</span>
@@ -6,11 +8,11 @@
             <mat-label>Suche</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
         </mat-form-field>
-        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Kontakt hinzufügen" (click)="addDummyContact()"> 
+        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Kontakt hinzufügen" (click)="addDummyContact()">
             <mat-icon>add</mat-icon> Dummy Kontakt hinzufügen
         </button>
         <button class="button" button="submit" mat-mini-fab color="primary" (click)="openAddDialog()">
-            <mat-icon>add</mat-icon> 
+            <mat-icon>add</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
@@ -61,6 +63,9 @@
         <ng-container matColumnDef="action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
+                <a (click)="openDisclosureDialog(element.id)" type="button">
+                    <mat-icon color="primary" class="icon">description</mat-icon>
+                </a>
                 <a (click)="openEditDialog(element)" type="button">
                     <mat-icon color="primary" class="icon">edit</mat-icon>
                 </a>
@@ -70,7 +75,7 @@
                 <a (click)="addNote(element.id)" type="button">
                     <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
                 </a>
-                <a (click)="deleteContact(element.id)" type="button">
+                <a (click)="deleteContact(element)" type="button">
                     <mat-icon color="primary" title="Kontakt löschen" class="icon">delete</mat-icon>
                 </a>
             </mat-cell>

@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormBuilder, Validators, } from '@angular/forms';
-import { IPermissionTemp } from '../mock-roles';
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
+import { PermissionDto } from 'src/app/shared/api-generated/api-generated';
 
 @Component({
   selector: 'app-create-role',
@@ -17,7 +17,7 @@ export class CreateRoleDialogComponent extends BaseDialogInput<CreateRoleDialogC
   constructor(
     public dialogRef: MatDialogRef<CreateRoleDialogComponent>,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public permissions: IPermissionTemp[],
+    @Inject(MAT_DIALOG_DATA) public permissions: PermissionDto[],
     private readonly fb: FormBuilder) {
     super(dialogRef, dialog);
   }
@@ -31,5 +31,4 @@ export class CreateRoleDialogComponent extends BaseDialogInput<CreateRoleDialogC
   hasChanged() {
     return !this.roleForm.pristine;
   }
-
 }

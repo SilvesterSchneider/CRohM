@@ -39,7 +39,7 @@ namespace WebApi
             var port = Configuration["DBPort"] ?? "1433";
             var user = Configuration["DBUser"] ?? "SA";
             var password = Configuration["DBPassword"] ?? "CRohM2020";
-            var database = Configuration["DBName"] ?? "CRMDB";
+            var database = Configuration["DBName"] ?? "CRMDB"; 
 
             var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
             connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
@@ -120,14 +120,23 @@ namespace WebApi
                 });
 
             services.AddHealthChecks();
+
         }
 
-        public void Configure(IPermissionGroupService permissionGroupService, IMapper mapper, IApplicationBuilder app, IWebHostEnvironment env, IUserService userService, CrmContext dataContext)
+        public void Configure(
+            IUserPermissionGroupRepository userPermissionGroupRepo,
+            IPermissionGroupService permissionGroupService,
+            IMapper mapper,
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IUserService userService,
+            CrmContext dataContext,
+            IServiceProvider serviceProvider,
+            IConfiguration configuration)
         {
             dataContext.Database.Migrate();
             ApplicationDbInitializer.SeedPermissions(permissionGroupService, mapper);
-            ApplicationDbInitializer.SeedUsers(userService, permissionGroupService);
-
+            ApplicationDbInitializer.SeedUsers(userService, permissionGroupService, userPermissionGroupRepo);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -157,13 +166,14 @@ namespace WebApi
             {
                 spa.Options.SourcePath = "wwwroot";
             });
+            new UserCheckThread(serviceProvider.CreateScope().ServiceProvider.GetService<IUserCheckDateService>(), configuration).runScheduledService().Wait();
         }
 
         private void AddDependencyInjection(IServiceCollection services)
         {
             //###########################Helper#######################################
 
-            services.AddSingleton<IMailProvider, MailService>();
+            services.AddSingleton<IMailService, MailService>();
 
             //###########################Services#######################################
             services.AddScoped<RoleManager<Permission>>();
@@ -177,6 +187,10 @@ namespace WebApi
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IPermissionGroupService, PermissionGroupService>();
+            services.AddScoped<IUserCheckDateService, UserCheckDateService>();
+            services.AddScoped<IModificationEntryService, ModificationEntryService>();
+            services.AddScoped<IUserLoginService, UserLoginService>();
+            services.AddScoped<IDataProtectionService, DataProtectionService>();
 
             //###########################Repositories#######################################
 
@@ -189,6 +203,10 @@ namespace WebApi
             services.AddScoped<IEventContactRepository, EventContactRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IModificationEntryRepository, ModificationEntryRepository>();
+            services.AddScoped<IUserCheckDateRepository, UserCheckDateRepository>();
+            services.AddScoped<IContactPossibilitiesEntryRepository, ContactPossibilitiesEntryRepository>();
+            services.AddScoped<IUserLoginRepository, UserLoginRepository>();
+            services.AddScoped<IUserPermissionGroupRepository, UserPermissionGroupRepository>();
         }
     }
 }

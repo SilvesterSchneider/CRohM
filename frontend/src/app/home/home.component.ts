@@ -3,11 +3,13 @@ import { ContactService, OrganizationService, ContactDto, OrganizationDto, Event
   ModificationEntryService, MODEL_TYPE, MODIFICATION, ModificationEntryDto, AddressDto,
   ContactPossibilitiesDto,
   ParticipatedDto,
-  HistoryElementDto} from '../shared/api-generated/api-generated';
+  HistoryElementDto,
+  UserLoginService} from '../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts/contacts-info/contacts-info.component';
 import { EventsInfoComponent } from '../events/events-info/events-info.component';
 import { OrganizationsInfoComponent } from '../organizations/organizations-info/organizations-info.component';
+import { JwtService } from '../shared/jwt.service';
 
 export class ContactExtended implements ContactDto {
   id: number;
@@ -55,40 +57,61 @@ export class HomeComponent implements OnInit {
   public contacts: ContactExtended[] = new Array<ContactExtended>();
   public organizations: OrganizationExtended[] = new Array<OrganizationExtended>();
   public events: EventExtended[] = new Array<EventExtended>();
+  AMOUNT_OF_DATASETS = 2;
+  public lastLogin: string;
+  private weekDays: string[] = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
   constructor(
     private contactsService: ContactService,
     private organizationService: OrganizationService,
     private eventsService: EventService,
     private modificationEntryService: ModificationEntryService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private userLoginService: UserLoginService,
+    private jwt: JwtService) { }
 
   ngOnInit() {
     this.modificationEntryService.getSortedListByType(MODEL_TYPE.CONTACT).subscribe(x => {
-      const index = x.length - 1;
-      if (index > -1) {
-        this.addContact(x[0]);
-      }
-      if (index > 0) {
-        this.addContact(x[1]);
-      }
+      let modelId = -1;
+      let idx = 0;
+      x.forEach(a => {
+        if (a.dataModelId !== modelId && idx < this.AMOUNT_OF_DATASETS) {
+          modelId = a.dataModelId;
+          idx++;
+          this.addContact(a);
+        }
+      });
     });
     this.modificationEntryService.getSortedListByType(MODEL_TYPE.ORGANIZATION).subscribe(x => {
-      const index = x.length - 1;
-      if (index > -1) {
-        this.addOrganization(x[0]);
-      }
-      if (index > 0) {
-        this.addOrganization(x[1]);
-      }});
+      let modelId = -1;
+      let idx = 0;
+      x.forEach(a => {
+        if (a.dataModelId !== modelId && idx < this.AMOUNT_OF_DATASETS) {
+          modelId = a.dataModelId;
+          idx++;
+          this.addOrganization(a);
+        }
+      });
+    });
     this.modificationEntryService.getSortedListByType(MODEL_TYPE.EVENT).subscribe(x => {
-      const index = x.length - 1;
-      if (index > -1) {
-        this.addEvent(x[0]);
-      }
-      if (index > 0) {
-        this.addEvent(x[1]);
-    }});
+      let modelId = -1;
+      let idx = 0;
+      x.forEach(a => {
+        if (a.dataModelId !== modelId && idx < this.AMOUNT_OF_DATASETS) {
+          modelId = a.dataModelId;
+          idx++;
+          this.addEvent(a);
+        }
+      });
+    });
+    this.userLoginService.getTheLastLoginTimeOfUserById(this.jwt.getUserId()).subscribe(x => this.lastLogin = this.getDate(x));
+  }
+
+  getDate(x: string): string {
+    const date = new Date(x);
+    return this.weekDays[date.getDay()] + ' den ' + date.getDate().toString() + '-' + (date.getMonth() + 1).toString()
+      + '-' + date.getFullYear().toString() + ' um ' + date.getHours().toString() + ':' + date.getMinutes().toString()
+      + '.' + date.getSeconds().toString() + ' Uhr';
   }
 
   addEvent(entry: ModificationEntryDto) {
@@ -101,7 +124,7 @@ export class HomeComponent implements OnInit {
             id: y.id,
             contacts: y.contacts,
             participated: y.participated,
-            userName: entry.userName,
+            userName: entry.user?.userName,
             created: entry.modificationType === MODIFICATION.CREATED
           });
         }
@@ -117,7 +140,7 @@ export class HomeComponent implements OnInit {
             name: y.name,
             id: y.id,
             employees: y.employees,
-            userName: entry.userName,
+            userName: entry.user?.userName,
             created: entry.modificationType === MODIFICATION.CREATED
           });
         }
@@ -136,20 +159,20 @@ export class HomeComponent implements OnInit {
         events: y.events,
         history: y.history,
         organizations: y.organizations,
-        userName: entry.userName,
+        userName: entry.user?.userName,
         created: entry.modificationType === MODIFICATION.CREATED
     }));
   }
 
-  openContactDetails(contact: ContactDto) {
-    this.dialog.open(ContactsInfoComponent, {data: contact});
+  openContactDetails(contactId: number) {
+    this.contactsService.getById(contactId).subscribe(x => this.dialog.open(ContactsInfoComponent, {data: x}));
   }
 
-  openOrganizationDetails(organization: OrganizationDto) {
-    this.dialog.open(OrganizationsInfoComponent, {data: organization});
+  openOrganizationDetails(organizationId: number) {
+    this.organizationService.getById(organizationId).subscribe(x => this.dialog.open(OrganizationsInfoComponent, {data: x}));
   }
 
-  openEventDetails(event: EventDto) {
-    this.dialog.open(EventsInfoComponent, {data: event});
+  openEventDetails(eventId: number) {
+    this.eventsService.getById(eventId).subscribe(x => this.dialog.open(EventsInfoComponent, {data: x}));
   }
 }

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using RepositoryLayer;
+using ModelLayer.Helper;
 
 namespace WebApi.Controllers
 {
@@ -21,15 +21,23 @@ namespace WebApi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUserService userService;
-        private readonly IModificationEntryRepository modRepo;
+        private readonly IModificationEntryService modService;
         private readonly IOrganizationService _organizationService;
         private readonly ILogger _logger;
+        private IContactService contactService;
 
-        public OrganizationController(IMapper mapper, IOrganizationService organizationService, IUserService userService, ILoggerFactory logger, IModificationEntryRepository modRepo)
+        public OrganizationController(
+            IMapper mapper,
+            IOrganizationService organizationService,
+            IUserService userService,
+            ILoggerFactory logger,
+            IModificationEntryService modService,
+            IContactService contactService)
         {
             _mapper = mapper;
+            this.contactService = contactService;
             this.userService = userService;
-            this.modRepo = modRepo;
+            this.modService = modService;
             _organizationService = organizationService;
             _logger = logger.CreateLogger(nameof(OrganizationController));
         }
@@ -60,10 +68,12 @@ namespace WebApi.Controllers
             return Ok(organizationDto);
         }
 
+        //[ClaimsAuthorization(ClaimType = Einsehen und Bearbeiten aller Organisationen",
+        //                     ClaimValue = "Einsehen und Bearbeiten aller Organisationen")]
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> Put([FromBody]OrganizationDto organization, [FromRoute]long id, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> Put([FromBody]OrganizationDto organization, [FromRoute]long id)
         {
             if (organization == null)
             {
@@ -73,14 +83,19 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             var mappedOrganization = _mapper.Map<Organization>(organization);
-            await _organizationService.UpdateAsyncWithAlleDependencies(mappedOrganization);
-            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
+            await modService.UpdateOrganizationAsync(userOfChange, await _organizationService.GetByIdAsync(id), mappedOrganization, true);
+            if (await _organizationService.UpdateAsyncWithAlleDependencies(mappedOrganization))
+            {
+                await modService.CommitChanges();
+            }
             var organizationDto = _mapper.Map<OrganizationDto>(mappedOrganization);
             return Ok(organizationDto);
         }
 
+        //[ClaimsAuthorization(ClaimType = Einsehen und Bearbeiten aller Organisationen",
+        //                     ClaimValue = "Einsehen und Bearbeiten aller Organisationen")]
         /// <summary>
         /// Add new contact to organization
         /// </summary>
@@ -89,7 +104,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}/addContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> AddContact([FromRoute]long id, [FromBody]long contactId, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> AddContact([FromRoute]long id, [FromBody]long contactId)
         {
             Organization organization;
             try
@@ -103,11 +118,19 @@ namespace WebApi.Controllers
             }
 
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
-            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            string contactName = string.Empty;
+            Contact contact = await contactService.GetByIdAsync(contactId);
+            if (contact != null)
+            {
+                contactName = contact.PreName + " " + contact.Name;
+            }
+            await modService.ChangeEmployeesOfOrganization(id, contactName, false, userOfChange);
             return Ok(organizationDto);
         }
 
+        //[ClaimsAuthorization(ClaimType = Einsehen und Bearbeiten aller Organisationen",
+        //                     ClaimValue = "Einsehen und Bearbeiten aller Organisationen")]
         /// <summary>
         /// Remove a contact from a organization
         /// </summary>
@@ -116,7 +139,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}/removeContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> RemoveContact([FromRoute]long id, [FromBody]long contactId, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> RemoveContact([FromRoute]long id, [FromBody]long contactId)
         {
             try
             {
@@ -127,24 +150,32 @@ namespace WebApi.Controllers
                 _logger.LogWarning(e.Message);
                 return BadRequest();
             }
-            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.UpdateModificationAsync(userNameOfChange, id, MODEL_TYPE.ORGANIZATION);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            string contactName = string.Empty;
+            Contact contact = await contactService.GetByIdAsync(contactId);
+            if (contact != null)
+            {
+                contactName = contact.PreName + " " + contact.Name;
+            }
+            await modService.ChangeEmployeesOfOrganization(id, contactName, true , userOfChange);
             return Ok();
         }
 
+        //[ClaimsAuthorization(ClaimType = "Anlegen einer Organisation", ClaimValue = "Anlegen einer Organisation")]
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(OrganizationDto), Description = "successfully created")]
-        public async Task<IActionResult> Post([FromBody]OrganizationCreateDto organizationToCreate, [FromQuery]long idOfUserChange)
+        public async Task<IActionResult> Post([FromBody]OrganizationCreateDto organizationToCreate)
         {
             Organization organization = await _organizationService.CreateAsync(_mapper.Map<Organization>(organizationToCreate));
 
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
             var uri = $"https://{Request.Host}{Request.Path}/{organizationDto.Id}";
-            string userNameOfChange = await userService.GetUserNameByIdAsync(idOfUserChange);
-            await modRepo.CreateNewEntryAsync(userNameOfChange, organization.Id, MODEL_TYPE.ORGANIZATION);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            await modService.CreateNewOrganizationEntryAsync(userOfChange, organization.Id);
             return Created(uri, organizationDto);
         }
 
+        //[ClaimsAuthorization(ClaimType = "Löschen einer Organisation", ClaimValue = "Löschen einer Organisation")]
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
@@ -156,7 +187,19 @@ namespace WebApi.Controllers
                 return NotFound();
             }
             await _organizationService.DeleteAsync(organization);
-            await modRepo.RemoveEntryAsync(id, MODEL_TYPE.ORGANIZATION);
+            await modService.UpdateOrganizationByDeletionAsync(id);
+            return Ok();
+        }
+
+        //[ClaimsAuthorization(ClaimType = "Anlegen einer Organisation", ClaimValue = "Anlegen einer Organisation")]
+        // creates new contact in db via frontend
+        [HttpPost("{id}/historyElement")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
+        public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id)
+        { 
+            await _organizationService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            await modService.UpdateOrganizationByHistoryElementAsync(userOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
             return Ok();
         }
     }

@@ -1,4 +1,4 @@
-﻿using ModelLayer;
+using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer.Base;
 using System;
@@ -28,6 +28,8 @@ namespace RepositoryLayer
         public async Task<List<Contact>> GetAllContactsOfAnOrganizationAsync(long id)
         {
             Organization org = await Entities
+                .Include(t => t.Tags)
+                .Include(d => d.History)
                 .Include(a => a.Contact)
                 .ThenInclude(b => b.ContactEntries)
                 .Include(x => x.OrganizationContacts)
@@ -46,6 +48,8 @@ namespace RepositoryLayer
         public override async Task<Organization> GetByIdAsync(long id)
         {
             return await Entities
+                .Include(t => t.Tags)
+                .Include(d => d.History)
                 .Include(x => x.Address)
                 .Include(y => y.Contact)
                 .ThenInclude(b => b.ContactEntries)
@@ -58,15 +62,20 @@ namespace RepositoryLayer
         {
             return Entities
                 .Include(x => x.Address)
+                .Include(d => d.History)
                 .Include(y => y.Contact)
                 .ThenInclude(b => b.ContactEntries)
                 .Include(z => z.OrganizationContacts)
-                .ThenInclude(a => a.Contact).ToListAsync();
+                .ThenInclude(a => a.Contact)
+                .Include(t => t.Tags)
+                .ToListAsync();
         }
 
         public async Task<bool> UpdateAsyncWithAlleDependencies(Organization newOrganization)
         {
             Organization organization = await Entities
+                .Include(t => t.Tags)
+                .Include(d => d.History)
                 .Include(x => x.Address)
                 .Include(y => y.OrganizationContacts)
                 .Include(z => z.Contact)
@@ -113,6 +122,30 @@ namespace RepositoryLayer
                     {
                         organization.Contact.ContactEntries.Add(entry);
                     }
+                }
+                List<Tag> tagsToAdd = new List<Tag>();
+                List<Tag> tagsToRemove = new List<Tag>();
+                foreach (Tag tag in newOrganization.Tags)
+                {
+                    if (organization.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        tagsToAdd.Add(tag);
+                    }
+                }
+                foreach (Tag tag in organization.Tags)
+                {
+                    if (newOrganization.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
+                    {
+                        tagsToRemove.Add(tag);
+                    }
+                }
+                foreach (Tag tag in tagsToRemove)
+                {
+                    organization.Tags.Remove(tag);
+                }
+                foreach (Tag tag in tagsToAdd)
+                {
+                    organization.Tags.Add(tag);
                 }
                 await UpdateAsync(organization);
                 return true;

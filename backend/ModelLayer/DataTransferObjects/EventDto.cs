@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,6 +13,7 @@ namespace ModelLayer.DataTransferObjects
         public float Duration { get; set; }
         public List<ContactDto> Contacts { get; set; } = new List<ContactDto>();
         public List<ParticipatedDto> Participated { get; set; } = new List<ParticipatedDto>();
+        public List<TagDto> Tags { get; set; } = new List<TagDto>();
     }
 
     public class EventCreateDto

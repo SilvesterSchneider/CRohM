@@ -1,6 +1,6 @@
 <mat-dialog-content>
     <div class="eventsAdd" [formGroup]="eventsForm">
-        <div class="column">
+        <div class="row">
             <div class="col-md-12">
                 <h3>
                     Veranstaltungsinformationen
@@ -33,28 +33,77 @@
             Teilnehmer
         </h6>
     </div>
-    <mat-table *ngIf="contacts.length > 0" #table [dataSource]="contacts">
-        <ng-container matColumnDef="participated">
-            <mat-header-cell *matHeaderCellDef> Teilgenommen </mat-header-cell>
-            <mat-cell *matCellDef="let element"> 
-                <mat-icon *ngIf="!element.participated">check_box_outline_blank</mat-icon>
-                <mat-icon *ngIf="element.participated">check_box</mat-icon>
-            </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="prename">
-            <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.preName}}
-            </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.name}}
-            </mat-cell>
-        </ng-container>
-        <mat-header-row *matHeaderRowDef="columnsContacts"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: columnsContacts;"></mat-row>
-    </mat-table>
-    <button mat-raised-button color="primary" title="Schließen" (click)="close()">
+    <div class="col-md-12">
+        <mat-table *ngIf="contacts.length > 0" #table [dataSource]="contacts">
+            <ng-container matColumnDef="participated">
+                <mat-header-cell *matHeaderCellDef> Teilgenommen </mat-header-cell>
+                <mat-cell *matCellDef="let element"> 
+                    <mat-icon *ngIf="!element.participated">check_box_outline_blank</mat-icon>
+                    <mat-icon *ngIf="element.participated">check_box</mat-icon>
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="prename">
+                <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.preName}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.name}}
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="columnsContacts"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: columnsContacts;"></mat-row>
+        </mat-table>
+    </div>
+    <div class="col-md-12">
+        <h6 *ngIf="dataHistory.length > 0">Datenveränderungen</h6>
+    </div>
+    <div class="col-md-12">
+        <mat-table *ngIf="dataHistory.length > 0" #table [dataSource]="dataHistory">
+            <ng-container matColumnDef="datum">
+                <mat-header-cell *matHeaderCellDef> Datum </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{getDate(element.dateTime)}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="bearbeiter">
+                <mat-header-cell *matHeaderCellDef> Bearbeiter </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.userName}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="feldname">
+                <mat-header-cell *matHeaderCellDef> Eigenschaft </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.propertyName}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="alterWert">
+                <mat-header-cell *matHeaderCellDef> Alter Wert </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.oldValue}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="neuerWert">
+                <mat-header-cell *matHeaderCellDef> Neuer Wert </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.actualValue}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="kommentar">
+                <mat-header-cell *matHeaderCellDef> Kommentar </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.comment}}
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumnsDataChangeHistory"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumnsDataChangeHistory;"></mat-row>
+        </mat-table>
+    </div>
+	<div *ngIf="tags.length > 0" class="col-md-12">
+		<h5>Tags</h5>
+		<mat-chip-list #chipList>
+			<mat-chip *ngFor="let item of tags">
+				{{ item.name }}
+			</mat-chip>
+		</mat-chip-list>
+	</div>
+    <button class="margin" mat-raised-button color="primary" title="Schließen" (click)="close()">
         Schließen
     </button>
 </mat-dialog-content>

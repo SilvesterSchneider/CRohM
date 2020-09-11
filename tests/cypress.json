@@ -1,0 +1,13 @@
+{
+    "baseUrl": "https://localhost",
+    "fixturesFolder": "fixtures",
+    "integrationFolder": "integration",
+    "screenshotsFolder": "screenshots",
+    "videosFolder": "videos",
+    "pluginsFile": "plugins/index.js",
+    "supportFile": "support/index.js",
+    "reporter": "cypress-junit-reporter",
+    "reporterOptions": {
+        "mochaFile": "reports/cypress.xml"
+    }
+}

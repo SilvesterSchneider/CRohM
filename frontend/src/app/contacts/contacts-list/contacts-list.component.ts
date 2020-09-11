@@ -1,16 +1,19 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { ContactService, UsersService } from '../../shared/api-generated/api-generated';
+import { ContactService, UsersService, DataProtectionService } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
-import { ContactsAddHistoryComponent } from '../contacts-add-history/contacts-add-history.component';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { ContactsEditDialogComponent } from '../contacts-edit-dialog/contacts-edit-dialog.component';
 import { ContactsAddDialogComponent } from '../contacts-add-dialog/contacts-add-dialog.component';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
+import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { DataProtectionHelperService,DpUpdatePopupComponent } from 'src/app/shared/data-protection';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
 
 @Component({
   selector: 'app-contacts-list',
@@ -28,13 +31,15 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<ContactDto>();
 
   constructor(
-    private userService: UsersService,
     private service: ContactService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dialog: MatDialog,
     private mediaObserver: MediaObserver,
+    private readonly dataProtectionService: DataProtectionService,
+    private readonly dsgvoService: DataProtectionHelperService,
+    private readonly snackBar: MatSnackBar,
     private jwt: JwtService) {
-      this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
+    this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
       if (change[0].mqAlias !== this.currentScreenWidth) {
         this.currentScreenWidth = change[0].mqAlias;
         this.setupTable();
@@ -81,11 +86,21 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   private getData() {
     this.contacts = this.service.getAll();
     this.contacts.subscribe(x => {
-       this.length = x.length;
-       x.forEach(y => this.dataSource.data = x);
+      this.length = x.length;
+      this.dataSource.data = x;
     });
     this.changeDetectorRefs.detectChanges();
   }
+
+  openDisclosureDialog(id: number) {
+    this.service.getById(id).subscribe((x) => {
+    const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.contacts = this.service.getAll();
+    });
+  });
+}
 
   openAddDialog() {
     const dialogRef = this.dialog.open(ContactsAddDialogComponent, {
@@ -99,30 +114,65 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   openEditDialog(contact: ContactDto) {
     const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: contact, disableClose: true });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result.delete) {
-        this.deleteContact(result.id);
+    dialogRef.afterClosed().subscribe((editDialogResult) => {
+      if (editDialogResult.delete) {
+        this.deleteContact(contact);
+      } else {
+        if (editDialogResult.newContact && editDialogResult.oldContact && this.jwt.isDatenschutzbeauftragter()) {
+        const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
+
+        dialogDSGVORef.afterClosed().subscribe(sendMessage => {
+          if (sendMessage) {
+            const diff = this.dsgvoService.getDiffOfObjects( editDialogResult.newContact, editDialogResult.oldContact, ['unchanged']);
+            this.dataProtectionService.sendUpdateMessage({delete: false, contactChanges: diff, contact}).subscribe({error: err => {
+              this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
+                duration: 2000,
+              });
+            }});
+          }
+        });
       }
-      this.getData();
+        this.getData();
+      }
     });
   }
 
-  deleteContact(id: number) {
+  deleteContact(contact: ContactDto) {
     const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
       data: 'Kontakt',
       disableClose: true
     });
 
     deleteDialogRef.afterClosed().subscribe((deleteResult) => {
-      if (deleteResult?.delete) {
-        this.service.delete(id).subscribe(x => this.getData());
+      if (deleteResult?.delete ) {
+        this.service.delete(contact.id).subscribe(x => {
+          this.service.getAll().subscribe(fu => {
+            this.dataSource.data = fu;
+           });
+        });
+        if (this.jwt.isDatenschutzbeauftragter()) {
+        const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
+
+        dialogDSGVORef.afterClosed().subscribe(sendMessage => {
+          if (sendMessage) {
+            this.dataProtectionService.sendUpdateMessage({delete: true, contactChanges: null, contact}).subscribe({error: err => {
+              this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
+                duration: 3000,
+              });
+            }});
+          }
+        }); }
       }
     });
   }
 
   addNote(id: number) {
-    const dialogRef = this.dialog.open(ContactsAddHistoryComponent, { data: id });
-    dialogRef.afterClosed().subscribe((y) => this.getData());
+    const dialogRef = this.dialog.open(AddHistoryComponent);
+    dialogRef.afterClosed().subscribe((y) => {
+      if (y) {
+        this.service.postHistoryElement(y, id).subscribe(x => this.getData());
+      }
+    });
   }
 
   openInfo(id: number) {
@@ -142,10 +192,10 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       },
       contactPossibilities: {
         fax: '01234-123' + this.length,
-        mail: 'info@test' + this.length + '.de',
+        mail: 'a.b@fu.com' ,
         phoneNumber: '0172-9344333' + this.length,
         contactEntries: []
       }
-    }, this.jwt.getUserId()).subscribe(x => this.getData());
+    }).subscribe(x => this.getData());
   }
 }

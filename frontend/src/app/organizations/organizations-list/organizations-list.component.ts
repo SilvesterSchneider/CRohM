@@ -9,6 +9,7 @@ import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/o
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
+import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -31,7 +32,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	isAdminUserLoggedIn = false;
 	dataSource = new MatTableDataSource<OrganizationDto>();
 
-	constructor(public dialog: MatDialog, service: OrganizationService, private userService: UsersService,
+	constructor(public dialog: MatDialog, service: OrganizationService,
 		           private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver, private jwt: JwtService) {
 		this.service = service;
 		this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
@@ -109,19 +110,30 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	openEditDialog(organization: OrganizationDto) {
-		const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, {
-			data: organization,
-			disableClose: true
-		});
+	openEditDialog(id: number) {
+		this.service.getById(id).subscribe(x => {
+			const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, {
+				data: x,
+				disableClose: true
+			});
 
-		dialogRef.afterClosed().subscribe((result) => {
-			if (result.delete) {
-				this.deleteOrganization(result.id);
-			}
-			this.getData();
+			dialogRef.afterClosed().subscribe((result) => {
+				if (result.delete) {
+					this.deleteOrganization(result.id);
+				}
+				this.getData();
+			});
 		});
 	}
+
+	addNote(id: number) {
+		const dialogRef = this.dialog.open(AddHistoryComponent);
+		dialogRef.afterClosed().subscribe((y) => {
+			if (y) {
+				this.service.postHistoryElement(y, id).subscribe(x => this.getData());
+			}
+		});
+	  }
 
 	openInfo(id: number) {
 		this.service.getById(id).subscribe(x => this.dialog.open(OrganizationsInfoComponent, { data: x }));
@@ -158,6 +170,6 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			mail: 'info@testorga' + this.length + '.de',
 			phoneNumber: '02342-234234' + this.length
 		  }
-		}, this.jwt.getUserId()).subscribe(x => this.getData());
+		}).subscribe(x => this.getData());
 	}
 }

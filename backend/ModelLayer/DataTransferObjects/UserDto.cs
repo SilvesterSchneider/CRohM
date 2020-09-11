@@ -1,4 +1,4 @@
-﻿using ModelLayer.Helper;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
@@ -19,6 +19,7 @@ namespace ModelLayer.DataTransferObjects
         public string AccessToken { get; set; }
         public bool UserLockEnabled { get; set; }
         public bool hasPasswordChanged { get; set; }
+        public DateTime LastLoginDate { get; set; }
         //TODO: implement endpoint for login with refresh token
         //public string RefreshToken { get; set; }
 

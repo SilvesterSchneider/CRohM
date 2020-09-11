@@ -5,7 +5,7 @@
 
 ### STAGE 1: Build Frontend ###
 # base image
-FROM node:12.2.0 as buildFrontend
+FROM node:14.9.0 as buildFrontend
 
 # set working directory
 WORKDIR /usr/src/frontend
@@ -58,5 +58,5 @@ COPY --from=buildBackend /app /app
 
 WORKDIR /app/WebApi/app
 
-HEALTHCHECK --interval=5s --timeout=5s --start-period=5s --retries=10 CMD curl --fail --insecure https://localhost:${HTTPS_PORT}/health || exit 1
+HEALTHCHECK --interval=5s --timeout=5s --start-period=5s --retries=10 CMD curl --silent --fail --insecure https://localhost:${HTTPS_PORT}/health || exit 1
 ENTRYPOINT ["dotnet", "WebApi.dll"]
