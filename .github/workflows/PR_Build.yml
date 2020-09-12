@@ -4,16 +4,16 @@ on:
 
 jobs:
 
-  container_security_scan:
-    runs-on: ubuntu-latest
-    steps:
+  # container_security_scan:
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-    - name: Container Security Scan
-      uses: azure/container-scan@v0
-      with:
-        image-name: crohmcrms/crohm_crms
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+  #   - name: Container Security Scan
+  #     uses: azure/container-scan@v0
+  #     with:
+  #       image-name: crohmcrms/crohm_crms
+  #       username: ${{ secrets.DOCKER_USERNAME }}
+  #       password: ${{ secrets.DOCKER_PASSWORD }}
 
   dump:
     runs-on: ubuntu-16.04
@@ -49,11 +49,11 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
 
-  echo_test:
+  var_test:
     runs-on: ubuntu-16.04
     steps:
 
-      - name: Test var
+      - name: Var test print
         env:
           BRANCH_NAME: ${{ github.head_ref }}
           SHA: ${{ github.sha }}
