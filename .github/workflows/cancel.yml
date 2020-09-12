@@ -1,7 +1,5 @@
 name: Cancel
-on:
-  push:
-  pull_request:
+on: [push, pull_request]
 
 jobs:
   cancel_ci_build:
