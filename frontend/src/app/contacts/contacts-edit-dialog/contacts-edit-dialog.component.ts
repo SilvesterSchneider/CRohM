@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Inject, ElementRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { ContactDto, TagDto } from '../../shared/api-generated/api-generated';
+import { ContactDto, GenderTypes, TagDto } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
@@ -19,6 +19,7 @@ import { startWith, map } from 'rxjs/operators';
 export class ContactsEditDialogComponent extends BaseDialogInput implements OnInit {
 	@ViewChild(ContactPossibilitiesComponent, { static: true })
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
+	public genderTypes: string[] = ['Männlich', 'Weiblich', 'Divers'];
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	contactsForm: FormGroup;
 	contact: ContactDto;
@@ -58,6 +59,17 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
 		this.initForm();
 		this.contactsForm.patchValue(this.contact);
+		this.contactsForm.get('gender').setValue(this.getGenderText(this.contact.gender));
+	}
+
+	private getGenderText(value: number): string {
+		if (value === GenderTypes.MALE) {
+			return this.genderTypes[0];
+		} else if (value === GenderTypes.FEMALE) {
+			return this.genderTypes[1];
+		} else {
+			return this.genderTypes[2];
+		}
 	}
 
 	private _filter(value: string): string[] {
@@ -110,6 +122,8 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 			organizations: [[]],
 			name: ['', Validators.required],
 			preName: ['', Validators.required],
+			gender: [this.genderTypes[0], Validators.required],
+			contactPartner: [''],
 			address: this.fb.control(''),
 			contactPossibilities: this.fb.group({
 				// Validiert auf korrektes E-Mail-Format
@@ -134,11 +148,19 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.contact.address = newContact.address;
 		this.contact.preName = newContact.preName;
 		this.contact.name = newContact.name;
+		this.contact.contactPartner = newContact.contactPartner;
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
 		this.contact.tags = this.selectedTags;
-
+		const genderText: string = this.contactsForm.get('gender').value;
+		let gender: GenderTypes = GenderTypes.MALE;
+		if (genderText === this.genderTypes[1]) {
+			gender = GenderTypes.FEMALE;
+		} else if (genderText === this.genderTypes[2]) {
+			gender = GenderTypes.DIVERS;
+		}
+		this.contact.gender = gender;
 		this.newContact.tags = this.selectedTags;
 		this.contactService.put(this.contact.id, this.contact).subscribe(x => {
 			this.dialogRef.close({ delete: false, id: 0, oldContact: this.copy, newContact: this.newContact });

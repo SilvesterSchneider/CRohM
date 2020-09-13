@@ -16,6 +16,21 @@
             </mat-form-field>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-3">
+            <mat-form-field>
+                <mat-label>Geschlecht wählen</mat-label>
+                <mat-select formControlName="gender">
+                    <mat-option [value]="suit" *ngFor="let suit of genderTypes">{{suit}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field class="col-md-6">
+                <input matInput placeholder="Ansprechpartner" formControlName="contactPartner">
+            </mat-form-field>
+        </div>
+    </div>
 
     <app-osm-address formControlName="address"></app-osm-address>
 

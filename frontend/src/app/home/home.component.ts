@@ -4,7 +4,7 @@ import { ContactService, OrganizationService, ContactDto, OrganizationDto, Event
   ContactPossibilitiesDto,
   ParticipatedDto,
   HistoryElementDto,
-  UserLoginService} from '../shared/api-generated/api-generated';
+  UserLoginService, GenderTypes} from '../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts/contacts-info/contacts-info.component';
 import { EventsInfoComponent } from '../events/events-info/events-info.component';
@@ -16,6 +16,8 @@ export class ContactExtended implements ContactDto {
   description?: string;
   organizations?: OrganizationDto[];
   events?: EventDto[];
+  gender: GenderTypes;
+  contactPartner: string;
   history?: HistoryElementDto[];
   name?: string;
   preName?: string;
@@ -153,6 +155,8 @@ export class HomeComponent implements OnInit {
         address: y.address,
         contactPossibilities: y.contactPossibilities,
         name: y.name,
+        gender: y.gender,
+        contactPartner: y.contactPartner,
         preName: y.preName,
         id: y.id,
         description: y.description,

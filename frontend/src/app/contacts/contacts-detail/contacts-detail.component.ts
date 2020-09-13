@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ContactDto, EventService } from '../../shared/api-generated/api-generated';
+import { ContactDto, EventService, GenderTypes } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { JwtService } from 'src/app/shared/jwt.service';
@@ -14,6 +14,7 @@ import { JwtService } from 'src/app/shared/jwt.service';
 export class ContactsDetailComponent implements OnInit {
 	@ViewChild(ContactPossibilitiesComponent, { static: true })
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
+	public genderTypes: string[] = ['Männlich', 'Weiblich', 'Divers'];
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	contact: ContactDto;
 	contactsForm: FormGroup;
@@ -32,6 +33,17 @@ export class ContactsDetailComponent implements OnInit {
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
 		this.initForm();
 		this.contactsForm.patchValue(this.contact);
+		this.contactsForm.get('gender').setValue(this.getGenderText(this.contact.gender));
+	}
+
+	private getGenderText(value: number): string {
+		if (value === GenderTypes.MALE) {
+			return this.genderTypes[0];
+		} else if (value === GenderTypes.FEMALE) {
+			return this.genderTypes[1];
+		} else {
+			return this.genderTypes[2];
+		}
 	}
 
 	initForm() {
@@ -39,6 +51,8 @@ export class ContactsDetailComponent implements OnInit {
 			id: [ '', Validators.required ],
 			name: [ '', Validators.required ],
 			preName: [ '', Validators.required ],
+			gender: [this.genderTypes[0], Validators.required],
+			contactPartner: [''],
 			address: this.fb.control(''),
 			contactPossibilities: this.fb.group({
 				// Validiert auf korrektes E-Mail-Format
@@ -58,6 +72,14 @@ export class ContactsDetailComponent implements OnInit {
 		this.contact.address = newContact.address;
 		this.contact.preName = newContact.preName;
 		this.contact.name = newContact.name;
+		const genderText: string = this.contactsForm.get('gender').value;
+		let gender: GenderTypes = GenderTypes.MALE;
+		if (genderText === this.genderTypes[1]) {
+			gender = GenderTypes.FEMALE;
+		} else if (genderText === this.genderTypes[2]) {
+			gender = GenderTypes.DIVERS;
+		}
+		this.contact.gender = gender;
 		this.contact.contactPossibilities = newContact.contactPossibilities;
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
