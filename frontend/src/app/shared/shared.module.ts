@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 import { ContactPossibilitiesComponent } from './contactPossibilities/contact-possibilities.component';
 import { AddHistoryComponent } from './add-history/add-history.component';
+import { TagsFilterComponent } from './tags-filter/tags-filter.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,7 @@ import { AddHistoryComponent } from './add-history/add-history.component';
     HttpClientModule,
     MaterialModule,
     FlexLayoutModule],
-  declarations: [OsmAddressComponent, ContactPossibilitiesComponent, AddHistoryComponent],
+  declarations: [OsmAddressComponent, ContactPossibilitiesComponent, AddHistoryComponent, TagsFilterComponent],
   exports: [
     CommonModule,
     FormsModule,
@@ -26,7 +27,8 @@ import { AddHistoryComponent } from './add-history/add-history.component';
     FlexLayoutModule,
     OsmAddressComponent,
     ContactPossibilitiesComponent,
-    AddHistoryComponent
+    AddHistoryComponent,
+    TagsFilterComponent
     ]
 })
 export class SharedModule { }

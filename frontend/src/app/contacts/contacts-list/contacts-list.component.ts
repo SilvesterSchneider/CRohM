@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { ContactService, UsersService, DataProtectionService } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
@@ -14,6 +14,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DataProtectionHelperService, DpUpdatePopupComponent } from 'src/app/shared/data-protection';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
+import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
 
 @Component({
   selector: 'app-contacts-list',
@@ -22,12 +23,15 @@ import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog
 })
 
 export class ContactsListComponent implements OnInit, OnDestroy {
+  @ViewChild(TagsFilterComponent, { static: true })
+	tagsFilter: TagsFilterComponent;
   contacts: Observable<ContactDto[]>;
   displayedColumns = [];
   isAdminUserLoggedIn = false;
   length = 0;
   currentScreenWidth = '';
   flexMediaWatcher: Subscription;
+  allContacts: ContactDto[];
   dataSource = new MatTableDataSource<ContactDto>();
 
   constructor(
@@ -65,8 +69,18 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
   }
 
+  applyTagFilter() {
+    this.dataSource = new MatTableDataSource<ContactDto>();
+    this.allContacts.forEach(x => {
+      if (this.tagsFilter.areAllTagsIncluded(x.tags)) {
+        this.dataSource.data.push(x);
+      }
+    });
+  }
+
   ngOnInit() {
     this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
+    this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
     this.getData();
   }
 
@@ -88,6 +102,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.contacts.subscribe(x => {
       this.length = x.length;
       this.dataSource.data = x;
+      this.allContacts = x;
     });
     this.changeDetectorRefs.detectChanges();
   }
