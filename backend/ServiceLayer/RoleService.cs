@@ -222,7 +222,7 @@ namespace ServiceLayer
             {
                 return IdentityResult.Failed(new IdentityError() { Code="301", Description="Role not found!" });
             }
-            if (!roleToUpdate.Name.Equals(role.Name))
+            if (!roleToUpdate.Name.Equals(role.Name) && role.Id > 2)
             {
                 if (!await CheckIfRoleNameAlreadyExistsAsync(role.Name))
                 {
