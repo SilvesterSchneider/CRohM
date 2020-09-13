@@ -4,7 +4,7 @@
         <span class="spacer"></span>
         <mat-form-field>
             <mat-label>Suche</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
+            <input matInput (keyup)="applyFilter($event)" placeholder="Veranstaltungen...">
         </mat-form-field>
         <mat-checkbox class="button" [checked]="checkboxSelected" title="Veranstaltungen aus der Vergangenheit ausblenden" (change)="toggleSelection()">
             Veranstaltungen aus der Vergangenheit ausblenden
