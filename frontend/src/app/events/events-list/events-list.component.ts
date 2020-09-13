@@ -203,6 +203,7 @@ export class EventsListComponent implements OnInit {
         isGroupBy: false
       });
     });
+    this.tagsFilter.updateTagsInAutofill(this.allEvents);
     this.dataSourceFiltered.data = this.dataSource;
   }
 

@@ -109,6 +109,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			 this.length = x.length;
 			 this.dataSource.data = x;
 			 this.allOrganizations = x;
+			 this.tagsFilter.updateTagsInAutofill(this.allOrganizations);
 		});
 		this.changeDetectorRefs.detectChanges();
 		// this.organizationMock = this.orgaMock.getOrganizationsMock();

@@ -103,6 +103,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       this.length = x.length;
       this.dataSource.data = x;
       this.allContacts = x;
+      this.tagsFilter.updateTagsInAutofill(this.allContacts);
     });
     this.changeDetectorRefs.detectChanges();
   }
