@@ -14,22 +14,22 @@ describe('Contacts Tests', () => {
 
     it('should correctly create a new user', () => {
         // Login with credentials admin/@dm1n1stR4tOr
-        doLogin('admin', 'admin1!');
+        doLogin('admin', '@dm1n1stR4tOr');
         cy.wait(1000);
-        // go to setting page
+        // go to contacts page
         cy.visit('/contacts');
         cy.wait(1000);
-        //change to roles tab
+        //click on add button
         cy.get('#addButton').click();
         cy.wait(2000);
-        //click on create role button
+        //type in all values
         cy.get('#name').type('testName');
         cy.get('#preName').type('testVorname');
         cy.get('#contactPartner').type('razvan');
         cy.get('#gender')
                 .click()
                 .get('mat-option')
-                //get the first permission
+                //get the female gender
                 .contains('Weiblich')
                 .click()  
         cy.get('#street').type('testStrasse');
@@ -39,7 +39,7 @@ describe('Contacts Tests', () => {
         cy.get('#country')
                 .click()
                 .get('mat-option')
-                //get the first permission
+                //get the germany as country
                 .contains('Deutschland')
                 .click()  
         cy.get('#mail').type('info@test.de');
@@ -51,17 +51,18 @@ describe('Contacts Tests', () => {
     }); 
     it('should correctly edit the fields gender and contactPerson of an existing user', () => {
         // Login with credentials admin/@dm1n1stR4tOr
-        doLogin('admin', 'admin1!');
+        doLogin('admin', '@dm1n1stR4tOr');
         cy.wait(1000);
-        // go to setting page
+        // go to contacts page
         cy.visit('/contacts');
         cy.wait(1000);
+        //click on edit button
         cy.get('.editButton').click();
         cy.wait(4000);
         cy.get('#gender')
                 .click()
                 .get('mat-option')
-                //get the first permission
+                //get the male gender
                 .contains('Männlich')
                 .click()  
         cy.get('#contactPartner').type('matis');
