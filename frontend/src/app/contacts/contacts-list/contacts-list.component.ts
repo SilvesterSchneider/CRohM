@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { ContactService, UsersService, DataProtectionService } from '../../shared/api-generated/api-generated';
+import { ContactService, UsersService, DataProtectionService, GenderTypes } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
@@ -123,7 +123,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe((result) => {
-      this.contacts = this.service.getAll();
+      this.getData();
     });
   }
 
@@ -199,6 +199,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.service.post({
       name: 'Nachname' + this.length,
       preName: 'Vorname' + this.length,
+      gender: GenderTypes.MALE,
       address: {
         city: 'Stadt' + this.length,
         country: 'Land' + this.length,

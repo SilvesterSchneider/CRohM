@@ -14,7 +14,7 @@ import {
   MODEL_TYPE,
   MODIFICATION,
   DATA_TYPE,
-  UserDto
+  UserDto, GenderTypes
 } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -44,6 +44,7 @@ export enum TYPE {
 
 export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   contact: ContactDto;
+  public genderTypes: string[] = ['Männlich', 'Weiblich', 'Divers'];
   organizations: OrganizationDto[] = new Array<OrganizationDto>();
   contactPossibilitiesEntries: ContactPossibilitiesEntryDto[] = new Array<ContactPossibilitiesEntryDto>();
   contactsForm: FormGroup;
@@ -118,7 +119,18 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
       this.contact.contactPossibilities.contactEntries.forEach(x => this.contactPossibilitiesEntries.push(x));
     }
     this.contactsForm.patchValue(this.contact);
+    this.contactsForm.get('gender').setValue(this.getGenderText(this.contact.gender));
   }
+
+  private getGenderText(value: number): string {
+		if (value === GenderTypes.MALE) {
+			return this.genderTypes[0];
+		} else if (value === GenderTypes.FEMALE) {
+			return this.genderTypes[1];
+		} else {
+			return this.genderTypes[2];
+		}
+	}
 
   getSortHistoryFunction(a: ModificationEntryDto, b: ModificationEntryDto) {
     return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
@@ -163,6 +175,8 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
       id: [''],
       name: [''],
       preName: [''],
+      gender: [this.genderTypes[0]],
+			contactPartner: [''],
       address: this.fb.group({
         id: [''],
         name: [''],
