@@ -19,6 +19,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatDividerModule} from '@angular/material/divider';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   imports: [
@@ -41,6 +42,8 @@ import {MatDividerModule} from '@angular/material/divider';
     MatSelectModule,
     MatDialogModule,
     MatCheckboxModule,
+    MatToolbarModule,
+    MatTabsModule,
     MatChipsModule,
     MatProgressSpinnerModule, MatDividerModule
   ],
@@ -60,6 +63,7 @@ import {MatDividerModule} from '@angular/material/divider';
     MatInputModule,
     MatCardModule,
     MatMenuModule,
+    MatTabsModule,
     MatTableModule,
     MatSelectModule,
     MatDialogModule,
