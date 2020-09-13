@@ -22,8 +22,16 @@ namespace ServiceLayer
             doc.Add(new Paragraph("Auskunft gem. Art. 15 EU-DSGVO"));
 
             doc.Add(new Paragraph("Stand " + DateTime.Today.Date.Day + "." + DateTime.Today.Date.Month + "." + DateTime.Today.Date.Year));
-
-            doc.Add(new Paragraph(" Folgende personenbezogene Daten sind zu Herrn/Frau " + contact.Name +
+            string gender = "Herrn ";
+            if (contact.Gender == Contact.GenderTypes.FEMALE)
+            {
+                gender = "Frau ";
+            }
+            else if (contact.Gender == Contact.GenderTypes.DIVERS)
+            {
+                gender = "Divers ";
+            }
+            doc.Add(new Paragraph(" Folgende personenbezogene Daten sind zu " + gender + contact.Name +
                                   " im Customer Relationship Management System(CRMS) der TH Nürnberg gespeichert. Die Zustimmung zur Speicherung und Verarbeitung der Daten erfolgte am "
                                   + DateTime.Today.Date.Day + "." + DateTime.Today.Date.Month + "." + DateTime.Today.Date.Year));
             doc.Add(new Paragraph(contactDetails));
