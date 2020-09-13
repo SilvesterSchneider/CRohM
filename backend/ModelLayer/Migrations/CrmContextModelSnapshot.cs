@@ -15,7 +15,7 @@ namespace ModelLayer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7")
+                .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -163,11 +163,17 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("AddressId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("ContactPartner")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("ContactPossibilitiesId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -505,7 +511,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "8f52c5f2-5faf-4aa4-97aa-d554498b83fb",
+                            ConcurrencyStamp = "fe748231-8273-4ab9-9a5f-e24e030005f1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

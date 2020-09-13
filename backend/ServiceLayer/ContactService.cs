@@ -32,8 +32,18 @@ namespace ServiceLayer
         public async Task SendDisclosure(long id)
         {
             Contact contact = await GetByIdAsync(id);
+            string gender = " geehrter Herr ";
+            if (contact.Gender == Contact.GenderTypes.FEMALE)
+            {
+                gender = " geehrte Frau ";
+            }
+            else if (contact.Gender == Contact.GenderTypes.DIVERS)
+            {
+                gender = " geehrt ";
+            }
+
             string body = "<h3> Auskunft über gespeicherte Daten </h3> " +
-                          "<p> Sehr geehrte/r Herr/Frau " + contact.Name + ",</p>" +
+                          "<p> Sehr" + gender + contact.Name + ",</p>" +
                           "<p> Sie hatten um eine Auskunft über die zur Ihrer Person in unserem Customer Relationship Management System(CRMS) gespeicherten Daten gebeten. Im angehängten PDF - Dokument erhalten Sie die entsprechende Auskunft gem. Art. 15 EU - DSGVO.</p>" +
                           "<p></p>" +
                           "<p>Technische Hochschule Nürnberg</p>";
