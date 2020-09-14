@@ -4,7 +4,7 @@ import { ContactService, OrganizationService, ContactDto, OrganizationDto, Event
   ContactPossibilitiesDto,
   ParticipatedDto,
   HistoryElementDto,
-  UserLoginService, GenderTypes} from '../shared/api-generated/api-generated';
+  UserLoginService, GenderTypes, DataProtectionService} from '../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts/contacts-info/contacts-info.component';
 import { EventsInfoComponent } from '../events/events-info/events-info.component';
