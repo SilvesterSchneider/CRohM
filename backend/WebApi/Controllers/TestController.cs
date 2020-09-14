@@ -14,8 +14,10 @@ namespace WebApi.Controllers
     [Authorize]
     public class TestController : ControllerBase
     {
+
         private readonly IUserService userService;
         private readonly IUserCheckDateService userCheckDateService;
+
 
         public TestController(IUserService userService, IUserCheckDateService userCheckDateService)
         {
@@ -25,9 +27,10 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successful")]
-        public async Task<IActionResult> Test()
+        public async Task<IActionResult> test()
         {
-            await Task.Delay(1);
+            await Task.Yield();
+
             return Ok();
         }
 
@@ -38,6 +41,7 @@ namespace WebApi.Controllers
             await userCheckDateService.CheckAllUsersAsync();
             return Ok();
         }
+
 
         [HttpPost("user/{id}/lastLoginDate/{lastLoginDate}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
@@ -54,11 +58,14 @@ namespace WebApi.Controllers
             if (!DateTime.TryParse(lastLoginDate, out lastDate))
             {
                 return NotFound();
+
             }
 
             user.LastLoginDate = lastDate;
             await userService.UpdateUserAsync(user);
             return Ok();
         }
+
+
     }
 }

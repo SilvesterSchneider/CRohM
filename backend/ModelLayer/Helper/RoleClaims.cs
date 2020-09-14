@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ModelLayer.Helper
 {
-    public class RoleClaims
+    public static class RoleClaims
     {
         /// <summary>
         /// The admin role
@@ -95,15 +95,29 @@ namespace ModelLayer.Helper
             return list.ToArray();
         }
 
+        private static List<Claim> contactClaimsInternally = GetClaimListForStringArray(CONTACT_CLAIMS);
+        private static List<Claim> dsgvoClaimsInternally = GetClaimListForStringArray(DSGVO_CLAIMS);
+        private static List<Claim> adminClaimsInternally = GetClaimListForStringArray(ADMIN_CLAIMS);
+        private static List<Claim> calendarClaimsInternally = GetClaimListForStringArray(CALENDAR_CLAIMS);
+        private static List<Claim> organizationClaimsInternally = GetClaimListForStringArray(ORGANISATION_CLAIMS);
         private static List<Claim> dsgvoClaims = GetAllDsgvoClaimsInternally();
+        private static List<Claim> adminClaims = GetAllAdminClaimsInternally();
         private static List<Claim> allClaims = GetAllPredefinedClaims();
+
+        private static List<Claim> GetAllAdminClaimsInternally()
+        {
+            List<Claim> list = new List<Claim>();
+            list.Add(contactClaimsInternally[2]);
+            list.AddRange(adminClaimsInternally);
+            return list;
+        }
 
         private static List<Claim> GetAllDsgvoClaimsInternally()
         {
             List<Claim> list = new List<Claim>();
-            list.Add(new Claim(CONTACT_CLAIMS[1], CONTACT_CLAIMS[1]));
-            list.Add(new Claim(CONTACT_CLAIMS[2], CONTACT_CLAIMS[2]));
-            list.AddRange(GetClaimListForStringArray(DSGVO_CLAIMS));
+            list.Add(contactClaimsInternally[1]);
+            list.Add(contactClaimsInternally[2]);
+            list.AddRange(dsgvoClaimsInternally);
             return list;
         }
 
@@ -135,14 +149,23 @@ namespace ModelLayer.Helper
             return new List<Claim>(dsgvoClaims);
         }
 
+        /// <summary>
+        /// Get all admin related claims
+        /// </summary>
+        /// <returns>list with claims</returns>
+        public static List<Claim> GetAllAdminClaims()
+        {
+            return new List<Claim>(adminClaims);
+        }
+
         private static List<Claim> GetAllPredefinedClaims()
         {
             List<Claim> list = new List<Claim>();
-            list.Add(new Claim(CONTACT_CLAIMS[0], CONTACT_CLAIMS[0]));
-            list.AddRange(dsgvoClaims);
-            list.AddRange(GetClaimListForStringArray(ORGANISATION_CLAIMS));
-            list.AddRange(GetClaimListForStringArray(CALENDAR_CLAIMS));
-            list.AddRange(GetClaimListForStringArray(ADMIN_CLAIMS));
+            list.AddRange(contactClaimsInternally);
+            list.AddRange(organizationClaimsInternally);
+            list.AddRange(calendarClaimsInternally);
+            list.AddRange(dsgvoClaimsInternally);
+            list.AddRange(adminClaimsInternally);
             return list;
         }
     }
