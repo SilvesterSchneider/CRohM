@@ -32,7 +32,7 @@ namespace WebApi.Controllers
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "not successful")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully send message")]
-        public IActionResult SendUpdateMessage([FromBody]SendInfoDTO sendInoInfoDto)
+        public async Task<IActionResult> SendUpdateMessage([FromBody]SendInfoDTO sendInoInfoDto)
         {
             await Task.Yield();
 
