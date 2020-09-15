@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ModelLayer.Models;
+using static ModelLayer.Models.Contact;
 
 namespace ModelLayer.DataTransferObjects
 {
     public class ContactDto
     {
         public long Id { get; set; }
+        public GenderTypes Gender { get; set; }
+        public string ContactPartner { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string PreName { get; set; }
@@ -24,6 +27,10 @@ namespace ModelLayer.DataTransferObjects
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        [Required]
+        public GenderTypes Gender { get; set; }
+        public string ContactPartner { get; set; }
 
         [Required]
         public string PreName { get; set; }

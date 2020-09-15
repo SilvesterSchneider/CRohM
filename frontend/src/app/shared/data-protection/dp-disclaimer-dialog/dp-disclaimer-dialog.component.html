@@ -1,0 +1,16 @@
+
+
+  <div mat-dialog-title id="dataProtectionOfficeDisclaimer">
+    <span id="title">Warnmeldung</span>
+  </div>
+  <div mat-dialog-content>
+    Es wurde noch kein Datenschutzbeauftragter bestimmt.
+    <br>
+    Erfüllen Sie die gesetzlichen Auflagen indem Sie als Administrator jetzt einen Datenschutzbeauftragten bestimmen.   
+    </div>
+  <div mat-dialog-actions>   
+    
+  <span class="fill-remaining-space"></span>
+    <button mat-raised-button [matDialogClose]="false" id="ignoreButton" >Ignorieren</button>
+    <button mat-raised-button (click)="onResolve()" color="primary" id="resolveButton">Jetzt einen bestimmen</button>
+  </div>

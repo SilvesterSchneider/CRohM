@@ -115,20 +115,18 @@ namespace ServiceLayer
 
         public async Task<IdentityResult> CreateAsync(Role role)
         {
+            if (await CheckIfRoleNameAlreadyExistsAsync(role.Name))
+            {
+                return IdentityResult.Failed(new IdentityError() { Code="401", Description="Role with same name already exists!" });
+            }
             return await manager.CreateAsync(role);
         }
 
         public async Task<IdentityResult> CreateWithClaimsAsync(RoleDto role)
         {
             Role roleToCreate = new Role() { Id=0, Name=role.Name };
-            foreach (Role existingRole in await GetAllRolesAsync())
-            {
-                if (existingRole.Name.Equals(roleToCreate.Name))
-                {
-                    return IdentityResult.Success;
-                }
-            }
-            if (await CreateAsync(roleToCreate) == IdentityResult.Success)
+            IdentityResult result = await CreateAsync(roleToCreate);
+            if (result == IdentityResult.Success)
             {
                 Role createdRole = await FindRoleByNameAsync(roleToCreate.Name);
                 List<Claim> claimsToAdd = new List<Claim>();
@@ -146,12 +144,8 @@ namespace ServiceLayer
                 {
                     await AddClaimAsync(createdRole, newClaim);
                 }
-                return IdentityResult.Success;
             }
-            else
-            {
-                return IdentityResult.Failed(new IdentityError() { Code="301", Description="Error creating a role" });
-            }
+            return result;
         }
 
         public async Task<IdentityResult> DeleteAsync(Role role)
@@ -196,12 +190,29 @@ namespace ServiceLayer
 
         public async Task<IdentityResult> RemoveClaimAsync(Role role, Claim claim)
         {
+            if ((role.Id == 1 && RoleClaims.GetAllAdminClaims().FirstOrDefault(x => x.Type.Equals(claim.Type)) != null &&
+                RoleClaims.GetAllAdminClaims().FirstOrDefault(x => x.Value.Equals(claim.Value)) != null) ||
+                role.Id == 2 && RoleClaims.GetAllDsgvoClaims().FirstOrDefault(x => x.Type.Equals(claim.Type)) != null &&
+                RoleClaims.GetAllDsgvoClaims().FirstOrDefault(x => x.Value.Equals(claim.Value)) != null)
+            {
+                return IdentityResult.Success;
+            }
             return await manager.RemoveClaimAsync(role, claim);
         }
 
         public async Task<IdentityResult> UpdateAsync(Role role)
         {
             return await manager.UpdateAsync(role);
+        }
+
+        private async Task<bool> CheckIfRoleNameAlreadyExistsAsync(string roleName)
+        {
+            List<Role> allAvailableRoles = await GetAllRolesAsync();
+            if (allAvailableRoles.FirstOrDefault(x => x.Name.Equals(roleName)) == null)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<IdentityResult> UpdateRoleWithClaimsAsync(RoleDto role)
@@ -211,10 +222,13 @@ namespace ServiceLayer
             {
                 return IdentityResult.Failed(new IdentityError() { Code="301", Description="Role not found!" });
             }
-            if (!roleToUpdate.Name.Equals(role.Name))
+            if (!roleToUpdate.Name.Equals(role.Name) && role.Id > 2)
             {
-                roleToUpdate.Name = role.Name;
-                await UpdateAsync(roleToUpdate);
+                if (!await CheckIfRoleNameAlreadyExistsAsync(role.Name))
+                {
+                    roleToUpdate.Name = role.Name;
+                    await UpdateAsync(roleToUpdate);
+                }
             }
             
             List<Claim> claimsToDelete = new List<Claim>();

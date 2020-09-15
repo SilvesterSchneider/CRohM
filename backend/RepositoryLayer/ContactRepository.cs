@@ -155,6 +155,8 @@ namespace RepositoryLayer
                 originalContact.Description = contact.Description;
                 originalContact.Name = contact.Name;
                 originalContact.PreName = contact.PreName;
+                originalContact.Gender = contact.Gender;
+                originalContact.ContactPartner = contact.ContactPartner;
                 await UpdateAsync(originalContact);
                 return true;
             }
