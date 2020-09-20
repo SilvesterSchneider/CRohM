@@ -31,9 +31,10 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Einen bestehenden event aktualisieren
+        /// Eine Einladungsmail an kontakte senden
         /// </summary>
-        /// <param name="eventToModify">das zu bearbeitende event</param>
+        /// <param name="mailContent">der mail inhalt</param>
+        /// <param name="contactIds">die kontakt ids an die eine mail versendet werden soll</param>
         /// <param name="id">die event id</param>
         /// <returns></returns>
         [HttpPut("{id}")]
@@ -55,6 +56,17 @@ namespace WebApi.Controllers
             }
             EventDto eventToModify = _mapper.Map<EventDto>(oldOne);
             return Ok(eventToModify);
+        }
+
+        /// <summary>
+        /// den standart text für die einladung holen.
+        /// <returns></returns>
+        [HttpGet()]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(string), Description = "successfully get mail text")]
+        public async Task<IActionResult> GetSendInvitationText(EventDto eventToUse)
+        {
+            string text = MailService.GetMailForInvitationAsTemplate(eventToUse);
+            return await Task.FromResult(Ok(text));
         }
     }
 }

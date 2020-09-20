@@ -17,6 +17,7 @@ import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
+import { EventsInvitationComponent } from '../events-invitation/events-invitation.component';
 
 export class EventContactConnection {
   contactId: number;
@@ -249,6 +250,15 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 
   clicker() {
     this.inputTrigger.openPanel();
+  }
+
+  callInvitation() {
+    const dialogRef = this.dialog.open(EventsInvitationComponent, { data: this.event, disableClose: true, minWidth: '400px', minHeight: '400px' });
+    dialogRef.afterClosed().subscribe(x => {
+      if (x.send && x.text != null) {
+        alert(x.text);
+      }
+    });
   }
 
   filter(filter: string): EventContactConnection[] {

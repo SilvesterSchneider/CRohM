@@ -103,4 +103,7 @@
     <button mat-raised-button title="Verwerfen" (click)="close()">
         Verwerfen
     </button>
+    <button mat-raised-button color="primary" title="Einladung" [disabled]="selectedItems.length == 0" (click)="callInvitation()">
+        Einladung
+    </button>
 <mat-dialog-content>

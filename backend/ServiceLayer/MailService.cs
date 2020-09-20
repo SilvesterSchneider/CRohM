@@ -6,6 +6,7 @@ using System.IO;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using static ModelLayer.Models.Contact;
+using ModelLayer.DataTransferObjects;
 
 namespace ServiceLayer
 {
@@ -29,17 +30,23 @@ namespace ServiceLayer
 
     public class MailService : IMailService
     {
-        public static string INVITATION_DEF_CONTENT = STARTFIELD + " " + NAMEFIELD +
-            "\rn Wir laden Sie herzlich ein zu unserer Veranstaltung " + EVENTNAMEFIELD +
-            " am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + ".\rn Wir freuen uns auf ihre Erscheinen. \rn Technische Hochschule Nürnberg";
         private static string STARTFIELD = "<Anrede>";
         private static string NAMEFIELD = "<Nachname>";
         private static string EVENTNAMEFIELD = "<Veranstaltungsname>";
         private static string EVENTDATEFIELD = "<Datum>";
         private static string EVENTTIMEFIELD = "<Uhrzeit>";
+        public static string INVITATION_DEF_CONTENT = STARTFIELD + " " + NAMEFIELD +
+            "\r Wir laden Sie herzlich ein zu unserer Veranstaltung " + EVENTNAMEFIELD +
+            " am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + ".\r Wir freuen uns auf ihre Erscheinen. \r Technische Hochschule Nürnberg";
+
         public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
         {
             return SendMail(subject, body, address, new MemoryStream(attachment), attachmentType);
+        }
+
+        public static string GetMailForInvitationAsTemplate(EventDto eventToUse)
+        {
+            return INVITATION_DEF_CONTENT.Replace(EVENTNAMEFIELD, eventToUse.Name).Replace(EVENTDATEFIELD, eventToUse.Date.ToString("yyyy-MM-dd")).Replace(EVENTTIMEFIELD, eventToUse.Time.ToString("hh:mm:ss"));
         }
 
         public bool Registration(string benutzer, string passwort, string email)
