@@ -24,6 +24,7 @@ export class EventContactConnection {
   name: string;
   preName: string;
   participated: boolean;
+  wasInvited: boolean;
 }
 
 @Component({
@@ -148,9 +149,11 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       this.contacts = y;
       y.forEach(x => {
         let participatedReal = false;
+        let wasInvited = false;
         this.event.participated.forEach(z => {
           if (z.contactId === x.id) {
             participatedReal = z.hasParticipated;
+            wasInvited = z.wasInvited;
           }
         });
         this.filteredItems.push(
@@ -159,7 +162,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             name: x.name,
             preName: x.preName,
             selected: false,
-            participated: participatedReal
+            participated: participatedReal,
+            wasInvited: wasInvited
           }
         );
       });
@@ -323,6 +327,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             {
               contactId: x.contactId,
               hasParticipated: x.participated,
+              wasInvited: false,
               id: 0
             }
           );

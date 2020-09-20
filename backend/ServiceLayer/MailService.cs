@@ -5,6 +5,7 @@ using System.Linq;
 using System.IO;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using static ModelLayer.Models.Contact;
 
 namespace ServiceLayer
 {
@@ -13,6 +14,7 @@ namespace ServiceLayer
     /// </summary>
     public interface IMailService
     {
+        public bool CreateAndSendInvitationMail(string address, string eventName, string eventDate, string eventTime, string name, string content, GenderTypes gender);
         public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment,
             string attachmentType);
 
@@ -27,6 +29,14 @@ namespace ServiceLayer
 
     public class MailService : IMailService
     {
+        public static string INVITATION_DEF_CONTENT = STARTFIELD + " " + NAMEFIELD +
+            "\rn Wir laden Sie herzlich ein zu unserer Veranstaltung " + EVENTNAMEFIELD +
+            " am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + ".\rn Wir freuen uns auf ihre Erscheinen. \rn Technische Hochschule Nürnberg";
+        private static string STARTFIELD = "<Anrede>";
+        private static string NAMEFIELD = "<Nachname>";
+        private static string EVENTNAMEFIELD = "<Veranstaltungsname>";
+        private static string EVENTDATEFIELD = "<Datum>";
+        private static string EVENTTIMEFIELD = "<Uhrzeit>";
         public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
         {
             return SendMail(subject, body, address, new MemoryStream(attachment), attachmentType);
@@ -128,6 +138,23 @@ namespace ServiceLayer
             }
             return true;
         }
+
+        public bool CreateAndSendInvitationMail(string address, string eventName, string eventDate, string eventTime, string name, string content, GenderTypes gender)
+        {
+            string start = "Sehr geehrter Herr";
+            if (gender == GenderTypes.FEMALE)
+            {
+                start = "Sehr geehrte Frau";
+            }
+            else if (gender == GenderTypes.DIVERS)
+            {
+                start = "Sehr geehrt";
+            }
+            string finishedcontent = content.Replace(NAMEFIELD, name).Replace(EVENTNAMEFIELD, eventName).Replace(EVENTDATEFIELD, eventDate).Replace(EVENTTIMEFIELD, eventTime).Replace(STARTFIELD, start);
+            finishedcontent = "<p>" + finishedcontent + "</p>";
+            return SendMail("Einladung zur Veranstaltung", finishedcontent, address, null, null);
+        }
+
 
         /*
          *Falls wir einmal eine Signatur einbauen möchten... wird in der Regel iwo als .htm abgelgt

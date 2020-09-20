@@ -28,7 +28,8 @@ namespace ModelLayer.Models
         DATE,
         TIME,
         PARTICIPATED,
-        TAG
+        TAG,
+        INVITATION
     }
 
     /// <summary>
@@ -159,6 +160,10 @@ namespace ModelLayer.Models
                 else if (DataType == DATA_TYPE.TAG)
                 {
                     return "Tags";
+                }
+                else if (DataType == DATA_TYPE.INVITATION)
+                {
+                    return "Einladung";
                 }
                 else 
                 {
