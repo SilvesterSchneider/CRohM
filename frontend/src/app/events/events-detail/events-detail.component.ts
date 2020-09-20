@@ -11,13 +11,14 @@ import {
   MatAutocompleteTrigger, MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { ContactDto, EventDto, ParticipatedDto, TagDto } from '../../shared/api-generated/api-generated';
+import { ContactDto, EventDto, MailService, ParticipatedDto, TagDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 import { EventsInvitationComponent } from '../events-invitation/events-invitation.component';
+import { StickyDirection } from '@angular/cdk/table';
 
 export class EventContactConnection {
   contactId: number;
@@ -62,6 +63,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   controlType?: string;
   autofilled?: boolean;
   columnsEvent: ['participated', 'prename', 'name'];
+  enableMailSending: boolean;
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   tagsControl = new FormControl();
@@ -83,7 +85,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     private cd: ChangeDetectorRef,
     private contactService: ContactService,
     private eventService: EventService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private mailService: MailService) {
     super(dialogRef, dialog);
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
@@ -93,6 +96,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       this.stateChanges.next();
     });
     this.event = data;
+    this.enableMailSending = this.event.contacts.length > 0;
     this.event.tags.forEach(x => this.selectedTags.push(x));
     this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(
       map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
@@ -150,11 +154,11 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       this.contacts = y;
       y.forEach(x => {
         let participatedReal = false;
-        let wasInvited = false;
+        let wasInvitedReal = false;
         this.event.participated.forEach(z => {
           if (z.contactId === x.id) {
             participatedReal = z.hasParticipated;
-            wasInvited = z.wasInvited;
+            wasInvitedReal = z.wasInvited;
           }
         });
         this.filteredItems.push(
@@ -164,7 +168,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             preName: x.preName,
             selected: false,
             participated: participatedReal,
-            wasInvited: wasInvited
+            wasInvited: wasInvitedReal
           }
         );
       });
@@ -253,10 +257,15 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   }
 
   callInvitation() {
-    const dialogRef = this.dialog.open(EventsInvitationComponent, { data: this.event, disableClose: true, minWidth: '400px', minHeight: '400px' });
+    const dialogRef = this.dialog.open(EventsInvitationComponent, { data: this.event, disableClose: true, minWidth: '450px', minHeight: '400px' });
     dialogRef.afterClosed().subscribe(x => {
       if (x.send && x.text != null) {
-        alert(x.text);
+        const listOfIds: number[] = new Array<number>();
+        this.event.contacts.forEach(y => {
+          listOfIds.push(y.id);
+        });
+        alert(listOfIds.length);
+        this.mailService.sendInvitationMails(this.event.id, listOfIds, x.text).subscribe();
       }
     });
   }
@@ -350,7 +359,9 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.event.contacts = contacts;
     this.event.participated = participants;
     this.event.tags = this.selectedTags;
-    this.eventService.put(this.event, this.event.id).subscribe(() => this.dialogRef.close());
+    this.eventService.put(this.event, this.event.id).subscribe(() => {
+      this.dialogRef.close();
+    });
   }
 
   close() {

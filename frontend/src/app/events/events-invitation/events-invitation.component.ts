@@ -12,7 +12,7 @@ export class EventsInvitationComponent implements OnInit {
   textForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private mailService: MailService,
     public dialogRef: MatDialogRef<EventsInvitationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EventDto,
@@ -20,7 +20,7 @@ export class EventsInvitationComponent implements OnInit {
 
   ngOnInit(): void {
     this.textForm = this.createTextForm();
-    this.mailService.getSendInvitationText(this.data).subscribe(x => {
+    this.mailService.getSendInvitationText(this.data.name, this.getDate(this.data.date), this.getTime(this.data.time)).subscribe(x => {
       this.textForm.get('text').setValue(x);
     });
   }
@@ -29,6 +29,40 @@ export class EventsInvitationComponent implements OnInit {
     return this.fb.group({
       text: ['', Validators.required]
     });
+  }
+
+  private getTime(time: string): string {
+    const date: Date = new Date(time);
+    let result = '';
+    let hours = date.getHours().toString();
+    if (hours.length === 1) {
+      hours = '0' + hours;
+    }
+    let minutes = date.getMinutes().toString();
+    if (minutes.length === 1) {
+      minutes = '0' + minutes;
+    }
+    let seconds = date.getSeconds().toString();
+    if (seconds.length === 1) {
+      seconds = '0' + seconds;
+    }
+    result = hours + ':' + minutes + ':' + seconds;
+    return result;
+  }
+
+  private getDate(date: string): string {
+    let result = '';
+    const dt: Date = new Date(date);
+    let month = (dt.getMonth() + 1).toString();
+    if (month.length === 1) {
+      month = '0' + month;
+    }
+    let day = dt.getDate().toString();
+    if (day.length === 1) {
+      day = '0' + day;
+    }
+    result = dt.getFullYear().toString() + '-' + month + '-' + day;
+    return result;
   }
 
   sendMail(shouldSend: boolean) {

@@ -18,9 +18,12 @@ namespace ServiceLayer
     public class EventService : EventRepository, IEventService
     {
         private IMailService mailService;
+        private IContactRepository contactRepo;
+
         public EventService(CrmContext context, IEventContactRepository eventContactRepo, IContactRepository contactRepo, IMailService mailService) : base(context, eventContactRepo, contactRepo)
         {
             this.mailService = mailService;
+            this.contactRepo = contactRepo;
         }
 
         public async Task<bool> SendInvitationMailsAsync(Event oldOne, List<long> contactIds, string mailContent)
@@ -42,8 +45,8 @@ namespace ServiceLayer
             {
                 if (part.WasInvited)
                 {
-                    Contact contact = oldOne.Contacts.FirstOrDefault(a => a.ContactId == part.ContactId).Contact;
-                    mailService.CreateAndSendInvitationMail(contact.ContactPossibilities.Mail, oldOne.Description, oldOne.Date.ToString(), oldOne.Time.ToString(), contact.Name, mailContent, contact.Gender);
+                    Contact contact = await contactRepo.GetByIdAsync(part.ContactId);
+                    mailService.CreateAndSendInvitationMail(contact.ContactPossibilities.Mail, contact.PreName, contact.Name, mailContent, contact.Gender);
                 }
             }
             return true; 

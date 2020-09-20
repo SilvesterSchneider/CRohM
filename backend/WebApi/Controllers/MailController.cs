@@ -61,11 +61,11 @@ namespace WebApi.Controllers
         /// <summary>
         /// den standart text für die einladung holen.
         /// <returns></returns>
-        [HttpGet()]
+        [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(string), Description = "successfully get mail text")]
-        public async Task<IActionResult> GetSendInvitationText(EventDto eventToUse)
+        public async Task<IActionResult> GetSendInvitationText(string eventName, string date, string time)
         {
-            string text = MailService.GetMailForInvitationAsTemplate(eventToUse);
+            string text = MailService.GetMailForInvitationAsTemplate(eventName, date, time);
             return await Task.FromResult(Ok(text));
         }
     }
