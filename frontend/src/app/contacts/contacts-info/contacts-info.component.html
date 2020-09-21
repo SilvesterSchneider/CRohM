@@ -17,7 +17,8 @@
                     <input id="gender" [readonly]="true" matInput placeholder="Geschlecht" formControlName="gender">
                 </mat-form-field>
                 <mat-form-field class="col-md-6">
-                    <input id="contactPartner" [readonly]="true" matInput placeholder="Ansprechpartner" formControlName="contactPartner">
+                    <input id="contactPartner" [readonly]="true" matInput placeholder="Ansprechpartner"
+                        formControlName="contactPartner">
                 </mat-form-field>
             </div>
 
@@ -102,8 +103,13 @@
         </mat-table>
     </div>
 
-    <div *ngIf="events.length > 0" class="col-md-12">
-        <h5>Historie</h5>
+
+    <mat-expansion-panel *ngIf="events.length > 0" togglePosition="before" class="extensionPanel">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Historie
+            </mat-panel-title>
+        </mat-expansion-panel-header>
         <mat-table #table [dataSource]="events">
             <ng-container matColumnDef="icon">
                 <mat-header-cell *matHeaderCellDef> Typ </mat-header-cell>
@@ -133,9 +139,14 @@
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </mat-table>
-    </div>
-    <div *ngIf="dataHistory.length > 0" class="col-md-12">
-        <h5>Datenveränderungen</h5>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel *ngIf="dataHistory.length > 0" togglePosition="before" class="extensionPanel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Datenveränderungen
+          </mat-panel-title>
+        </mat-expansion-panel-header>
         <mat-table #table [dataSource]="dataHistory">
             <ng-container matColumnDef="datum">
                 <mat-header-cell fxFlex="20%" *matHeaderCellDef> Datum </mat-header-cell>
@@ -143,7 +154,7 @@
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="bearbeiter">
-                <mat-header-cell fxFlex="20%"  *matHeaderCellDef> Bearbeiter </mat-header-cell>
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> Bearbeiter </mat-header-cell>
                 <mat-cell fxFlex="20%" *matCellDef="let element"> {{getUsername(element.user)}}
                 </mat-cell>
             </ng-container>
@@ -170,8 +181,8 @@
             <mat-header-row *matHeaderRowDef="displayedColumnsDataChangeHistory"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumnsDataChangeHistory;"></mat-row>
         </mat-table>
-    </div>
-    <div *ngIf="tags.length > 0" class="col-md-12">
+      </mat-expansion-panel>
+      <div *ngIf="tags.length > 0" class="col-md-12">
         <h5>Tags</h5>
         <mat-chip-list #chipList>
             <mat-chip *ngFor="let item of tags">

@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import {
   ContactDto,
   ContactPossibilitiesEntryDto,
@@ -16,9 +15,9 @@ import {
   DATA_TYPE,
   UserDto, GenderTypes
 } from '../../shared/api-generated/api-generated';
-import { ContactService } from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
+import { sortDatesDesc } from '../../shared/util/sort';
 
 export class EventDtoCustomized {
   id: number;
@@ -61,8 +60,6 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: ContactDto,
     private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private service: ContactService,
     private eventService: EventService,
     private modService: ModificationEntryService) {
     super(dialogRef, dialog);
@@ -102,15 +99,16 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
         });
       });
     }
-    this.modService.getSortedListByTypeAndId(this.contact.id, MODEL_TYPE.CONTACT).subscribe(x => {
-      x.forEach(a => {
+    this.modService.getSortedListByTypeAndId(this.contact.id, MODEL_TYPE.CONTACT).subscribe(modificationEntry => {
+      modificationEntry.forEach(a => {
         if (a.dataType !== DATA_TYPE.NONE) {
           this.dataHistory.push(a);
         }
       });
-      this.dataHistory.sort(this.getSortHistoryFunction);
+      this.dataHistory.sort((obj1, obj2) => sortDatesDesc(obj1.dateTime, obj2.dateTime));
     });
-    this.sortEvents();
+
+    this.events.sort((obj1, obj2) => sortDatesDesc(obj1.date, obj2.date));
     this.initForm();
     if (this.contact.organizations != null) {
       this.contact.organizations.forEach(x => this.organizations.push(x));
@@ -131,19 +129,6 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
 			return this.genderTypes[2];
 		}
 	}
-
-  getSortHistoryFunction(a: ModificationEntryDto, b: ModificationEntryDto) {
-    return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
-  }
-
-  sortEvents() {
-    const sortedEvents: EventDtoCustomized[] = this.events.sort(this.getSortFunction);
-    this.events = sortedEvents;
-  }
-
-  getSortFunction(a: EventDtoCustomized, b: EventDtoCustomized): number {
-    return new Date(a.date).getTime() - new Date(b.date).getTime();
-  }
 
   updateParticipation(id: number, participated: ParticipatedDto[]) {
     const update: EventDtoCustomized = this.events.find(x => x.id === id);

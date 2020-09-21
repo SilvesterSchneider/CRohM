@@ -1,11 +1,14 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { ContactDto,
+import { Component, OnInit, Inject, ModuleWithComponentFactories } from '@angular/core';
+import {
+  ContactDto,
   ModificationEntryService, MODEL_TYPE, MODIFICATION, DATA_TYPE,
   ContactPossibilitiesEntryDto, OrganizationDto, ModificationEntryDto, TagDto,
   HistoryElementDto,
-  HistoryElementType} from '../../shared/api-generated/api-generated';
+  HistoryElementType
+} from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { sortDatesDesc } from '../../shared/util/sort';
 
 @Component({
   selector: 'app-organizations-info',
@@ -31,9 +34,9 @@ export class OrganizationsInfoComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: OrganizationDto,
     private fb: FormBuilder,
     private modService: ModificationEntryService) {
-      this.organization = data;
-      this.tags = this.organization.tags;
-    }
+    this.organization = data;
+    this.tags = this.organization.tags;
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -49,14 +52,10 @@ export class OrganizationsInfoComponent implements OnInit {
           this.dataHistory.push(a);
         }
       });
-      this.dataHistory.sort(this.getSortHistoryFunction);
+      this.dataHistory.sort((obj1, obj2) => sortDatesDesc(obj1.dateTime, obj2.dateTime));
     });
-    this.history = this.organization.history;
+    this.history = this.organization.history.sort((obj1, obj2) => sortDatesDesc(obj1.date, obj2.date));
     this.organizationsForm.patchValue(this.organization);
-  }
-
-  getSortHistoryFunction(a: ModificationEntryDto, b: ModificationEntryDto) {
-    return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
   }
 
   getDate(date: string): string {
@@ -78,7 +77,7 @@ export class OrganizationsInfoComponent implements OnInit {
         zipcode: [''],
         city: [''],
         country: ['']
-       }),
+      }),
       contact: this.fb.group({
         mail: [''],
         phoneNumber: [''],
