@@ -34,7 +34,15 @@ namespace ModelLayer.Helper
             listWithCreation = listEntries;
         }
 
-
+        /// <summary>
+        /// Check if the invitations changed.
+        /// </summary>
+        /// <param name="participatedOld">the old participated</param>
+        /// <param name="participatedNew">the new participated</param>
+        /// <param name="listEntries">the list with modification entries</param>
+        /// <param name="userOfModification">the user who performed the change</param>
+        /// <param name="modelId">the model id</param>
+        /// <param name="contactsParticipated">the contacts</param>
         private static void GetInvitationChangedOfEvents(List<Participated> participatedOld, List<ParticipatedDto> participatedNew, List<ModificationEntry> listEntries, User userOfModification, long modelId, List<Contact> contactsParticipated)
         {
             foreach (ParticipatedDto part in participatedNew)
@@ -42,9 +50,9 @@ namespace ModelLayer.Helper
                 if (part.WasInvited)
                 {
                     Participated partToCheck = participatedOld.FirstOrDefault(a => a.ContactId == part.ContactId);
-                    if (partToCheck != null && !partToCheck.WasInvited)
+                    if (partToCheck == null || !partToCheck.WasInvited)
                     {
-                        listEntries.Add(GetNewModificationEntry(contactsParticipated.FirstOrDefault(b => b.Id == partToCheck.ContactId).PreName + " " + contactsParticipated.FirstOrDefault(b => b.Id == partToCheck.ContactId).Name,
+                        listEntries.Add(GetNewModificationEntry(contactsParticipated.FirstOrDefault(b => b.Id == part.ContactId).PreName + " " + contactsParticipated.FirstOrDefault(b => b.Id == part.ContactId).Name,
                             string.Empty, modelId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, userOfModification, MODIFICATION.MODIFIED));
                     }
                 }                               

@@ -1638,11 +1638,8 @@ export class MailService {
      * @param mailContent (optional) 
      * @return successfully send mails
      */
-    sendInvitationMails(id: number, contactIds: number[], mailContent?: string | null | undefined): Observable<EventDto> {
-        let url_ = this.baseUrl + "/api/Mail/{id}?";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    sendInvitationMails(contactIds: number[], mailContent?: string | null | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/Mail?";
         if (mailContent !== undefined && mailContent !== null)
             url_ += "mailContent=" + encodeURIComponent("" + mailContent) + "&";
         url_ = url_.replace(/[?&]$/, "");
@@ -1666,14 +1663,14 @@ export class MailService {
                 try {
                     return this.processSendInvitationMails(<any>response_);
                 } catch (e) {
-                    return <Observable<EventDto>><any>_observableThrow(e);
+                    return <Observable<boolean>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<EventDto>><any>_observableThrow(response_);
+                return <Observable<boolean>><any>_observableThrow(response_);
         }));
     }
 
-    protected processSendInvitationMails(response: HttpResponseBase): Observable<EventDto> {
+    protected processSendInvitationMails(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1683,19 +1680,15 @@ export class MailService {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <EventDto>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <boolean>JSON.parse(_responseText, this.jsonParseReviver);
             return _observableOf(result200);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("bad request", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<EventDto>(<any>null);
+        return _observableOf<boolean>(<any>null);
     }
 
     /**

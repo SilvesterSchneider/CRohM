@@ -28,28 +28,12 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="mailContent">der mail inhalt</param>
         /// <param name="contactIds">die kontakt ids an die eine mail versendet werden soll</param>
-        /// <param name="id">die event id</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(EventDto), Description = "successfully send mails")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
-        public async Task<IActionResult> SendInvitationMails([FromRoute]long id, [FromBody]List<long> contactIds, [FromQuery]string mailContent)
+        [HttpPut]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully send mails")]
+        public async Task<IActionResult> SendInvitationMails([FromBody]List<long> contactIds, [FromQuery]string mailContent)
         {
-            Event oldOne = await eventService.GetEventByIdWithAllIncludesAsync(id);
-            if (oldOne == null)
-            {
-                return BadRequest();
-            }
-
-            if (await eventService.SendInvitationMailsAsync(contactIds, mailContent))
-            {
-                EventDto eventToModify = _mapper.Map<EventDto>(oldOne);
-                return Ok(eventToModify);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return Ok(await eventService.SendInvitationMailsAsync(contactIds, mailContent));
         }
 
         /// <summary>

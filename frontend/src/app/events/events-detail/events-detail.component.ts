@@ -63,7 +63,6 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   controlType?: string;
   autofilled?: boolean;
   columnsEvent: ['participated', 'prename', 'name'];
-  enableMailSending: boolean;
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   tagsControl = new FormControl();
@@ -96,7 +95,6 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       this.stateChanges.next();
     });
     this.event = data;
-    this.enableMailSending = this.event.contacts.length > 0;
     this.event.tags.forEach(x => this.selectedTags.push(x));
     this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(
       map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
@@ -261,11 +259,11 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     dialogRef.afterClosed().subscribe(x => {
       if (x.send && x.text != null) {
         const listOfIds: number[] = new Array<number>();
-        this.event.contacts.forEach(y => {
-          listOfIds.push(y.id);
+        this.selectedItems.forEach(y => {
+          listOfIds.push(y.contactId);
+          y.wasInvited = true;
         });
-        alert(listOfIds.length);
-        this.mailService.sendInvitationMails(this.event.id, listOfIds, x.text).subscribe();
+        this.mailService.sendInvitationMails(listOfIds, x.text).subscribe();
       }
     });
   }
@@ -346,12 +344,13 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             {
               contactId: x.contactId,
               hasParticipated: x.participated,
-              wasInvited: false,
+              wasInvited: x.wasInvited,
               id: 0
             }
           );
         } else {
           partExistend.hasParticipated = x.participated;
+          partExistend.wasInvited = x.wasInvited;
           participants.push(partExistend);
         }
       }
