@@ -1,18 +1,14 @@
-using Microsoft.AspNetCore.Identity;
 using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ServiceLayer
 {
     public interface IEventService : IEventRepository
     {
-        Task<bool> SendInvitationMailsAsync(Event oldOne, List<long> contactIds, string mailContent);
+        Task<bool> SendInvitationMailsAsync(List<long> contacts, string mailContent);
     }
 
     public class EventService : EventRepository, IEventService
@@ -26,30 +22,22 @@ namespace ServiceLayer
             this.contactRepo = contactRepo;
         }
 
-        public async Task<bool> SendInvitationMailsAsync(Event oldOne, List<long> contactIds, string mailContent)
+        public async Task<bool> SendInvitationMailsAsync(List<long> contacts, string mailContent)
         {
-            foreach (long id in contactIds)
+            bool ok = true;
+            foreach (long contactId in contacts)
             {
-                Participated part = oldOne.Participated.FirstOrDefault(a => a.ContactId == id);
-                if (part == null)
+                Contact contact = await contactRepo.GetByIdAsync(contactId);
+                if (contact != null)
                 {
-                    oldOne.Participated.Add(new Participated() { ContactId = id, HasParticipated = false, WasInvited = true });
-                }
-                else if (!part.WasInvited)
-                {
-                    part.WasInvited = true;
-                }
-            }
-            await UpdateAsync(oldOne);
-            foreach (Participated part in oldOne.Participated)
-            {
-                if (part.WasInvited)
-                {
-                    Contact contact = await contactRepo.GetByIdAsync(part.ContactId);
                     mailService.CreateAndSendInvitationMail(contact.ContactPossibilities.Mail, contact.PreName, contact.Name, mailContent, contact.Gender);
                 }
+                else
+                {
+                    ok = false;
+                }                
             }
-            return true; 
+            return ok; 
         }
     }
 }

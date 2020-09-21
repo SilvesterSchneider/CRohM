@@ -30,7 +30,25 @@ namespace ModelLayer.Helper
             CompareTagFields(listEntries, oldEvent.Tags, newEvent.Tags, newEvent.Id, MODEL_TYPE.EVENT, userOfModification);
             GetContactsChangeOfEvents(oldEvent.Contacts, newEvent.Contacts, newEvent.Id, userOfModification, listEntries);
             GetParticipatedChangesOfEvent(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id, contactsParticipated);
+            GetInvitationChangedOfEvents(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id, contactsParticipated);
             listWithCreation = listEntries;
+        }
+
+
+        private static void GetInvitationChangedOfEvents(List<Participated> participatedOld, List<ParticipatedDto> participatedNew, List<ModificationEntry> listEntries, User userOfModification, long modelId, List<Contact> contactsParticipated)
+        {
+            foreach (ParticipatedDto part in participatedNew)
+            {
+                if (part.WasInvited)
+                {
+                    Participated partToCheck = participatedOld.FirstOrDefault(a => a.ContactId == part.ContactId);
+                    if (partToCheck != null && !partToCheck.WasInvited)
+                    {
+                        listEntries.Add(GetNewModificationEntry(contactsParticipated.FirstOrDefault(b => b.Id == partToCheck.ContactId).PreName + " " + contactsParticipated.FirstOrDefault(b => b.Id == partToCheck.ContactId).Name,
+                            string.Empty, modelId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, userOfModification, MODIFICATION.MODIFIED));
+                    }
+                }                               
+            }
         }
 
         /// <summary>

@@ -41,8 +41,6 @@ namespace ServiceLayer
         /// <returns></returns>
         Task UpdateEventsAsync(User usernameOfModification, Event oldEvent, EventDto newEvent, List<Contact> contactsParticipated);
 
-        Task UpdateEventsAsync(List<EventContact> contacts, User usernameOfModification, long eventId, List<Participated> participated, List<long> contactIds);
-
         /// <summary>
         /// creates a new modification entry just for insertion of a new contact
         /// </summary>
@@ -241,11 +239,6 @@ namespace ServiceLayer
             {
                 await CreateNewEntryAsync(userNameOfChange, id, MODIFICATION.ADDED, modelType, DATA_TYPE.CONTACTS, "", contactName);
             }
-        }
-
-        public async Task UpdateEventsAsync(List<EventContact> contacts, User usernameOfModification, long eventId, List<Participated> participated, List<long> contactIds)
-        { 
-            await Task.Run(() => ComparerForModificationEntryCreation.CompareEventInvitations(contacts, eventId, participated, contactIds, usernameOfModification, out listWithCreation, out listWithDeletion));
         }
     }
 }
