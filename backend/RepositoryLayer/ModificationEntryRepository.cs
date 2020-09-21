@@ -127,7 +127,7 @@ namespace RepositoryLayer
 
         public async Task<List<ModificationEntry>> GetSortedModificationEntriesByModelDataTypeAsync(MODEL_TYPE dataType)
         {
-            List<ModificationEntry> list = await Entities.Where(x => x.DataModelType == dataType).ToListAsync();
+            List<ModificationEntry> list = await Entities.Include(u => u.User).Where(x => x.DataModelType == dataType).ToListAsync();
             List<ModificationEntry> listToDelete = new List<ModificationEntry>();
             foreach (ModificationEntry entry in list)
             {
