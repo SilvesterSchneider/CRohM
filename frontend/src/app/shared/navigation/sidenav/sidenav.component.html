@@ -25,20 +25,22 @@
       <a routerLink="/">
         <img class="icon" src="/assets/logo.svg">
         <span> CRohM </span>
-        </a>
-      <nav mat-tab-nav-bar backgroundColor="primary" *ngIf="isLoggedIn()">
-        <a mat-tab-link
-        *ngFor="let link of navLinks"
-        [routerLink]="link.link"
-        routerLinkActive #rla="routerLinkActive"
-        [active]="rla.isActive">
-        <div style="color:white; margin-left: 10px;">
-          {{link.label}}
-        </div>
-        </a>
+      </a>
+      <div fxFlex fxLayout fxHide.xs *ngIf="isLoggedIn()" fxLayout fxLayoutGap="40px" class="navigation-items">
+        <nav mat-tab-nav-bar fxFlex fxLayout fxHide.xs backgroundColor="primary">
+          <a mat-tab-link
+              *ngFor="let link of navLinks"
+              [routerLink]="link.link"
+              routerLinkActive #rla="routerLinkActive"
+              [active]="rla.isActive">
+            <div style="color:white; margin-left: 10px; font-size: larger;">
+              {{link.label}}
+            </div>
+          </a>
         </nav>
-      <app-user-menu class="userMenu" *ngIf="isLoggedIn()"></app-user-menu>
-    </mat-toolbar>
+        <app-user-menu class="userMenu" *ngIf="isLoggedIn()"></app-user-menu>
+      </div>
+      </mat-toolbar>
     <main>
       <router-outlet></router-outlet>
     </main>
