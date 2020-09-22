@@ -181,6 +181,9 @@ namespace ModelLayer.Migrations
                     b.Property<string>("PreName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("approval")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
@@ -511,7 +514,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "fe748231-8273-4ab9-9a5f-e24e030005f1",
+                            ConcurrencyStamp = "fa364ec8-da6f-4623-93ad-cf9443bc1773",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

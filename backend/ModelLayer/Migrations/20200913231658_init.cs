@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class ram_init_wwd19_20 : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -208,7 +208,8 @@ namespace ModelLayer.Migrations
                     ContactPartner = table.Column<string>(nullable: true),
                     PreName = table.Column<string>(nullable: true),
                     AddressId = table.Column<long>(nullable: true),
-                    ContactPossibilitiesId = table.Column<long>(nullable: true)
+                    ContactPossibilitiesId = table.Column<long>(nullable: true),
+                    approval = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -514,7 +515,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "fe748231-8273-4ab9-9a5f-e24e030005f1", "Admin", "ADMIN" });
+                values: new object[] { 1L, "fa364ec8-da6f-4623-93ad-cf9443bc1773", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",

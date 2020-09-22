@@ -23,6 +23,8 @@ namespace ModelLayer.Models
         public List<OrganizationContact> OrganizationContacts { get; set; } = new List<OrganizationContact>();
         public List<HistoryElement> History { get; set; } = new List<HistoryElement>();
         public List<Tag> Tags { get; set; } = new List<Tag>();
+        public bool approval { get; set; } = false;
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

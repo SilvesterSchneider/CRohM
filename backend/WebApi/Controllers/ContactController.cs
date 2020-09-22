@@ -26,14 +26,16 @@ namespace WebApi.Controllers
         private IUserService userService;
         private readonly IModificationEntryService modService;
         private IContactService contactService;
+        private readonly IMailService mailService;
 
-        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService)
+        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IMailService mailService)
         {
             _mapper = mapper;
             this.eventService = eventService;
             this.userService = userService;
             this.modService = modService;
             this.contactService = contactService;
+            this.mailService = mailService;
         }
 
         [HttpGet]
@@ -107,6 +109,7 @@ namespace WebApi.Controllers
             var contactDto = _mapper.Map<ContactDto>(contact);
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             await modService.CreateNewContactEntryAsync(userOfChange, contact.Id);
+            mailService.AskForAproval(contact);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
             return Created(uri, contactDto);
         }
