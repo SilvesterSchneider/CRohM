@@ -161,7 +161,7 @@
             </ng-container>
             <ng-container matColumnDef="bearbeiter">
                 <mat-header-cell *matHeaderCellDef> Bearbeiter </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.userName}}
+                <mat-cell *matCellDef="let element"> {{element.user.firstName + " " + element.user.lastName}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="feldname">
