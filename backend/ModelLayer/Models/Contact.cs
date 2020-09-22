@@ -1,4 +1,5 @@
 using ModelLayer.Models.Base;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,15 @@ namespace ModelLayer.Models
 {
     public class Contact : BaseEntity
     {
+        public enum GenderTypes
+        {
+            MALE,
+            FEMALE,
+            DIVERS
+        }
+
+        public GenderTypes Gender { get; set; }
+        public string ContactPartner { get; set; }
         public string PreName { get; set; } = "";
         public Address Address { get; set; } = new Address();
         public ContactPossibilities ContactPossibilities { get; set; } = new ContactPossibilities();
@@ -18,6 +28,13 @@ namespace ModelLayer.Models
             StringBuilder sb = new StringBuilder();
             sb.Append("Name: " + PreName + " " + Name);
             sb.AppendLine();
+            sb.Append("Geschlecht: " + Enum.GetName(typeof(GenderTypes), Gender));
+            sb.AppendLine();
+            if (!string.IsNullOrEmpty(ContactPartner))
+            {
+                sb.Append("Ansprechpartner: " + ContactPartner);
+                sb.AppendLine();
+            }
             sb.Append("Anschrift: ");
             sb.AppendLine();
             sb.Append(Address.ToString());

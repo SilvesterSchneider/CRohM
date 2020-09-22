@@ -6,10 +6,21 @@
             </h3>
         </div>
         <mat-form-field class="col-md-6">
-            <input matInput placeholder="Vorname" formControlName="preName">
+            <input id="preName" matInput placeholder="Vorname" formControlName="preName">
         </mat-form-field>
         <mat-form-field class="col-md-6">
-            <input matInput placeholder="Nachname" formControlName="name">
+            <input id="name" matInput placeholder="Nachname" formControlName="name">
+        </mat-form-field>
+    </div>
+    <div class="row">
+        <mat-form-field class="col-md-6">
+            <mat-label>Geschlecht wählen</mat-label>
+            <mat-select id="gender" formControlName="gender">
+                <mat-option [value]="suit" *ngFor="let suit of genderTypes">{{suit}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col-md-6">
+            <input id="contactPartner" matInput placeholder="Ansprechpartner" formControlName="contactPartner">
         </mat-form-field>
     </div>
 
@@ -25,17 +36,17 @@
     <div class="row" formGroupName="contactPossibilities">
         <div class="col-md-3">
             <mat-form-field>
-                <input matInput placeholder="E-Mail" formControlName="mail">
+                <input id="mail" matInput placeholder="E-Mail" formControlName="mail">
             </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input matInput placeholder="Telefonnummer" formControlName="phoneNumber">
+                <input id="phoneNumber" matInput placeholder="Telefonnummer" formControlName="phoneNumber">
             </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input matInput placeholder="Faxnummer" formControlName="fax">
+                <input id="fax" matInput placeholder="Faxnummer" formControlName="fax">
             </mat-form-field>
         </div>
         <app-contact-possibilities></app-contact-possibilities>
@@ -45,7 +56,7 @@
         <button mat-raised-button color="primary" title="Abbrechen" (click)="onCancel()">
             Abbrechen
         </button>
-        <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid"
+        <button id="save" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid"
             (click)="onApprove()">
             Speichern
         </button>
