@@ -286,28 +286,21 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 
   toggleSelectAll() {
     this.isAllSelected = !this.isAllSelected;
-    const len = this.filteredItems.length;
-    if (this.isAllSelected) {
-      for (let i = 0; i++; i < len) {
-        this.filteredItems[i].selected = true;
-      }
-      this.selectedItems = this.filteredItems;
-      this.changeCallback(this.selectedItems);
-      this.cd.markForCheck();
-    } else {
-      this.selectedItems = [];
-    }
-    this.changeCallback(this.selectedItems);
+    this.filteredItems.forEach(x => this.toggleSelection(x));
   }
 
   toggleSelection(item: EventContactConnection) {
     item.selected = !item.selected;
     if (item.selected) {
-      this.selectedItems.push(item);
+      if (this.selectedItems.find(a => a.contactId === item.contactId) == null) {
+        this.selectedItems.push(item);
+      }
     } else {
       const i = this.selectedItems.findIndex(value => value.contactId === item.contactId);
-      this.selectedItems[i].participated = false;
-      this.selectedItems.splice(i, 1);
+      if (i > -1) {
+        this.selectedItems[i].participated = false;
+        this.selectedItems.splice(i, 1);
+      }
     }
     if (this.changeCallback) {
       this.changeCallback(this.selectedItems);

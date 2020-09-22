@@ -42,7 +42,7 @@
         </div>
     </div>
     <div class="row">
-        <mat-chip-list class="list" aria-orientation="vertical" #chipList>
+        <mat-chip-list id="invitationList" class="list" aria-orientation="vertical" #chipList>
             <mat-chip *ngFor="let item of selectedItems">
                 <mat-checkbox class="checkBox" [disabled]="true" [checked]="item.wasInvited">
                 </mat-checkbox>
@@ -50,16 +50,16 @@
         </mat-chip-list>
         <mat-chip-list class="secondList" aria-orientation="vertical" #chipList>
             <mat-chip *ngFor="let item of selectedItems" [selectable]="selectable">
-                <mat-checkbox class="checkBox" [checked]="item.participated" (change)="toggleParticipated(item)">
+                <mat-checkbox class="checkBoxb" [checked]="item.participated" (change)="toggleParticipated(item)">
                 </mat-checkbox>
                 {{ item.preName + ' ' + item.name }}
             </mat-chip>
-            <input class="autoComplete" type="text" #inputTrigger placeholder="Kontakte auswählen" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
+            <input id="textInput" class="autoComplete" type="text" #inputTrigger placeholder="Kontakte auswählen" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
             [matChipInputFor]="chipList">
         </mat-chip-list>
         <mat-autocomplete #autoComplete="matAutocomplete">
             <mat-option>
-                <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
+                <mat-checkbox id="contactInput" [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
                         Alle selektieren
                 </mat-checkbox>
             </mat-option>
@@ -103,7 +103,7 @@
     <button mat-raised-button title="Verwerfen" (click)="close()">
         Verwerfen
     </button>
-    <button mat-raised-button color="primary" title="Einladung" (click)="callInvitation()">
+    <button id="invitationButton" mat-raised-button color="primary" title="Einladung" (click)="callInvitation()">
         Einladung
     </button>
 <mat-dialog-content>
