@@ -1,12 +1,12 @@
 <!-- Copyright (c) 2019 Christ Electronic System GmbH -->
 <!-- All Rights Reserved. -->
 <mat-toolbar>
-    <mat-toolbar-row>
+    <mat-toolbar-row class="tabrow">
         <span>Kontakte</span>
         <span class="spacer"></span>
         <mat-form-field>
             <mat-label>Suche</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
+            <input class="input" matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
         </mat-form-field>
         <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Kontakt hinzufügen" (click)="addDummyContact()">
             <mat-icon>add</mat-icon> Dummy Kontakt hinzufügen
