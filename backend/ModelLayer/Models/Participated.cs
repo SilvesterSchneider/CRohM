@@ -1,4 +1,4 @@
-﻿using ModelLayer.Models.Base;
+using ModelLayer.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,5 +9,7 @@ namespace ModelLayer.Models
     {
         public long ContactId { get; set; }
         public bool HasParticipated { get; set; }
+        public bool WasInvited { get; set; }
     }
 }
+

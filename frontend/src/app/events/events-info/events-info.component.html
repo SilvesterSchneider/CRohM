@@ -35,6 +35,13 @@
     </div>
     <div class="col-md-12">
         <mat-table *ngIf="contacts.length > 0" #table [dataSource]="contacts">
+            <ng-container matColumnDef="wasInvited">
+                <mat-header-cell *matHeaderCellDef> Eingeladen </mat-header-cell>
+                <mat-cell *matCellDef="let element"> 
+                    <mat-icon *ngIf="!element.wasInvited">check_box_outline_blank</mat-icon>
+                    <mat-icon *ngIf="element.wasInvited">check_box</mat-icon>
+                </mat-cell>
+            </ng-container>
             <ng-container matColumnDef="participated">
                 <mat-header-cell *matHeaderCellDef> Teilgenommen </mat-header-cell>
                 <mat-cell *matCellDef="let element"> 

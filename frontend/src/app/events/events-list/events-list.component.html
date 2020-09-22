@@ -9,10 +9,10 @@
         <mat-checkbox class="button" [checked]="checkboxSelected" title="Veranstaltungen aus der Vergangenheit ausblenden" (change)="toggleSelection()">
             Veranstaltungen aus der Vergangenheit ausblenden
         </mat-checkbox>
-        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Veranstaltung hinzufügen" (click)="addDummyEvent()"> 
+        <button id="addDummyEventButton" class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Veranstaltung hinzufügen" (click)="addDummyEvent()"> 
             <mat-icon>add</mat-icon> Dummy Veranstaltung hinzufügen
         </button>
-        <button class="button" button="submit" mat-mini-fab color="primary" (click)="addEvent()">
+        <button id="addEventButton" class="button" button="submit" mat-mini-fab color="primary" (click)="addEvent()">
             <mat-icon>add</mat-icon> 
         </button>
     </mat-toolbar-row>
@@ -36,7 +36,7 @@
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
-                <a (click)="callEdit(element.id)" type="button">
+                <a class="editButton" (click)="callEdit(element.id)" type="button">
                     <mat-icon color="primary" class="icon" title="Veranstaltung bearbeiten">edit</mat-icon>
                 </a>
                 <a (click)="openInfo(element.id)" type="button">

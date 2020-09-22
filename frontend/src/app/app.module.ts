@@ -29,7 +29,7 @@ import { ChangePasswordComponent } from './login/change-password-dialog/change-p
     UserMenuComponent,
     SidenavComponent,
     ConfirmDialogComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

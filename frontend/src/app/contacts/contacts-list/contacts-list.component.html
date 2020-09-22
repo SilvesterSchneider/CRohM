@@ -8,7 +8,7 @@
             <mat-label>Suche</mat-label>
             <input class="input" matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
         </mat-form-field>
-        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Kontakt hinzufügen" (click)="addDummyContact()">
+        <button id="addDummyButton" class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Kontakt hinzufügen" (click)="addDummyContact()">
             <mat-icon>add</mat-icon> Dummy Kontakt hinzufügen
         </button>
         <button id="addButton" class="button" button="submit" mat-mini-fab color="primary" (click)="openAddDialog()">
