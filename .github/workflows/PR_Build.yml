@@ -66,12 +66,16 @@ jobs:
           BRANCH_NAME: ${{ github.head_ref }}
           SHA: ${{ github.sha }}
         run: |
+          BRANCH_NAME_TAG=crohmcrms/crohm_crms:${BRANCH_NAME////-}
+          echo BRANCH_NAME_TAG: $BRANCH_NAME_TAG
+          echo "::set-env name=BRANCH_NAME_TAG::$BRANCH_NAME_TAG"
           SHA_TAG=crohmcrms/crohm_crms:sha-${SHA::7}
-          echo $SHA_TAG
+          echo SHA_TAG: $SHA_TAG
           echo "::set-env name=SHA_TAG::$SHA_TAG"
 
       - name: Test Prepare
         run: |
+          echo ${{ env.BRANCH_NAME_TAG }}
           echo ${{ env.SHA_TAG }}
   #
   # TODO: LABEL PRs
