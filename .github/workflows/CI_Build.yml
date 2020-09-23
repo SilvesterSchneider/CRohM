@@ -82,8 +82,6 @@ jobs:
           BRANCH_NAME: ${{ github.ref }}
           SHA: ${{ github.sha }}
         run: |
-          BRANCH_NAME=${BRANCH_NAME/refs//heads///}
-          echo BRANCH_NAME: $BRANCH_NAME
           BRANCH_NAME_TAG=crohmcrms/crohm_crms:${BRANCH_NAME////-}
           echo BRANCH_NAME_TAG: $BRANCH_NAME_TAG
           echo "::set-env name=BRANCH_NAME_TAG::$BRANCH_NAME_TAG"
