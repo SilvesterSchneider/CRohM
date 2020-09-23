@@ -72,7 +72,7 @@ jobs:
 
       - name: Test Prepare
         run: |
-          echo ${{ SHA_TAG }}
+          echo ${{ env.SHA_TAG }}
   #
   # TODO: LABEL PRs
   # TODO: Set assignee in PRs
