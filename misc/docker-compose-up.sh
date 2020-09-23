@@ -4,10 +4,15 @@ echo
 echo "Starting docker-stack..."
 
 export CROHM_BRANCH=$(git branch --show-current)
-export CROHM_IMAGE=$(echo "${CROHM_BRANCH}" | tr "/" -)
+
+# Replace foreslashes
+export CROHM_IMAGE_PREP=$(echo "${CROHM_BRANCH}" | tr "/" -)
+
+# Replace underscores
+export CROHM_IMAGE=$(echo "${CROHM_IMAGE_PREP}" | tr "_" -)
 
 if [ ${CROHM_BRANCH} = "master" ]; then
-     export CROHM_IMAGE=latest;
+    export CROHM_IMAGE=latest
 fi
 
 echo
