@@ -3,7 +3,6 @@ on:
   pull_request:
 
 jobs:
-
   # container_security_scan:
   #   runs-on: ubuntu-latest
   #   steps:
@@ -18,7 +17,6 @@ jobs:
   dump:
     runs-on: ubuntu-16.04
     steps:
-
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
@@ -52,7 +50,6 @@ jobs:
   var_test:
     runs-on: ubuntu-16.04
     steps:
-
       - name: Var test print
         env:
           BRANCH_NAME: ${{ github.head_ref }}
@@ -61,6 +58,22 @@ jobs:
           echo "$BRANCH_NAME"
           echo sha-${SHA::7}
 
+  var_test2:
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Prepare
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
+          SHA: ${{ github.sha }}
+        run: |
+          SHA_TAG=crohmcrms/crohm_crms:sha-${SHA::7}
+          echo $SHA_TAG
+          echo "::set-env name=SHA_TAG::$SHA_TAG"
+
+      - name: Test Prepare
+        run: |
+          echo ${{ SHA_TAG }}
+  #
   # TODO: LABEL PRs
   # TODO: Set assignee in PRs
   # TODO: Full rebuilds in PRs
