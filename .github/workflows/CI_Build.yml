@@ -82,9 +82,11 @@ jobs:
           BRANCH_NAME: ${{ github.ref }}
           SHA: ${{ github.sha }}
         run: |
-          BRANCH_NAME_TAG=crohmcrms/crohm_crms:${BRANCH_NAME////-}
-          echo BRANCH_NAME_TAG: $BRANCH_NAME_TAG
-          echo "::set-env name=BRANCH_NAME_TAG::$BRANCH_NAME_TAG"
+          BRANCH_NAME_TAG_PREP1=crohmcrms/crohm_crms:${BRANCH_NAME////-}
+          echo BRANCH_NAME_TAG_PREP1: $BRANCH_NAME_TAG_PREP1
+          BRANCH_NAME_TAG_PREP2=crohmcrms/crohm_crms:${BRANCH_NAME_TAG_PREP1/refs-heads-/}
+          echo BRANCH_NAME_TAG_PREP2: $BRANCH_NAME_TAG_PREP2
+          echo "::set-env name=BRANCH_NAME_TAG::$BRANCH_NAME_TAG_PREP2"
           SHA_TAG=crohmcrms/crohm_crms:sha-${SHA::7}
           echo SHA_TAG: $SHA_TAG
           echo "::set-env name=SHA_TAG::$SHA_TAG"
