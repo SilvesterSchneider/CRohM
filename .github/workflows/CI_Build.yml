@@ -82,11 +82,26 @@ jobs:
           BRANCH_NAME: ${{ github.ref }}
           SHA: ${{ github.sha }}
         run: |
-          BRANCH_NAME_TAG_PREP1=crohmcrms/crohm_crms:${BRANCH_NAME////-}
-          echo BRANCH_NAME_TAG_PREP1: $BRANCH_NAME_TAG_PREP1
-          BRANCH_NAME_TAG_PREP2=crohmcrms/crohm_crms:${BRANCH_NAME_TAG_PREP1/refs-heads-/}
-          echo BRANCH_NAME_TAG_PREP2: $BRANCH_NAME_TAG_PREP2
-          echo "::set-env name=BRANCH_NAME_TAG::$BRANCH_NAME_TAG_PREP2"
+          echo "BRANCH_NAME_TAG: Replace foreslashes"
+          BRANCH_NAME_PREP1=${BRANCH_NAME////-}
+          echo BRANCH_NAME_PREP1: $BRANCH_NAME_PREP1
+          echo ""
+          echo "BRANCH_NAME_TAG: Replace underscores"
+          BRANCH_NAME_PREP2=${BRANCH_NAME_PREP1/_/-}
+          echo BRANCH_NAME_PREP2: $BRANCH_NAME_PREP2
+          echo ""
+          echo "BRANCH_NAME_TAG: Remove ref prefix"
+          BRANCH_NAME_PREP3=${BRANCH_NAME_PREP2/refs-heads-/}
+          echo BRANCH_NAME_PREP3: $BRANCH_NAME_PREP3
+          echo ""
+          echo "BRANCH_NAME_TAG: Add tag label"
+          BRANCH_NAME_TAG=crohmcrms/crohm_crms:$BRANCH_NAME_PREP3
+          echo BRANCH_NAME_TAG: $BRANCH_NAME_TAG
+          echo ""
+          echo "BRANCH_NAME_TAG: Set env variable"
+          echo "::set-env name=BRANCH_NAME_TAG::$BRANCH_NAME_TAG"
+          echo ""
+          echo "SHA_TAG: Set env variable"
           SHA_TAG=crohmcrms/crohm_crms:sha-${SHA::7}
           echo SHA_TAG: $SHA_TAG
           echo "::set-env name=SHA_TAG::$SHA_TAG"
