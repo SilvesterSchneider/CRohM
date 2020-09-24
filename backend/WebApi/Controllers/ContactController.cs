@@ -26,14 +26,16 @@ namespace WebApi.Controllers
         private IUserService userService;
         private readonly IModificationEntryService modService;
         private IContactService contactService;
+        private IContactHistoryService contactHistoryService;
 
-        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService)
+        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IContactHistoryService  contactHistoryService)          
         {
             _mapper = mapper;
             this.eventService = eventService;
             this.userService = userService;
             this.modService = modService;
             this.contactService = contactService;
+            this.contactHistoryService = contactHistoryService;
         }
 
         [HttpGet]
@@ -145,6 +147,14 @@ namespace WebApi.Controllers
             await contactService.DeleteAsync(contact);
             await modService.UpdateContactByDeletionAsync(id);
             return Ok();
+        }
+
+        [HttpGet("{id}/history")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(List<HistoryElement>), Description = "successfully found")]
+        public async Task<IActionResult> GetHistory(long id)
+        {
+            List<HistoryElement> history = await contactHistoryService.GetContactHistoryByContactAsync(id);
+            return Ok(history);
         }
     }
 }
