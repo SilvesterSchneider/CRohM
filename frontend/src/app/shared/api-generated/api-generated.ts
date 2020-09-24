@@ -1677,6 +1677,136 @@ export class EventService {
 @Injectable({
     providedIn: 'root'
 })
+export class MailService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @param mailContent (optional) 
+     * @return successfully send mails
+     */
+    sendInvitationMails(contactIds: number[], mailContent?: string | null | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/Mail?";
+        if (mailContent !== undefined && mailContent !== null)
+            url_ += "mailContent=" + encodeURIComponent("" + mailContent) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(contactIds);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSendInvitationMails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSendInvitationMails(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSendInvitationMails(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <boolean>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
+
+    /**
+     * @param eventName (optional) 
+     * @param date (optional) 
+     * @param time (optional) 
+     * @return successfully get mail text
+     */
+    getSendInvitationText(eventName?: string | null | undefined, date?: string | null | undefined, time?: string | null | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/Mail?";
+        if (eventName !== undefined && eventName !== null)
+            url_ += "eventName=" + encodeURIComponent("" + eventName) + "&";
+        if (date !== undefined && date !== null)
+            url_ += "date=" + encodeURIComponent("" + date) + "&";
+        if (time !== undefined && time !== null)
+            url_ += "time=" + encodeURIComponent("" + time) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSendInvitationText(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSendInvitationText(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetSendInvitationText(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class ModificationEntryService {
     private http: HttpClient;
     private baseUrl: string;
@@ -3250,6 +3380,7 @@ export interface ParticipatedDto {
     id: number;
     contactId: number;
     hasParticipated: boolean;
+    wasInvited: boolean;
 }
 
 export interface ContactCreateDto {
@@ -3429,6 +3560,7 @@ export enum DATA_TYPE {
     TIME = 18,
     PARTICIPATED = 19,
     TAG = 20,
+    INVITATION = 21,
 }
 
 export enum MODEL_TYPE {

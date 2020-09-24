@@ -20,6 +20,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   imports: [
@@ -42,6 +43,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatSelectModule,
     MatDialogModule,
     MatCheckboxModule,
+    MatToolbarModule,
+    MatTabsModule,
     MatChipsModule,
     MatProgressSpinnerModule,
     MatDividerModule,
@@ -63,6 +66,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatInputModule,
     MatCardModule,
     MatMenuModule,
+    MatTabsModule,
     MatTableModule,
     MatSelectModule,
     MatDialogModule,

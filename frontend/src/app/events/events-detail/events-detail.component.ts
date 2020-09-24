@@ -11,12 +11,14 @@ import {
   MatAutocompleteTrigger, MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { ContactDto, EventDto, ParticipatedDto, TagDto } from '../../shared/api-generated/api-generated';
+import { ContactDto, EventDto, MailService, ParticipatedDto, TagDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
+import { EventsInvitationComponent } from '../events-invitation/events-invitation.component';
+import { StickyDirection } from '@angular/cdk/table';
 
 export class EventContactConnection {
   contactId: number;
@@ -24,6 +26,7 @@ export class EventContactConnection {
   name: string;
   preName: string;
   participated: boolean;
+  wasInvited: boolean;
 }
 
 @Component({
@@ -81,7 +84,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     private cd: ChangeDetectorRef,
     private contactService: ContactService,
     private eventService: EventService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private mailService: MailService) {
     super(dialogRef, dialog);
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
@@ -148,9 +152,11 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       this.contacts = y;
       y.forEach(x => {
         let participatedReal = false;
+        let wasInvitedReal = false;
         this.event.participated.forEach(z => {
           if (z.contactId === x.id) {
             participatedReal = z.hasParticipated;
+            wasInvitedReal = z.wasInvited;
           }
         });
         this.filteredItems.push(
@@ -159,7 +165,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             name: x.name,
             preName: x.preName,
             selected: false,
-            participated: participatedReal
+            participated: participatedReal,
+            wasInvited: wasInvitedReal
           }
         );
       });
@@ -247,6 +254,20 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.inputTrigger.openPanel();
   }
 
+  callInvitation() {
+    const dialogRef = this.dialog.open(EventsInvitationComponent, { data: this.event, disableClose: true, minWidth: '450px', minHeight: '400px' });
+    dialogRef.afterClosed().subscribe(x => {
+      if (x.send && x.text != null) {
+        const listOfIds: number[] = new Array<number>();
+        this.selectedItems.forEach(y => {
+          listOfIds.push(y.contactId);
+          y.wasInvited = true;
+        });
+        this.mailService.sendInvitationMails(listOfIds, x.text).subscribe();
+      }
+    });
+  }
+
   filter(filter: string): EventContactConnection[] {
     this.lastFilter = filter;
     if (filter) {
@@ -265,28 +286,21 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 
   toggleSelectAll() {
     this.isAllSelected = !this.isAllSelected;
-    const len = this.filteredItems.length;
-    if (this.isAllSelected) {
-      for (let i = 0; i++; i < len) {
-        this.filteredItems[i].selected = true;
-      }
-      this.selectedItems = this.filteredItems;
-      this.changeCallback(this.selectedItems);
-      this.cd.markForCheck();
-    } else {
-      this.selectedItems = [];
-    }
-    this.changeCallback(this.selectedItems);
+    this.filteredItems.forEach(x => this.toggleSelection(x));
   }
 
   toggleSelection(item: EventContactConnection) {
     item.selected = !item.selected;
     if (item.selected) {
-      this.selectedItems.push(item);
+      if (this.selectedItems.find(a => a.contactId === item.contactId) == null) {
+        this.selectedItems.push(item);
+      }
     } else {
       const i = this.selectedItems.findIndex(value => value.contactId === item.contactId);
-      this.selectedItems[i].participated = false;
-      this.selectedItems.splice(i, 1);
+      if (i > -1) {
+        this.selectedItems[i].participated = false;
+        this.selectedItems.splice(i, 1);
+      }
     }
     if (this.changeCallback) {
       this.changeCallback(this.selectedItems);
@@ -323,11 +337,13 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             {
               contactId: x.contactId,
               hasParticipated: x.participated,
+              wasInvited: x.wasInvited,
               id: 0
             }
           );
         } else {
           partExistend.hasParticipated = x.participated;
+          partExistend.wasInvited = x.wasInvited;
           participants.push(partExistend);
         }
       }
@@ -335,7 +351,9 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.event.contacts = contacts;
     this.event.participated = participants;
     this.event.tags = this.selectedTags;
-    this.eventService.put(this.event, this.event.id).subscribe(() => this.dialogRef.close());
+    this.eventService.put(this.event, this.event.id).subscribe(() => {
+      this.dialogRef.close();
+    });
   }
 
   close() {

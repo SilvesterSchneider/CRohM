@@ -5,6 +5,8 @@ using System.Linq;
 using System.IO;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using static ModelLayer.Models.Contact;
+using ModelLayer.DataTransferObjects;
 
 namespace ServiceLayer
 {
@@ -13,6 +15,7 @@ namespace ServiceLayer
     /// </summary>
     public interface IMailService
     {
+        public bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender);
         public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment,
             string attachmentType);
 
@@ -27,9 +30,24 @@ namespace ServiceLayer
 
     public class MailService : IMailService
     {
+        private static string STARTFIELD = "<Anrede>";
+        private static string PRENAMEFIELD = "<Vorname>";
+        private static string NAMEFIELD = "<Nachname>";
+        private static string EVENTNAMEFIELD = "<Veranstaltungsname>";
+        private static string EVENTDATEFIELD = "<Datum>";
+        private static string EVENTTIMEFIELD = "<Uhrzeit>";
+        public static string INVITATION_DEF_CONTENT = STARTFIELD + " " + PRENAMEFIELD + " " + NAMEFIELD +
+            "\rWir laden Sie herzlich ein zu unserer Veranstaltung \"" + EVENTNAMEFIELD +
+            "\" am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr.\rWir freuen uns auf ihre Erscheinen.\rTechnische Hochschule Nürnberg";
+
         public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
         {
             return SendMail(subject, body, address, new MemoryStream(attachment), attachmentType);
+        }
+
+        public static string GetMailForInvitationAsTemplate(string eventName, string date, string time)
+        {
+            return INVITATION_DEF_CONTENT.Replace(EVENTNAMEFIELD, eventName).Replace(EVENTDATEFIELD, date).Replace(EVENTTIMEFIELD, time);
         }
 
         public bool Registration(string benutzer, string passwort, string email)
@@ -129,26 +147,27 @@ namespace ServiceLayer
             return true;
         }
 
-        /*
-         *Falls wir einmal eine Signatur einbauen möchten... wird in der Regel iwo als .htm abgelgt
-         *Ich ändere in der Firma oft meine Signatur z.B. werbung für Messenauftritte, besondere aktionen etc.
-        private string ReadSignature()
+        public bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender)
         {
-            string signature = string.Empty;
-
-            if (File.Exists("htmlDatei"))
+            string start = "Sehr geehrter Herr";
+            if (gender == GenderTypes.FEMALE)
             {
-                FileInfo fiSignature = new FileInfo("htmlDatei");
-                StreamReader sr = new StreamReader(fiSignature.FullName, Encoding.Default);
-                signature = sr.ReadToEnd();
-
-                if (!string.IsNullOrEmpty(signature))
-                {
-                    string fileName = fiSignature.Name.Replace(fiSignature.Extension, string.Empty);
-                }
+                start = "Sehr geehrte Frau";
             }
-            return signature;
+            else if (gender == GenderTypes.DIVERS)
+            {
+                start = "Sehr geehrt";
+            }
+            string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
+            string[] fields = finishedcontent.Split("\r");
+            string text = string.Empty;
+            foreach (string line in fields)
+            {
+                text += "<p>";
+                text += line;
+                text += "</p>";
+            }
+            return SendMail("Einladung zur Veranstaltung", text, address, null, null);
         }
-        */
     }
 }

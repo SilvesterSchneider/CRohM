@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { JwtService } from '../../jwt.service';
 
 @Component({
@@ -7,8 +8,24 @@ import { JwtService } from '../../jwt.service';
   styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit {
-
-  constructor(private jwtService: JwtService) { }
+  navLinks: any[];
+  constructor(private jwtService: JwtService, private router: Router) {
+    this.navLinks = [
+      {
+          label: 'Kontakte',
+          link: './contacts',
+          index: 0
+      }, {
+          label: 'Organisationen',
+          link: './organizations',
+          index: 1
+      }, {
+          label: 'Veranstaltungen',
+          link: './events',
+          index: 2
+      },
+    ];
+   }
 
   ngOnInit(): void {
   }
@@ -16,5 +33,4 @@ export class SidenavComponent implements OnInit {
   public isLoggedIn() {
     return this.jwtService.isLoggedIn();
   }
-
 }
