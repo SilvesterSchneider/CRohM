@@ -3,7 +3,6 @@ on:
   pull_request:
 
 jobs:
-
   # container_security_scan:
   #   runs-on: ubuntu-latest
   #   steps:
@@ -18,7 +17,6 @@ jobs:
   dump:
     runs-on: ubuntu-16.04
     steps:
-
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
@@ -48,19 +46,7 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
-
-  var_test:
-    runs-on: ubuntu-16.04
-    steps:
-
-      - name: Var test print
-        env:
-          BRANCH_NAME: ${{ github.head_ref }}
-          SHA: ${{ github.sha }}
-        run: |
-          echo "$BRANCH_NAME"
-          echo sha-${SHA::7}
-
+  #
   # TODO: LABEL PRs
   # TODO: Set assignee in PRs
   # TODO: Full rebuilds in PRs
