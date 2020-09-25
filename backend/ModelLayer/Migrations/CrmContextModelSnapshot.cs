@@ -472,6 +472,9 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("WasInvited")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EventId");
@@ -511,7 +514,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "fe748231-8273-4ab9-9a5f-e24e030005f1",
+                            ConcurrencyStamp = "d77fb6b8-8596-411d-a45f-48c17d49b24e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

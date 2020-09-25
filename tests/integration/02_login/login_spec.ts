@@ -1,4 +1,4 @@
-import { doLogin } from '../../shared/login';
+import { doLogin,loginAsAdmin } from '../../shared/login';
 
 function visitAndCheck(url: string) {
     // Navigate to url (baseUrl from cypress.json is used as base)
@@ -34,22 +34,48 @@ describe('Login Tests', () => {
             }
         });
 
-        // Validate that JSON Webtoken has been saved
-        cy.getCookie('.AspNetCore.Identity.Application').should('exist');
-
         // Validate that url equals baseUrl
-        cy.url().should('equal', Cypress.config().baseUrl + '/');
+        cy.url().should('equal', Cypress.config().baseUrl + '/?from=login');
 
         // Validate that the correct page is displayed by checking the title
         cy.contains('CRohM - Customer Relationship Management System').should('exist');
     });
 
+    it('should not appear disclaimer beacause data protection officer is in system',()=>{        
+        loginAsAdmin();
+
+        // make admin to data protection officer
+        cy.request({
+            method: 'PUT',
+            url: '/api/role/1',
+            body: ["Admin","Datenschutzbeauftragter"],
+            auth: getAccessToken()
+        }).then(()=>{
+             // after reloade the disclaimer should not be visible
+                cy.reload();
+
+                cy.url().should('equal', Cypress.config().baseUrl + '/?from=login');
+                cy.get('#dataProtectionOfficeDisclaimer').should('not.exist');
+
+                        // take role of admin
+                cy.request({
+                    method: 'PUT',
+                    url: '/api/role/1',
+                    body: ["Admin"],
+                    auth: getAccessToken()
+                }).then(()=>{   });
+        })
+       
+        
+                      
+       
+
+           
+    })
+
     it('should not accept a wrong password', () => {
         // Login with credentials admin/wrongpassword
         doLogin('admin', 'wrongpassword');
-
-        // Validate that no JSON Webtoken has been issued
-        cy.getCookie('.AspNetCore.Identity.Application').should('not.exist');
 
         // Validate that url equals baseUrl/login
         cy.url().should('equal', Cypress.config().baseUrl + '/login');
@@ -69,6 +95,13 @@ describe('Login Tests', () => {
         visitAndCheck('/organizations');
         visitAndCheck('/settings');
     });
+
 });
+
+function getAccessToken() {
+    return {
+        bearer: localStorage.getItem('access_token')
+    };
+}
 
 
