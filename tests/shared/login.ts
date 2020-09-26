@@ -19,5 +19,5 @@ export function doLogin(username: string, password: string) {
     cy.get('#login-button').click();
 
     // Wait for cookie storage
-    cy.wait(1000);
+    cy.wait(100);
 }
