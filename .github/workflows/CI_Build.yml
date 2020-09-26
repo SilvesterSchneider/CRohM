@@ -70,6 +70,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Prepare
+        # Using bash substring manipulation
+        # http://www.autoscorch.com/bsm
         id: prepare_build_docker
         env:
           # On PRs:
@@ -83,11 +85,11 @@ jobs:
           echo BRANCH_NAME_PREP1: $BRANCH_NAME_PREP1
           echo ""
           echo "BRANCH_NAME_TAG: Replace underscores"
-          BRANCH_NAME_PREP2=${BRANCH_NAME_PREP1/_/-}
+          BRANCH_NAME_PREP2=${BRANCH_NAME_PREP1//_/-}
           echo BRANCH_NAME_PREP2: $BRANCH_NAME_PREP2
           echo ""
           echo "BRANCH_NAME_TAG: Remove ref prefix"
-          BRANCH_NAME_PREP3=${BRANCH_NAME_PREP2/refs-heads-/}
+          BRANCH_NAME_PREP3=${BRANCH_NAME_PREP2#refs-heads-}
           echo BRANCH_NAME_PREP3: $BRANCH_NAME_PREP3
           echo ""
           echo "BRANCH_NAME_TAG: Set variable"
@@ -99,7 +101,6 @@ jobs:
           SHA_TAG=crohmcrms/crohm_crms:sha-${SHA::7}
           echo SHA_TAG: $SHA_TAG
           echo "::set-output name=SHA_TAG::$SHA_TAG"
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@master
 
