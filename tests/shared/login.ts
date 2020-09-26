@@ -10,10 +10,10 @@ export function doLogin(username: string, password: string) {
     cy.get('#login-user').click();
 
     // Type 'admin' into username field
-    cy.get('#login-user').type(username);
+    cy.get('#login-user').click().type(username);
 
     // Type password into password field
-    cy.get('#login-password').type(password);
+    cy.get('#login-password').click().type(password);
 
     // Click login button
     cy.get('#login-button').click();
