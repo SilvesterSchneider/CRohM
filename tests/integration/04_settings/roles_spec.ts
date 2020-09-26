@@ -1,15 +1,9 @@
+import { cookieClear } from '../../shared/cookie_clear';
 import { doLogin } from '../../shared/login';
 
-describe('Login Tests', () => {
+describe('Role Tests', () => {
     beforeEach(() => {
-        // Delete all cookies
-        cy.clearCookies();
-
-        // Reload page
-        cy.reload();
-
-        // Validate that no JSON Webtoken has been issued
-        cy.getCookie('.AspNetCore.Identity.Application').should('not.exist');
+        cookieClear();
     });
 
     it('should correctly create a new role and assign it to a user', () => {

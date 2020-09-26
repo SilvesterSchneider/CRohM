@@ -1,15 +1,10 @@
 import { doLogin, loginAsAdmin } from '../../shared/login';
 
+import { cookieClear } from '../../shared/cookie_clear';
+
 describe('Login Tests', () => {
     beforeEach(() => {
-        // Delete all cookies
-        cy.clearCookies();
-
-        // Reload page
-        cy.reload();
-
-        // Validate that no JSON Webtoken has been issued
-        cy.getCookie('.AspNetCore.Identity.Application').should('not.exist');
+        cookieClear();
     });
 
     it('should login with or without an initial password change', () => {
@@ -19,7 +14,7 @@ describe('Login Tests', () => {
         cy.url().then(($url) => {
             if ($url.match(Cypress.config().baseUrl + '/login')) {
                 // Change password
-                cy.get('#change-password').type('@dm1n1stR4tOr');
+                cy.get('#change-password').click().type('@dm1n1stR4tOr');
 
                 // Accept new password
                 cy.get('#change-button').click();
