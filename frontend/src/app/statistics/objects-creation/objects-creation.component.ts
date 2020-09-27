@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { StatisticsService, STATISTICS_VALUES, VerticalGroupedBarDto } from 'src/app/shared/api-generated/api-generated';
+import { VerticalGroupedBarChartComponent } from 'src/app/shared/charts/vertical-grouped-bar-chart/vertical-grouped-bar-chart.component';
 
 @Component({
   selector: 'app-objects-creation',
@@ -8,53 +8,36 @@ import { StatisticsService, STATISTICS_VALUES, VerticalGroupedBarDto } from 'src
   styleUrls: ['./objects-creation.component.scss']
 })
 export class ObjectsCreationComponent implements OnInit {
-  view: any[] = [3 * 120 + 600, 400];
-  allData: VerticalGroupedBarDto[] = new Array<VerticalGroupedBarDto>();
-  visibleData: VerticalGroupedBarDto[] = new Array<VerticalGroupedBarDto>();
+  @ViewChild(VerticalGroupedBarChartComponent, { static: true })
+	chart: VerticalGroupedBarChartComponent;
   totalContacts = 0;
   totalOrganizations = 0;
   totalEvents = 0;
-  startDate: Date;
-  endDate: Date;
 
   constructor(
     private statistics: StatisticsService) { }
 
   ngOnInit(): void {
     this.statistics.getVerticalGroupedBarDataByType(STATISTICS_VALUES.ALL_CREATED_OBJECTS).subscribe(x => {
-      this.visibleData = x;
-      this.allData = x;
+      this.chart.setSizes(80, 400, 400);
+      this.chart.setChangeCallback((visibleData: VerticalGroupedBarDto[]) => this.calculateTheAmounts(visibleData));
+      this.chart.setLabels('Daten', 'Anzahl erzeugter Objekte', 'Objekte');
+      this.chart.setData(x);
       if (x.length === 0) {
-        this.view = [700, 400];
         this.totalContacts = 0;
         this.totalOrganizations = 0;
         this.totalEvents = 0;
       } else {
-        this.setTheView();
-        this.calculateTheAmounts();
+        this.calculateTheAmounts(x);
       }
     });
   }
 
-  addEventStart(type: string, event: MatDatepickerInputEvent<Date>) {
-    this.startDate = new Date(event.value);
-    this.checkForUpdate();
-  }
-
-  addEventEnd(type: string, event: MatDatepickerInputEvent<Date>) {
-    this.endDate = new Date(event.value);
-    this.checkForUpdate();
-  }
-
-  setTheView() {
-    this.view = [this.visibleData.length * 120 + 600, 400];
-  }
-
-  calculateTheAmounts() {
+  calculateTheAmounts(visibleData: VerticalGroupedBarDto[]) {
     this.totalContacts = 0;
     this.totalOrganizations = 0;
     this.totalEvents = 0;
-    this.visibleData.forEach(x => {
+    visibleData.forEach(x => {
       const contactSet = x.series.find(a => a.name === 'Kontakte');
       if (contactSet != null) {
         this.totalContacts += contactSet.value;
@@ -68,30 +51,5 @@ export class ObjectsCreationComponent implements OnInit {
         this.totalEvents += eventSet.value;
       }
     });
-  }
-
-  checkForUpdate() {
-    if (this.startDate != null && this.endDate != null) {
-      this.visibleData = new Array<VerticalGroupedBarDto>();
-      this.allData.forEach(x => {
-        if (this.isDateGreaterThan(new Date(x.name), this.startDate) && this.isDateSmallerThan(new Date(x.name), this.endDate)) {
-          this.visibleData.push(x);
-        }
-      });
-      this.setTheView();
-      this.calculateTheAmounts();
-    }
-  }
-
-  isDateSmallerThan(dateOne: Date, dateTwo: Date): boolean {
-    const one: number = dateOne.getFullYear() + dateOne.getMonth() + dateOne.getDate();
-    const two: number = dateTwo.getFullYear() + dateTwo.getMonth() + dateTwo.getDate();
-    return one <= two;
-  }
-
-  isDateGreaterThan(dateOne: Date, dateTwo: Date): boolean {
-    const one: number = dateOne.getFullYear() + dateOne.getMonth() + dateOne.getDate();
-    const two: number = dateTwo.getFullYear() + dateTwo.getMonth() + dateTwo.getDate();
-    return one >= two;
   }
 }

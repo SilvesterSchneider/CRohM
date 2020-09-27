@@ -1,33 +1,5 @@
-<div class="column" style="max-width: 1200px; overflow: auto">
-    <ngx-charts-bar-vertical-2d class="margin"
-        [view]="view"
-        [results]="visibleData"
-        [gradient]="true"
-        [xAxis]="true"
-        [yAxis]="true"
-        [legend]="true"
-        [showXAxisLabel]="true"
-        [showYAxisLabel]="true"
-        [xAxisLabel]="'Daten'"
-        [yAxisLabel]="'Anzahl erstellter Objekte'"
-        [legendTitle]="'Objekte'">
-    </ngx-charts-bar-vertical-2d>
-    <div class="col-md-3">
-        <mat-form-field>
-            <input matInput [matDatepicker]="pickera" placeholder="Startdatum"
-                (dateChange)="addEventStart('change', $event)">
-            <mat-datepicker-toggle matSuffix [for]="pickera"></mat-datepicker-toggle>
-            <mat-datepicker #pickera></mat-datepicker>
-        </mat-form-field>
-    </div>
-    <div class="col-md-3">
-        <mat-form-field>
-            <input matInput [matDatepicker]="picker" placeholder="Enddatum"
-                (dateChange)="addEventEnd('change', $event)">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-    </div>
+<div>
+    <app-vertical-grouped-bar-chart></app-vertical-grouped-bar-chart>
     <div class="margin">
         Anzahl sämtlich erstellter Kontakte: {{totalContacts}}
     </div>
