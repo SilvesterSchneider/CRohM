@@ -8,10 +8,14 @@ namespace ModelLayer.DataTransferObjects
     {
         public static string SERIES_INVITED_CONTACTS = "Eingeladen";
         public static string SERIES_PARTICIPATED_CONTACS = "Teilgenommen";
+        public static string SERIES_CREATED_CONTACTS = "Kontakte";
+        public static string SERIES_CREATED_ORGANIZATIONS = "Organisationen";
+        public static string SERIES_CREATED_EVENTS = "Veranstaltungen";
 
         public enum STATISTICS_VALUES
         {
-            INVITED_AND_PARTICIPATED_EVENT_PERSONS = 0
+            ALL_CREATED_OBJECTS = 0,
+            INVITED_AND_PARTICIPATED_EVENT_PERSONS = 1
         }
 
         public class VerticalGroupedBarDto

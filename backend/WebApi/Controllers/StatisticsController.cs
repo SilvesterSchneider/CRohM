@@ -31,6 +31,10 @@ namespace WebApi.Controllers
             {
                 list = await statisticsService.GetInvitedAndParticipatedRelationOfEvents();
             }
+            else if (id == STATISTICS_VALUES.ALL_CREATED_OBJECTS)
+            {
+                list = await statisticsService.GetAllCreatedObjects();
+            }
 
             return Ok(list);
         }

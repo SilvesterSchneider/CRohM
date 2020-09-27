@@ -5,6 +5,7 @@ import { MaterialModule } from '../shared/material.module';
 import { EventVisitsComponent } from './event-visits/event-visits.component';
 import { StatisticsRoutingModule } from './statistics-routing.module';
 import { OverviewComponent } from './overview/overview.component';
+import { ObjectsCreationComponent } from './objects-creation/objects-creation.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { OverviewComponent } from './overview/overview.component';
   ],
   declarations: [
     EventVisitsComponent,
-    OverviewComponent
+    OverviewComponent,
+    ObjectsCreationComponent
   ],
 })
 export class StatisticsModule { }
