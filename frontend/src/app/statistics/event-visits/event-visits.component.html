@@ -1,0 +1,24 @@
+<div style="max-width: 1200px; overflow: auto">
+    <ngx-charts-bar-vertical-2d class="margin"
+        [view]="view"
+        [results]="data"
+        [gradient]="true"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="true"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxisLabel]="'Veranstaltungen'"
+        [yAxisLabel]="'Anzahl Teilnehmer'"
+        [legendTitle]="'Teilnehmer'">
+    </ngx-charts-bar-vertical-2d>
+    <div>
+        Anzahl sämtlich eingeladener Personen: {{totalInvitations}}
+    </div>
+    <div>
+        Gesamte Anzahl von Veranstaltungsteilnehmern: {{totalParticipations}}
+    </div>
+    <div>
+        Prozentualer Anteil aller Teilnehmer: {{relation}}%
+    </div>
+</div>
