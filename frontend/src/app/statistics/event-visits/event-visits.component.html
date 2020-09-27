@@ -1,7 +1,7 @@
-<div style="max-width: 1200px; overflow: auto">
+<div class="column" style="max-width: 1200px; overflow: auto">
     <ngx-charts-bar-vertical-2d class="margin"
         [view]="view"
-        [results]="data"
+        [results]="visibleData"
         [gradient]="true"
         [xAxis]="true"
         [yAxis]="true"
@@ -12,13 +12,29 @@
         [yAxisLabel]="'Anzahl Teilnehmer'"
         [legendTitle]="'Teilnehmer'">
     </ngx-charts-bar-vertical-2d>
-    <div>
+    <div class="col-md-3">
+        <mat-form-field>
+            <input matInput [matDatepicker]="pickera" placeholder="Startdatum"
+                (dateChange)="addEventStart('change', $event)">
+            <mat-datepicker-toggle matSuffix [for]="pickera"></mat-datepicker-toggle>
+            <mat-datepicker #pickera></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div class="col-md-3">
+        <mat-form-field>
+            <input matInput [matDatepicker]="picker" placeholder="Enddatum"
+                (dateChange)="addEventEnd('change', $event)">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div class="margin">
         Anzahl sämtlich eingeladener Personen: {{totalInvitations}}
     </div>
-    <div>
+    <div class="margin">
         Gesamte Anzahl von Veranstaltungsteilnehmern: {{totalParticipations}}
     </div>
-    <div>
-        Prozentualer Anteil aller Teilnehmer: {{relation}}%
+    <div class="margin">
+        Prozentualer Anteil aller Teilnehmer: {{relation | number : '.2-2'}}%
     </div>
 </div>
