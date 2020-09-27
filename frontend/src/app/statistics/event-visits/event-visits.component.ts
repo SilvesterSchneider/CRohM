@@ -11,7 +11,7 @@ import { StatisticsService, STATISTICS_VALUES, VerticalGroupedBarDto } from 'src
   styleUrls: ['./event-visits.component.scss']
 })
 export class EventVisitsComponent implements OnInit {
-  view: any[] = [3 * 100 + 400, 500];
+  view: any[] = [3 * 100 + 400, 400];
   allData: VerticalGroupedBarDto[] = new Array<VerticalGroupedBarDto>();
   visibleData: VerticalGroupedBarDto[] = new Array<VerticalGroupedBarDto>();
   totalInvitations = 0;
@@ -28,7 +28,7 @@ export class EventVisitsComponent implements OnInit {
       this.visibleData = x;
       this.allData = x;
       if (x.length === 0) {
-        this.view = [700, 500];
+        this.view = [700, 400];
         this.totalInvitations = 0;
         this.totalParticipations = 0;
         this.relation = 0;
@@ -50,7 +50,7 @@ export class EventVisitsComponent implements OnInit {
   }
 
   setTheView() {
-    this.view = [this.visibleData.length * 80 + 400, 500];
+    this.view = [this.visibleData.length * 80 + 400, 400];
   }
 
   calculateTheAmounts() {
