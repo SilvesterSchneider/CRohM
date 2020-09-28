@@ -1,8 +1,8 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
+import { Component, Inject, OnInit } from '@angular/core';
 import { DeleteEntryDialogComponent } from '../../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
+import { FormBuilder, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { RoleDto } from 'src/app/shared/api-generated/api-generated';
 
 @Component({
@@ -38,7 +38,7 @@ export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogC
     return !this.roleForm.pristine;
   }
 
-  public onCancle(): void {
+  public onCancel(): void {
     super.confirmDialog();
   }
 
@@ -67,4 +67,3 @@ export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogC
     });
   }
 }
-

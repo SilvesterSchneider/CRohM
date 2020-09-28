@@ -15,19 +15,16 @@ export class DeleteEntryDialogComponent implements OnInit {
   public ngOnInit(): void {
   }
 
-  public onCancle(): void {
-    this.dialogRef.close({delete: false});
+  public onCancel(): void {
+    this.dialogRef.close({ delete: false });
   }
 
   public onDelete(): void {
-    this.dialogRef.close({delete: true});
+    this.dialogRef.close({ delete: true });
   }
 
 }
 
 export interface IDeleteDialogReturnValue {
-   delete: boolean;
- }
-
-
-
+  delete: boolean;
+}

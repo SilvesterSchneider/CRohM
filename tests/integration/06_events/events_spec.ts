@@ -1,14 +1,13 @@
 import { cookieClear } from '../../shared/cookie_clear';
-import { doLogin } from '../../shared/login';
+import { loginAsAdmin } from '../../shared/login';
 
 describe('Contacts Tests', () => {
     beforeEach(() => {
         cookieClear();
+        loginAsAdmin();
     });
 
     it('should correctly preselect invitations after a invitation was send', () => {
-        // Login with credentials admin/@dm1n1stR4tOr
-        doLogin('admin', '@dm1n1stR4tOr');
         cy.get('#ignoreButton').click();
         // go to contacts page
         cy.visit('/contacts');

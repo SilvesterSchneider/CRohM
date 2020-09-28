@@ -1,5 +1,15 @@
 export function loginAsAdmin() {
     doLogin('admin', '@dm1n1stR4tOr');
+
+    cy.url().then(($url) => {
+        if ($url.match(Cypress.config().baseUrl + '/login')) {
+            // Change password
+            cy.get('#change-password').click().type('@dm1n1stR4tOr');
+
+            // Accept new password
+            cy.get('#change-button').click();
+        }
+    });
 }
 
 export function doLogin(username: string, password: string) {

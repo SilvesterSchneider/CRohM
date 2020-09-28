@@ -1,6 +1,6 @@
-import { doLogin, loginAsAdmin } from '../../shared/login';
-
 import { cookieClear } from '../../shared/cookie_clear';
+import { doLogin, loginAsAdmin } from '../../shared/login';
+import { doLogout } from '../../shared/logout';
 
 describe('Login Tests', () => {
     beforeEach(() => {
@@ -8,18 +8,7 @@ describe('Login Tests', () => {
     });
 
     it('should login with or without an initial password change', () => {
-        // Login with credentials admin/@dm1n1stR4tOr
-        doLogin('admin', '@dm1n1stR4tOr');
-
-        cy.url().then(($url) => {
-            if ($url.match(Cypress.config().baseUrl + '/login')) {
-                // Change password
-                cy.get('#change-password').click().type('@dm1n1stR4tOr');
-
-                // Accept new password
-                cy.get('#change-button').click();
-            }
-        });
+        loginAsAdmin();
 
         // Validate that url equals baseUrl
         cy.url().should('equal', Cypress.config().baseUrl + '/?from=login');
@@ -52,6 +41,8 @@ describe('Login Tests', () => {
                 auth: getAccessToken()
             }).then(() => { });
         })
+
+        doLogout();
     })
 
     it('should not accept a wrong password', () => {
@@ -63,7 +54,6 @@ describe('Login Tests', () => {
 
         // Validate that error message is displayed
         cy.get('#login-error').should('have.text', 'Login fehlgeschlagen!');
-
     });
 
     it('should redirected to /login when the token is deleted', () => {

@@ -1,11 +1,9 @@
-
-
-  <h1 mat-dialog-title>{{data}} löschen</h1>
-  <div style="padding-bottom: 1em;" mat-dialog-content>
-    Sind Sie sich sicher, dass Sie diesen Eintrag löschen möchten?
-    </div>
-  <div mat-dialog-actions>   
+<h1 mat-dialog-title>{{data}} löschen</h1>
+<div style="padding-bottom: 1em;" mat-dialog-content>
+  Sind Sie sich sicher, dass Sie diesen Eintrag löschen möchten?
+</div>
+<div mat-dialog-actions>
   <span class="fill-remaining-space"></span>
-    <button mat-raised-button (click)="onCancle()">Abbrechen</button>
-    <button mat-raised-button (click)="onDelete()" color="warn">Löschen</button> 
-  </div>
+  <button mat-raised-button (click)="onCancel()">Abbrechen</button>
+  <button mat-raised-button (click)="onDelete()" color="warn" id="delete_button">Löschen</button>
+</div>

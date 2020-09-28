@@ -1,13 +1,13 @@
 .full-width {
-    width: 100%;
-  }
+  width: 100%;
+}
 
-  .fill-remaining-space {
-    /* This fills the remaining space, by using flexbox. 
+.fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
        Every toolbar row uses a flexbox row layout. */
-    flex: 1 1 auto;
-  }
+  flex: 1 1 auto;
+}
 
-  #title{
-    font-size: 2em;
-  }
+#title {
+  font-size: 2em;
+}

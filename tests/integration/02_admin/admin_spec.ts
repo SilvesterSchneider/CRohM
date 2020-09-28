@@ -1,3 +1,4 @@
+import { cookieClear } from '../../shared/cookie_clear';
 import { loginAsAdmin } from '../../shared/login';
 
 describe('Delete inactive users', () => {
@@ -7,7 +8,7 @@ describe('Delete inactive users', () => {
     });
 
     afterEach(() => {
-        cy.clearCookies();
+        cookieClear();
     });
 
     it('should delete inactive user', () => {
