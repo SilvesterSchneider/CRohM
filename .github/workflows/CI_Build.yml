@@ -164,6 +164,7 @@ jobs:
       - name: Test
         uses: cypress-io/github-action@v2
         with:
+          browser: chrome
           working-directory: tests
 
       - name: Collect Report
