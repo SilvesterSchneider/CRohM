@@ -3310,6 +3310,7 @@ export enum HistoryElementType {
     MAIL = 0,
     PHONE_CALL = 1,
     NOTE = 2,
+    VISIT = 3,
 }
 
 export interface EventDto {

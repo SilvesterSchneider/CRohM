@@ -77,7 +77,7 @@
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 (keyup.enter)="addTag($event)">
         </mat-chip-list>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="selected($event)">
             <mat-option *ngFor="let item of filteredTagsObservable | async" [value]="item">
               {{item}}
             </mat-option>

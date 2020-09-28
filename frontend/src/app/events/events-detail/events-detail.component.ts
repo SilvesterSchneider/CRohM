@@ -18,7 +18,6 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 import { EventsInvitationComponent } from '../events-invitation/events-invitation.component';
-import { StickyDirection } from '@angular/cdk/table';
 
 export class EventContactConnection {
   contactId: number;
@@ -69,8 +68,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   selectedTags: TagDto[] = new Array<TagDto>();
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredTagsObservable: Observable<string[]>;
-  allTags: string[] = ['Lehrbeauftragter', 'Kunde', 'Politiker', 'Firma', 'Behörde', 'Bildungseinrichtung', 'Institute', 'Ministerium',
-    'Emeriti', 'Alumni'];
+  allTags: string[] = ['Lehrbeauftragter', 'Kunde', 'Politiker', 'Unternehmen', 'Behörde', 'Bildungseinrichtung',
+   'Institute', 'Ministerium', 'Emeriti', 'Alumni'];
   removable = true;
   selectableTag = true;
 
@@ -286,7 +285,25 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 
   toggleSelectAll() {
     this.isAllSelected = !this.isAllSelected;
-    this.filteredItems.forEach(x => this.toggleSelection(x));
+    this.filteredItems.forEach(x => this.toggleSelectionAll(x, this.isAllSelected));
+  }
+
+  toggleSelectionAll(item: EventContactConnection, isSelected: boolean) {
+    item.selected = isSelected;
+    if (item.selected) {
+      if (this.selectedItems.find(a => a.contactId === item.contactId) == null) {
+        this.selectedItems.push(item);
+      }
+    } else {
+      const i = this.selectedItems.findIndex(value => value.contactId === item.contactId);
+      if (i > -1) {
+        this.selectedItems[i].participated = false;
+        this.selectedItems.splice(i, 1);
+      }
+    }
+    if (this.changeCallback) {
+      this.changeCallback(this.selectedItems);
+    }
   }
 
   toggleSelection(item: EventContactConnection) {

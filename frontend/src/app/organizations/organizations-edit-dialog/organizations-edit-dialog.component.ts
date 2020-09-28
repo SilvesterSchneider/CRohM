@@ -25,6 +25,7 @@ import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
+import { OsmAddressComponent } from 'src/app/shared/osm/osm-address/osm-address.component';
 
 export class ItemList {
 	constructor(public item: string, public selected?: boolean) {
@@ -57,6 +58,9 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	public selectable = true;
+	@ViewChild(OsmAddressComponent, { static: true })
+	addressGroup: OsmAddressComponent;
+	addressForm: FormGroup;
 	items: OrganizationContactConnection[];
 	selectedItems: OrganizationContactConnection[] = new Array<OrganizationContactConnection>();
 	filteredItems: OrganizationContactConnection[] = new Array<OrganizationContactConnection>();
@@ -82,8 +86,8 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 	selectedTags: TagDto[] = new Array<TagDto>();
 	separatorKeysCodes: number[] = [ENTER, COMMA];
 	filteredTagsObservable: Observable<string[]>;
-	allTags: string[] = [ 'Lehrbeauftragter', 'Kunde', 'Politiker', 'Firma', 'Behörde', 'Bildungseinrichtung', 'Institute', 'Ministerium',
-		 'Emeriti', 'Alumni'];
+	allTags: string[] = [ 'Lehrbeauftragter', 'Kunde', 'Politiker', 'Unternehmen', 'Behörde', 'Bildungseinrichtung',
+	 'Institute', 'Ministerium', 'Emeriti', 'Alumni'];
 	removable = true;
 	selectableTag = true;
 
@@ -155,6 +159,7 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 
 	ngOnInit() {
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
+		this.addressForm = this.addressGroup.getAddressForm();
 		this.organizationForm = this.createOrganizationForm();
 		this.contactService.getAll().subscribe((y) => {
 			y.forEach((x) =>
@@ -189,13 +194,14 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 		}
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.organization.contact.contactEntries);
 		this.organizationForm.patchValue(this.organization);
+		this.organizationForm.markAsPristine();
 	}
 
 	private createOrganizationForm(): FormGroup {
 		return this.fb.group({
 			name: ['', Validators.required],
 			description: [''],
-			address: this.fb.control(''),
+			address: this.addressForm,
 			contact: this.createContactForm()
 		});
 	}

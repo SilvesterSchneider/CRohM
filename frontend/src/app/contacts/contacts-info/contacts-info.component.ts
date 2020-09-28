@@ -30,10 +30,11 @@ export class EventDtoCustomized {
 }
 
 export enum TYPE {
-  EVENT = 3,
+  EVENT = 4,
   PHONE_CALL = HistoryElementType.PHONE_CALL,
   NOTE = HistoryElementType.NOTE,
-  MAIL = HistoryElementType.MAIL
+  MAIL = HistoryElementType.MAIL,
+  VISIT = HistoryElementType.VISIT
 }
 
 @Component({
@@ -104,9 +105,7 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
     }
     this.modService.getSortedListByTypeAndId(this.contact.id, MODEL_TYPE.CONTACT).subscribe(x => {
       x.forEach(a => {
-        if (a.dataType !== DATA_TYPE.NONE) {
-          this.dataHistory.push(a);
-        }
+        this.dataHistory.push(a);
       });
       this.dataHistory.sort(this.getSortHistoryFunction);
     });
@@ -219,5 +218,9 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
 
   isMail(element: EventDtoCustomized): boolean {
     return element.type === TYPE.MAIL;
+  }
+
+  isVisit(element: EventDtoCustomized): boolean {
+    return element.type === TYPE.VISIT;
   }
 }

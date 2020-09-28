@@ -38,7 +38,7 @@ namespace ServiceLayer
         private static string EVENTTIMEFIELD = "<Uhrzeit>";
         public static string INVITATION_DEF_CONTENT = STARTFIELD + " " + PRENAMEFIELD + " " + NAMEFIELD +
             "\rWir laden Sie herzlich ein zu unserer Veranstaltung \"" + EVENTNAMEFIELD +
-            "\" am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr.\rWir freuen uns auf ihre Erscheinen.\rTechnische Hochschule Nürnberg";
+            "\" am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr.\rWir freuen uns auf Ihr Erscheinen.\rTechnische Hochschule Nürnberg";
 
         public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
         {

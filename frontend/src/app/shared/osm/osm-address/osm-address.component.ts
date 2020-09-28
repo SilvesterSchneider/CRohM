@@ -5,7 +5,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AddressDto } from '../../api-generated/api-generated';
 import {
   FormBuilder, Validators, NG_VALUE_ACCESSOR, NG_VALIDATORS,
-  ControlValueAccessor, Validator, AbstractControl, ValidationErrors
+  ControlValueAccessor, Validator, AbstractControl, ValidationErrors, FormGroup
 } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
@@ -44,9 +44,9 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
     name: [''],
     description: [''],
     country: ['', Validators.required],
-    street: ['', Validators.required],
+    street: ['', Validators.pattern('^[a-zA-Z0-9.-]*')],
     streetNumber: ['', Validators.required],
-    zipcode: ['', Validators.pattern('^[0-9]{5}$')],
+    zipcode: ['', Validators.pattern('^[0-9]{4,5}$')],
     city: ['', Validators.required],
   });
 
@@ -55,6 +55,10 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
 
   validate(control: AbstractControl): ValidationErrors | null {
     return this.addressForm.valid ? null : this.addressForm.errors;
+  }
+
+  public getAddressForm(): FormGroup {
+    return this.addressForm;
   }
 
   public onTouched: () => void = () => { };

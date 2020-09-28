@@ -81,9 +81,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     }
     this.modService.getSortedListByTypeAndId(this.event.id, MODEL_TYPE.EVENT).subscribe(x => {
       x.forEach(a => {
-        if (a.dataType !== DATA_TYPE.NONE) {
-          this.dataHistory.push(a);
-        }
+        this.dataHistory.push(a);
       });
       this.dataHistory.sort(this.getSortHistoryFunction);
     });

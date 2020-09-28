@@ -115,7 +115,7 @@ namespace ModelLayer.Models
                 }
                 else if (DataType == DATA_TYPE.HISTORY_ELEMENT)
                 {
-                    return "Historieanzahl";
+                    return "Historienanzahl";
                 }
                 else if (DataType == DATA_TYPE.MAIL || DataType == DATA_TYPE.MAIL_EXTENDED)
                 {
@@ -165,9 +165,13 @@ namespace ModelLayer.Models
                 {
                     return "Einladung";
                 }
-                else 
+                else if (DataType == DATA_TYPE.ZIPCODE)
                 {
                     return "PLZ";
+                }
+                else
+                {
+                    return "Angelegt";
                 }
             }
             set

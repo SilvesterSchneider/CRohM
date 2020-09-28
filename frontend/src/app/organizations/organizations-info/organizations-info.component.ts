@@ -45,9 +45,7 @@ export class OrganizationsInfoComponent implements OnInit {
     }
     this.modService.getSortedListByTypeAndId(this.organization.id, MODEL_TYPE.ORGANIZATION).subscribe(x => {
       x.forEach(a => {
-        if (a.dataType !== DATA_TYPE.NONE) {
-          this.dataHistory.push(a);
-        }
+        this.dataHistory.push(a);
       });
       this.dataHistory.sort(this.getSortHistoryFunction);
     });
@@ -103,5 +101,9 @@ export class OrganizationsInfoComponent implements OnInit {
 
   isMail(element: HistoryElementDto): boolean {
     return element.type === HistoryElementType.MAIL;
+  }
+
+  isVisit(element: HistoryElementDto): boolean {
+    return element.type === HistoryElementType.VISIT;
   }
 }

@@ -9,7 +9,8 @@ import { JwtService } from 'src/app/shared/jwt.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { OsmAddressComponent } from 'src/app/shared/osm/osm-address/osm-address.component';
 
 @Component({
 	selector: 'app-contacts-edit-dialog',
@@ -26,14 +27,16 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	private oldContact: ContactDto;
 	private newContact: ContactDto;
 	private copy;
-
+	@ViewChild(OsmAddressComponent, { static: true })
+	addressGroup: OsmAddressComponent;
+	addressForm: FormGroup;
 	@ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 	tagsControl = new FormControl();
 	selectedTags: TagDto[] = new Array<TagDto>();
 	separatorKeysCodes: number[] = [ENTER, COMMA];
 	filteredTagsObservable: Observable<string[]>;
-	allTags: string[] = [ 'Lehrbeauftragter', 'Kunde', 'Politiker', 'Firma', 'Behörde', 'Bildungseinrichtung', 'Institute', 'Ministerium',
-		'Emeriti', 'Alumni'];
+	allTags: string[] = [ 'Lehrbeauftragter', 'Kunde', 'Politiker', 'Unternehmen', 'Behörde', 'Bildungseinrichtung',
+	 'Institute', 'Ministerium', 'Emeriti', 'Alumni'];
 	removable = true;
 	selectable = true;
 
@@ -57,6 +60,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.copy = (JSON.parse(JSON.stringify(this.data)));
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
+		this.addressForm = this.addressGroup.getAddressForm();
 		this.initForm();
 		this.contactsForm.patchValue(this.contact);
 		this.contactsForm.get('gender').setValue(this.getGenderText(this.contact.gender));
@@ -124,7 +128,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 			preName: ['', Validators.required],
 			gender: [this.genderTypes[0], Validators.required],
 			contactPartner: [''],
-			address: this.fb.control(''),
+			address: this.addressForm,
 			contactPossibilities: this.fb.group({
 				// Validiert auf korrektes E-Mail-Format
 				mail: ['', Validators.email],
