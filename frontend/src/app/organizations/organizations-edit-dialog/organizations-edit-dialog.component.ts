@@ -112,7 +112,7 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 			this.focused = !!origin;
 			this.stateChanges.next();
 		});
-		this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(
+		this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(startWith(''),
 			map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
 	}
 

@@ -9,7 +9,7 @@ import { JwtService } from 'src/app/shared/jwt.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { OsmAddressComponent } from 'src/app/shared/osm/osm-address/osm-address.component';
 
 @Component({
@@ -51,7 +51,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		super(dialogRef, dialog);
 		this.contact = data;
 		this.contact.tags.forEach(x => this.selectedTags.push(x));
-		this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(
+		this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(startWith(''),
 			map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
 	}
 
