@@ -34,8 +34,21 @@ namespace ServiceLayer
                         {
                             return new List<Contact>();
                         }
-                    }));
-
+                    }))
+                .ForMember(dto => dto.Events,
+                    expression => expression.MapFrom((orga, orgaDto) =>
+                    {
+                        if (orga.Events.Any())
+                        {
+                            return orga.Events
+                                .Select(innerEvent => innerEvent.Event)
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<Event>();
+                        }
+                    })); 
             CreateMap<OrganizationDto, Organization>()
                 .ForMember(dto => dto.OrganizationContacts,
                     expression => expression.MapFrom((organizationDto, organization) =>
@@ -50,8 +63,21 @@ namespace ServiceLayer
                         {
                             return new List<OrganizationContact>();
                         }
+                    }))
+                .ForMember(dto => dto.Events,
+                    expression => expression.MapFrom((orgaDto, orga) =>
+                    {
+                        if (orgaDto.Events.Any())
+                        {
+                            return orgaDto.Events
+                                .Select(innerEvent => new EventOrganization() { OrganizationId = orgaDto.Id, EventId = innerEvent.Id })
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<EventOrganization>();
+                        }
                     }));
-
             CreateMap<OrganizationCreateDto, Organization>();
             CreateMap<ContactPossibilitiesDto, ContactPossibilities>().ReverseMap();
             CreateMap<ContactPossibilities, ContactPossibilitiesDto>();

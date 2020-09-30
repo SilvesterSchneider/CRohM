@@ -1516,15 +1516,13 @@ export class MailService {
 
     /**
      * @param orgaIds (optional) 
+     * @param mailContent (optional) 
      * @return successfully send mails
      */
-    sendInvitationMails(contactIds: number[], mailContent: string | null, orgaIds?: number[] | null | undefined): Observable<boolean> {
+    sendInvitationMails(contactIds: number[], orgaIds?: number[] | null | undefined, mailContent?: string | null | undefined): Observable<boolean> {
         let url_ = this.baseUrl + "/api/Mail?";
-        if (mailContent === undefined || mailContent === null)
-            throw new Error("The parameter 'mailContent' must be defined.");
-        url_ = url_.replace("{mailContent}", encodeURIComponent("" + mailContent));
-        if (orgaIds !== undefined && orgaIds !== null)
-            orgaIds && orgaIds.forEach(item => { url_ += "orgaIds=" + encodeURIComponent("" + item) + "&"; });
+        if (mailContent !== undefined && mailContent !== null)
+            url_ += "mailContent=" + encodeURIComponent("" + mailContent) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(contactIds);
@@ -1534,6 +1532,7 @@ export class MailService {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "orgaIds": orgaIds !== undefined && orgaIds !== null ? "" + orgaIds : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -3171,29 +3170,10 @@ export interface OrganizationDto {
     description?: string | undefined;
     address?: AddressDto | undefined;
     contact?: ContactPossibilitiesDto | undefined;
+    events?: EventDto[] | undefined;
     employees?: ContactDto[] | undefined;
     tags?: TagDto[] | undefined;
     history?: HistoryElementDto[] | undefined;
-}
-
-export interface TagDto {
-    id: number;
-    name?: string | undefined;
-}
-
-export interface HistoryElementDto {
-    id: number;
-    name?: string | undefined;
-    date: string;
-    type: HistoryElementType;
-    comment?: string | undefined;
-}
-
-export enum HistoryElementType {
-    MAIL = 0,
-    PHONE_CALL = 1,
-    NOTE = 2,
-    VISIT = 3,
 }
 
 export interface EventDto {
@@ -3220,6 +3200,26 @@ export enum MODEL_TYPE {
     CONTACT = 0,
     ORGANIZATION = 1,
     EVENT = 2,
+}
+
+export interface TagDto {
+    id: number;
+    name?: string | undefined;
+}
+
+export interface HistoryElementDto {
+    id: number;
+    name?: string | undefined;
+    date: string;
+    type: HistoryElementType;
+    comment?: string | undefined;
+}
+
+export enum HistoryElementType {
+    MAIL = 0,
+    PHONE_CALL = 1,
+    NOTE = 2,
+    VISIT = 3,
 }
 
 export interface ContactCreateDto {

@@ -14,6 +14,7 @@ export class ContactDtoExtended {
   name: string;
   participated: boolean;
   wasInvited: boolean;
+  modelType: MODEL_TYPE;
 }
 
 @Component({
@@ -66,13 +67,24 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
           preName: x.preName,
           name: x.name,
           participated: false,
-          wasInvited: false
+          wasInvited: false,
+          modelType: MODEL_TYPE.CONTACT
+        });
+      });
+      this.event.organizations.forEach(x => {
+        this.contacts.push({
+          id: x.id,
+          preName: '',
+          name: x.name,
+          participated: false,
+          wasInvited: false,
+          modelType: MODEL_TYPE.ORGANIZATION
         });
       });
     }
     if (this.event.participated != null) {
       this.event.participated.forEach(x => {
-        const cont: ContactDtoExtended = this.contacts.find(y => y.id === x.contactId);
+        const cont: ContactDtoExtended = this.contacts.find(y => y.id === x.objectId && y.modelType === x.modelType);
         if (cont != null) {
           cont.participated = x.hasParticipated;
           cont.wasInvited = x.wasInvited;

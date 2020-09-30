@@ -11,7 +11,7 @@ import {
   MatAutocompleteTrigger, MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { ContactDto, EventDto, MailService, ParticipatedDto, TagDto } from '../../shared/api-generated/api-generated';
+import { ContactDto, EventDto, MailService, MODEL_TYPE, OrganizationDto, OrganizationService, ParticipatedDto, TagDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
@@ -20,12 +20,13 @@ import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.
 import { EventsInvitationComponent } from '../events-invitation/events-invitation.component';
 
 export class EventContactConnection {
-  contactId: number;
+  objectId: number;
   selected: boolean;
   name: string;
   preName: string;
   participated: boolean;
   wasInvited: boolean;
+  modelType: MODEL_TYPE;
 }
 
 @Component({
@@ -42,6 +43,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   @HostBinding('attr.aria-describedby') describedBy = '';
   public selectable = true;
   contacts: ContactDto[];
+  orgas: OrganizationDto[];
   items: EventContactConnection[] = new Array<EventContactConnection>();
   selectedItems: EventContactConnection[] = new Array<EventContactConnection>();
   filteredItems: EventContactConnection[] = new Array<EventContactConnection>();
@@ -82,6 +84,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     private elRef: ElementRef<HTMLElement>,
     private cd: ChangeDetectorRef,
     private contactService: ContactService,
+    private orgaService: OrganizationService,
     private eventService: EventService,
     private fb: FormBuilder,
     private mailService: MailService) {
@@ -153,25 +156,53 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
         let participatedReal = false;
         let wasInvitedReal = false;
         this.event.participated.forEach(z => {
-          if (z.contactId === x.id) {
+          if (z.objectId === x.id && z.modelType === MODEL_TYPE.CONTACT) {
             participatedReal = z.hasParticipated;
             wasInvitedReal = z.wasInvited;
           }
         });
         this.filteredItems.push(
           {
-            contactId: x.id,
+            objectId: x.id,
             name: x.name,
             preName: x.preName,
             selected: false,
             participated: participatedReal,
-            wasInvited: wasInvitedReal
+            wasInvited: wasInvitedReal,
+            modelType: MODEL_TYPE.CONTACT
+          }
+        );
+      });
+      this.addOrgas();
+    });
+  }
+
+  addOrgas() {
+    this.orgaService.get().subscribe(x => {
+      this.orgas = x;
+      x.forEach(y => {
+        let participatedReal = false;
+        let wasInvitedReal = false;
+        this.event.participated.forEach(z => {
+          if (z.objectId === y.id && z.modelType === MODEL_TYPE.ORGANIZATION) {
+            participatedReal = z.hasParticipated;
+            wasInvitedReal = z.wasInvited;
+          }
+        });
+        this.filteredItems.push(
+          {
+            objectId: y.id,
+            name: y.name,
+            preName: '',
+            selected: false,
+            participated: participatedReal,
+            wasInvited: wasInvitedReal,
+            modelType: MODEL_TYPE.ORGANIZATION
           }
         );
       });
       this.finishInit();
-    }
-    );
+    });
   }
 
   private finishInit() {
@@ -183,9 +214,17 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 
     if (this.event.contacts.length > 0) {
       this.event.contacts.forEach(x => {
-        const cont = this.filteredItems.find(y => y.contactId === x.id);
+        const cont = this.filteredItems.find(y => y.objectId === x.id && y.modelType === MODEL_TYPE.CONTACT);
         if (cont != null) {
           this.toggleSelection(cont);
+        }
+      });
+    }
+    if (this.event.organizations.length > 0) {
+      this.event.organizations.forEach(x => {
+        const org = this.filteredItems.find(y => y.objectId === x.id && y.modelType === MODEL_TYPE.ORGANIZATION);
+        if (org != null) {
+          this.toggleSelection(org);
         }
       });
     }
@@ -257,12 +296,17 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     const dialogRef = this.dialog.open(EventsInvitationComponent, { data: this.event, disableClose: true, minWidth: '450px', minHeight: '400px' });
     dialogRef.afterClosed().subscribe(x => {
       if (x.send && x.text != null) {
-        const listOfIds: number[] = new Array<number>();
+        const listOfContactIds: number[] = new Array<number>();
+        const listOfOrgaIds: number[] = new Array<number>();
         this.selectedItems.forEach(y => {
-          listOfIds.push(y.contactId);
+          if (y.modelType === MODEL_TYPE.CONTACT) {
+            listOfContactIds.push(y.objectId);
+          } else if (y.modelType === MODEL_TYPE.ORGANIZATION) {
+            listOfOrgaIds.push(y.objectId);
+          }
           y.wasInvited = true;
         });
-        this.mailService.sendInvitationMails(listOfIds, x.text).subscribe();
+        this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text).subscribe();
       }
     });
   }
@@ -291,11 +335,11 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   toggleSelectionAll(item: EventContactConnection, isSelected: boolean) {
     item.selected = isSelected;
     if (item.selected) {
-      if (this.selectedItems.find(a => a.contactId === item.contactId) == null) {
+      if (this.selectedItems.find(a => a.objectId === item.objectId && a.modelType === item.modelType) == null) {
         this.selectedItems.push(item);
       }
     } else {
-      const i = this.selectedItems.findIndex(value => value.contactId === item.contactId);
+      const i = this.selectedItems.findIndex(value => value.objectId === item.objectId && value.modelType === item.modelType);
       if (i > -1) {
         this.selectedItems[i].participated = false;
         this.selectedItems.splice(i, 1);
@@ -309,11 +353,11 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   toggleSelection(item: EventContactConnection) {
     item.selected = !item.selected;
     if (item.selected) {
-      if (this.selectedItems.find(a => a.contactId === item.contactId) == null) {
+      if (this.selectedItems.find(a => a.objectId === item.objectId && a.modelType === item.modelType) == null) {
         this.selectedItems.push(item);
       }
     } else {
-      const i = this.selectedItems.findIndex(value => value.contactId === item.contactId);
+      const i = this.selectedItems.findIndex(value => value.objectId === item.objectId && value.modelType === item.modelType);
       if (i > -1) {
         this.selectedItems[i].participated = false;
         this.selectedItems.splice(i, 1);
@@ -326,7 +370,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 
   toggleParticipated(item: EventContactConnection) {
     this.selectedItems.forEach(x => {
-      if (x.contactId === item.contactId) {
+      if (x.objectId === item.objectId && x.modelType === item.modelType) {
         x.participated = !x.participated;
       }
     });
@@ -343,29 +387,57 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.event.duration = eventToSave.duration;
     this.event.time = eventToSave.time;
     const contacts: ContactDto[] = new Array<ContactDto>();
+    const organizations: OrganizationDto[] = new Array<OrganizationDto>();
     const participants: ParticipatedDto[] = new Array<ParticipatedDto>();
     this.selectedItems.forEach(x => {
-      const contact = this.contacts.find(y => y.id === x.contactId);
-      if (contact != null) {
-        contacts.push(contact);
-        const partExistend: ParticipatedDto = this.event.participated.find(z => z.contactId === x.contactId);
-        if (partExistend == null) {
-          participants.push(
-            {
-              contactId: x.contactId,
-              hasParticipated: x.participated,
-              wasInvited: x.wasInvited,
-              id: 0
-            }
-          );
-        } else {
-          partExistend.hasParticipated = x.participated;
-          partExistend.wasInvited = x.wasInvited;
-          participants.push(partExistend);
+      if (x.modelType === MODEL_TYPE.CONTACT) {
+        const contact = this.contacts.find(y => y.id === x.objectId);
+        if (contact != null) {
+          contacts.push(contact);
+          const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
+             MODEL_TYPE.CONTACT);
+          if (partExistend == null) {
+            participants.push(
+              {
+                objectId: x.objectId,
+                hasParticipated: x.participated,
+                wasInvited: x.wasInvited,
+                id: 0,
+                modelType: MODEL_TYPE.CONTACT
+              }
+            );
+          } else {
+            partExistend.hasParticipated = x.participated;
+            partExistend.wasInvited = x.wasInvited;
+            participants.push(partExistend);
+          }
+        }
+      } else if (x.modelType === MODEL_TYPE.ORGANIZATION) {
+        const orga = this.orgas.find(y => y.id === x.objectId);
+        if (orga != null) {
+          organizations.push(orga);
+          const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
+             MODEL_TYPE.ORGANIZATION);
+          if (partExistend == null) {
+            participants.push(
+              {
+                objectId: x.objectId,
+                hasParticipated: x.participated,
+                wasInvited: x.wasInvited,
+                id: 0,
+                modelType: MODEL_TYPE.ORGANIZATION
+              }
+            );
+          } else {
+            partExistend.hasParticipated = x.participated;
+            partExistend.wasInvited = x.wasInvited;
+            participants.push(partExistend);
+          }
         }
       }
     });
     this.event.contacts = contacts;
+    this.event.organizations = organizations;
     this.event.participated = participants;
     this.event.tags = this.selectedTags;
     this.eventService.put(this.event, this.event.id).subscribe(() => {

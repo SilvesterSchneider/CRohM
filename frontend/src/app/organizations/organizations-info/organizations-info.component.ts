@@ -3,9 +3,26 @@ import { ContactDto,
   ModificationEntryService, MODEL_TYPE, MODIFICATION, DATA_TYPE,
   ContactPossibilitiesEntryDto, OrganizationDto, ModificationEntryDto, TagDto,
   HistoryElementDto,
-  HistoryElementType} from '../../shared/api-generated/api-generated';
+  HistoryElementType, EventService, ParticipatedDto} from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
+
+export class EventDtoCustomized {
+  id: number;
+  name: string;
+  date: string;
+  type: number;
+  comment: string;
+  participated: boolean;
+}
+
+export enum TYPE {
+  EVENT = 4,
+  PHONE_CALL = HistoryElementType.PHONE_CALL,
+  NOTE = HistoryElementType.NOTE,
+  MAIL = HistoryElementType.MAIL,
+  VISIT = HistoryElementType.VISIT
+}
 
 @Component({
   selector: 'app-organizations-info',
@@ -15,6 +32,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 
 export class OrganizationsInfoComponent implements OnInit {
   organization: OrganizationDto;
+  events: EventDtoCustomized[] = new Array<EventDtoCustomized>();
   contactPossibilitiesEntries: ContactPossibilitiesEntryDto[] = new Array<ContactPossibilitiesEntryDto>();
   organizationsForm: FormGroup;
   dataHistory: ModificationEntryDto[] = new Array<ModificationEntryDto>();
@@ -30,12 +48,41 @@ export class OrganizationsInfoComponent implements OnInit {
     public dialogRef: MatDialogRef<OrganizationsInfoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: OrganizationDto,
     private fb: FormBuilder,
+    private eventService: EventService,
     private modService: ModificationEntryService) {
       this.organization = data;
       this.tags = this.organization.tags;
     }
 
   ngOnInit(): void {
+    if (this.organization.events != null && this.organization.events.length > 0) {
+      this.organization.events.forEach(x => {
+        this.events.push({
+          id: x.id,
+          name: x.name,
+          date: this.getDate(x.date),
+          type: TYPE.EVENT,
+          participated: false,
+          comment: ''
+        });
+        this.eventService.getById(x.id).subscribe(y => {
+          this.updateParticipation(x.id, y.participated);
+        });
+      });
+    }
+    if (this.organization.history != null && this.organization.history.length > 0) {
+      this.organization.history.forEach(x => {
+        this.events.push({
+          id: 0,
+          date: this.getDate(x.date),
+          name: x.name,
+          type: x.type,
+          participated: false,
+          comment: x.comment
+        });
+      });
+    }
+    this.sortEvents();
     this.initForm();
     if (this.organization.employees != null) {
       this.organization.employees.forEach(x => this.employees.push(x));
@@ -49,12 +96,36 @@ export class OrganizationsInfoComponent implements OnInit {
       });
       this.dataHistory.sort(this.getSortHistoryFunction);
     });
-    this.history = this.organization.history;
     this.organizationsForm.patchValue(this.organization);
+  }
+
+  sortEvents() {
+    const sortedEvents: EventDtoCustomized[] = this.events.sort(this.getSortFunction);
+    this.events = sortedEvents;
+  }
+
+  getSortFunction(a: EventDtoCustomized, b: EventDtoCustomized): number {
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
   }
 
   getSortHistoryFunction(a: ModificationEntryDto, b: ModificationEntryDto) {
     return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
+  }
+
+  updateParticipation(id: number, participated: ParticipatedDto[]) {
+    const update: EventDtoCustomized = this.events.find(x => x.id === id);
+    if (update != null) {
+      update.participated = this.getParticipation(participated);
+    }
+  }
+
+  getParticipation(participations: ParticipatedDto[]): boolean {
+    let participatedReal = false;
+    const part: ParticipatedDto = participations.find(x => x.objectId === this.organization.id && x.modelType === MODEL_TYPE.ORGANIZATION);
+    if (part != null) {
+      participatedReal = part.hasParticipated;
+    }
+    return participatedReal;
   }
 
   getDate(date: string): string {
@@ -67,6 +138,7 @@ export class OrganizationsInfoComponent implements OnInit {
       id: [''],
       name: [''],
       description: [''],
+      events: [''],
       address: this.fb.group({
         id: [''],
         name: [''],
@@ -91,19 +163,27 @@ export class OrganizationsInfoComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  isLocalPhone(element: HistoryElementDto): boolean {
-    return element.type === HistoryElementType.PHONE_CALL;
+  eventParticipated(element: EventDtoCustomized): boolean {
+    return element.type === TYPE.EVENT && element.participated;
   }
 
-  isNote(element: HistoryElementDto): boolean {
-    return element.type === HistoryElementType.NOTE;
+  eventNotParticipated(element: EventDtoCustomized): boolean {
+    return element.type === TYPE.EVENT && !element.participated;
   }
 
-  isMail(element: HistoryElementDto): boolean {
-    return element.type === HistoryElementType.MAIL;
+  isLocalPhone(element: EventDtoCustomized): boolean {
+    return element.type === TYPE.PHONE_CALL;
   }
 
-  isVisit(element: HistoryElementDto): boolean {
-    return element.type === HistoryElementType.VISIT;
+  isNote(element: EventDtoCustomized): boolean {
+    return element.type === TYPE.NOTE;
+  }
+
+  isMail(element: EventDtoCustomized): boolean {
+    return element.type === TYPE.MAIL;
+  }
+
+  isVisit(element: EventDtoCustomized): boolean {
+    return element.type === TYPE.VISIT;
   }
 }

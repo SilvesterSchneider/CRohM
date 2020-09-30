@@ -153,7 +153,7 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
 
   getParticipation(participations: ParticipatedDto[]): boolean {
     let participatedReal = false;
-    const part: ParticipatedDto = participations.find(x => x.contactId === this.contact.id);
+    const part: ParticipatedDto = participations.find(x => x.objectId === this.contact.id && x.modelType === MODEL_TYPE.CONTACT);
     if (part != null) {
       participatedReal = part.hasParticipated;
     }
