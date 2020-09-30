@@ -39,7 +39,7 @@ namespace ServiceLayer
         /// <param name="oldEvent">old event</param>
         /// <param name="newEvent">new event</param>
         /// <returns></returns>
-        Task UpdateEventsAsync(User usernameOfModification, Event oldEvent, EventDto newEvent, List<Contact> contactsParticipated);
+        Task UpdateEventsAsync(User usernameOfModification, Event oldEvent, EventDto newEvent, List<Contact> contactsParticipated, List<Organization> orgasParticipated);
 
         /// <summary>
         /// creates a new modification entry just for insertion of a new contact
@@ -195,9 +195,9 @@ namespace ServiceLayer
             await CreateNewEntryAsync(null, id, MODIFICATION.DELETED, MODEL_TYPE.ORGANIZATION, DATA_TYPE.NONE);
         }
 
-        public async Task UpdateEventsAsync(User usernameOfModification, Event oldEvent, EventDto newEvent, List<Contact> contactsParticipated)
+        public async Task UpdateEventsAsync(User usernameOfModification, Event oldEvent, EventDto newEvent, List<Contact> contactsParticipated, List<Organization> orgasParticipated)
         {
-            await Task.Run(() => ComparerForModificationEntryCreation.CompareEvents(oldEvent, newEvent, usernameOfModification, out listWithCreation, out listWithDeletion, contactsParticipated));
+            await Task.Run(() => ComparerForModificationEntryCreation.CompareEvents(oldEvent, newEvent, usernameOfModification, out listWithCreation, out listWithDeletion, contactsParticipated, orgasParticipated));
         }
 
         public async Task CreateNewEventEntryAsync(User userNameOfChange, long id)

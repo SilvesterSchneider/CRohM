@@ -21,12 +21,19 @@ namespace WebApi.Controllers
         private readonly IModificationEntryService modService;
         private IEventService eventService;
         private IContactService contactService;
+        private IOrganizationService orgaService;
 
-        public EventController(IMapper mapper, IEventService eventService, IModificationEntryService modService, IUserService userService, IContactService contactService)
+        public EventController(IMapper mapper,
+            IEventService eventService,
+            IModificationEntryService modService,
+            IUserService userService,
+            IContactService contactService,
+            IOrganizationService orgaService)
         {
             this._mapper = mapper;
             this.userService = userService;
             this.modService = modService;
+            this.orgaService = orgaService;
             this.eventService = eventService;
             this.contactService = contactService;
         }
@@ -88,15 +95,27 @@ namespace WebApi.Controllers
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             Event oldOne = await eventService.GetEventByIdWithAllIncludesAsync(id);
             List<Contact> contactsParticipated = new List<Contact>();
+            List<Organization> orgasParticipated = new List<Organization>();
             foreach (ParticipatedDto part in eventToModify.Participated)
             {
-                Contact cont = await contactService.GetByIdAsync(part.ObjectId);
-                if (cont != null)
+                if (part.ModelType == MODEL_TYPE.CONTACT)
                 {
-                    contactsParticipated.Add(cont);
+                    Contact cont = await contactService.GetByIdAsync(part.ObjectId);
+                    if (cont != null)
+                    {
+                        contactsParticipated.Add(cont);
+                    }
+                }
+                else if (part.ModelType == MODEL_TYPE.ORGANIZATION)
+                {
+                    Organization orga = await orgaService.GetByIdAsync(part.ObjectId);
+                    if (orga != null)
+                    {
+                        orgasParticipated.Add(orga);
+                    }
                 }
             }
-            await modService.UpdateEventsAsync(userOfChange, oldOne, eventToModify, contactsParticipated);
+            await modService.UpdateEventsAsync(userOfChange, oldOne, eventToModify, contactsParticipated, orgasParticipated);
             if (await eventService.ModifyEventAsync(eventToModify))
             {
                 await modService.CommitChanges();

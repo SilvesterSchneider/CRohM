@@ -15,17 +15,17 @@ namespace ServiceLayer
     /// </summary>
     public interface IMailService
     {
-        public bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender);
-        public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment,
-            string attachmentType);
+        bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender);
+        bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType);
 
-        public bool PasswordReset(string newPassword, string mailAddress);
+        bool PasswordReset(string newPassword, string mailAddress);
 
-        public bool Registration(string benutzer, string passwort, string email);
+        bool Registration(string benutzer, string passwort, string email);
 
-        public bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
+        bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
 
-        public bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
+        bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
+        bool CreateAndSendInvitationMail(string mail, string name, string mailContent);
     }
 
     public class MailService : IMailService
@@ -33,6 +33,7 @@ namespace ServiceLayer
         private static string STARTFIELD = "<Anrede>";
         private static string PRENAMEFIELD = "<Vorname>";
         private static string NAMEFIELD = "<Nachname>";
+        private static string ORGASTART = "Sehr geehrte Damen und Herren des Unternehmens";
         private static string EVENTNAMEFIELD = "<Veranstaltungsname>";
         private static string EVENTDATEFIELD = "<Datum>";
         private static string EVENTTIMEFIELD = "<Uhrzeit>";
@@ -159,6 +160,11 @@ namespace ServiceLayer
                 start = "Sehr geehrt";
             }
             string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
+            return FinishMailInvitationSend(finishedcontent, address);
+        }
+
+        private bool FinishMailInvitationSend(string finishedcontent, string address)
+        {
             string[] fields = finishedcontent.Split("\r");
             string text = string.Empty;
             foreach (string line in fields)
@@ -168,6 +174,20 @@ namespace ServiceLayer
                 text += "</p>";
             }
             return SendMail("Einladung zur Veranstaltung", text, address, null, null);
+        }
+
+        public bool CreateAndSendInvitationMail(string mail, string name, string mailContent)
+        {
+            string finishedcontent = mailContent.Replace(STARTFIELD, ORGASTART);
+            if (mailContent.IndexOf(NAMEFIELD) > 0)
+            {
+                finishedcontent = finishedcontent.Replace(NAMEFIELD, name).Replace(PRENAMEFIELD, string.Empty);
+            }
+            else
+            {
+                finishedcontent = finishedcontent.Replace(NAMEFIELD, string.Empty).Replace(PRENAMEFIELD, name);
+            }
+            return FinishMailInvitationSend(finishedcontent, mail);
         }
     }
 }

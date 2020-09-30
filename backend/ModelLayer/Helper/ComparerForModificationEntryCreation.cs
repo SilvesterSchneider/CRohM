@@ -19,7 +19,7 @@ namespace ModelLayer.Helper
         /// <param name="listWithCreation">the list with all modification entries to be created afterwards</param>
         /// <param name="listWithDeletion">the list with all modification entries to be set up to deletion state = true</param>
         public static void CompareEvents(Event oldEvent, EventDto newEvent, User userOfModification,
-            out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion, List<Contact> contactsParticipated)
+            out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion, List<Contact> contactsParticipated, List<Organization> orgasParticipated)
         {
             listWithDeletion = new List<ModificationEntry>();
             List<ModificationEntry> listEntries = new List<ModificationEntry>();
@@ -29,9 +29,28 @@ namespace ModelLayer.Helper
             ComparePlainFields(listEntries, oldEvent.Duration.ToString(), newEvent.Duration.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DURATION, userOfModification, MODIFICATION.MODIFIED);
             CompareTagFields(listEntries, oldEvent.Tags, newEvent.Tags, newEvent.Id, MODEL_TYPE.EVENT, userOfModification);
             GetContactsChangeOfEvents(oldEvent.Contacts, newEvent.Contacts, newEvent.Id, userOfModification, listEntries);
-            GetParticipatedChangesOfEvent(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id, contactsParticipated);
-            GetInvitationChangedOfEvents(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id, contactsParticipated);
+            GetOrganizationsChangeOfEvents(oldEvent.Organizations, newEvent.Organizations, newEvent.Id, userOfModification, listEntries);
+            GetParticipatedChangesOfEvent(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id, contactsParticipated, orgasParticipated);
+            GetInvitationChangedOfEvents(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id, contactsParticipated, orgasParticipated);
             listWithCreation = listEntries;
+        }
+
+        private static void GetOrganizationsChangeOfEvents(List<EventOrganization> oldOrgas, List<OrganizationDto> newOrgas, long id, User userOfModification, List<ModificationEntry> listEntries)
+        {
+            foreach (EventOrganization connection in oldOrgas)
+            {
+                if (newOrgas.Find(a => a.Id == connection.OrganizationId) == null)
+                {
+                    listEntries.Add(GetNewModificationEntry("", connection.Organization.Name, id, MODEL_TYPE.EVENT, DATA_TYPE.CONTACTS, userOfModification, MODIFICATION.DELETED));
+                }
+            }
+            foreach (OrganizationDto orga in newOrgas)
+            {
+                if (oldOrgas.Find(a => a.Organization.Id == orga.Id) == null)
+                {
+                    listEntries.Add(GetNewModificationEntry(orga.Name, "", id, MODEL_TYPE.EVENT, DATA_TYPE.CONTACTS, userOfModification, MODIFICATION.ADDED));
+                }
+            }
         }
 
         /// <summary>
@@ -43,16 +62,33 @@ namespace ModelLayer.Helper
         /// <param name="userOfModification">the user who performed the change</param>
         /// <param name="modelId">the model id</param>
         /// <param name="contactsParticipated">the contacts</param>
-        private static void GetInvitationChangedOfEvents(List<Participated> participatedOld, List<ParticipatedDto> participatedNew, List<ModificationEntry> listEntries, User userOfModification, long modelId, List<Contact> contactsParticipated)
+        private static void GetInvitationChangedOfEvents(List<Participated> participatedOld, List<ParticipatedDto> participatedNew, List<ModificationEntry> listEntries, User userOfModification, long modelId, List<Contact> contactsParticipated, List<Organization> orgasParticipated)
         {
             foreach (ParticipatedDto part in participatedNew)
             {
                 if (part.WasInvited)
                 {
-                    Participated partToCheck = participatedOld.FirstOrDefault(a => a.ObjectId == part.ObjectId);
+                    Participated partToCheck = participatedOld.FirstOrDefault(a => a.ObjectId == part.ObjectId && a.ModelType == part.ModelType);
                     if (partToCheck == null || !partToCheck.WasInvited)
                     {
-                        listEntries.Add(GetNewModificationEntry(contactsParticipated.FirstOrDefault(b => b.Id == part.ObjectId).PreName + " " + contactsParticipated.FirstOrDefault(b => b.Id == part.ObjectId).Name,
+                        string name = string.Empty;
+                        if (part.ModelType == MODEL_TYPE.CONTACT)
+                        {
+                            Contact cont = contactsParticipated.FirstOrDefault(b => b.Id == part.ObjectId);
+                            if (cont != null)
+                            {
+                                name = cont.PreName + " " + cont.Name;
+                            }
+                        }
+                        else if (part.ModelType == MODEL_TYPE.ORGANIZATION)
+                        {
+                            Organization orga = orgasParticipated.FirstOrDefault(b => b.Id == part.ObjectId);
+                            if (orga != null)
+                            {
+                                name = orga.Name;
+                            }
+                        }
+                        listEntries.Add(GetNewModificationEntry(name,
                             string.Empty, modelId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, userOfModification, MODIFICATION.MODIFIED));
                     }
                 }                               
@@ -186,20 +222,32 @@ namespace ModelLayer.Helper
         /// <param name="listEntries">the list with all entries to create</param>
         /// <param name="userOfModification">who made this change?</param>
         /// <param name="id">the model id</param>
-        private static void GetParticipatedChangesOfEvent(List<Participated> oldOnes, List<ParticipatedDto> newOnes, List<ModificationEntry> listEntries, User userOfModification, long id, List<Contact> contactsParticipated)
+        private static void GetParticipatedChangesOfEvent(List<Participated> oldOnes, List<ParticipatedDto> newOnes, List<ModificationEntry> listEntries, User userOfModification, long id, List<Contact> contactsParticipated, List<Organization> orgasParticipated)
         {
             foreach (Participated partOld in oldOnes)
             {
                 ParticipatedDto newPart = newOnes.Find(a => a.Id == partOld.Id);
                 if (newPart != null && newPart.HasParticipated != partOld.HasParticipated)
                 {
-                    string contactName = string.Empty;
-                    Contact contact = contactsParticipated.Find(a => a.Id == newPart.ObjectId);
-                    if (contact != null)
+                    string name = string.Empty;
+                    if (newPart.ModelType == MODEL_TYPE.CONTACT)
                     {
-                        contactName = contact.PreName + " " + contact.Name;
+                        Contact contact = contactsParticipated.Find(a => a.Id == newPart.ObjectId);
+                        if (contact != null)
+                        {
+                            name = contact.PreName + " " + contact.Name;
+                        }
                     }
-                    listEntries.Add(GetNewModificationEntry(contactName + ":" + newPart.HasParticipated.ToString(), contactName + ":" + partOld.HasParticipated.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
+                    else if (newPart.ModelType == MODEL_TYPE.ORGANIZATION)
+                    {
+                        Organization orga = orgasParticipated.Find(a => a.Id == newPart.ObjectId);
+                        if (orga != null)
+                        {
+                            name = orga.Name;
+                        }
+                    }
+                    
+                    listEntries.Add(GetNewModificationEntry(name + ":" + newPart.HasParticipated.ToString(), name + ":" + partOld.HasParticipated.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
                 }
             }
         }

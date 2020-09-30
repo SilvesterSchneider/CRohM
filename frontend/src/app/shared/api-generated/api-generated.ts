@@ -1499,126 +1499,6 @@ export class EventService {
         }
         return _observableOf<void>(<any>null);
     }
-
-    /**
-     * @return successfully updated
-     */
-    addContact(id: number, contactId: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/Event/{id}/addContact";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(contactId);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAddContact(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processAddContact(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processAddContact(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result400: any = null;
-            result400 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
-            return throwException("bad request", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-
-    /**
-     * @return successfully updated
-     */
-    removeContact(id: number, contactId: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/Event/{id}/removeContact";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(contactId);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRemoveContact(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRemoveContact(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processRemoveContact(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result400: any = null;
-            result400 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
-            return throwException("bad request", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
 }
 
 @Injectable({
@@ -1635,13 +1515,16 @@ export class MailService {
     }
 
     /**
-     * @param mailContent (optional) 
+     * @param orgaIds (optional) 
      * @return successfully send mails
      */
-    sendInvitationMails(contactIds: number[], mailContent?: string | null | undefined): Observable<boolean> {
+    sendInvitationMails(contactIds: number[], mailContent: string | null, orgaIds?: number[] | null | undefined): Observable<boolean> {
         let url_ = this.baseUrl + "/api/Mail?";
-        if (mailContent !== undefined && mailContent !== null)
-            url_ += "mailContent=" + encodeURIComponent("" + mailContent) + "&";
+        if (mailContent === undefined || mailContent === null)
+            throw new Error("The parameter 'mailContent' must be defined.");
+        url_ = url_.replace("{mailContent}", encodeURIComponent("" + mailContent));
+        if (orgaIds !== undefined && orgaIds !== null)
+            orgaIds && orgaIds.forEach(item => { url_ += "orgaIds=" + encodeURIComponent("" + item) + "&"; });
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(contactIds);
@@ -3320,15 +3203,23 @@ export interface EventDto {
     name?: string | undefined;
     duration: number;
     contacts?: ContactDto[] | undefined;
+    organizations?: OrganizationDto[] | undefined;
     participated?: ParticipatedDto[] | undefined;
     tags?: TagDto[] | undefined;
 }
 
 export interface ParticipatedDto {
     id: number;
-    contactId: number;
+    modelType: MODEL_TYPE;
+    objectId: number;
     hasParticipated: boolean;
     wasInvited: boolean;
+}
+
+export enum MODEL_TYPE {
+    CONTACT = 0,
+    ORGANIZATION = 1,
+    EVENT = 2,
 }
 
 export interface ContactCreateDto {
@@ -3379,6 +3270,7 @@ export interface EventCreateDto {
     name?: string | undefined;
     duration: number;
     contacts?: number[] | undefined;
+    organizations?: number[] | undefined;
 }
 
 export interface ModificationEntryDto {
@@ -3419,12 +3311,6 @@ export enum DATA_TYPE {
     PARTICIPATED = 19,
     TAG = 20,
     INVITATION = 21,
-}
-
-export enum MODEL_TYPE {
-    CONTACT = 0,
-    ORGANIZATION = 1,
-    EVENT = 2,
 }
 
 export enum MODIFICATION {
