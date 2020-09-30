@@ -7,7 +7,8 @@ namespace ModelLayer.Models
 {
     public class Participated : BaseEntity
     {
-        public long ContactId { get; set; }
+        public MODEL_TYPE ModelType { get; set; }
+        public long ObjectId { get; set; }
         public bool HasParticipated { get; set; }
         public bool WasInvited { get; set; }
     }

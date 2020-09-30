@@ -132,6 +132,20 @@ namespace ServiceLayer
                         {
                             return new List<Contact>();
                         }
+                    }))
+                .ForMember(dto => dto.Organizations,
+                    expression => expression.MapFrom((modelEvent, eventDto) =>
+                    {
+                        if (modelEvent.Organizations.Any())
+                        {
+                            return modelEvent.Organizations
+                                .Select(eventOrga => eventOrga.Organization)
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<Organization>();
+                        }
                     }));
             CreateMap<EventDto, Event>()
                 .ForMember(dto => dto.Contacts,
@@ -146,6 +160,20 @@ namespace ServiceLayer
                         {
                             return new List<EventContact>();
                         }                        
+                    }))
+                .ForMember(dto => dto.Organizations,
+                    expression => expression.MapFrom((eventDto, modelEvent) =>
+                    {
+                        if (eventDto.Organizations.Any())
+                        {
+                            return eventDto.Organizations
+                                .Select(innerOrga => new EventOrganization() { OrganizationId = innerOrga.Id, EventId = eventDto.Id })
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<EventOrganization>();
+                        }
                     }));
             CreateMap<EventCreateDto, Event>();
             CreateMap<Participated, ParticipatedDto>().ReverseMap();

@@ -5,11 +5,11 @@ using System.Text;
 
 namespace ModelLayer.Models
 {
-    public class EventContact : BaseEntity
+    public class EventOrganization : BaseEntity
     {
         public long EventId { get; set; }
         public Event Event { get; set; }
-        public long ContactId { get; set; }
-        public Contact Contact { get; set; }
+        public long OrganizationId { get; set; }
+        public Organization Organization { get; set; }
     }
 }
