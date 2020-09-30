@@ -95,7 +95,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     });
     this.event = data;
     this.event.tags.forEach(x => this.selectedTags.push(x));
-    this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(
+    this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(startWith(''),
       map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
   }
 
