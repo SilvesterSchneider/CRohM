@@ -29,7 +29,7 @@ import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-
     OsmAddressComponent,
     ContactPossibilitiesComponent,
     AddHistoryComponent,
-    TagsFilterComponent
+    TagsFilterComponent,
     VerticalGroupedBarChartComponent
     ]
 })

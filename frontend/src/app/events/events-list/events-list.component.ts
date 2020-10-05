@@ -85,6 +85,7 @@ export class EventsListComponent implements OnInit {
       const xSort: EventDto[] = y.sort(this.funtionGetSortedData);
       this.filterValues(xSort);
       this.length = y.length;
+      this.applyTagFilter();
     });
   }
 
