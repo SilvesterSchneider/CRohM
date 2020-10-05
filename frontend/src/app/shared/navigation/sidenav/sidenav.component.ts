@@ -23,7 +23,11 @@ export class SidenavComponent implements OnInit {
           label: 'Veranstaltungen',
           link: './events',
           index: 2
-      },
+      }, {
+        label: 'Statistiken',
+        link: './statistics',
+        index: 3
+    }
     ];
    }
 

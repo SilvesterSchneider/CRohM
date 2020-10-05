@@ -20,6 +20,7 @@ import { ProgressSpinnerInterceptor } from './shared/progress-spinner/progress-s
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ConfirmDialogComponent } from './shared/form/confirmdialog/confirmdialog.component';
 import { ChangePasswordComponent } from './login/change-password-dialog/change-password-dialog.component';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import { ChangePasswordComponent } from './login/change-password-dialog/change-p
     UserMenuComponent,
     SidenavComponent,
     ConfirmDialogComponent,
-    ChangePasswordComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +43,7 @@ import { ChangePasswordComponent } from './login/change-password-dialog/change-p
     OverlayModule,
     FlexLayoutModule,
     ContactsModule,
+    StatisticsModule,
     EventsModule,
     OrganizationsModule,
     JwtModule.forRoot({

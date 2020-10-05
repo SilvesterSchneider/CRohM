@@ -4,13 +4,14 @@ on:
 
 jobs:
   build_frontend:
-    runs-on: windows-latest
+    name: Build Frontend
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2.1.1
+        uses: actions/setup-node@v2.1.2
         with:
           node-version: "12"
 
@@ -43,13 +44,14 @@ jobs:
           path: frontend/dist/*
 
   build_backend:
-    runs-on: windows-latest
+    name: Build Backend
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v1.7.1
+        uses: actions/setup-dotnet@v1.7.2
 
       - name: Install Dependencies
         run: dotnet restore ./backend/WebApi/WebApi.csproj
@@ -64,6 +66,7 @@ jobs:
           path: backend-dist/*
 
   build_docker:
+    name: Build Docker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -112,7 +115,7 @@ jobs:
           restore-keys: ${{ runner.os }}-buildx-
 
       - name: Docker Login
-        uses: docker/login-action@v1.4.0
+        uses: docker/login-action@v1.4.1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -128,8 +131,9 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
 
   build_app:
+    name: Build App (Full-Stack)
     needs: [build_frontend, build_backend]
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Download Backend Artifact
         uses: actions/download-artifact@v2
@@ -150,6 +154,7 @@ jobs:
           path: app/*
 
   test_integration:
+    name: Test Integration
     needs: build_docker
     runs-on: ubuntu-latest
     steps:
@@ -164,6 +169,8 @@ jobs:
       - name: Test
         uses: cypress-io/github-action@v2
         with:
+          browser: chrome
+          headless: true
           working-directory: tests
 
       - name: Collect Report
@@ -190,4 +197,5 @@ jobs:
         with:
           name: test_integration_videos
           path: tests/videos/*
+  #
   # TODO: Cached builds on Push
