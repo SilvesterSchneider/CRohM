@@ -209,7 +209,8 @@ namespace ModelLayer.Migrations
                     PreName = table.Column<string>(nullable: true),
                     AddressId = table.Column<long>(nullable: true),
                     ContactPossibilitiesId = table.Column<long>(nullable: true),
-                    approval = table.Column<bool>(nullable: false)
+                    approval = table.Column<bool>(nullable: false),
+                    CreatedByUser = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -515,7 +516,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "fa364ec8-da6f-4623-93ad-cf9443bc1773", "Admin", "ADMIN" });
+                values: new object[] { 1L, "95103996-2ce0-4257-8b8d-94b3799eef17", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",

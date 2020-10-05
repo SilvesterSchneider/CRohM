@@ -25,7 +25,7 @@ namespace ServiceLayer
 
         public bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
 
-        public bool AskForAproval(Contact contact);
+        public bool AskForAproval(string uri, Contact contact);
     }
 
     public class MailService : IMailService
@@ -35,12 +35,15 @@ namespace ServiceLayer
             return SendMail(subject, body, address, new MemoryStream(attachment), attachmentType);
         }
 
-        public bool AskForAproval(Contact contact){
-            string body = "<h3>Bitte bestätigen Sie ihre Registrierung.</h3> "+
-                        "< p > Bitte klicken Sie auf Bestätigen um uns die Speicherung Ihrer personenbezogenen Daten laut DSGVO zu ermöglichen.</ p > " +
-                        "   < a  class=”link” href=\"https://localhost:5001/api/ContactReply/"+contact.Id+"\" target=\"_blank\">Bestätigen</a> " +
-                        " <p>Vielen Dank, für Ihre Bemühungen.</p>";
-            return SendMail("Bestätigung", body, "mi@geovision.de", null, ""); //TODO Mailadresse einfügen
+        public bool AskForAproval(string uri, Contact contact){
+
+            string body = "<p>Bitte bestätigen Sie ihre Registrierung.</p>" +
+                "< p > &nbsp;</ p >   < p > Bitte klicken Sie auf Bestätigen um uns die Speicherung Ihrer" +
+                " personenbezogenen Daten laut DSGVO zu ermöglichen < a href " +
+                "= \""+uri+"\" > Bitte klicken Sie hier.</ a ></ p >" +
+                "< p > Vielen Dank, f & uuml; r Ihre Bem & uuml; hungen.</ p > ";
+
+            return SendMail("Bestätigung", body, contact.ContactPossibilities.Mail, null, ""); //TODO Mailadresse einfügen
         }
 
 

@@ -109,8 +109,8 @@ namespace WebApi.Controllers
             var contactDto = _mapper.Map<ContactDto>(contact);
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             await modService.CreateNewContactEntryAsync(userOfChange, contact.Id);
-            mailService.AskForAproval(contact);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
+            mailService.AskForAproval(uri, contact);
             return Created(uri, contactDto);
         }
 
