@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Injectable, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Injectable, OnDestroy, ViewChild } from '@angular/core';
 import { OrganizationService, UsersService } from '../../shared/api-generated/api-generated';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
@@ -11,6 +11,7 @@ import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
 import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
 
 @Component({
 	selector: 'app-organizations-list',
@@ -22,9 +23,11 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 
 export class OrganizationsListComponent implements OnInit, OnDestroy {
+	@ViewChild(TagsFilterComponent, { static: true })
+	tagsFilter: TagsFilterComponent;
 	service: OrganizationService;
 	organizations: Observable<OrganizationDto[]>;
-	organizationMock: Observable<OrganizationDto[]>;
+	allOrganizations: OrganizationDto[];
 	displayedColumns = [];
 	currentScreenWidth = '';
 	flexMediaWatcher: Subscription;
@@ -61,8 +64,18 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
+		this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
 		this.getData();
 	}
+
+	applyTagFilter() {
+		this.dataSource = new MatTableDataSource<OrganizationDto>();
+		this.allOrganizations.forEach(x => {
+		  if (this.tagsFilter.areAllTagsIncluded(x.tags)) {
+			this.dataSource.data.push(x);
+		  }
+		});
+	  }
 
 	ngOnDestroy(): void {
 		this.flexMediaWatcher.unsubscribe();
@@ -95,6 +108,9 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		this.organizations.subscribe(x => {
 			 this.length = x.length;
 			 this.dataSource.data = x;
+			 this.allOrganizations = x;
+			 this.tagsFilter.updateTagsInAutofill(this.allOrganizations);
+			 this.applyTagFilter();
 		});
 		this.changeDetectorRefs.detectChanges();
 		// this.organizationMock = this.orgaMock.getOrganizationsMock();

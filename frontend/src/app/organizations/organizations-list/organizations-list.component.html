@@ -2,11 +2,12 @@
     <mat-toolbar-row class="tabrow">
         <span>Organisationen</span>
         <span class="spacer"></span>
+        <app-tags-filter></app-tags-filter>
         <mat-form-field>
             <mat-label>Suche</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Organisationen...">
         </mat-form-field>
-        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Organisation hinzufügen" (click)="addDummyOrganization()"> 
+        <button id="addDummy" class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Organisation hinzufügen" (click)="addDummyOrganization()"> 
             <mat-icon>add</mat-icon> Dummy Organisation hinzufügen
         </button>
         <button class="button" button="submit" mat-mini-fab color="primary" (click)="openAddDialog()">
@@ -16,7 +17,7 @@
 </mat-toolbar>
 
 <div fxLayout="column" fxLayoutGap="100px">
-    <mat-table #table [dataSource]="dataSource">
+    <mat-table id="tableOrganization" #table [dataSource]="dataSource">
         <ng-container matColumnDef="Name">
             <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
@@ -73,7 +74,7 @@
         <ng-container matColumnDef="Action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
-                <a (click)="openEditDialog(element.id)" type="button">
+                <a class="editOrganization" (click)="openEditDialog(element.id)" type="button">
                     <mat-icon color="primary" class="icon">edit</mat-icon>
                 </a>
                 <a (click)="openInfo(element.id)" type="button">

@@ -72,7 +72,7 @@
                 {{ item.name }}
                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
             </mat-chip>
-            <input 
+            <input id="tagInputEdit"
                 placeholder="Neuer tag..." 
                 #tagInput
                 [matAutocomplete]="auto"
@@ -93,7 +93,7 @@
         <button mat-raised-button color="primary" title="Abbrechen" (click)="onCancel()">
             Abbrechen
         </button>
-        <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!organizationForm.valid"
+        <button id="saveButton" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!organizationForm.valid"
             (click)="onApprove()">
             Speichern
         </button>
