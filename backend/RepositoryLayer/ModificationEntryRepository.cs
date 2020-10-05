@@ -52,6 +52,13 @@ namespace RepositoryLayer
         /// <returns></returns>
         Task<List<ModificationEntry>> GetModificationEntriesByIdAndModelTypeAsync(long id, MODEL_TYPE dataType);
 
+        /// <summary>
+        /// Get all modification entries just for creation of specific model type.
+        /// </summary>
+        /// <param name="modelType">the modeltype to consider</param>
+        /// <returns></returns>
+        Task<List<ModificationEntry>> GetModificationEntriesForCreationByModelType(MODEL_TYPE modelType);
+
 
         /// <summary>
         /// To be able to delete a user, the foreign key relation in ModificationEntry needs to be set to null 
@@ -162,5 +169,9 @@ namespace RepositoryLayer
             return new List<ModificationEntry>();
         }
 
+        public async Task<List<ModificationEntry>> GetModificationEntriesForCreationByModelType(MODEL_TYPE modelType)
+        {
+            return await Entities.Where(entry => entry.DataModelType == modelType && entry.DataType == DATA_TYPE.NONE).ToListAsync();
+        }
     }
 }
