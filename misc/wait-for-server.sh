@@ -2,8 +2,6 @@
 
 SERVER_TIMEOUT=300
 
-curl --insecure --silent --output /dev/null --write-out "%{http_code}\n" https://localhost/health
-
 while [ "$(curl --insecure --silent --output /dev/null --write-out "%{http_code}\n" https://localhost/health)" != "200" ]; do
     echo "Waiting ${SERVER_TIMEOUT}s till timeout ..."
 
