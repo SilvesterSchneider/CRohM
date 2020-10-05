@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ContactPossibilitiesComponent } from './contactPossibilities/contact-possibilities.component';
 import { AddHistoryComponent } from './add-history/add-history.component';
 import { TagsFilterComponent } from './tags-filter/tags-filter.component';
+import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-chart/vertical-grouped-bar-chart.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,7 @@ import { TagsFilterComponent } from './tags-filter/tags-filter.component';
     HttpClientModule,
     MaterialModule,
     FlexLayoutModule],
-  declarations: [OsmAddressComponent, ContactPossibilitiesComponent, AddHistoryComponent, TagsFilterComponent],
+  declarations: [OsmAddressComponent, ContactPossibilitiesComponent, AddHistoryComponent, TagsFilterComponent, VerticalGroupedBarChartComponent],
   exports: [
     CommonModule,
     FormsModule,
@@ -29,6 +30,7 @@ import { TagsFilterComponent } from './tags-filter/tags-filter.component';
     ContactPossibilitiesComponent,
     AddHistoryComponent,
     TagsFilterComponent
+    VerticalGroupedBarChartComponent
     ]
 })
 export class SharedModule { }
