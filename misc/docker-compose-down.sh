@@ -1,9 +1,11 @@
 #!/bin/sh
 
 # Replace foreslashes
-export CROHM_IMAGE_PREP=$(echo "${CROHM_BRANCH}" | tr "/" -)
+CROHM_IMAGE_PREP="$(echo "${CROHM_BRANCH}" | tr "/" -)"
+export CROHM_IMAGE_PREP
 
 # Replace underscores
-export CROHM_IMAGE=$(echo "${CROHM_IMAGE_PREP}" | tr "_" -)
+CROHM_IMAGE="$(echo "${CROHM_IMAGE_PREP}" | tr "_" -)"
+export CROHM_IMAGE
 
 docker-compose down
