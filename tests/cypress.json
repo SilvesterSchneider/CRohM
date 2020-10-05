@@ -1,13 +1,14 @@
 {
+    "$schema": "https://raw.githubusercontent.com/cypress-io/cypress/develop/cli/schema/cypress.schema.json",
     "baseUrl": "https://localhost",
     "fixturesFolder": "fixtures",
     "integrationFolder": "integration",
-    "screenshotsFolder": "screenshots",
-    "videosFolder": "videos",
     "pluginsFile": "plugins/index.js",
-    "supportFile": "support/index.js",
-    "reporter": "cypress-junit-reporter",
+    "reporter": "junit",
     "reporterOptions": {
         "mochaFile": "reports/cypress.xml"
-    }
+    },
+    "screenshotsFolder": "screenshots",
+    "supportFile": "support/index.js",
+    "videosFolder": "videos"
 }

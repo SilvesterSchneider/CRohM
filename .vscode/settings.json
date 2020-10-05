@@ -21,4 +21,5 @@
     "telemetry.enableCrashReporter": false,
     "telemetry.enableTelemetry": false,
     "typescript.updateImportsOnFileMove.enabled": "always",
+    "bashIde.highlightParsingErrors": true
 }
