@@ -72,8 +72,8 @@ namespace WebApi.Controllers
             return Ok(contactsDto);
         }
 
-        //[ClaimsAuthorization(ClaimType = "Einsehen und Bearbeiten aller Kontakte",
-        //                     ClaimValue = "Einsehen und Bearbeiten aller Kontakte")]
+        [ClaimsAuthorization(ClaimType = "Einsehen und Bearbeiten aller Kontakte",
+                             ClaimValue = "Einsehen und Bearbeiten aller Kontakte")]
         // put updates contact with id {id} via frontend
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully updated")]
@@ -87,7 +87,7 @@ namespace WebApi.Controllers
             User userOfModification = await userService.FindByNameAsync(User.Identity.Name);
 
             var mappedContact = _mapper.Map<Contact>(contact);
-            await modService.UpdateContactAsync(userOfModification, await contactService.GetByIdAsync(id), mappedContact, true);
+            await modService.UpdateContactAsync(userOfModification, await contactService.GetByIdAsync(id), mappedContact, await userService.IsDataSecurityEngineer(userOfModification.Id));
             if (await contactService.UpdateAsync(mappedContact, id))
             {
                 await modService.CommitChanges();
@@ -98,7 +98,7 @@ namespace WebApi.Controllers
                 return Conflict();
             }
         }
-        //[ClaimsAuthorization(ClaimType = "Anlegen eines Kontaktes", ClaimValue = "Anlegen eines Kontaktes")]
+        [ClaimsAuthorization(ClaimType = "Anlegen eines Kontaktes", ClaimValue = "Anlegen eines Kontaktes")]
         // creates new contact in db via frontend
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(ContactDto), Description = "successfully created")]
@@ -113,7 +113,7 @@ namespace WebApi.Controllers
             return Created(uri, contactDto);
         }
 
-        //[ClaimsAuthorization(ClaimType = "Anlegen eines Kontaktes", ClaimValue = "Anlegen eines Kontaktes")]
+        [ClaimsAuthorization(ClaimType = "Anlegen eines Kontaktes", ClaimValue = "Anlegen eines Kontaktes")]
         // creates new contact in db via frontend
         [HttpPost("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
@@ -125,7 +125,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        //[ClaimsAuthorization(ClaimType = "Anlegen eines Kontaktes", ClaimValue = "Anlegen eines Kontaktes")]
+        [ClaimsAuthorization(ClaimType = "Anlegen eines Kontaktes", ClaimValue = "Anlegen eines Kontaktes")]
         // sends disclosure per mail
         [HttpPost("{id}/disclosure")] // template ^= zusammen mit basis ganz oben -> pfad für http request
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
@@ -136,7 +136,7 @@ namespace WebApi.Controllers
         }
 
         // deletes with id {id} contact via frontend
-        //[Authorize(Roles = "DeleteContact")]
+        [Authorize(Roles = "Löschen eines Kontakts")]
         //[ClaimsAuthorization(ClaimType = "Löschen eines Kontakts", ClaimValue = "Löschen eines Kontakts")]
 
         [HttpDelete("{id}")]

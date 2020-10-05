@@ -22,8 +22,6 @@ namespace ModelLayer.DataTransferObjects
         public DateTime LastLoginDate { get; set; }
         //TODO: implement endpoint for login with refresh token
         //public string RefreshToken { get; set; }
-
-        public List<PermissionGroupDto> Permission { get; set; } = new List<PermissionGroupDto>();
     }
 
     public class UserCreateDto

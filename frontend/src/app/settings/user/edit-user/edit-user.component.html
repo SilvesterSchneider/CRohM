@@ -27,7 +27,7 @@
             <div class="col-md-3">
                 <mat-form-field>
                     <mat-label>Gruppenberechtigungen</mat-label>
-                    <mat-select [formControl]="groupPermission" multiple>
+                    <mat-select id="permissionSelectionForUser" [formControl]="groupPermission" multiple>
                         <mat-option *ngFor="let groupPermission of permissionGroups" [value]="groupPermission.name">
                             {{groupPermission.name}}
                         </mat-option>
@@ -42,7 +42,7 @@
                 Abbrechen
             </button>
             <!--Mit Klick auf 'Hinzufuegen' wird die Funktion addUser() aufgerufen-->
-            <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid" (click)="editUser()">
+            <button id="saveUserChangesButton" mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid" (click)="editUser()">
                 Speichern
             </button>
         </div>

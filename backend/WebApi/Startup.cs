@@ -42,7 +42,7 @@ namespace WebApi
             var database = Configuration["DBName"] ?? "CRMDB"; 
 
             var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
-            connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
+            //connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -72,7 +72,7 @@ namespace WebApi
                 settings.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT token"));
             });
 
-            services.AddIdentity<User, Permission>(options =>
+            services.AddIdentity<User, Role>(options =>
                 {
                     //// Password settings
                     options.Password.RequireDigit = PasswordGuidelines.RequireDigit;
@@ -124,8 +124,7 @@ namespace WebApi
         }
 
         public void Configure(
-            IUserPermissionGroupRepository userPermissionGroupRepo,
-            IPermissionGroupService permissionGroupService,
+            IRoleService rolesService,
             IMapper mapper,
             IApplicationBuilder app,
             IWebHostEnvironment env,
@@ -135,8 +134,8 @@ namespace WebApi
             IConfiguration configuration)
         {
             dataContext.Database.Migrate();
-            ApplicationDbInitializer.SeedPermissions(permissionGroupService, mapper);
-            ApplicationDbInitializer.SeedUsers(userService, permissionGroupService, userPermissionGroupRepo);
+            ApplicationDbInitializer.SeedRoles(rolesService);
+            ApplicationDbInitializer.SeedUsers(userService);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -176,7 +175,8 @@ namespace WebApi
             services.AddSingleton<IMailService, MailService>();
 
             //###########################Services#######################################
-            services.AddScoped<RoleManager<Permission>>();
+            services.AddScoped<RoleManager<Role>>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserManager, DefaultUserManager>();
             services.AddScoped<ISignInService, SignInService>();
@@ -186,7 +186,6 @@ namespace WebApi
             services.AddScoped<IEducationalOpportunityService, EducationalOpportunityService>();
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IEventService, EventService>();
-            services.AddScoped<IPermissionGroupService, PermissionGroupService>();
             services.AddScoped<IUserCheckDateService, UserCheckDateService>();
             services.AddScoped<IModificationEntryService, ModificationEntryService>();
             services.AddScoped<IUserLoginService, UserLoginService>();
@@ -199,14 +198,12 @@ namespace WebApi
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<IOrganizationContactRepository, OrganizationContactRepository>();
-            services.AddScoped<IPermissionGroupRepositiory, PermissionGroupRepository>();
             services.AddScoped<IEventContactRepository, EventContactRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IModificationEntryRepository, ModificationEntryRepository>();
             services.AddScoped<IUserCheckDateRepository, UserCheckDateRepository>();
             services.AddScoped<IContactPossibilitiesEntryRepository, ContactPossibilitiesEntryRepository>();
             services.AddScoped<IUserLoginRepository, UserLoginRepository>();
-            services.AddScoped<IUserPermissionGroupRepository, UserPermissionGroupRepository>();
         }
     }
 }

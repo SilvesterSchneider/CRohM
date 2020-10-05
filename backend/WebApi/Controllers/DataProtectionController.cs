@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -29,6 +29,8 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully send message")]
         public async Task<IActionResult> SendUpdateMessage([FromBody]SendInfoDTO sendInoInfoDto)
         {
+            await Task.Yield();
+
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrEmpty(sendInoInfoDto.Contact?.ContactPossibilities?.Mail))

@@ -1,14 +1,13 @@
-using ModelLayer.Helper;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ModelLayer.DataTransferObjects
 {
-    public class PermissionDto
+    public class RoleDto
     {
-        public string Name { get; set; }
         public long Id { get; set; }
-        public UserRight UserRight { get; set; }
+        public string Name { get; set; }
+        public List<string> Claims { get; set; }
     }
 }

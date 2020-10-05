@@ -2175,7 +2175,7 @@ export class OrganizationService {
 @Injectable({
     providedIn: 'root'
 })
-export class PermissionsService {
+export class RoleService {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -2186,10 +2186,10 @@ export class PermissionsService {
     }
 
     /**
-     * @return successfully request
+     * @return successfully found
      */
-    getAllPermissionGroups(): Observable<PermissionGroupDto[]> {
-        let url_ = this.baseUrl + "/api/Permissions";
+    get(): Observable<RoleDto[]> {
+        let url_ = this.baseUrl + "/api/Role";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2201,20 +2201,20 @@ export class PermissionsService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAllPermissionGroups(response_);
+            return this.processGet(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetAllPermissionGroups(<any>response_);
+                    return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<PermissionGroupDto[]>><any>_observableThrow(e);
+                    return <Observable<RoleDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<PermissionGroupDto[]>><any>_observableThrow(response_);
+                return <Observable<RoleDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAllPermissionGroups(response: HttpResponseBase): Observable<PermissionGroupDto[]> {
+    protected processGet(response: HttpResponseBase): Observable<RoleDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2224,7 +2224,7 @@ export class PermissionsService {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <PermissionGroupDto[]>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <RoleDto[]>JSON.parse(_responseText, this.jsonParseReviver);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2232,17 +2232,75 @@ export class PermissionsService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<PermissionGroupDto[]>(<any>null);
+        return _observableOf<RoleDto[]>(<any>null);
     }
 
     /**
-     * @return successfully request
+     * @return successfully created
      */
-    updatePermissionGroup(group: PermissionGroupDto): Observable<void> {
-        let url_ = this.baseUrl + "/api/Permissions";
+    post(roleToCreate: RoleDto): Observable<RoleDto> {
+        let url_ = this.baseUrl + "/api/Role";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(group);
+        const content_ = JSON.stringify(roleToCreate);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPost(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPost(<any>response_);
+                } catch (e) {
+                    return <Observable<RoleDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<RoleDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPost(response: HttpResponseBase): Observable<RoleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result201: any = null;
+            result201 = _responseText === "" ? null : <RoleDto>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result201);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("unsuccessfully request", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<RoleDto>(<any>null);
+    }
+
+    /**
+     * @return successfully updated
+     */
+    put(roleToUpdate: RoleDto): Observable<void> {
+        let url_ = this.baseUrl + "/api/Role";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(roleToUpdate);
 
         let options_ : any = {
             body: content_,
@@ -2254,11 +2312,11 @@ export class PermissionsService {
         };
 
         return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdatePermissionGroup(response_);
+            return this.processPut(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processUpdatePermissionGroup(<any>response_);
+                    return this.processPut(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -2267,7 +2325,7 @@ export class PermissionsService {
         }));
     }
 
-    protected processUpdatePermissionGroup(response: HttpResponseBase): Observable<void> {
+    protected processPut(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2278,6 +2336,10 @@ export class PermissionsService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return _observableOf<void>(<any>null);
             }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("conflict in update process", status, _responseText, _headers);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -2287,13 +2349,69 @@ export class PermissionsService {
     }
 
     /**
-     * @return successfully request
+     * @return successfully found
      */
-    createPermissionGroup(group: PermissionGroupDto): Observable<void> {
-        let url_ = this.baseUrl + "/api/Permissions";
+    getAllClaims(id: number): Observable<string[]> {
+        let url_ = this.baseUrl + "/api/Role/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(group);
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllClaims(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllClaims(<any>response_);
+                } catch (e) {
+                    return <Observable<string[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllClaims(response: HttpResponseBase): Observable<string[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <string[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string[]>(<any>null);
+    }
+
+    /**
+     * @return successfully updated
+     */
+    changeUserRoles(id: number, rolesToUpdate: string[]): Observable<void> {
+        let url_ = this.baseUrl + "/api/Role/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(rolesToUpdate);
 
         let options_ : any = {
             body: content_,
@@ -2304,12 +2422,12 @@ export class PermissionsService {
             })
         };
 
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreatePermissionGroup(response_);
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeUserRoles(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCreatePermissionGroup(<any>response_);
+                    return this.processChangeUserRoles(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -2318,7 +2436,7 @@ export class PermissionsService {
         }));
     }
 
-    protected processCreatePermissionGroup(response: HttpResponseBase): Observable<void> {
+    protected processChangeUserRoles(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2329,6 +2447,10 @@ export class PermissionsService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return _observableOf<void>(<any>null);
             }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("conflict in update process", status, _responseText, _headers);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -2338,10 +2460,10 @@ export class PermissionsService {
     }
 
     /**
-     * @return successfully request
+     * @return successfully deleted
      */
-    deletePermissionGroup(id: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/Permissions/{id}";
+    delete(id: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/Role/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -2355,11 +2477,11 @@ export class PermissionsService {
         };
 
         return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDeletePermissionGroup(response_);
+            return this.processDelete(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processDeletePermissionGroup(<any>response_);
+                    return this.processDelete(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -2368,7 +2490,172 @@ export class PermissionsService {
         }));
     }
 
-    protected processDeletePermissionGroup(response: HttpResponseBase): Observable<void> {
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("address not found", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class TestService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @return successful
+     */
+    test(): Observable<void> {
+        let url_ = this.baseUrl + "/api/Test";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTest(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTest(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processTest(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @return successfully deleted
+     */
+    deleteInactiveUser(): Observable<void> {
+        let url_ = this.baseUrl + "/api/Test/inactiveuser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteInactiveUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteInactiveUser(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteInactiveUser(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @return successfully deleted
+     */
+    setLastLoginDate(id: number, lastLoginDate: string | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/Test/user/{id}/lastLoginDate/{lastLoginDate}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (lastLoginDate === undefined || lastLoginDate === null)
+            throw new Error("The parameter 'lastLoginDate' must be defined.");
+        url_ = url_.replace("{lastLoginDate}", encodeURIComponent("" + lastLoginDate));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetLastLoginDate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetLastLoginDate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSetLastLoginDate(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2454,134 +2741,6 @@ export class UserLoginService {
             }));
         }
         return _observableOf<string>(<any>null);
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class UserPermissionsService {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
-    }
-
-    /**
-     * @param permissiongroupid (optional) 
-     * @return successfully request
-     */
-    deletePermissionsByUserId(id: number, permissiongroupid?: number | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/UserPermissions/{id}?";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (permissiongroupid === null)
-            throw new Error("The parameter 'permissiongroupid' cannot be null.");
-        else if (permissiongroupid !== undefined)
-            url_ += "permissiongroupid=" + encodeURIComponent("" + permissiongroupid) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDeletePermissionsByUserId(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDeletePermissionsByUserId(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processDeletePermissionsByUserId(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-
-    /**
-     * @param permissiongroupid (optional) 
-     * @return successfully request
-     */
-    addPermissionsByUserId(id: number, permissiongroupid?: number | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/UserPermissions/{id}?";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (permissiongroupid === null)
-            throw new Error("The parameter 'permissiongroupid' cannot be null.");
-        else if (permissiongroupid !== undefined)
-            url_ += "permissiongroupid=" + encodeURIComponent("" + permissiongroupid) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAddPermissionsByUserId(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processAddPermissionsByUserId(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processAddPermissionsByUserId(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("Permission ID und UserID m\u00fcssen gr\u00f6\u00dfer 0 sein.", status, _responseText, _headers);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
     }
 }
 
@@ -2814,6 +2973,59 @@ export class UsersService {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @return successfully found
+     */
+    getAllRolesForUser(id: number): Observable<string[]> {
+        let url_ = this.baseUrl + "/api/Users/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllRolesForUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllRolesForUser(<any>response_);
+                } catch (e) {
+                    return <Observable<string[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllRolesForUser(response: HttpResponseBase): Observable<string[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <string[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string[]>(<any>null);
+    }
 }
 
 export interface AddressDto {
@@ -2847,25 +3059,6 @@ export interface UserDto {
     userLockEnabled: boolean;
     hasPasswordChanged: boolean;
     lastLoginDate: string;
-    permission?: PermissionGroupDto[] | undefined;
-}
-
-export interface PermissionGroupDto {
-    id: number;
-    name?: string | undefined;
-    permissions?: PermissionDto[] | undefined;
-}
-
-export interface PermissionDto {
-    name?: string | undefined;
-    id: number;
-    userRight: UserRight;
-}
-
-export enum UserRight {
-    USER_DELETE = 1,
-    USER_CREATE = 2,
-    USER_MODIFY = 3,
 }
 
 export interface CredentialsDto {
@@ -3055,6 +3248,12 @@ export interface OrganizationCreateDto {
     address?: AddressCreateDto | undefined;
     contact?: ContactPossibilitiesCreateDto | undefined;
     employees?: ContactCreateDto[] | undefined;
+}
+
+export interface RoleDto {
+    id: number;
+    name?: string | undefined;
+    claims?: string[] | undefined;
 }
 
 export interface UserCreateDto {

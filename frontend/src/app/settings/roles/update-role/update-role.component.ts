@@ -3,7 +3,7 @@ import { Validators, FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
 import { DeleteEntryDialogComponent } from '../../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
-import { PermissionGroupDto, PermissionDto } from 'src/app/shared/api-generated/api-generated';
+import { RoleDto } from 'src/app/shared/api-generated/api-generated';
 
 @Component({
   selector: 'app-update-role',
@@ -11,8 +11,8 @@ import { PermissionGroupDto, PermissionDto } from 'src/app/shared/api-generated/
   styleUrls: ['./update-role.component.scss']
 })
 export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogComponent> implements OnInit {
-  permissionGroup: PermissionGroupDto;
-  permissions: PermissionDto[];
+  permissionGroup: RoleDto;
+  permissions: string[];
   public roleForm = this.fb.group({
     id: [''],
     name: ['', Validators.required],
@@ -57,8 +57,8 @@ export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogC
 
   private updateForm(): void {
     const permStrings: string[] = new Array<string>();
-    this.permissionGroup.permissions.forEach(a => {
-      permStrings.push(a.name);
+    this.permissionGroup.claims.forEach(a => {
+      permStrings.push(a);
     });
     this.roleForm.patchValue({
       id: this.permissionGroup.id,
