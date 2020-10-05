@@ -4,7 +4,8 @@ on:
 
 jobs:
   build_frontend:
-    runs-on: windows-latest
+    name: Build Frontend
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -43,7 +44,8 @@ jobs:
           path: frontend/dist/*
 
   build_backend:
-    runs-on: windows-latest
+    name: Build Backend
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -64,6 +66,7 @@ jobs:
           path: backend-dist/*
 
   build_docker:
+    name: Build Docker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -128,8 +131,9 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
 
   build_app:
+    name: Build App (Full-Stack)
     needs: [build_frontend, build_backend]
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Download Backend Artifact
         uses: actions/download-artifact@v2
@@ -150,6 +154,7 @@ jobs:
           path: app/*
 
   test_integration:
+    name: Test Integration
     needs: build_docker
     runs-on: ubuntu-latest
     steps:
@@ -164,6 +169,8 @@ jobs:
       - name: Test
         uses: cypress-io/github-action@v2
         with:
+          browser: chrome
+          headless: true
           working-directory: tests
 
       - name: Collect Report
@@ -190,4 +197,5 @@ jobs:
         with:
           name: test_integration_videos
           path: tests/videos/*
+  #
   # TODO: Cached builds on Push
