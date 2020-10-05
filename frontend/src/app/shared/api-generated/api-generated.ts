@@ -2578,6 +2578,73 @@ export class RoleService {
 @Injectable({
     providedIn: 'root'
 })
+export class StatisticsService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @return successfully found
+     */
+    getVerticalGroupedBarDataByType(id: STATISTICS_VALUES): Observable<VerticalGroupedBarDto[]> {
+        let url_ = this.baseUrl + "/api/Statistics/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetVerticalGroupedBarDataByType(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetVerticalGroupedBarDataByType(<any>response_);
+                } catch (e) {
+                    return <Observable<VerticalGroupedBarDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VerticalGroupedBarDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetVerticalGroupedBarDataByType(response: HttpResponseBase): Observable<VerticalGroupedBarDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <VerticalGroupedBarDto[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VerticalGroupedBarDto[]>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class TestService {
     private http: HttpClient;
     private baseUrl: string;
@@ -3332,6 +3399,21 @@ export interface RoleDto {
     id: number;
     name?: string | undefined;
     claims?: string[] | undefined;
+}
+
+export interface VerticalGroupedBarDto {
+    name?: string | undefined;
+    series?: VerticalGroupedBarDataSet[] | undefined;
+}
+
+export interface VerticalGroupedBarDataSet {
+    name?: string | undefined;
+    value: number;
+}
+
+export enum STATISTICS_VALUES {
+    ALL_CREATED_OBJECTS = 0,
+    INVITED_AND_PARTICIPATED_EVENT_PERSONS = 1,
 }
 
 export interface UserCreateDto {

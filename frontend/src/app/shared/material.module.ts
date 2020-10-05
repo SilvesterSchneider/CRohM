@@ -20,9 +20,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatDividerModule} from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   imports: [
+    NgxChartsModule,
     MatSidenavModule,
     MatToolbarModule,
     MatIconModule,
@@ -48,6 +50,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatProgressSpinnerModule, MatDividerModule
   ],
   exports: [
+    NgxChartsModule,
     MatSidenavModule,
     MatToolbarModule,
     MatIconModule,
