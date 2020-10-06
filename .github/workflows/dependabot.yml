@@ -1,0 +1,23 @@
+name: Dependabot Action
+on:
+  pull_request:
+    branches:
+      - dependabot/**
+
+jobs:
+  dependabot-auto-merge:
+    name: Dependabot Auto-Merge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dependabot Auto Approve
+        uses: hmarr/auto-approve-action@v2.0.0
+        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]' || github.actor == 'dependabot'
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Dependabot Merge Comment
+        uses: thollander/actions-comment-pull-request@master
+        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]' || github.actor == 'dependabot'
+        with:
+          message: "@dependabot merge"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
