@@ -9,6 +9,8 @@ updates:
     directory: "/frontend/"
     schedule:
       interval: "daily"
+      time: "18:00"
+      timezone: "Europe/Berlin"
     assignees:
       - "Pantastisch"
     open-pull-requests-limit: 50
@@ -21,6 +23,8 @@ updates:
     directory: "/backend/"
     schedule:
       interval: "daily"
+      time: "18:00"
+      timezone: "Europe/Berlin"
     assignees:
       - "Pantastisch"
     open-pull-requests-limit: 50
@@ -33,6 +37,8 @@ updates:
     directory: "/tests/"
     schedule:
       interval: "daily"
+      time: "18:00"
+      timezone: "Europe/Berlin"
     assignees:
       - "Pantastisch"
     open-pull-requests-limit: 50
@@ -45,6 +51,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+      time: "18:00"
+      timezone: "Europe/Berlin"
     assignees:
       - "Pantastisch"
     open-pull-requests-limit: 50
@@ -57,6 +65,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+      time: "18:00"
+      timezone: "Europe/Berlin"
     assignees:
       - "Pantastisch"
     open-pull-requests-limit: 50
