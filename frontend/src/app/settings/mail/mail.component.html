@@ -37,8 +37,21 @@
             </div>
         </div>
         <button class="margin" id="saveMail" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!mailsForm.valid"
-                (click)="saveValues()">
-                Speichern
+            (click)="saveValues()">
+            Speichern
         </button>
     </div>
+</div>
+<div class="mydivclass" [formGroup]="sendMailForm">
+    <div class="column">
+        <div class="col-md-3">
+            <mat-form-field class="textMargin">
+                <input matInput placeholder="Ihre E-Mail Adresse" formControlName="address">
+            </mat-form-field>
+        </div>
+    </div>
+    <button class="margin" id="sendMail" mat-raised-button color="primary" title="E-Mail senden" type="submit" [disabled]="!sendMailForm.valid"
+        (click)="sendMail()">
+        E-Mail senden
+    </button>
 </div>

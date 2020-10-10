@@ -27,6 +27,8 @@ namespace ServiceLayer
         public bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
 
         public bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
+
+        Task<bool> SendMailToAddress(string subject, string address, string mailContent);
     }
 
     public class MailService : IMailService
@@ -36,7 +38,10 @@ namespace ServiceLayer
         private static string NAMEFIELD = "<Nachname>";
         private static string EVENTNAMEFIELD = "<Veranstaltungsname>";
         private static string EVENTDATEFIELD = "<Datum>";
+        private static string TESTMAIL = "Test-Email";
         private static string EVENTTIMEFIELD = "<Uhrzeit>";
+        private static string MAILSETUP = "Sehr geehrter Herr Administrator\r\rDie Einstellungen für den Email-Server wurden erfolgreich " +
+            "übernommen\r\rTechnische Hochschule Nürnberg";
         public static string INVITATION_DEF_CONTENT = STARTFIELD + " " + PRENAMEFIELD + " " + NAMEFIELD +
             "\rWir laden Sie herzlich ein zu unserer Veranstaltung \"" + EVENTNAMEFIELD +
             "\" am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr.\rWir freuen uns auf ihre Erscheinen.\rTechnische Hochschule Nürnberg";
@@ -170,6 +175,23 @@ namespace ServiceLayer
                 text += "</p>";
             }
             return SendMail("Einladung zur Veranstaltung", text, address, null, null);
+        }
+
+        public async Task<bool> SendMailToAddress(string subject, string address, string mailContent)
+        {
+            if (string.IsNullOrEmpty(mailContent) && subject.Equals(TESTMAIL))
+            {
+                mailContent = MAILSETUP;
+            }
+            string[] fields = mailContent.Split("\r");
+            string text = string.Empty;
+            foreach (string line in fields)
+            {
+                text += "<p>";
+                text += line;
+                text += "</p>";
+            }
+            return await Task.FromResult(SendMail(subject, text, address, null, null));
         }
     }
 }

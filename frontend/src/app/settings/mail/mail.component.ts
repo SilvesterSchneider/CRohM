@@ -9,6 +9,7 @@ import { MailCredentialsSerializableDto, MailService } from 'src/app/shared/api-
 })
 export class MailComponent implements OnInit {
   mailsForm: FormGroup;
+  sendMailForm: FormGroup;
   mailCredentials: MailCredentialsSerializableDto;
 
   constructor(
@@ -17,9 +18,16 @@ export class MailComponent implements OnInit {
 
   ngOnInit(): void {
     this.mailsForm = this.createForm();
+    this.sendMailForm = this.createSendMailForm();
     this.mailService.getEmailCredentials('1').subscribe(x => {
       this.mailsForm.patchValue(x);
     });
+  }
+
+  createSendMailForm(): FormGroup {
+    return this.fb.group({
+			address: ['', Validators.email],
+		});
   }
 
   createForm(): FormGroup {
@@ -36,5 +44,9 @@ export class MailComponent implements OnInit {
   saveValues() {
     this.mailCredentials = this.mailsForm.value;
     this.mailService.saveMailCredentials(this.mailCredentials).subscribe();
+  }
+
+  sendMail() {
+    this.mailService.sendMail('1', 'Test-Email', this.sendMailForm.get('address').value, '').subscribe();
   }
 }

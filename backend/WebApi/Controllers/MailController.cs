@@ -17,10 +17,12 @@ namespace WebApi.Controllers
     {
         private readonly IMapper _mapper;
         private IEventService eventService;
+        private IMailService mailService;
 
-        public MailController(IMapper mapper, IEventService eventService)
+        public MailController(IMapper mapper, IEventService eventService, IMailService mailService)
         {
             this._mapper = mapper;
+            this.mailService = mailService;
             this.eventService = eventService;
         }
 
@@ -64,6 +66,13 @@ namespace WebApi.Controllers
         {
             await Task.Run(() => MailCredentialsHelper.SaveMailCredentials(new MailCredentials(_mapper.Map<MailCredentialsSerializable>(data))));
             return Ok();
+        }
+
+        [HttpPut("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully send mail")]
+        public async Task<IActionResult> SendMail(string subject, string address, string mailContent)
+        {
+            return Ok(await mailService.SendMailToAddress(subject, address, mailContent));
         }
     }
 }
