@@ -5,7 +5,7 @@
 
 ### STAGE 1: Build Frontend ###
 # base image
-FROM node:14.12.0 as buildFrontend
+FROM node:14.13.1 as buildFrontend
 
 # set working directory
 WORKDIR /usr/src/frontend
