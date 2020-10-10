@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 using NSwag.Annotations;
 using ServiceLayer;
@@ -45,6 +46,24 @@ namespace WebApi.Controllers
         {
             string text = MailService.GetMailForInvitationAsTemplate(eventName, date, time);
             return await Task.FromResult(Ok(text));
+        }
+
+        /// <summary>
+        /// den standart text für die einladung holen.
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(MailCredentialsSerializableDto), Description = "successfully get mail data")]
+        public async Task<IActionResult> GetEmailCredentials()
+        {
+            return await Task.FromResult(Ok(_mapper.Map<MailCredentialsSerializableDto>(new MailCredentialsSerializable(MailCredentialsHelper.GetMailCredentials()))));
+        }
+
+        [HttpPost]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully post mail data")]
+        public async Task<IActionResult> SaveMailCredentials([FromBody] MailCredentialsSerializableDto data)
+        {
+            await Task.Run(() => MailCredentialsHelper.SaveMailCredentials(new MailCredentials(_mapper.Map<MailCredentialsSerializable>(data))));
+            return Ok();
         }
     }
 }

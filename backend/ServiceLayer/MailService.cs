@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using static ModelLayer.Models.Contact;
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Helper;
 
 namespace ServiceLayer
 {
@@ -111,6 +112,7 @@ namespace ServiceLayer
         {
             try
             {
+                MailCredentials mailCredentials = MailCredentialsHelper.GetMailCredentials();
                 MailMessage msg = new MailMessage();
                 string[] str = new string[] { emailAddressRecipient };
                 msg.IsBodyHtml = true;
@@ -119,7 +121,7 @@ namespace ServiceLayer
                 {
                     msg.To.Add(new MailAddress(empf));
                 }
-                msg.From = new MailAddress("crohm_nuernberg@hotmail.com", "CRMS-Team");
+                msg.From = mailCredentials.MailAddress;
                 msg.Subject = subject;
                 msg.Body = body;
 
@@ -129,11 +131,11 @@ namespace ServiceLayer
                 SmtpClient client = new SmtpClient();
                 client.UseDefaultCredentials = false;
 
-                client.Credentials = new System.Net.NetworkCredential("crohm_nuernberg@hotmail.com", "crohm2020");
+                client.Credentials = mailCredentials.NetworkCredential;
 
-                client.Port = 587;
+                client.Port = mailCredentials.Port;
 
-                client.Host = "smtp.office365.com";
+                client.Host = mailCredentials.Host;
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.EnableSsl = true;
                 client.Send(msg);

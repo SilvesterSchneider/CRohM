@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using ModelLayer.Helper;
+using System.Net.Mail;
 
 namespace WebApi
 {
@@ -42,7 +43,7 @@ namespace WebApi
             var database = Configuration["DBName"] ?? "CRMDB"; 
 
             var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
-            //connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
+            connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -136,6 +137,15 @@ namespace WebApi
             dataContext.Database.Migrate();
             ApplicationDbInitializer.SeedRoles(rolesService);
             ApplicationDbInitializer.SeedUsers(userService);
+            MailCredentialsHelper.CheckIfCredentialsExist(
+                new MailCredentials(
+                    new MailAddress(
+                        Configuration["MailAddress"] ?? "",
+                        Configuration["MailDisplayName"] ?? ""),
+                        new System.Net.NetworkCredential(Configuration["MailUserName"] ?? "",
+                        Configuration["MailPassword"] ?? ""),
+                        int.Parse(Configuration["MailPort"] ?? "0"),
+                        Configuration["MailHost"] ?? ""));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
