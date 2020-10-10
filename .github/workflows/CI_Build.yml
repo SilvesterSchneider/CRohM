@@ -104,6 +104,7 @@ jobs:
           SHA_TAG=crohmcrms/crohm_crms:sha-${SHA::7}
           echo SHA_TAG: $SHA_TAG
           echo "::set-output name=SHA_TAG::$SHA_TAG"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@master
 
@@ -163,6 +164,7 @@ jobs:
 
       - name: Start Server
         run: bash ./misc/docker-compose-up.sh
+
       - name: Waiting for Server
         run: bash ./misc/wait-for-server.sh
 
