@@ -7,25 +7,37 @@ using System.Text;
 
 namespace ModelLayer.Helper
 {
-    public class MailCredentialsHelper { 
-
+    public class MailCredentialsHelper {
+        private const string FILENAME = "\\mailCredentials.info";
         private static MailCredentials mailCredentials;
 
+        /// <summary>
+        /// Save the mail credentials into file
+        /// </summary>
+        /// <param name="mailCredentialsIntern">the mail credentials</param>
         public static void SaveMailCredentials(MailCredentials mailCredentialsIntern)
         {
             mailCredentials = mailCredentialsIntern;
-            File.Delete(Directory.GetCurrentDirectory() + "\\mailCredentials.info");
-            WriteToBinaryFile(Directory.GetCurrentDirectory() + "\\mailCredentials.info", new MailCredentialsSerializable(mailCredentialsIntern));
+            File.Delete(Directory.GetCurrentDirectory() + FILENAME);
+            WriteToBinaryFile(Directory.GetCurrentDirectory() + FILENAME, new MailCredentialsSerializable(mailCredentialsIntern, true));
         }
 
+        /// <summary>
+        /// Check if initially the file with data exists.
+        /// </summary>
+        /// <param name="mailCredentialsIntern">the credentials to save if file does not exist</param>
         public static void CheckIfCredentialsExist(MailCredentials mailCredentialsIntern)
         {
-            if (!File.Exists(Directory.GetCurrentDirectory() + "\\mailCredentials.info"))
+            if (!File.Exists(Directory.GetCurrentDirectory() + FILENAME))
             {
                 SaveMailCredentials(mailCredentialsIntern);
             }
         }
 
+        /// <summary>
+        /// Getter for the mail credentials
+        /// </summary>
+        /// <returns></returns>
         public static MailCredentials GetMailCredentials()
         {
             if (mailCredentials == null)
@@ -39,8 +51,7 @@ namespace ModelLayer.Helper
         private static void ReadMailCredentials()
         {
             MailCredentialsSerializable mailCredentialsIntern = ReadFromBinaryFile<MailCredentialsSerializable>(Directory.GetCurrentDirectory() + "\\mailCredentials.info");
-            mailCredentials = new MailCredentials(new MailAddress(mailCredentialsIntern.MailAddress, mailCredentialsIntern.DisplayName),
-                new System.Net.NetworkCredential(mailCredentialsIntern.UserName, mailCredentialsIntern.Password), mailCredentialsIntern.Port, mailCredentialsIntern.Host);
+            mailCredentials = new MailCredentials(mailCredentialsIntern, true);
         }
 
         /// <summary>
@@ -90,19 +101,34 @@ namespace ModelLayer.Helper
         }
     }
 
+    /// <summary>
+    /// The serializable variant of the class containing all necessary information about the mail settings
+    /// </summary>
     [Serializable]
     public class MailCredentialsSerializable
     {
         public MailCredentialsSerializable() { }
 
-        public MailCredentialsSerializable(MailCredentials mailCredentials)
+        public MailCredentialsSerializable(MailCredentials mailCredentials, bool useBase64Encoding = false)
         {
-            MailAddress = mailCredentials.MailAddress.Address;
-            DisplayName = mailCredentials.MailAddress.DisplayName;
-            UserName = mailCredentials.NetworkCredential.UserName;
-            Password = mailCredentials.NetworkCredential.Password;
-            Port = mailCredentials.Port;
-            Host = mailCredentials.Host;
+            if (useBase64Encoding)
+            {
+                MailAddress = Convert.ToBase64String(Encoding.ASCII.GetBytes(mailCredentials.MailAddress.Address));
+                DisplayName = Convert.ToBase64String(Encoding.ASCII.GetBytes(mailCredentials.MailAddress.DisplayName));
+                UserName = Convert.ToBase64String(Encoding.ASCII.GetBytes(mailCredentials.NetworkCredential.UserName));
+                Password = Convert.ToBase64String(Encoding.ASCII.GetBytes(mailCredentials.NetworkCredential.Password));
+                Port = mailCredentials.Port;
+                Host = Convert.ToBase64String(Encoding.ASCII.GetBytes(mailCredentials.Host));
+            }
+            else
+            {
+                MailAddress = mailCredentials.MailAddress.Address;
+                DisplayName = mailCredentials.MailAddress.DisplayName;
+                UserName = mailCredentials.NetworkCredential.UserName;
+                Password = mailCredentials.NetworkCredential.Password;
+                Port = mailCredentials.Port;
+                Host = mailCredentials.Host;
+            }
         }
 
         public string MailAddress { get; private set; }
@@ -113,14 +139,31 @@ namespace ModelLayer.Helper
         public string Host { get; private set; }
     }
 
+    /// <summary>
+    /// The class containing all necessary information about the mail settings.
+    /// </summary>
     public class MailCredentials
     {
-        public MailCredentials(MailCredentialsSerializable mailCredentialsSerializable)
+        public MailCredentials(MailCredentialsSerializable mailCredentialsSerializable, bool useBase64Decoding = false)
         {
-            MailAddress = new MailAddress(mailCredentialsSerializable.MailAddress, mailCredentialsSerializable.DisplayName);
-            NetworkCredential = new NetworkCredential(mailCredentialsSerializable.UserName, mailCredentialsSerializable.Password);
-            Port = mailCredentialsSerializable.Port;
-            Host = mailCredentialsSerializable.Host;
+            if (useBase64Decoding)
+            {
+                MailAddress = new MailAddress(Encoding.ASCII.GetString(Convert.FromBase64String(mailCredentialsSerializable.MailAddress)),
+                Encoding.ASCII.GetString(Convert.FromBase64String(mailCredentialsSerializable.DisplayName)));
+                NetworkCredential = new NetworkCredential(Encoding.ASCII.GetString(Convert.FromBase64String(mailCredentialsSerializable.UserName)),
+                    Encoding.ASCII.GetString(Convert.FromBase64String(mailCredentialsSerializable.Password)));
+                Port = mailCredentialsSerializable.Port;
+                Host = Encoding.ASCII.GetString(Convert.FromBase64String(mailCredentialsSerializable.Host));
+            }
+            else
+            {
+                MailAddress = new MailAddress(mailCredentialsSerializable.MailAddress,
+                    mailCredentialsSerializable.DisplayName);
+                NetworkCredential = new NetworkCredential(mailCredentialsSerializable.UserName,
+                   mailCredentialsSerializable.Password);
+                Port = mailCredentialsSerializable.Port;
+                Host = mailCredentialsSerializable.Host;
+            }
         }
 
         public MailCredentials(MailAddress mailAddress, NetworkCredential networkCredential, int port, string host)

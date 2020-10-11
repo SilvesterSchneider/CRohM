@@ -166,7 +166,12 @@ namespace ServiceLayer
                 start = "Sehr geehrt";
             }
             string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
-            string[] fields = finishedcontent.Split("\r");
+            return SendFormattedMail("Einladung zur Veranstaltung", finishedcontent, address, null, null);
+        }
+
+        private bool SendFormattedMail(string subject, string body, string emailAddressRecipient, Stream attachment, string attachmentType)
+        {
+            string[] fields = body.Split("\r");
             string text = string.Empty;
             foreach (string line in fields)
             {
@@ -174,7 +179,7 @@ namespace ServiceLayer
                 text += line;
                 text += "</p>";
             }
-            return SendMail("Einladung zur Veranstaltung", text, address, null, null);
+            return SendMail(subject, text, emailAddressRecipient, attachment, attachmentType);
         }
 
         public async Task<bool> SendMailToAddress(string subject, string address, string mailContent)
@@ -183,15 +188,7 @@ namespace ServiceLayer
             {
                 mailContent = MAILSETUP;
             }
-            string[] fields = mailContent.Split("\r");
-            string text = string.Empty;
-            foreach (string line in fields)
-            {
-                text += "<p>";
-                text += line;
-                text += "</p>";
-            }
-            return await Task.FromResult(SendMail(subject, text, address, null, null));
+            return await Task.FromResult(SendFormattedMail(subject, mailContent, address, null, null));
         }
     }
 }

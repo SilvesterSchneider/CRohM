@@ -51,7 +51,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// den standart text für die einladung holen.
+        /// die mail einstellungen holen
         /// <returns></returns>
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(MailCredentialsSerializableDto), Description = "successfully get mail data")]
@@ -60,6 +60,11 @@ namespace WebApi.Controllers
             return await Task.FromResult(Ok(_mapper.Map<MailCredentialsSerializableDto>(new MailCredentialsSerializable(MailCredentialsHelper.GetMailCredentials()))));
         }
 
+        /// <summary>
+        /// Die mail einstellungen speichern.
+        /// </summary>
+        /// <param name="data">die einstellungen</param>
+        /// <returns></returns>
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully post mail data")]
         public async Task<IActionResult> SaveMailCredentials([FromBody] MailCredentialsSerializableDto data)
@@ -68,6 +73,13 @@ namespace WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Eine freie mail senden
+        /// </summary>
+        /// <param name="subject">betreff</param>
+        /// <param name="address">adresse des empfängers</param>
+        /// <param name="mailContent">der mail inhalt</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully send mail")]
         public async Task<IActionResult> SendMail(string subject, string address, string mailContent)

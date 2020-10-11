@@ -44,6 +44,14 @@ export class JwtService {
   }
 
   public isDatenschutzbeauftragter(): boolean {
+    return this.isInRole('Datenschutzbeauftragter');
+  }
+
+  public isAdmin(): boolean {
+    return this.isInRole('Admin');
+  }
+
+  public isInRole(roleToCheck: string): boolean {
     const jwt = localStorage.getItem(JwtService.LS_KEY);
 
     if (jwt != null && jwt.length > 0 && jwt.indexOf('.') < jwt.lastIndexOf('.')) {
@@ -51,7 +59,7 @@ export class JwtService {
       text = text.substr(0, text.indexOf('.'));
       const decodedText = atob(text);
       const obj = JSON.parse(decodedText);
-      return obj.role?.includes('Datenschutzbeauftragter');
+      return obj.role?.includes(roleToCheck);
     } else {
       return false;
     }

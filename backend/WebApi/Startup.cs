@@ -140,12 +140,12 @@ namespace WebApi
             MailCredentialsHelper.CheckIfCredentialsExist(
                 new MailCredentials(
                     new MailAddress(
-                        Configuration["MailAddress"] ?? "crohm_nuernberg@hotmail.com",
+                        Configuration["MailAddress"] ?? "a@b.com",
                         Configuration["MailDisplayName"] ?? "CRMS-Team"),
-                        new System.Net.NetworkCredential(Configuration["MailUserName"] ?? "crohm_nuernberg@hotmail.com",
-                        Configuration["MailPassword"] ?? "crohm2020"),
+                        new System.Net.NetworkCredential(Configuration["MailUserName"] ?? "c@d.com",
+                        Configuration["MailPassword"] ?? "password"),
                         int.Parse(Configuration["MailPort"] ?? "587"),
-                        Configuration["MailHost"] ?? "smtp.office365.com"));
+                        Configuration["MailHost"] ?? "smtp.a.com"));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
