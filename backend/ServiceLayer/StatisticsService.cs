@@ -13,17 +13,22 @@ namespace ServiceLayer
     {
         Task<List<VerticalGroupedBarDto>> GetInvitedAndParticipatedRelationOfEvents();
         Task<List<VerticalGroupedBarDto>> GetAllCreatedObjects();
+        Task<List<VerticalGroupedBarDto>> GetAllTags();
     }
 
     public class StatisticsService : IStatisticsService
     {
         private IEventService eventService;
         private IModificationEntryService modService;
+        private IContactService contactService;
+        private IOrganizationService organizationService;
 
-        public StatisticsService(IEventService eventService, IModificationEntryService modService)
+        public StatisticsService(IEventService eventService, IModificationEntryService modService, IContactService contactService, IOrganizationService organizationService)
         {
             this.eventService = eventService;
             this.modService = modService;
+            this.organizationService = organizationService;
+            this.contactService = contactService;
         }
 
         public async Task<List<VerticalGroupedBarDto>> GetAllCreatedObjects()
@@ -76,6 +81,53 @@ namespace ServiceLayer
                 }
             }
             return list;
+        }
+
+        public async Task<List<VerticalGroupedBarDto>> GetAllTags()
+        {
+            List<VerticalGroupedBarDto> list = new List<VerticalGroupedBarDto>();
+            foreach (Contact contact in await contactService.GetAllContactsWithAllIncludesAsync())
+            {
+                foreach (Tag tag in contact.Tags)
+                {
+                    await CheckTagInternally(tag, list, MODEL_TYPE.CONTACT);
+                }
+            }
+            foreach (Organization organization in await organizationService.GetAllOrganizationsWithIncludesAsync())
+            {
+                foreach (Tag tag in organization.Tags)
+                {
+                    await CheckTagInternally(tag, list, MODEL_TYPE.ORGANIZATION);
+                }
+            }
+            foreach (Event EventCheck in await eventService.GetAllEventsWithAllIncludesAsync())
+            {
+                foreach (Tag tag in EventCheck.Tags)
+                {
+                    await CheckTagInternally(tag, list, MODEL_TYPE.EVENT);
+                }
+            }
+            return list;
+        }
+
+        private async Task CheckTagInternally(Tag tag, List<VerticalGroupedBarDto> list, MODEL_TYPE model)
+        {
+            await Task.Run(() =>
+            {
+                VerticalGroupedBarDto vDto = list.FirstOrDefault(a => a.Name.Equals(tag.Name));
+                if (vDto == null)
+                {
+                    vDto = new VerticalGroupedBarDto() { Name = tag.Name };
+                    list.Add(vDto);
+                }
+                VerticalGroupedBarDataSet vEntry = vDto.Series.FirstOrDefault(a => a.Name.Equals(Enum.GetName(typeof(MODEL_TYPE), model)));
+                if (vEntry == null)
+                {
+                    vEntry = new VerticalGroupedBarDataSet() { Name = Enum.GetName(typeof(MODEL_TYPE), model), Value = 0 };
+                    vDto.Series.Add(vEntry);
+                }
+                vEntry.Value++;
+            });
         }
     }
 }

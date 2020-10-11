@@ -3527,6 +3527,7 @@ export interface VerticalGroupedBarDataSet {
 export enum STATISTICS_VALUES {
     ALL_CREATED_OBJECTS = 0,
     INVITED_AND_PARTICIPATED_EVENT_PERSONS = 1,
+    ALL_TAGS = 2,
 }
 
 export interface UserCreateDto {

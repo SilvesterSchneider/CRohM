@@ -21,6 +21,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatDividerModule} from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     MatToolbarModule,
     MatTabsModule,
     MatChipsModule,
+    MatRadioModule,
     MatProgressSpinnerModule, MatDividerModule
   ],
   exports: [
@@ -72,6 +74,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     MatDialogModule,
     MatCheckboxModule,
     MatChipsModule,
+    MatRadioModule,
     MatProgressSpinnerModule, MatDividerModule
   ]
 })

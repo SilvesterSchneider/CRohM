@@ -18,7 +18,8 @@ import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-
     HttpClientModule,
     MaterialModule,
     FlexLayoutModule],
-  declarations: [OsmAddressComponent, ContactPossibilitiesComponent, AddHistoryComponent, TagsFilterComponent, VerticalGroupedBarChartComponent],
+  declarations: [OsmAddressComponent, ContactPossibilitiesComponent, AddHistoryComponent, TagsFilterComponent,
+     VerticalGroupedBarChartComponent],
   exports: [
     CommonModule,
     FormsModule,
