@@ -1,0 +1,24 @@
+name: Cancel
+on:
+  push:
+
+jobs:
+  cancel_ci_build:
+    name: Cancel Outdated CI Builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          # https://api.github.com/repos/SilvesterSchneider/CRohM/actions/workflows
+          workflow_id: 1903067
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
+  cancel_pr_build:
+    name: Cancel Outdated PR Builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          # https://api.github.com/repos/SilvesterSchneider/CRohM/actions/workflows
+          workflow_id: 1915134
+          access_token: ${{ secrets.GITHUB_TOKEN }}

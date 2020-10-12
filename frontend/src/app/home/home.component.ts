@@ -1,21 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ContactService, OrganizationService, ContactDto, OrganizationDto, EventDto, EventService,
   ModificationEntryService, MODEL_TYPE, MODIFICATION, ModificationEntryDto, AddressDto,
   ContactPossibilitiesDto,
   ParticipatedDto,
   HistoryElementDto,
-  UserLoginService} from '../shared/api-generated/api-generated';
+  UserLoginService, GenderTypes, DataProtectionService} from '../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts/contacts-info/contacts-info.component';
 import { EventsInfoComponent } from '../events/events-info/events-info.component';
 import { OrganizationsInfoComponent } from '../organizations/organizations-info/organizations-info.component';
 import { JwtService } from '../shared/jwt.service';
+import { ActivatedRoute } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { DpDisclaimerDialogComponent } from '../shared/data-protection';
 
 export class ContactExtended implements ContactDto {
   id: number;
   description?: string;
   organizations?: OrganizationDto[];
   events?: EventDto[];
+  gender: GenderTypes;
+  contactPartner: string;
   history?: HistoryElementDto[];
   name?: string;
   preName?: string;
@@ -59,19 +64,30 @@ export class HomeComponent implements OnInit {
   public events: EventExtended[] = new Array<EventExtended>();
   AMOUNT_OF_DATASETS = 2;
   public lastLogin: string;
+
   private weekDays: string[] = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
   constructor(
-    private contactsService: ContactService,
-    private organizationService: OrganizationService,
-    private eventsService: EventService,
-    private modificationEntryService: ModificationEntryService,
-    private dialog: MatDialog,
-    private userLoginService: UserLoginService,
-    private jwt: JwtService) { }
+    private readonly contactsService: ContactService,
+    private readonly organizationService: OrganizationService,
+    private readonly eventsService: EventService,
+    private readonly modificationEntryService: ModificationEntryService,
+    private readonly dialog: MatDialog,
+    private readonly userLoginService: UserLoginService,
+    private readonly jwt: JwtService,
+    private readonly route: ActivatedRoute,
+    private readonly dataProtectionService: DataProtectionService ) { }
 
-  ngOnInit() {
-    this.modificationEntryService.getSortedListByType(MODEL_TYPE.CONTACT).subscribe(x => {
+  public ngOnInit(): void {
+     this.checkIfComingFromLogin().then(isLogin => {
+       if (isLogin){
+        this.dataProtectionService.isThereAnyDataProtectionOfficerInTheSystem()
+        .subscribe({next: () => {}, error: () =>
+        this.dialog.open(DpDisclaimerDialogComponent)});
+       }
+     });
+
+     this.modificationEntryService.getSortedListByType(MODEL_TYPE.CONTACT).subscribe(x => {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
@@ -82,7 +98,7 @@ export class HomeComponent implements OnInit {
         }
       });
     });
-    this.modificationEntryService.getSortedListByType(MODEL_TYPE.ORGANIZATION).subscribe(x => {
+     this.modificationEntryService.getSortedListByType(MODEL_TYPE.ORGANIZATION).subscribe(x => {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
@@ -93,7 +109,7 @@ export class HomeComponent implements OnInit {
         }
       });
     });
-    this.modificationEntryService.getSortedListByType(MODEL_TYPE.EVENT).subscribe(x => {
+     this.modificationEntryService.getSortedListByType(MODEL_TYPE.EVENT).subscribe(x => {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
@@ -104,26 +120,47 @@ export class HomeComponent implements OnInit {
         }
       });
     });
-    this.userLoginService.getTheLastLoginTimeOfUserById(this.jwt.getUserId()).subscribe(x => this.lastLogin = this.getDate(x));
+     this.userLoginService.getTheLastLoginTimeOfUserById(this.jwt.getUserId())
+    .subscribe(lastLogin => this.lastLogin = this.getDate(lastLogin));
   }
 
-  getDate(x: string): string {
-    const date = new Date(x);
+  public openContactDetails(contactId: number) {
+    this.contactsService.getById(contactId).subscribe(x => this.dialog.open(ContactsInfoComponent, {data: x}));
+  }
+
+  public openOrganizationDetails(organizationId: number) {
+    this.organizationService.getById(organizationId).subscribe(x => this.dialog.open(OrganizationsInfoComponent, {data: x}));
+  }
+
+  public openEventDetails(eventId: number) {
+    this.eventsService.getById(eventId).subscribe(x => this.dialog.open(EventsInfoComponent, {data: x}));
+  }
+
+  private checkIfComingFromLogin(): Promise<boolean>{
+    return new Promise(resolve => {
+      this.route.queryParams.pipe(
+        filter(params => params.from))
+      .subscribe(params => resolve(params.from === 'login'));
+    });
+  }
+
+  private getDate(lastLogin: string): string {
+    const date = new Date(lastLogin);
     return this.weekDays[date.getDay()] + ' den ' + date.getDate().toString() + '-' + (date.getMonth() + 1).toString()
       + '-' + date.getFullYear().toString() + ' um ' + date.getHours().toString() + ':' + date.getMinutes().toString()
       + '.' + date.getSeconds().toString() + ' Uhr';
   }
 
-  addEvent(entry: ModificationEntryDto) {
-    this.eventsService.getById(entry.dataModelId).subscribe(y => {
+  private addEvent(entry: ModificationEntryDto) {
+    this.eventsService.getById(entry.dataModelId).subscribe(event => {
           this.events.push({
-            date: y.date,
-            time: y.time,
-            duration: y.duration,
-            name: y.name,
-            id: y.id,
-            contacts: y.contacts,
-            participated: y.participated,
+            date: event.date,
+            time: event.time,
+            duration: event.duration,
+            name: event.name,
+            id: event.id,
+            contacts: event.contacts,
+            participated: event.participated,
             userName: entry.user?.userName,
             created: entry.modificationType === MODIFICATION.CREATED
           });
@@ -131,7 +168,7 @@ export class HomeComponent implements OnInit {
       );
   }
 
-  addOrganization(entry: ModificationEntryDto) {
+  private addOrganization(entry: ModificationEntryDto) {
     this.organizationService.getById(entry.dataModelId).subscribe(y => {
           this.organizations.push({
             address: y.address,
@@ -147,12 +184,14 @@ export class HomeComponent implements OnInit {
       );
   }
 
-  addContact(entry: ModificationEntryDto) {
+  private addContact(entry: ModificationEntryDto) {
     this.contactsService.getById(entry.dataModelId).subscribe(y =>
       this.contacts.push({
         address: y.address,
         contactPossibilities: y.contactPossibilities,
         name: y.name,
+        gender: y.gender,
+        contactPartner: y.contactPartner,
         preName: y.preName,
         id: y.id,
         description: y.description,
@@ -162,17 +201,5 @@ export class HomeComponent implements OnInit {
         userName: entry.user?.userName,
         created: entry.modificationType === MODIFICATION.CREATED
     }));
-  }
-
-  openContactDetails(contactId: number) {
-    this.contactsService.getById(contactId).subscribe(x => this.dialog.open(ContactsInfoComponent, {data: x}));
-  }
-
-  openOrganizationDetails(organizationId: number) {
-    this.organizationService.getById(organizationId).subscribe(x => this.dialog.open(OrganizationsInfoComponent, {data: x}));
-  }
-
-  openEventDetails(eventId: number) {
-    this.eventsService.getById(eventId).subscribe(x => this.dialog.open(EventsInfoComponent, {data: x}));
   }
 }

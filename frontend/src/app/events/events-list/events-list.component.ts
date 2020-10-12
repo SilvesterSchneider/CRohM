@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ModuleWithComponentFactories } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EventService, ParticipatedDto, ContactDto } from '../../shared/api-generated/api-generated';
+import { EventService, ParticipatedDto, ContactDto, TagDto } from '../../shared/api-generated/api-generated';
 import { EventDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { EventsAddComponent } from '../events-add/events-add.component';
@@ -10,12 +10,14 @@ import { EventsInfoComponent } from '../events-info/events-info.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { JwtService } from 'src/app/shared/jwt.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
 
 export class EventDtoGroup implements EventDto {
   id: number;
   date: string;
   time: string;
   name?: string;
+  tags: TagDto[];
   duration: number;
   contacts?: ContactDto[];
   participated?: ParticipatedDto[];
@@ -30,8 +32,11 @@ export class EventDtoGroup implements EventDto {
 })
 
 export class EventsListComponent implements OnInit {
+  @ViewChild(TagsFilterComponent, { static: true })
+	tagsFilter: TagsFilterComponent;
   @ViewChild(MatSort) sort: MatSort;
   events: Observable<EventDto[]>;
+  allEvents: EventDtoGroup[] = new Array<EventDtoGroup>();
   displayedColumns = ['bezeichnung', 'datum', 'uhrzeit', 'action'];
   public dataSource: EventDtoGroup[] = new Array<EventDtoGroup>();
   checkboxSelected = true;
@@ -60,8 +65,18 @@ export class EventsListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
     this.init();
     this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
+  }
+
+  applyTagFilter() {
+    this.dataSourceFiltered = new MatTableDataSource<EventDtoGroup>();
+    this.allEvents.forEach(x => {
+      if (this.tagsFilter.areAllTagsIncluded(x.tags)) {
+        this.dataSourceFiltered.data.push(x);
+      }
+    });
   }
 
   private init() {
@@ -70,6 +85,7 @@ export class EventsListComponent implements OnInit {
       const xSort: EventDto[] = y.sort(this.funtionGetSortedData);
       this.filterValues(xSort);
       this.length = y.length;
+      this.applyTagFilter();
     });
   }
 
@@ -92,7 +108,7 @@ export class EventsListComponent implements OnInit {
 
   callEdit(id: number) {
     this.service.getById(id).subscribe(x => {
-      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true });
+      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, minWidth: '450px' });
       dialogRef.afterClosed().subscribe(y => this.init());
     });
   }
@@ -126,6 +142,7 @@ export class EventsListComponent implements OnInit {
 
   filterValues(events: EventDto[]) {
     this.dataSource = [];
+    this.allEvents = new Array<EventDtoGroup>();
     this.weekNumber = 0;
     let eventsFiltered: EventDto[] = new Array<EventDto>();
     if (this.checkboxSelected) {
@@ -141,6 +158,19 @@ export class EventsListComponent implements OnInit {
           date: x.date,
           duration: x.duration,
           id: x.id,
+          tags: x.tags,
+          time: x.time,
+          contacts: x.contacts,
+          name: x.name,
+          participated: x.participated,
+          weekNumber: week,
+          isGroupBy: true
+        });
+        this.allEvents.push({
+          date: x.date,
+          duration: x.duration,
+          id: x.id,
+          tags: x.tags,
           time: x.time,
           contacts: x.contacts,
           name: x.name,
@@ -149,8 +179,21 @@ export class EventsListComponent implements OnInit {
           isGroupBy: true
         });
       }
+      this.allEvents.push({
+        date: x.date,
+        tags: x.tags,
+        duration: x.duration,
+        id: x.id,
+        time: x.time,
+        contacts: x.contacts,
+        name: x.name,
+        participated: x.participated,
+        weekNumber: 0,
+        isGroupBy: false
+      });
       this.dataSource.push({
         date: x.date,
+        tags: x.tags,
         duration: x.duration,
         id: x.id,
         time: x.time,
@@ -161,6 +204,7 @@ export class EventsListComponent implements OnInit {
         isGroupBy: false
       });
     });
+    this.tagsFilter.updateTagsInAutofill(this.allEvents);
     this.dataSourceFiltered.data = this.dataSource;
   }
 

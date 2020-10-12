@@ -31,12 +31,12 @@ export class LoginComponent {
     );
   }
 
-  redirect() {
+  private redirect() {
     if (this.user.hasPasswordChanged) {
-      this.router.navigate([''], { relativeTo: this.route });
+      this.router.navigate([''], { relativeTo: this.route, queryParams: {from: 'login'} });
     } else {
       this.matDialog = this.dialog.open(ChangePasswordComponent, { data: this.user, disableClose: true });
-      this.matDialog.afterClosed().subscribe(x => this.router.navigate([''], { relativeTo: this.route }));
+      this.matDialog.afterClosed().subscribe(x => this.router.navigate([''], { relativeTo: this.route, queryParams: {from: 'login'} }));
     }
   }
 

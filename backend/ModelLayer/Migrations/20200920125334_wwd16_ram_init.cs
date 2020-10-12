@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class init_ram_fix_roles : Migration
+    public partial class wwd16_ram_init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -204,6 +204,8 @@ namespace ModelLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
+                    Gender = table.Column<int>(nullable: false),
+                    ContactPartner = table.Column<string>(nullable: true),
                     PreName = table.Column<string>(nullable: true),
                     AddressId = table.Column<long>(nullable: true),
                     ContactPossibilitiesId = table.Column<long>(nullable: true)
@@ -263,6 +265,7 @@ namespace ModelLayer.Migrations
                     Description = table.Column<string>(nullable: true),
                     ContactId = table.Column<long>(nullable: false),
                     HasParticipated = table.Column<bool>(nullable: false),
+                    WasInvited = table.Column<bool>(nullable: false),
                     EventId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
@@ -512,7 +515,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "8f52c5f2-5faf-4aa4-97aa-d554498b83fb", "Admin", "ADMIN" });
+                values: new object[] { 1L, "d77fb6b8-8596-411d-a45f-48c17d49b24e", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",

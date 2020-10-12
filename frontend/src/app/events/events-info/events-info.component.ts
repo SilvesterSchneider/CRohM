@@ -13,6 +13,7 @@ export class ContactDtoExtended {
   preName: string;
   name: string;
   participated: boolean;
+  wasInvited: boolean;
 }
 
 @Component({
@@ -26,7 +27,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   event: EventDto;
   eventsForm: FormGroup;
   dataHistory: ModificationEntryDto[] = new Array<ModificationEntryDto>();
-  columnsContacts = ['participated', 'prename', 'name'];
+  columnsContacts = ['wasInvited', 'participated', 'prename', 'name'];
   tags: TagDto[] = new Array<TagDto>();
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
@@ -64,7 +65,8 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
           id: x.id,
           preName: x.preName,
           name: x.name,
-          participated: false
+          participated: false,
+          wasInvited: false
         });
       });
     }
@@ -73,6 +75,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
         const cont: ContactDtoExtended = this.contacts.find(y => y.id === x.contactId);
         if (cont != null) {
           cont.participated = x.hasParticipated;
+          cont.wasInvited = x.wasInvited;
         }
       });
     }

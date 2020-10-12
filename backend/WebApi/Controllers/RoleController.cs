@@ -74,10 +74,6 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
         public async Task<IActionResult> Put(RoleDto roleToUpdate)
         {
-            if (roleToUpdate.Name.Equals(RoleClaims.ADMIN_GROUP))
-            {
-                return Ok();
-            }
             var resut = await roleService.UpdateRoleWithClaimsAsync(roleToUpdate);
             if (resut == IdentityResult.Success)
             {
@@ -112,7 +108,7 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
         public async Task<IActionResult> Delete(long id)
         {
-            if (id == 1)
+            if (id == 1 || id == 2)
             {
                 return Ok(); ;
             }

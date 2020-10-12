@@ -15,7 +15,7 @@ namespace ModelLayer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7")
+                .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -163,11 +163,17 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("AddressId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("ContactPartner")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("ContactPossibilitiesId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -466,6 +472,9 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("WasInvited")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EventId");
@@ -505,24 +514,9 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-<<<<<<< HEAD
-                            ConcurrencyStamp = "042e8ffb-93f4-4e81-8047-185e3bd5ddd5",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN",
-                            UserRight = 0
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            ConcurrencyStamp = "3e53ec8d-e5cd-47b7-9b85-f098bf46485b",
-                            Name = "DeleteUser",
-                            NormalizedName = "DELETEUSER",
-                            UserRight = 0
-=======
-                            ConcurrencyStamp = "8f52c5f2-5faf-4aa4-97aa-d554498b83fb",
+                            ConcurrencyStamp = "d77fb6b8-8596-411d-a45f-48c17d49b24e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
->>>>>>> 2f7fe36f5b41f64229b5196b868fde44da257158
                         });
                 });
 

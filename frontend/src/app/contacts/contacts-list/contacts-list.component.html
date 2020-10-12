@@ -1,24 +1,25 @@
 <!-- Copyright (c) 2019 Christ Electronic System GmbH -->
 <!-- All Rights Reserved. -->
 <mat-toolbar>
-    <mat-toolbar-row>
+    <mat-toolbar-row class="tabrow">
         <span>Kontakte</span>
         <span class="spacer"></span>
+        <app-tags-filter></app-tags-filter>
         <mat-form-field>
             <mat-label>Suche</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
+            <input class="input" matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
         </mat-form-field>
-        <button class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Kontakt hinzufügen" (click)="addDummyContact()">
+        <button id="addDummyButton" class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Kontakt hinzufügen" (click)="addDummyContact()">
             <mat-icon>add</mat-icon> Dummy Kontakt hinzufügen
         </button>
-        <button class="button" button="submit" mat-mini-fab color="primary" (click)="openAddDialog()">
+        <button id="addButton" class="button" button="submit" mat-mini-fab color="primary" (click)="openAddDialog()">
             <mat-icon>add</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
 
 <div fxLayout="column" fxLayoutGap="100px">
-    <mat-table #table [dataSource]="dataSource">
+    <mat-table id="contactsTable" #table [dataSource]="dataSource">
         <ng-container matColumnDef="vorname">
             <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.preName}}
@@ -66,10 +67,10 @@
                 <a (click)="openDisclosureDialog(element.id)" type="button">
                     <mat-icon color="primary" class="icon">description</mat-icon>
                 </a>
-                <a (click)="openEditDialog(element)" type="button">
+                <a class="editButton" (click)="openEditDialog(element)" type="button">
                     <mat-icon color="primary" class="icon">edit</mat-icon>
                 </a>
-                <a (click)="openInfo(element.id)" type="button">
+                <a class="infoButton" (click)="openInfo(element.id)" type="button">
                     <mat-icon color="primary" title="Kontaktinformationen anzeigen" class="icon">list</mat-icon>
                 </a>
                 <a (click)="addNote(element.id)" type="button">

@@ -2,6 +2,7 @@ using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ModelLayer.Helper
@@ -29,7 +30,33 @@ namespace ModelLayer.Helper
             CompareTagFields(listEntries, oldEvent.Tags, newEvent.Tags, newEvent.Id, MODEL_TYPE.EVENT, userOfModification);
             GetContactsChangeOfEvents(oldEvent.Contacts, newEvent.Contacts, newEvent.Id, userOfModification, listEntries);
             GetParticipatedChangesOfEvent(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id, contactsParticipated);
+            GetInvitationChangedOfEvents(oldEvent.Participated, newEvent.Participated, listEntries, userOfModification, newEvent.Id, contactsParticipated);
             listWithCreation = listEntries;
+        }
+
+        /// <summary>
+        /// Check if the invitations changed.
+        /// </summary>
+        /// <param name="participatedOld">the old participated</param>
+        /// <param name="participatedNew">the new participated</param>
+        /// <param name="listEntries">the list with modification entries</param>
+        /// <param name="userOfModification">the user who performed the change</param>
+        /// <param name="modelId">the model id</param>
+        /// <param name="contactsParticipated">the contacts</param>
+        private static void GetInvitationChangedOfEvents(List<Participated> participatedOld, List<ParticipatedDto> participatedNew, List<ModificationEntry> listEntries, User userOfModification, long modelId, List<Contact> contactsParticipated)
+        {
+            foreach (ParticipatedDto part in participatedNew)
+            {
+                if (part.WasInvited)
+                {
+                    Participated partToCheck = participatedOld.FirstOrDefault(a => a.ContactId == part.ContactId);
+                    if (partToCheck == null || !partToCheck.WasInvited)
+                    {
+                        listEntries.Add(GetNewModificationEntry(contactsParticipated.FirstOrDefault(b => b.Id == part.ContactId).PreName + " " + contactsParticipated.FirstOrDefault(b => b.Id == part.ContactId).Name,
+                            string.Empty, modelId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, userOfModification, MODIFICATION.MODIFIED));
+                    }
+                }                               
+            }
         }
 
         /// <summary>
@@ -201,6 +228,32 @@ namespace ModelLayer.Helper
             CompareTagFields(listCreation, oldContact.Tags, newContact.Tags, newContact.Id, MODEL_TYPE.CONTACT, userOfModification);
             listCreation.AddRange(GetModificationsForAddressObject(oldContact.Address, newContact.Address, newContact.Id, userOfModification, MODEL_TYPE.CONTACT));
             GetModificationsForContactPossibilitiesObject(oldContact.ContactPossibilities, newContact.ContactPossibilities, newContact.Id, userOfModification, deleteEntries, listCreation, listDeletion, MODEL_TYPE.CONTACT, nextNewId);
+            listWithCreation = listCreation;
+            listWithDeletion = listDeletion;
+        }
+
+        public static void CompareEventInvitations(List<EventContact> contacts, long eventId, List<Participated> participated, List<long> contactIds, User usernameOfModification, out List<ModificationEntry> listWithCreation, out List<ModificationEntry> listWithDeletion)
+        {
+            List<ModificationEntry> listCreation = new List<ModificationEntry>();
+            List<ModificationEntry> listDeletion = new List<ModificationEntry>();
+            foreach (Participated part in participated)
+            {
+                if (contactIds.FirstOrDefault(a => part.ContactId == a) == 0)
+                {
+                    listDeletion.Add(GetNewModificationEntry(string.Empty, contacts.FirstOrDefault(b => b.ContactId == part.ContactId).Contact.Name, eventId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, usernameOfModification, MODIFICATION.DELETED));
+                }
+            }
+            foreach (long id in contactIds)
+            {
+                if (participated.FirstOrDefault(a => a.ContactId == id) == null)
+                {
+                    listCreation.Add(GetNewModificationEntry(contacts.FirstOrDefault(b => b.ContactId == id).Contact.Name, string.Empty, eventId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, usernameOfModification, MODIFICATION.CREATED));
+                }
+                else if (!participated.FirstOrDefault(a => a.ContactId == id).WasInvited)
+                {
+                    listCreation.Add(GetNewModificationEntry(contacts.FirstOrDefault(b => b.ContactId == id).Contact.Name, string.Empty, eventId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, usernameOfModification, MODIFICATION.MODIFIED));
+                }
+            }
             listWithCreation = listCreation;
             listWithDeletion = listDeletion;
         }
