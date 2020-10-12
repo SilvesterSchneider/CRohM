@@ -57,11 +57,11 @@ export class TagsComponent implements OnInit {
   }
 
   sortFunction(firstObject: VerticalGroupedBarDto, secondObject: VerticalGroupedBarDto): number {
-    let searchText = MODEL_TYPE[MODEL_TYPE.CONTACT];
+    let searchText = 'Kontakt';
     if (this.valueOrganizations) {
-      searchText = MODEL_TYPE[MODEL_TYPE.ORGANIZATION];
+      searchText = 'Organisation';
     } else if (this.valueEvents) {
-      searchText = MODEL_TYPE[MODEL_TYPE.EVENT];
+      searchText = 'Veranstaltung';
     }
     const vertA: VerticalGroupedBarDataSet = firstObject.series.find(a => a.name === searchText);
     const vertB: VerticalGroupedBarDataSet = secondObject.series.find(a => a.name === searchText);

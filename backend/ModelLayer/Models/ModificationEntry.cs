@@ -1,5 +1,6 @@
 using ModelLayer.Models.Base;
 using System;
+using System.Runtime.Serialization;
 
 namespace ModelLayer.Models
 {
@@ -37,8 +38,13 @@ namespace ModelLayer.Models
     /// </summary>
     public enum MODEL_TYPE
     {
+        [EnumMember(Value = "Kontakt")]
         CONTACT,
+
+        [EnumMember(Value = "Organisation")]
         ORGANIZATION,
+
+        [EnumMember(Value = "Veranstaltung")]
         EVENT
     }
 

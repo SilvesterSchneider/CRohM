@@ -1,8 +1,10 @@
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using static ModelLayer.DataTransferObjects.StatisticsDto;
@@ -120,10 +122,11 @@ namespace ServiceLayer
                     vDto = new VerticalGroupedBarDto() { Name = tag.Name };
                     list.Add(vDto);
                 }
-                VerticalGroupedBarDataSet vEntry = vDto.Series.FirstOrDefault(a => a.Name.Equals(Enum.GetName(typeof(MODEL_TYPE), model)));
+                string enumName = EnumHelper.GetEnumMemberValue(model);
+                VerticalGroupedBarDataSet vEntry = vDto.Series.FirstOrDefault(a => a.Name.Equals(enumName));
                 if (vEntry == null)
                 {
-                    vEntry = new VerticalGroupedBarDataSet() { Name = Enum.GetName(typeof(MODEL_TYPE), model), Value = 0 };
+                    vEntry = new VerticalGroupedBarDataSet() { Name = enumName, Value = 0 };
                     vDto.Series.Add(vEntry);
                 }
                 vEntry.Value++;
