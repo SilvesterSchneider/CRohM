@@ -35,7 +35,8 @@ namespace WebApi.Controllers
             this.modService = modService;
             this.contactService = contactService;
         }
-    
+        [ClaimsAuthorization(ClaimType = "Einsehen und Bearbeiten aller Kontakte",
+                            ClaimValue = "Einsehen und Bearbeiten aller Kontakte")]
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
@@ -45,7 +46,8 @@ namespace WebApi.Controllers
 
             return Ok(contactsDto);
         }
-
+        [ClaimsAuthorization(ClaimType = "Einsehen und Bearbeiten aller Kontakte",
+                            ClaimValue = "Einsehen und Bearbeiten aller Kontakte")]
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
@@ -61,7 +63,8 @@ namespace WebApi.Controllers
             var contactDto = _mapper.Map<ContactDto>(contact);
             return Ok(contactDto);
         }
-
+        [ClaimsAuthorization(ClaimType = "Einsehen und Bearbeiten aller Kontakte",
+                            ClaimValue = "Einsehen und Bearbeiten aller Kontakte")]
         [HttpGet("PartName")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get([FromQuery]string name)
@@ -98,6 +101,7 @@ namespace WebApi.Controllers
                 return Conflict();
             }
         }
+        
         [ClaimsAuthorization(ClaimType = "Anlegen eines Kontaktes", ClaimValue = "Anlegen eines Kontaktes")]
         // creates new contact in db via frontend
         [HttpPost]
@@ -113,7 +117,8 @@ namespace WebApi.Controllers
             return Created(uri, contactDto);
         }
 
-        [ClaimsAuthorization(ClaimType = "Anlegen eines Kontaktes", ClaimValue = "Anlegen eines Kontaktes")]
+        [ClaimsAuthorization(ClaimType = "Hinzufügen eines Historieneintrags bei Kontakt oder Organisation",
+                            ClaimValue = "Hinzufügen eines Historieneintrags bei Kontakt oder Organisation")]
         // creates new contact in db via frontend
         [HttpPost("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
@@ -125,7 +130,8 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [ClaimsAuthorization(ClaimType = "Anlegen eines Kontaktes", ClaimValue = "Anlegen eines Kontaktes")]
+        [ClaimsAuthorization(ClaimType = "Auskunft gegenüber eines Kontakts zu dessen Daten",
+                            ClaimValue = "Auskunft gegenüber eines Kontakts zu dessen Daten")]
         // sends disclosure per mail
         [HttpPost("{id}/disclosure")] // template ^= zusammen mit basis ganz oben -> pfad für http request
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
@@ -137,7 +143,7 @@ namespace WebApi.Controllers
 
         // deletes with id {id} contact via frontend
         [Authorize(Roles = "Löschen eines Kontakts")]
-        //[ClaimsAuthorization(ClaimType = "Löschen eines Kontakts", ClaimValue = "Löschen eines Kontakts")]
+        [ClaimsAuthorization(ClaimType = "Löschen eines Kontakts", ClaimValue = "Löschen eines Kontakts")]
 
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]

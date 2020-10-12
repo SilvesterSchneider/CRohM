@@ -31,6 +31,8 @@ namespace WebApi.Controllers
             this.contactService = contactService;
         }
 
+        [ClaimsAuthorization(ClaimType = "Einsehen und Bearbeiten einer Veranstaltung",
+                            ClaimValue = "Einsehen und Bearbeiten einer Veranstaltung")]
         /// <summary>
         /// Getter für alle events als liste
         /// </summary>
@@ -45,6 +47,8 @@ namespace WebApi.Controllers
             return Ok(eventsDto);
         }
 
+        [ClaimsAuthorization(ClaimType = "Einsehen und Bearbeiten einer Veranstaltung",
+                            ClaimValue = "Einsehen und Bearbeiten einer Veranstaltung")]
         /// <summary>
         /// Getter für event anhand id
         /// </summary>
@@ -66,6 +70,8 @@ namespace WebApi.Controllers
             return Ok(eventDto);
         }
 
+        [ClaimsAuthorization(ClaimType = "Einsehen und Bearbeiten einer Veranstaltung",
+                           ClaimValue = "Einsehen und Bearbeiten einer Veranstaltung")]
         /// <summary>
         /// Einen bestehenden event aktualisieren
         /// </summary>
@@ -104,6 +110,9 @@ namespace WebApi.Controllers
             return Ok(eventToModify);
         }
 
+        //TODO: Zählt Kontakt einem Event hinzufügen als "Bearbeiten einer Veranstaltung"?
+        [ClaimsAuthorization(ClaimType = "Einsehen und Bearbeiten einer Veranstaltung",
+                            ClaimValue = "Einsehen und Bearbeiten einer Veranstaltung")]
         /// <summary>
         /// Ein kontakt einem event hinzufügen
         /// </summary>
@@ -134,6 +143,9 @@ namespace WebApi.Controllers
             }
         }
 
+        //TODO: Zählt Kontakt aus Event entfernen als "Bearbeiten einer Veranstaltung"?
+        [ClaimsAuthorization(ClaimType = "Einsehen und Bearbeiten einer Veranstaltung",
+                            ClaimValue = "Einsehen und Bearbeiten einer Veranstaltung")]
         /// <summary>
         /// Einen kontakt aus einem event entfernen
         /// </summary>
@@ -164,6 +176,8 @@ namespace WebApi.Controllers
             }
         }
 
+        [ClaimsAuthorization(ClaimType = "Anlegen einer Veranstaltung",
+                            ClaimValue = "Anlegen einer Veranstaltung")]
         /// <summary>
         /// Erzeugen eines neuen events
         /// </summary>
@@ -189,6 +203,8 @@ namespace WebApi.Controllers
             return BadRequest("Fehler beim erzeugen eines Events!");
         }
 
+        [ClaimsAuthorization(ClaimType = "Löschen einer Veranstaltung",
+                            ClaimValue = "Löschen einer Veranstaltung")]
         /// <summary>
         /// Löschen eines events anhand der id
         /// </summary>

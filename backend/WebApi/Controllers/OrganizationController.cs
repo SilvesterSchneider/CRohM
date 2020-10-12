@@ -42,6 +42,9 @@ namespace WebApi.Controllers
             _logger = logger.CreateLogger(nameof(OrganizationController));
         }
 
+        // Einsehen aller Organisationen
+        [ClaimAuthorization(ClaimType = "Einsehen und Bearbeiten aller Organisationen",
+                           ClaimValue = "Einsehen und Bearbeiten aller Organisationen")]
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<OrganizationDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
@@ -52,6 +55,9 @@ namespace WebApi.Controllers
             return Ok(organizationsDto);
         }
 
+        // Einsehen aller Organisationen
+        [ClaimAuthorization(ClaimType = "Einsehen und Bearbeiten aller Organisationen",
+                           ClaimValue = "Einsehen und Bearbeiten aller Organisationen")]
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
@@ -68,8 +74,9 @@ namespace WebApi.Controllers
             return Ok(organizationDto);
         }
 
-        //[ClaimsAuthorization(ClaimType = Einsehen und Bearbeiten aller Organisationen",
-        //                     ClaimValue = "Einsehen und Bearbeiten aller Organisationen")]
+        //TODO: -> Zuordnen eines Kontakts zu Organisation? 
+        [ClaimAuthorization(ClaimType = "Einsehen und Bearbeiten aller Organisationen",
+                           ClaimValue = "Einsehen und Bearbeiten aller Organisationen")]
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
@@ -94,8 +101,8 @@ namespace WebApi.Controllers
             return Ok(organizationDto);
         }
 
-        //[ClaimsAuthorization(ClaimType = Einsehen und Bearbeiten aller Organisationen",
-        //                     ClaimValue = "Einsehen und Bearbeiten aller Organisationen")]
+        [ClaimsAuthorization(ClaimType = "Zuordnen eines Kontakts zu einer Organisation ",
+                            ClaimValue = "Zuordnen eines Kontakts zu einer Organisation")]
         /// <summary>
         /// Add new contact to organization
         /// </summary>
@@ -129,8 +136,9 @@ namespace WebApi.Controllers
             return Ok(organizationDto);
         }
 
-        //[ClaimsAuthorization(ClaimType = Einsehen und Bearbeiten aller Organisationen",
-        //                     ClaimValue = "Einsehen und Bearbeiten aller Organisationen")]
+        //TODO: Removing contact -> Zuornden oder eher Kontakt löschen(Aber wird ja dann komplett gelöscht oder einsehen/bearbeiten Organisation -> Aber wird dann kontakt gelöscht?)
+        [ClaimsAuthorization(ClaimType = "Zuordnen eines Kontakts zu einer Organisation ",
+                            ClaimValue = "Zuordnen eines Kontakts zu einer Organisation")]
         /// <summary>
         /// Remove a contact from a organization
         /// </summary>
@@ -161,7 +169,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        //[ClaimsAuthorization(ClaimType = "Anlegen einer Organisation", ClaimValue = "Anlegen einer Organisation")]
+        [ClaimsAuthorization(ClaimType = "Anlegen einer Organisation", ClaimValue = "Anlegen einer Organisation")]
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(OrganizationDto), Description = "successfully created")]
         public async Task<IActionResult> Post([FromBody]OrganizationCreateDto organizationToCreate)
@@ -175,7 +183,7 @@ namespace WebApi.Controllers
             return Created(uri, organizationDto);
         }
 
-        //[ClaimsAuthorization(ClaimType = "Löschen einer Organisation", ClaimValue = "Löschen einer Organisation")]
+        [ClaimsAuthorization(ClaimType = "Löschen einer Organisation", ClaimValue = "Löschen einer Organisation")]
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
@@ -191,7 +199,8 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        //[ClaimsAuthorization(ClaimType = "Anlegen einer Organisation", ClaimValue = "Anlegen einer Organisation")]
+        [ClaimsAuthorization(ClaimType = "Hinzufügen eines Historieneintrags bei Kontakt oder Organisation",
+                            ClaimValue = "Hinzufügen eines Historieneintrags bei Kontakt oder Organisation")]
         // creates new contact in db via frontend
         [HttpPost("{id}/historyElement")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
