@@ -191,7 +191,7 @@ namespace WebApi
             services.AddScoped<IUserLoginService, UserLoginService>();
             services.AddScoped<IDataProtectionService, DataProtectionService>();
             services.AddScoped<IHistoryService, HistoryService>();
-
+            services.AddScoped<IStatisticsService, StatisticsService>();
             //###########################Repositories#######################################
 
             services.AddScoped<IAddressRepository, AddressRepository>();
