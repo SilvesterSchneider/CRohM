@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20200920125334_wwd16_ram_init")]
-    partial class wwd16_ram_init
+    [Migration("20201017124455_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -332,9 +332,6 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("ContactId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -344,17 +341,20 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("OrganizationId")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<long?>("contactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("organizationId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ContactId");
+                    b.HasIndex("contactId");
 
-                    b.HasIndex("OrganizationId");
+                    b.HasIndex("organizationId");
 
                     b.ToTable("History");
                 });
@@ -516,7 +516,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "d77fb6b8-8596-411d-a45f-48c17d49b24e",
+                            ConcurrencyStamp = "76c93ea0-7552-4082-9333-5a8c94a3ab0f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -768,13 +768,13 @@ namespace ModelLayer.Migrations
 
             modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
                 {
-                    b.HasOne("ModelLayer.Models.Contact", null)
+                    b.HasOne("ModelLayer.Models.Contact", "contact")
                         .WithMany("History")
-                        .HasForeignKey("ContactId");
+                        .HasForeignKey("contactId");
 
-                    b.HasOne("ModelLayer.Models.Organization", null)
+                    b.HasOne("ModelLayer.Models.Organization", "organization")
                         .WithMany("History")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("organizationId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.ModificationEntry", b =>
