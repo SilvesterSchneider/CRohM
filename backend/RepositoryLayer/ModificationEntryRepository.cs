@@ -54,6 +54,25 @@ namespace RepositoryLayer
 
 
         /// <summary>
+        /// get all entries for a specific id and datatype with pagination
+        /// </summary>
+        /// <param name="id">the model id</param>
+        /// <param name="dataType">the datatype</param>
+        /// <param name="pageStart">starting position for pagination</param>
+        /// <param name="pageSize">Number of elements requested by pagination</param>
+        /// <returns></returns>
+        Task<List<ModificationEntry>> GetModificationEntriesByIdAndModelTypePaginationAsync(long id, MODEL_TYPE dataType, int pageStart, int pageSize);
+
+        /// <summary>
+        /// get count of all entries for a specific id and datatype 
+        /// </summary>
+        /// <param name="id">the model id</param>
+        /// <param name="dataType">the datatype</param>
+        /// <returns></returns>
+        Task<int> GetModificationEntriesByIdAndModelTypeCountAsync(long id, MODEL_TYPE dataType);
+
+
+        /// <summary>
         /// To be able to delete a user, the foreign key relation in ModificationEntry needs to be set to null 
         /// </summary>
         /// <param name="user"></param>
@@ -146,6 +165,26 @@ namespace RepositoryLayer
             return await Entities
                 .Include(x => x.User)
                 .Where(x => x.DataModelId == id && x.DataModelType == dataType).ToListAsync();
+        }
+
+
+        public async Task<List<ModificationEntry>> GetModificationEntriesByIdAndModelTypePaginationAsync(long id, MODEL_TYPE dataType, int pageStart, int pageSize)
+        {
+            return await Entities
+                .Include(x => x.User)
+                .Where(x => x.DataModelId == id && x.DataModelType == dataType)
+                .OrderByDescending(x => x.DateTime)
+                .Skip(pageStart)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetModificationEntriesByIdAndModelTypeCountAsync(long id, MODEL_TYPE dataType)
+        {
+            return await Entities
+                .Include(x => x.User)
+                .Where(x => x.DataModelId == id && x.DataModelType == dataType)
+                .CountAsync();
         }
 
         public async Task<List<ModificationEntry>> RemoveUserForeignKeys(User user)

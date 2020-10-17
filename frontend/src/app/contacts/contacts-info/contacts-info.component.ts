@@ -2,12 +2,11 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   ContactDto, HistoryElementType, ModificationEntryDto, ModificationEntryService,
-  MODEL_TYPE, DATA_TYPE, UserDto, GenderTypes, ContactService, HistoryElementDto, EventDto
+  MODEL_TYPE, UserDto, GenderTypes, ContactService, HistoryElementDto, EventDto
 } from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
-import { sortDatesDesc } from '../../shared/util/sort';
-import { map } from 'rxjs/operators';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-contacts-info',
@@ -16,50 +15,46 @@ import { map } from 'rxjs/operators';
 })
 
 export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
-  contact: ContactDto;
-  public genderTypes: string[] = ['Männlich', 'Weiblich', 'Divers'];
+  genderTypes: string[] = ['Männlich', 'Weiblich', 'Divers'];
   contactsForm: FormGroup;
+
   history: (EventDto | HistoryElementDto)[] = [];
-  dataHistory: ModificationEntryDto[] = new Array<ModificationEntryDto>();
+  historyPaginationLength: number;
+
+  modifications: ModificationEntryDto[] = new Array<ModificationEntryDto>();
+  modificationsPaginationLength: number;
+
   displayedColumns = ['icon', 'datum', 'name', 'kommentar'];
   displayedColumnsOrganizations = ['name'];
   displayedColumnsContactPossibilities = ['name', 'kontakt'];
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
-  constructor(
-    public dialogRef: MatDialogRef<ContactsInfoComponent>,
-    public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: ContactDto,
-    private fb: FormBuilder,
-    private modService: ModificationEntryService,
-    private contactService: ContactService) {
+  constructor(public dialogRef: MatDialogRef<ContactsInfoComponent>,
+              public dialog: MatDialog,
+              @Inject(MAT_DIALOG_DATA) public contact: ContactDto,
+              private fb: FormBuilder,
+              private modService: ModificationEntryService,
+              private contactService: ContactService) {
     super(dialogRef, dialog);
-    this.contact = data;
   }
 
   hasChanged() {
     return !this.contactsForm.pristine;
   }
 
+  onPaginationChangedModification(event: PageEvent) {
+    this.loadModifications((event.pageIndex * event.pageSize), event.pageSize);
+  }
+
+  onPaginationChangedHistory(event: PageEvent) {
+    this.loadHistory((event.pageIndex * event.pageSize), event.pageSize);
+  }
+
   ngOnInit(): void {
-    // Load dataHistory entries
-    this.modService.getSortedListByTypeAndId(this.contact.id, MODEL_TYPE.CONTACT)
-      .pipe(map(list => list
-        .filter(element => element.dataType !== DATA_TYPE.NONE)
-        .sort((obj1, obj2) => sortDatesDesc(obj1.dateTime, obj2.dateTime))))
-      .subscribe(modificationEntries => {
-        this.dataHistory = modificationEntries;
-      });
-
-    // Load history; TODO: Pagination
-    this.contactService.getHistory(this.contact.id)
-      .pipe(map(history => history.sort((obj1, obj2) => sortDatesDesc(obj1.date, obj2.date))))
-      .subscribe(history => {
-        this.history = this.history.concat(history);
-      });
-
-    // Merge history with events
-    this.history = this.history.concat(this.contact.events);
+    // Load initial modification entries
+    this.loadModifications(0, 5);
+    // Load initial history
+    this.loadHistory(0, 5);
 
     this.initForm();
     this.contactsForm.patchValue(this.contact);
@@ -107,10 +102,6 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
     });
   }
 
-  closeDialog() {
-    this.dialogRef.close();
-  }
-
   eventParticipated(element: EventDto): boolean {
     return !!element.participated && element.participated?.some(part => part.contactId === this.contact.id);
   }
@@ -129,6 +120,23 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
 
   isMail(element: HistoryElementDto): boolean {
     return element.type === HistoryElementType.MAIL;
+  }
+
+  private loadHistory(pageStart: number, pageSize: number) {
+    this.contactService.getHistory(this.contact.id, pageStart, pageSize)
+      .subscribe(result => {
+        this.history = result.data;
+        this.historyPaginationLength = result.totalRecords;
+      });
+  }
+
+  private loadModifications(pageStart: number, pageSize: number) {
+    this.modService.getSortedListByTypeAndId(this.contact.id, MODEL_TYPE.CONTACT, pageStart, pageSize)
+      .subscribe(result => {
+        this.modifications = result.data;
+        this.modificationsPaginationLength = result.totalRecords;
+      });
+
   }
 }
 

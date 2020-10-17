@@ -18,5 +18,6 @@ namespace ModelLayer.Models
         public HistoryElementType Type { get; set; } = HistoryElementType.MAIL;
         public string Comment { get; set; } = "";
         public Contact contact { get; set; }
+        public Organization organization { get; set; }
     }
 }

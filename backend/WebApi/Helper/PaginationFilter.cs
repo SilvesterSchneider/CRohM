@@ -7,17 +7,17 @@ namespace WebApi.Helper
 {
     public class PaginationFilter
     {
-        public int PageNumber { get; set; }
+        public int PageStart { get; set; }
         public int PageSize { get; set; }
         public PaginationFilter()
         {
-            this.PageNumber = 1;
-            this.PageSize = 10;
+            this.PageStart = 0;
+            this.PageSize = 5;
         }
-        public PaginationFilter(int pageNumber, int pageSize)
+        public PaginationFilter(int pageStart, int pageSize)
         {
-            this.PageNumber = pageNumber < 1 ? 1 : pageNumber;
-            this.PageSize = pageSize > 10 ? 10 : pageSize;
+            this.PageStart = pageStart < 0 ? 0 : pageStart;
+            this.PageSize = pageSize > 100 ? 100 : pageSize;
         }
     }
 }

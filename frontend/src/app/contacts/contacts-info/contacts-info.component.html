@@ -102,11 +102,20 @@
             <mat-row *matRowDef="let row; columns: displayedColumnsOrganizations;"></mat-row>
         </mat-table>
     </div>
-
-    <mat-expansion-panel *ngIf="history?.length > 0" togglePosition="before" class="extensionPanel">
+    <div *ngIf="contact.tags.length > 0" class="col-md-12">
+        <h5>Tags</h5>
+        <mat-chip-list #chipList>
+            <mat-chip *ngFor="let item of contact.tags">
+                {{ item.name }}
+            </mat-chip>
+        </mat-chip-list>
+    </div>
+    <mat-expansion-panel *ngIf="history?.length > 0" togglePosition="after" class="extensionPanel">
         <mat-expansion-panel-header>
             <mat-panel-title>
-                Historie
+                <h5>
+                    Historie
+                </h5>
             </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-table #table [dataSource]="history">
@@ -138,15 +147,16 @@
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </mat-table>
+        <mat-paginator (page)="onPaginationChangedHistory($event)" [pageSizeOptions]="[5, 10, 20]" [length]="historyPaginationLength"></mat-paginator>
     </mat-expansion-panel>
 
-    <mat-expansion-panel *ngIf="dataHistory.length > 0" togglePosition="before" class="extensionPanel">
+    <mat-expansion-panel *ngIf="modifications.length > 0" togglePosition="after" class="extensionPanel">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Datenveränderungen
+            <h5>Datenveränderungen</h5>
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <mat-table #table [dataSource]="dataHistory">
+        <mat-table #table [dataSource]="modifications">
             <ng-container matColumnDef="datum">
                 <mat-header-cell fxFlex="20%" *matHeaderCellDef> Datum </mat-header-cell>
                 <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.dateTime | date}}
@@ -180,15 +190,8 @@
             <mat-header-row *matHeaderRowDef="displayedColumnsDataChangeHistory"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumnsDataChangeHistory;"></mat-row>
         </mat-table>
+        <mat-paginator (page)="onPaginationChangedModification($event)" [pageSizeOptions]="[5, 10, 20]" [length]="modificationsPaginationLength"></mat-paginator>
       </mat-expansion-panel>
-      <div *ngIf="contact.tags.length > 0" class="col-md-12">
-        <h5>Tags</h5>
-        <mat-chip-list #chipList>
-            <mat-chip *ngFor="let item of contact.tags">
-                {{ item.name }}
-            </mat-chip>
-        </mat-chip-list>
-    </div>
     <button class="contactDetails" mat-raised-button color="primary" title="Schließen" type="submit"
-        (click)="closeDialog()">Schließen</button>
+        (click)="dialogRef.close()">Schließen</button>
 </mat-dialog-content>

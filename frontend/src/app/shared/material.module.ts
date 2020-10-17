@@ -21,6 +21,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   imports: [
@@ -48,7 +49,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatChipsModule,
     MatProgressSpinnerModule,
     MatDividerModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatPaginatorModule
   ],
   exports: [
     MatSidenavModule,
@@ -74,7 +76,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatChipsModule,
     MatProgressSpinnerModule,
     MatDividerModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatPaginatorModule
   ]
 })
 export class MaterialModule { }

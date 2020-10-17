@@ -1,16 +1,17 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
-using Microsoft.AspNetCore.Authorization;
 using NSwag.Annotations;
 using ServiceLayer;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using ModelLayer.Helper;
+using WebApi.Helper;
+using WebApi.Wrapper;
 
 namespace WebApi.Controllers
 {
@@ -24,7 +25,8 @@ namespace WebApi.Controllers
         private readonly IModificationEntryService modService;
         private readonly IOrganizationService _organizationService;
         private readonly ILogger _logger;
-        private IContactService contactService;
+        private readonly IContactService contactService;
+        private readonly IHistoryService historyService;
 
         public OrganizationController(
             IMapper mapper,
@@ -32,7 +34,8 @@ namespace WebApi.Controllers
             IUserService userService,
             ILoggerFactory logger,
             IModificationEntryService modService,
-            IContactService contactService)
+            IContactService contactService,
+            IHistoryService historyService)
         {
             _mapper = mapper;
             this.contactService = contactService;
@@ -40,6 +43,7 @@ namespace WebApi.Controllers
             this.modService = modService;
             _organizationService = organizationService;
             _logger = logger.CreateLogger(nameof(OrganizationController));
+            this.historyService = historyService;
         }
 
         [HttpGet]
@@ -151,7 +155,7 @@ namespace WebApi.Controllers
             {
                 contactName = contact.PreName + " " + contact.Name;
             }
-            await modService.ChangeEmployeesOfOrganization(id, contactName, true , userOfChange);
+            await modService.ChangeEmployeesOfOrganization(id, contactName, true, userOfChange);
             return Ok();
         }
 
@@ -187,11 +191,23 @@ namespace WebApi.Controllers
         [HttpPost("{id}/historyElement")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
         public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id)
-        { 
+        {
             await _organizationService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             await modService.UpdateOrganizationByHistoryElementAsync(userOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
             return Ok();
         }
+
+        [HttpGet("{id}/history")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(PagedResponse<List<HistoryElement>>), Description = "successfully found")]
+        public async Task<IActionResult> GetHistory(long id, [FromQuery] PaginationFilter filter)
+        {
+            PaginationFilter validFilter = new PaginationFilter(filter.PageStart, filter.PageSize);
+            List<HistoryElement> history = await historyService.GetHistoryByOrganisationAsync(id, validFilter.PageStart, validFilter.PageSize);
+            int count = await historyService.GetHistoryByOrganisationCountAsync(id);
+
+            return Ok(new PagedResponse<List<HistoryElement>>(history, validFilter.PageStart, validFilter.PageSize, count));
+        }
+
     }
 }

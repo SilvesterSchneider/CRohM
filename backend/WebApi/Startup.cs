@@ -190,7 +190,7 @@ namespace WebApi
             services.AddScoped<IModificationEntryService, ModificationEntryService>();
             services.AddScoped<IUserLoginService, UserLoginService>();
             services.AddScoped<IDataProtectionService, DataProtectionService>();
-            services.AddScoped<IContactHistoryService, ContactHistoryService>();
+            services.AddScoped<IHistoryService, HistoryService>();
 
             //###########################Repositories#######################################
 
@@ -205,7 +205,7 @@ namespace WebApi
             services.AddScoped<IUserCheckDateRepository, UserCheckDateRepository>();
             services.AddScoped<IContactPossibilitiesEntryRepository, ContactPossibilitiesEntryRepository>();
             services.AddScoped<IUserLoginRepository, UserLoginRepository>();
-            services.AddScoped<IContactHistoryRepository, ContactHistoryRepository>();
+            services.AddScoped<IHistoryRepository, HistoryRepository>();
         }
     }
 }
