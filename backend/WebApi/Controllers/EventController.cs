@@ -85,18 +85,21 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
-            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
-            Event oldOne = await eventService.GetEventByIdWithAllIncludesAsync(id);
-            List<Contact> contactsParticipated = new List<Contact>();
-            foreach (ParticipatedDto part in eventToModify.Participated)
+            if (User.Identity.Name != null)
             {
-                Contact cont = await contactService.GetByIdAsync(part.ContactId);
-                if (cont != null)
+                User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+                Event oldOne = await eventService.GetEventByIdWithAllIncludesAsync(id);
+                List<Contact> contactsParticipated = new List<Contact>();
+                foreach (ParticipatedDto part in eventToModify.Participated)
                 {
-                    contactsParticipated.Add(cont);
+                    Contact cont = await contactService.GetByIdAsync(part.ContactId);
+                    if (cont != null)
+                    {
+                        contactsParticipated.Add(cont);
+                    }
                 }
+                await modService.UpdateEventsAsync(userOfChange, oldOne, eventToModify, contactsParticipated);
             }
-            await modService.UpdateEventsAsync(userOfChange, oldOne, eventToModify, contactsParticipated);
             if (await eventService.ModifyEventAsync(eventToModify))
             {
                 await modService.CommitChanges();
@@ -118,14 +121,17 @@ namespace WebApi.Controllers
             EventContact result = await eventService.AddEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
             if (result != null)
             {
-                User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
                 string contactName = string.Empty;
                 Contact contactToUse = await contactService.GetByIdAsync(contactId);
                 if (contactToUse != null)
                 {
                     contactName = contactToUse.PreName + " " + contactToUse.Name;
                 }
-                await modService.ChangeContactsOfEvent(id, contactName, false, userOfChange);
+                if (User.Identity.Name != null)
+                {
+                    User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+                    await modService.ChangeContactsOfEvent(id, contactName, false, userOfChange);
+                }
                 return Ok();
             }
             else
@@ -148,14 +154,17 @@ namespace WebApi.Controllers
             bool result = await eventService.RemoveEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
             if (result)
             {
-                User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
                 string contactName = string.Empty;
                 Contact contactToUse = await contactService.GetByIdAsync(contactId);
                 if (contactToUse != null)
                 {
                     contactName = contactToUse.PreName + " " + contactToUse.Name;
                 }
-                await modService.ChangeContactsOfEvent(id, contactName, true, userOfChange);
+                if (User.Identity.Name != null)
+                {
+                    User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+                    await modService.ChangeContactsOfEvent(id, contactName, true, userOfChange);
+                }
                 return Ok();
             }
             else
@@ -182,8 +191,11 @@ namespace WebApi.Controllers
                     await eventService.AddEventContactAsync(new EventContact() { ContactId = contactId, EventId = newEvent.Id });
                 }
                 var uri = $"https://{Request.Host}{Request.Path}/{_mapper.Map<EventDto>(newEvent).Id}";
-                User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
-                await modService.CreateNewEventEntryAsync(userOfChange, newEvent.Id);
+                if (User.Identity.Name != null)
+                {
+                    User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+                    await modService.CreateNewEventEntryAsync(userOfChange, newEvent.Id);
+                }
                 return Created(uri, eventToCreate);
             }
             return BadRequest("Fehler beim erzeugen eines Events!");

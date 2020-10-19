@@ -82,10 +82,12 @@ namespace WebApi.Controllers
             {
                 return Conflict();
             }
-            User userOfModification = await userService.FindByNameAsync(User.Identity.Name);
-
             var mappedContact = _mapper.Map<Contact>(contact);
-            await modService.UpdateContactAsync(userOfModification, await contactService.GetByIdAsync(id), mappedContact, await userService.IsDataSecurityEngineer(userOfModification.Id));
+            if (User.Identity.Name != null)
+            {
+                User userOfModification = await userService.FindByNameAsync(User.Identity.Name);
+                await modService.UpdateContactAsync(userOfModification, await contactService.GetByIdAsync(id), mappedContact, await userService.IsDataSecurityEngineer(userOfModification.Id));
+            }
             if (await contactService.UpdateAsync(mappedContact, id))
             {
                 await modService.CommitChanges();
@@ -105,8 +107,11 @@ namespace WebApi.Controllers
             Contact contact = await contactService.CreateAsync(_mapper.Map<Contact>(contactToCreate));
 
             var contactDto = _mapper.Map<ContactDto>(contact);
-            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
-            await modService.CreateNewContactEntryAsync(userOfChange, contact.Id);
+            if (User.Identity.Name != null)
+            {
+                User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+                await modService.CreateNewContactEntryAsync(userOfChange, contact.Id);
+            }
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
             return Created(uri, contactDto);
         }
@@ -117,8 +122,12 @@ namespace WebApi.Controllers
         public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id)
         {
             await contactService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
-            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
-            await modService.UpdateContactByHistoryElementAsync(userOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
+
+            if (User.Identity.Name != null)
+            {
+                User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+                await modService.UpdateContactByHistoryElementAsync(userOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
+            }
             return Ok();
         }
 
