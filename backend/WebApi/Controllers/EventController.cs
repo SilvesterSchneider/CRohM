@@ -140,6 +140,10 @@ namespace WebApi.Controllers
                 {
                     await eventService.AddEventContactAsync(new EventContact() { ContactId = contactId, EventId = newEvent.Id });
                 }
+                foreach (int orgaId in eventToCreate.Organizations)
+                {
+                    await eventService.AddEventOrganizationAsync(new EventOrganization() { OrganizationId = orgaId, EventId = newEvent.Id });
+                }
                 var uri = $"https://{Request.Host}{Request.Path}/{_mapper.Map<EventDto>(newEvent).Id}";
                 User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
                 await modService.CreateNewEventEntryAsync(userOfChange, newEvent.Id);

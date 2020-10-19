@@ -44,10 +44,10 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
     name: [''],
     description: [''],
     country: ['', Validators.required],
-    street: ['', Validators.pattern('^[a-zA-Z0-9.-]*')],
-    streetNumber: ['', Validators.required],
+    street: ['', Validators.pattern('^[a-zA-ZäüöÄÜÖß.-]*')],
+    streetNumber: ['', Validators.pattern('^[a-zA-Z0-9äüöÄÜÖß.-]*')],
     zipcode: ['', Validators.pattern('^[0-9]{4,5}$')],
-    city: ['', Validators.required],
+    city: ['', Validators.pattern('^[a-zA-ZäüöÄÜÖß.-]*')],
   });
 
 

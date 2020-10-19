@@ -54,7 +54,7 @@
                 </mat-checkbox>
                 {{ item.preName + ' ' + item.name }}
             </mat-chip>
-            <input id="textInput" class="autoComplete" type="text" #inputTrigger placeholder="Kontakte auswählen" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
+            <input id="textInput" class="autoComplete" type="text" #inputTrigger placeholder="Kontakte/Organisationen einladen" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
             [matChipInputFor]="chipList">
         </mat-chip-list>
         <mat-autocomplete #autoComplete="matAutocomplete">
