@@ -12,11 +12,3 @@ jobs:
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]' || github.actor == 'dependabot'
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Dependabot Auto Merge
-        uses: ahmadnassri/action-dependabot-auto-merge@v2
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]' || github.actor == 'dependabot'
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          target: minor
-
