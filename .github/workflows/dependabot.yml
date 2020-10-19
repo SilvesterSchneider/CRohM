@@ -13,9 +13,9 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Dependabot Merge Comment
-        uses: thollander/actions-comment-pull-request@master
+      - name: Dependabot Auto Merge
+        uses: ahmadnassri/action-dependabot-auto-merge@v2
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]' || github.actor == 'dependabot'
         with:
-          message: "@dependabot merge"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
