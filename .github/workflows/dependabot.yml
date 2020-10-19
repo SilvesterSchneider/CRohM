@@ -1,8 +1,7 @@
 name: Dependabot Action
 on:
   pull_request:
-    branches:
-      - dependabot/**
+  push:
 
 jobs:
   dependabot-auto-merge:
