@@ -1,7 +1,6 @@
 name: Dependabot Action
 on:
   pull_request:
-  push:
 
 jobs:
   dependabot-auto-merge:
