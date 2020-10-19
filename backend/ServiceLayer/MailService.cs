@@ -18,6 +18,8 @@ namespace ServiceLayer
 
         public bool PasswordReset(string newPassword, string mailAddress);
 
+        public bool ApproveContactCreation(string benutzer, string email);
+
         public bool Registration(string benutzer, string passwort, string email);
 
         public bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
@@ -30,6 +32,14 @@ namespace ServiceLayer
         public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
         {
             return SendMail(subject, body, address, new MemoryStream(attachment), attachmentType);
+        }
+
+        public bool ApproveContactCreation(string benutzer, string email)
+        {
+            string body = "<h3> Bitte bestätigen Sie die aufnahmen Ihrer Kontaktdaten für die TH-Nürnberg </h3> " +
+                   "<p> "+benutzer+"</p>";
+
+            return SendMail("Zugangsdaten", body, email, null, "");
         }
 
         public bool Registration(string benutzer, string passwort, string email)

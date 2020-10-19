@@ -23,7 +23,7 @@ namespace RepositoryLayer
         /// Returns a full list of all contacts and its all dependencies.
         /// </summary>
         /// <returns></returns>
-        Task<List<Contact>> GetAllContactsWithAllIncludesAsync();
+        Task<List<Contact>> GetAllContactsWithAllIncludesAsync(long userid);
 
         Task<bool> UpdateAsync(Contact contact, long id);
     }
@@ -34,9 +34,9 @@ namespace RepositoryLayer
         {
         }
 
-        public async Task<List<Contact>> GetAllContactsWithAllIncludesAsync()
+        public async Task<List<Contact>> GetAllContactsWithAllIncludesAsync(long userid)
         {
-            return await Entities
+            List<Contact> contacts =  await Entities
                 .Include(x => x.Address)
                 .Include(t => t.Tags)
                 .Include(y => y.ContactPossibilities)
@@ -48,6 +48,19 @@ namespace RepositoryLayer
                 .ThenInclude(e => e.Participated)
                 .Include(x => x.History)
                 .ToListAsync();
+
+            List<Contact> contacttodelect = new List<Contact>();
+            foreach (Contact c in contacts){
+                if (c.CreatedByUser != userid && !c.isAproved) {
+                    contacttodelect.Add(c);
+                }
+            }
+
+            foreach (Contact c in contacttodelect) {
+                contacts.Remove(c);
+            }
+
+            return contacts;
         }
 
         public override async Task<Contact> GetByIdAsync(long id)

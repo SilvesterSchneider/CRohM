@@ -18,6 +18,8 @@ namespace ServiceLayer
         Task<string> GetContactInformationAsTextAsync(long id);
 
         Task SendDisclosure(long id);
+
+        Task<bool> ApproveContact(long id);
     }
 
     public class ContactService : ContactRepository, IContactService
@@ -79,6 +81,16 @@ namespace ServiceLayer
             }
 
             return await Task.FromResult(contact.ToString());
+        }
+
+        public async Task<bool> ApproveContact(long id) {
+            Contact contact = await GetByIdAsync(id);
+            if (contact != null) {
+                contact.isAproved = true;
+                return await UpdateAsync(contact, id);
+            }
+            return false;
+
         }
     }
 }

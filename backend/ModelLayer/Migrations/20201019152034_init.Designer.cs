@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20200913124325_ram_init_wwd19_20")]
-    partial class ram_init_wwd19_20
+    [Migration("20201019152034_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -513,7 +513,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "fe748231-8273-4ab9-9a5f-e24e030005f1",
+                            ConcurrencyStamp = "3fe61726-e29c-45da-ae82-2dddb33ecaa8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

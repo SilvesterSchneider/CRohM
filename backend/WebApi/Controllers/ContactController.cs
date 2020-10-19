@@ -26,21 +26,25 @@ namespace WebApi.Controllers
         private IUserService userService;
         private readonly IModificationEntryService modService;
         private IContactService contactService;
+        private IMailService mailService;
 
-        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService)
+        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IMailService mailService)
         {
             _mapper = mapper;
             this.eventService = eventService;
             this.userService = userService;
             this.modService = modService;
             this.contactService = contactService;
+            this.mailService = mailService;
+
         }
 
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
         {
-            var contacts = await contactService.GetAllContactsWithAllIncludesAsync();
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            var contacts = await contactService.GetAllContactsWithAllIncludesAsync(userOfChange.Id);
             var contactsDto = _mapper.Map<List<ContactDto>>(contacts);
 
             return Ok(contactsDto);
@@ -106,8 +110,13 @@ namespace WebApi.Controllers
 
             var contactDto = _mapper.Map<ContactDto>(contact);
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            contact.CreatedByUser = userOfChange.Id;
             await modService.CreateNewContactEntryAsync(userOfChange, contact.Id);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
+
+            //Send Mail to Approve
+            mailService.ApproveContactCreation($"https://{Request.Host}{Request.Path}/ApproveContact?id=" + contactDto.Id, contactDto.ContactPossibilities.Mail);
+
             return Created(uri, contactDto);
         }
 
@@ -145,6 +154,21 @@ namespace WebApi.Controllers
             await contactService.DeleteAsync(contact);
             await modService.UpdateContactByDeletionAsync(id);
             return Ok();
+        }
+
+        //Approve Contact
+        [HttpGet("ApproveContact")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully found")]
+        public async Task<IActionResult> ApproveContact([FromQuery] long id)
+        {
+            if (await contactService.ApproveContact(id))
+            {
+                return Ok();
+            }
+            else {
+                return BadRequest();
+            }
+            
         }
     }
 }
