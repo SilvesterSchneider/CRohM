@@ -86,7 +86,7 @@ namespace ServiceLayer
         public async Task<bool> ApproveContact(long id) {
             Contact contact = await GetByIdAsync(id);
             if (contact != null) {
-                contact.isAproved = true;
+                contact.isApproved = true;
                 return await UpdateAsync(contact, id);
             }
             return false;

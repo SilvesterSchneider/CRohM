@@ -24,8 +24,9 @@ namespace ModelLayer.Models
         public List<HistoryElement> History { get; set; } = new List<HistoryElement>();
         public List<Tag> Tags { get; set; } = new List<Tag>();
 
-        public bool isAproved {get; set; } = false;
+        public bool isApproved {get; set; } = false;
         public long CreatedByUser { get; set; } = 0;
+        public DateTime CreationDate { get; set; } = DateTime.Now;
 
         public override string ToString()
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
@@ -6,34 +7,24 @@ namespace ModelLayer.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<long>(
-                name: "CreatedByUser",
+            migrationBuilder.AddColumn<DateTime>(
+                name: "CreationDate",
                 table: "Contacts",
                 nullable: false,
-                defaultValue: 0L);
-
-            migrationBuilder.AddColumn<bool>(
-                name: "isAproved",
-                table: "Contacts",
-                nullable: false,
-                defaultValue: false);
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: 1L,
                 column: "ConcurrencyStamp",
-                value: "022a05ff-6003-4d75-a023-bca7893ebffe");
+                value: "e548f08a-592c-4798-bc21-29f02e8d0d7f");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CreatedByUser",
-                table: "Contacts");
-
-            migrationBuilder.DropColumn(
-                name: "isAproved",
+                name: "CreationDate",
                 table: "Contacts");
 
             migrationBuilder.UpdateData(
@@ -41,7 +32,7 @@ namespace ModelLayer.Migrations
                 keyColumn: "Id",
                 keyValue: 1L,
                 column: "ConcurrencyStamp",
-                value: "3fe61726-e29c-45da-ae82-2dddb33ecaa8");
+                value: "f848e4e4-1e92-45bd-aa5b-850868345de1");
         }
     }
 }

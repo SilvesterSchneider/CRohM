@@ -4,6 +4,8 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './shared/routing/auth.guard';
 import { OrganizationsListComponent } from './organizations/organizations-list/organizations-list.component';
+import { ApproveContactComponent } from './approve-contact/approve-contact.component';
+import { ContactsIdResolver2Service } from './approve-contact/contacts-id-resolver2.service';
 
 const routes: Routes = [
   {
@@ -31,11 +33,19 @@ const routes: Routes = [
     path: 'events',
     canActivate: [AuthGuard],
     loadChildren: () => import('./events/events.module').then(mod => mod.EventsModule)
-  }
+  },
+  {
+    path: 'ApproveContacte/:id',
+    component: ApproveContactComponent,
+    resolve: {
+			contact: ContactsIdResolver2Service
+		}
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [ ContactsIdResolver2Service ]
 })
 export class AppRoutingModule { }

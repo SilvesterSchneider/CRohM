@@ -67,7 +67,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
-    this.getData();
+    this.getDataWithUnapproved();
   }
 
   ngOnDestroy(): void {
@@ -92,12 +92,21 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.changeDetectorRefs.detectChanges();
   }
 
+  private getDataWithUnapproved() {
+    this.contacts = this.service.getWithUnapproved();
+    this.contacts.subscribe(x => {
+      this.length = x.length;
+      this.dataSource.data = x;
+    });
+    this.changeDetectorRefs.detectChanges();
+  }
+
   openDisclosureDialog(id: number) {
     this.service.getById(id).subscribe((x) => {
     const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.contacts = this.service.getAll();
+      this.contacts = this.service.getWithUnapproved();
     });
   });
 }
@@ -107,7 +116,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe((result) => {
-      this.getData();
+      this.getDataWithUnapproved();
     });
   }
 
@@ -132,7 +141,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
           }
         });
       }
-        this.getData();
+        this.getDataWithUnapproved();
       }
     });
   }
@@ -146,7 +155,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     deleteDialogRef.afterClosed().subscribe((deleteResult) => {
       if (deleteResult?.delete ) {
         this.service.delete(contact.id).subscribe(x => {
-          this.service.getAll().subscribe(fu => {
+          this.service.getWithUnapproved().subscribe(fu => {
             this.dataSource.data = fu;
            });
         });

@@ -43,8 +43,18 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
         {
+            var contacts = await contactService.GetAllContactsWithAllIncludesAsync();
+            var contactsDto = _mapper.Map<List<ContactDto>>(contacts);
+
+            return Ok(contactsDto);
+        }
+
+        [HttpGet("WithUnapproved")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
+        public async Task<IActionResult> GetWithUnapproved()
+        {
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
-            var contacts = await contactService.GetAllContactsWithAllIncludesAsync(userOfChange.Id);
+            var contacts = await contactService.GetAllContactsAndUnapprovedWithAllIncludesAsync(userOfChange.Id);
             var contactsDto = _mapper.Map<List<ContactDto>>(contacts);
 
             return Ok(contactsDto);
@@ -110,14 +120,25 @@ namespace WebApi.Controllers
 
             var contactDto = _mapper.Map<ContactDto>(contact);
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+
             contact.CreatedByUser = userOfChange.Id;
             await modService.CreateNewContactEntryAsync(userOfChange, contact.Id);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
 
             //Send Mail to Approve
-            mailService.ApproveContactCreation($"https://{Request.Host}{Request.Path}/ApproveContact?id=" + contactDto.Id, contactDto.ContactPossibilities.Mail);
+            mailService.ApproveContactCreation($"https://localhost:4200/ApproveContacte/" + contactDto.Id, contactDto.ContactPossibilities.Mail);
 
-            return Created(uri, contactDto);
+            var ret = Created(uri, contactDto);
+            //Anweisung von Markus zu Testzwecken -> Von Admin angelegt ist automatisch Approved
+            if (userOfChange.Id == 1)
+            {
+                
+                Contact created = contactService.GetById(contactDto.Id);
+                created.isApproved = true;
+                await contactService.UpdateAsync(created, created.Id);
+            }
+            return ret;
+             
         }
 
         // creates new contact in db via frontend
@@ -157,9 +178,10 @@ namespace WebApi.Controllers
         }
 
         //Approve Contact
-        [HttpGet("ApproveContact")]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully found")]
-        public async Task<IActionResult> ApproveContact([FromQuery] long id)
+        [HttpPut("ApproveContact{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully found")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "not found")]
+        public async Task<IActionResult> ApproveContact(long id)
         {
             if (await contactService.ApproveContact(id))
             {

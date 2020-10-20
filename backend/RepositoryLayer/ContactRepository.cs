@@ -23,8 +23,9 @@ namespace RepositoryLayer
         /// Returns a full list of all contacts and its all dependencies.
         /// </summary>
         /// <returns></returns>
-        Task<List<Contact>> GetAllContactsWithAllIncludesAsync(long userid);
-
+        Task<List<Contact>> GetAllContactsWithAllIncludesAsync();
+        Task<List<Contact>> GetAllContactsAndUnapprovedWithAllIncludesAsync(long userid);
+        Task<List<Contact>> GetAllUnapprovedContactsAllIncludesAsync();
         Task<bool> UpdateAsync(Contact contact, long id);
     }
 
@@ -34,7 +35,66 @@ namespace RepositoryLayer
         {
         }
 
-        public async Task<List<Contact>> GetAllContactsWithAllIncludesAsync(long userid)
+        public async Task<List<Contact>> GetAllContactsAndUnapprovedWithAllIncludesAsync(long userid)
+        {
+            List<Contact> contacts = await Entities
+                .Include(x => x.Address)
+                .Include(t => t.Tags)
+                .Include(y => y.ContactPossibilities)
+                .ThenInclude(b => b.ContactEntries)
+                .Include(x => x.OrganizationContacts)
+                .ThenInclude(a => a.Organization)
+                .Include(c => c.Events)
+                .ThenInclude(d => d.Event)
+                .ThenInclude(e => e.Participated)
+                .Include(x => x.History)
+                .ToListAsync();
+
+            List<Contact> contacttodelect = new List<Contact>();
+            foreach (Contact c in contacts)
+            {
+                if (c.CreatedByUser != userid && !c.isApproved)
+                {
+                    contacttodelect.Add(c);
+                }
+            }
+
+            foreach (Contact c in contacttodelect)
+            {
+                contacts.Remove(c);
+            }
+
+            return contacts;
+        }
+
+        public async Task<List<Contact>> GetAllUnapprovedContactsAllIncludesAsync()
+        {
+            List<Contact> contacts = await Entities
+                .Include(x => x.Address)
+                .Include(t => t.Tags)
+                .Include(y => y.ContactPossibilities)
+                .ThenInclude(b => b.ContactEntries)
+                .Include(x => x.OrganizationContacts)
+                .ThenInclude(a => a.Organization)
+                .Include(c => c.Events)
+                .ThenInclude(d => d.Event)
+                .ThenInclude(e => e.Participated)
+                .Include(x => x.History)
+                .ToListAsync();
+
+            List<Contact> unapproved = new List<Contact>();
+            foreach (Contact c in contacts)
+            {
+                if (!c.isApproved)
+                {
+                    unapproved.Add(c);
+                }
+            }
+
+            return unapproved;
+        }
+
+        public async Task<List<Contact>> GetAllContactsWithAllIncludesAsync()
         {
             List<Contact> contacts =  await Entities
                 .Include(x => x.Address)
@@ -51,7 +111,7 @@ namespace RepositoryLayer
 
             List<Contact> contacttodelect = new List<Contact>();
             foreach (Contact c in contacts){
-                if (c.CreatedByUser != userid && !c.isAproved) {
+                if (!c.isApproved) {
                     contacttodelect.Add(c);
                 }
             }

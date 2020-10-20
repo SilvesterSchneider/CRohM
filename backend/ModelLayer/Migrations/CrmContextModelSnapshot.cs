@@ -172,6 +172,9 @@ namespace ModelLayer.Migrations
                     b.Property<long>("CreatedByUser")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -184,7 +187,7 @@ namespace ModelLayer.Migrations
                     b.Property<string>("PreName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("isAproved")
+                    b.Property<bool>("isApproved")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -517,7 +520,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "022a05ff-6003-4d75-a023-bca7893ebffe",
+                            ConcurrencyStamp = "e548f08a-592c-4798-bc21-29f02e8d0d7f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

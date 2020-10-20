@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20201019152034_init")]
-    partial class init
+    [Migration("20201020165918_init2")]
+    partial class init2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -171,6 +171,12 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("ContactPossibilitiesId")
                         .HasColumnType("bigint");
 
+                    b.Property<long>("CreatedByUser")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -182,6 +188,9 @@ namespace ModelLayer.Migrations
 
                     b.Property<string>("PreName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isApproved")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -513,7 +522,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "3fe61726-e29c-45da-ae82-2dddb33ecaa8",
+                            ConcurrencyStamp = "e548f08a-592c-4798-bc21-29f02e8d0d7f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
