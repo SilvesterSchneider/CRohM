@@ -18,16 +18,15 @@ import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-
     ReactiveFormsModule,
     HttpClientModule,
     MaterialModule,
-    FlexLayoutModule],
+    FlexLayoutModule,
+    NgxChartsModule
+  ],
   declarations: [
     OsmAddressComponent,
     ContactPossibilitiesComponent,
     AddHistoryComponent, TagsFilterComponent,
-    VerticalGroupedBarChartComponent,
-	FlexLayoutModule,
-    NgxChartsModule
+    VerticalGroupedBarChartComponent
   ],
-
   exports: [
     CommonModule,
     FormsModule,
