@@ -10,14 +10,14 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20201017124455_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20201021183820_ram_init_mk")]
+    partial class ram_init_mk
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -322,6 +322,32 @@ namespace ModelLayer.Migrations
                     b.ToTable("EventContacts");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.EventOrganization", b =>
+                {
+                    b.Property<long>("EventId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("OrganizationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EventId", "OrganizationId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("EventOrganizations");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
                 {
                     b.Property<long>("Id")
@@ -459,9 +485,6 @@ namespace ModelLayer.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("ContactId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -471,8 +494,14 @@ namespace ModelLayer.Migrations
                     b.Property<bool>("HasParticipated")
                         .HasColumnType("bit");
 
+                    b.Property<int>("ModelType")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("ObjectId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("WasInvited")
                         .HasColumnType("bit");
@@ -516,7 +545,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "76c93ea0-7552-4082-9333-5a8c94a3ab0f",
+                            ConcurrencyStamp = "02bf52ce-4ef7-4e7b-b808-206938907503",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -762,6 +791,21 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.Models.Event", "Event")
                         .WithMany("Contacts")
                         .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.EventOrganization", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Event", "Event")
+                        .WithMany("Organizations")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelLayer.Models.Organization", "Organization")
+                        .WithMany("Events")
+                        .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -29,12 +29,12 @@
         </div>
     </div>
     <div class="col-md-12">
-        <h6 *ngIf="contacts.length > 0">
+        <h6 *ngIf="contactsOrganizations.length > 0">
             Teilnehmer
         </h6>
     </div>
     <div class="col-md-12">
-        <mat-table *ngIf="contacts.length > 0" #table [dataSource]="contacts">
+        <mat-table *ngIf="contactsOrganizations.length > 0" #table [dataSource]="contactsOrganizations">
             <ng-container matColumnDef="wasInvited">
                 <mat-header-cell *matHeaderCellDef> Eingeladen </mat-header-cell>
                 <mat-cell *matCellDef="let element"> 

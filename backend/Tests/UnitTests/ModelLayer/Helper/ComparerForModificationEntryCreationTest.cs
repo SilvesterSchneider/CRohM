@@ -18,7 +18,7 @@ namespace UnitTests.ModelLayer.Helper
             EventDto newEvent = new EventDto() { Id = oldEvent.Id, Date = oldEvent.Date, Time = oldEvent.Time, Name = "testEvent2", Duration = 3f };
 
             // Act
-            ComparerForModificationEntryCreation.CompareEvents(oldEvent, newEvent, null, out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion, new List<Contact>());
+            ComparerForModificationEntryCreation.CompareEvents(oldEvent, newEvent, null, out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion, new List<Contact>(), new List<Organization>());
 
             //Assert
             Assert.Equal(2, listWithNewEntries.Count);

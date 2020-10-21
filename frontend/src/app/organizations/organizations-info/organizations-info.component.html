@@ -141,6 +141,8 @@
             <ng-container matColumnDef="icon">
                 <mat-header-cell *matHeaderCellDef> Typ </mat-header-cell>
                 <mat-cell *matCellDef="let element">
+                    <mat-icon *ngIf="eventParticipated(element)">check_box</mat-icon>
+                    <mat-icon *ngIf="eventNotParticipated(element)">check_box_outline_blank</mat-icon>
                     <mat-icon *ngIf="isLocalPhone(element)">local_phone</mat-icon>
                     <mat-icon *ngIf="isNote(element)">note</mat-icon>
                     <mat-icon *ngIf="isMail(element)">mail</mat-icon>

@@ -1,7 +1,16 @@
 .mat-select-panel mat-option.mat-option {
-    height: unset;
-  }
+  height: unset;
+}
 
  .mat-option-text.mat-option-text {
     white-space: normal;
   }
+
+  .test {
+    &:hover:not(.mat-option-disabled),
+    &:focus:not(.mat-option-disabled) {
+    background: #607d8b;
+    color: white
+    }    
+  }
+

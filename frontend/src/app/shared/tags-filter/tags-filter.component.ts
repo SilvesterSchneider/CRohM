@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { ContactDto, OrganizationDto, TagDto } from '../api-generated/api-generated';
 
 @Component({
@@ -18,7 +18,7 @@ export class TagsFilterComponent implements OnInit {
 	selectedTags: TagDto[] = new Array<TagDto>();
 	separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredTagsObservable: Observable<string[]>;
-  allPredefinedTags: string[] = [ 'Lehrbeauftragter', 'Kunde', 'Politiker', 'Firma', 'Behörde', 'Bildungseinrichtung', 'Institute', 'Ministerium',
+  allPredefinedTags: string[] = [ 'Lehrbeauftragter', 'Kunde', 'Politiker', 'Unternehmen', 'Behörde', 'Bildungseinrichtung', 'Institute', 'Ministerium',
   'Emeriti', 'Alumni'];
 	allTags: string[] = this.allPredefinedTags;
 	removable = true;
@@ -26,7 +26,7 @@ export class TagsFilterComponent implements OnInit {
   refreshFunction: () => void;
 
   constructor() {
-    this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(
+    this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(startWith(''),
 			map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
   }
 

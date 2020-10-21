@@ -215,6 +215,7 @@ namespace WebApi
             services.AddScoped<IUserCheckDateRepository, UserCheckDateRepository>();
             services.AddScoped<IContactPossibilitiesEntryRepository, ContactPossibilitiesEntryRepository>();
             services.AddScoped<IUserLoginRepository, UserLoginRepository>();
+            services.AddScoped<IEventOrganizationRepository, EventOrganizationRepository>();
             services.AddScoped<IHistoryRepository, HistoryRepository>();
         }
     }

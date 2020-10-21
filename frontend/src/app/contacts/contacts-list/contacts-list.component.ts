@@ -202,9 +202,9 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       preName: 'Vorname' + this.length,
       gender: GenderTypes.MALE,
       address: {
-        city: 'Stadt' + this.length,
-        country: 'Land' + this.length,
-        street: 'Strasse' + this.length,
+        city: 'Stadt',
+        country: 'Land',
+        street: 'Strasse',
         streetNumber: this.length.toString(),
         zipcode: '12345'
       },
