@@ -1,0 +1,14 @@
+name: Dependabot Action
+on:
+  pull_request:
+
+jobs:
+  dependabot-auto-merge:
+    name: Dependabot Auto-Merge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dependabot Auto Approve
+        uses: hmarr/auto-approve-action@v2.0.0
+        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]' || github.actor == 'dependabot'
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
