@@ -46,7 +46,7 @@ describe('Contacts Tests', () => {
         cy.get('#fax').type('0123-123');
         cy.get('#phoneNumber').type('014-234234');
         cy.get('#save').click({force: true});
-        cy.wait(2000);
+        cy.wait(5000);
         cy.get('#contactsTable').should("contain.text", 'testName');
     }); 
     it('should correctly edit the fields gender and contactPerson of an existing user', () => {

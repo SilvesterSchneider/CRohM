@@ -19,20 +19,20 @@ describe('Contacts Tests', () => {
         cy.get('#ignoreButton').click();
         // go to contacts page
         cy.visit('/contacts');
-        cy.wait(5000);
+        cy.wait(10000);
         //click on add button
         cy.get('#addDummyButton').click();
-        cy.wait(5000);
+        cy.wait(10000);
         cy.get('#addDummyButton').click();
-        cy.wait(5000);
+        cy.wait(10000);
         cy.get('#addDummyButton').click();
-        cy.wait(5000);
+        cy.wait(10000);
         cy.visit('/events');
-        cy.wait(5000);
+        cy.wait(10000);
         cy.get('#addDummyEventButton').click();
-        cy.wait(8000);
+        cy.wait(18000);
         cy.get('.editButton').click();
-        cy.wait(5000);
+        cy.wait(10000);
         cy.get('#textInput').type('a');
         cy.wait(200);
         cy.get('#contactInput').find('input').click({force:true});
@@ -40,7 +40,7 @@ describe('Contacts Tests', () => {
         cy.get('#invitationButton').click({force:true});
         cy.wait(2000);
         cy.get('#buttonSend').click();
-        cy.wait(6000);
+        cy.wait(10000);
         cy.get('.checkBox').find('input').should("be.checked");
     }); 
 });
