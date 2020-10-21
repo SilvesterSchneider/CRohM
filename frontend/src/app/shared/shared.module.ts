@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { OsmAddressComponent } from './osm/osm-address/osm-address.component';
 import { MaterialModule } from './material.module';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -18,8 +19,15 @@ import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-
     HttpClientModule,
     MaterialModule,
     FlexLayoutModule],
-  declarations: [OsmAddressComponent, ContactPossibilitiesComponent, AddHistoryComponent, TagsFilterComponent,
-     VerticalGroupedBarChartComponent],
+  declarations: [
+    OsmAddressComponent,
+    ContactPossibilitiesComponent,
+    AddHistoryComponent, TagsFilterComponent,
+    VerticalGroupedBarChartComponent,
+	FlexLayoutModule,
+    NgxChartsModule
+  ],
+
   exports: [
     CommonModule,
     FormsModule,
@@ -31,7 +39,8 @@ import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-
     ContactPossibilitiesComponent,
     AddHistoryComponent,
     TagsFilterComponent,
-    VerticalGroupedBarChartComponent
-    ]
+    VerticalGroupedBarChartComponent,
+    NgxChartsModule
+  ]
 })
 export class SharedModule { }
