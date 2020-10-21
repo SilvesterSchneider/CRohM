@@ -10,14 +10,14 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20201018200703_ram_init")]
-    partial class ram_init
+    [Migration("20201021183820_ram_init_mk")]
+    partial class ram_init_mk
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -358,9 +358,6 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("ContactId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -370,17 +367,20 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("OrganizationId")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<long?>("contactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("organizationId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ContactId");
+                    b.HasIndex("contactId");
 
-                    b.HasIndex("OrganizationId");
+                    b.HasIndex("organizationId");
 
                     b.ToTable("History");
                 });
@@ -545,7 +545,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "e9550d51-9a41-4f59-9bbe-471a74d255f4",
+                            ConcurrencyStamp = "02bf52ce-4ef7-4e7b-b808-206938907503",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -812,13 +812,13 @@ namespace ModelLayer.Migrations
 
             modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
                 {
-                    b.HasOne("ModelLayer.Models.Contact", null)
+                    b.HasOne("ModelLayer.Models.Contact", "contact")
                         .WithMany("History")
-                        .HasForeignKey("ContactId");
+                        .HasForeignKey("contactId");
 
-                    b.HasOne("ModelLayer.Models.Organization", null)
+                    b.HasOne("ModelLayer.Models.Organization", "organization")
                         .WithMany("History")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("organizationId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.ModificationEntry", b =>

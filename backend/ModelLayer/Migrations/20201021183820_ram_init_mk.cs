@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class ram_init : Migration
+    public partial class ram_init_mk : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -462,21 +462,21 @@ namespace ModelLayer.Migrations
                     Date = table.Column<DateTime>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     Comment = table.Column<string>(nullable: true),
-                    ContactId = table.Column<long>(nullable: true),
-                    OrganizationId = table.Column<long>(nullable: true)
+                    contactId = table.Column<long>(nullable: true),
+                    organizationId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_History", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_History_Contacts_ContactId",
-                        column: x => x.ContactId,
+                        name: "FK_History_Contacts_contactId",
+                        column: x => x.contactId,
                         principalTable: "Contacts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_History_Organizations_OrganizationId",
-                        column: x => x.OrganizationId,
+                        name: "FK_History_Organizations_organizationId",
+                        column: x => x.organizationId,
                         principalTable: "Organizations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -544,7 +544,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "e9550d51-9a41-4f59-9bbe-471a74d255f4", "Admin", "ADMIN" });
+                values: new object[] { 1L, "02bf52ce-4ef7-4e7b-b808-206938907503", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -579,14 +579,14 @@ namespace ModelLayer.Migrations
                 column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_History_ContactId",
+                name: "IX_History_contactId",
                 table: "History",
-                column: "ContactId");
+                column: "contactId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_History_OrganizationId",
+                name: "IX_History_organizationId",
                 table: "History",
-                column: "OrganizationId");
+                column: "organizationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ModificatonHistory_UserId",

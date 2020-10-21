@@ -22,6 +22,20 @@ namespace RepositoryLayer
         Task<Event> GetEventByIdWithAllIncludesAsync(long id);
 
         /// <summary>
+        /// Get all requests for a contact
+        /// </summary>
+        /// <param name="contactId"></param>
+        /// <returns></returns>
+        Task<List<Event>> GetEventsForContact(long contactId);
+
+        /// <summary>
+        /// Get all events for a specific organization.
+        /// </summary>
+        /// <param name="orgaId"></param>
+        /// <returns></returns>
+        Task<List<Event>> GetEventsForOrganization(long orgaId);
+
+        /// <summary>
         /// Getter für alle events als liste mit allen includes
         /// </summary>
         /// <returns>liste aller events</returns>
@@ -88,6 +102,26 @@ namespace RepositoryLayer
                 .ThenInclude(b => b.Organization)
                 .Include(x => x.Participated)
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<Event>> GetEventsForContact(long contactId)
+        {
+            return await Entities
+                .Include(y => y.Contacts)
+                .ThenInclude(z => z.Contact)
+                .Include(a => a.Participated)
+                .Where(e => e.Contacts.Any(contact => contact.ContactId == contactId))
+                .ToListAsync();
+        }
+
+        public async Task<List<Event>> GetEventsForOrganization(long orgaId)
+        {
+            return await Entities
+                .Include(y => y.Organizations)
+                .ThenInclude(z => z.Organization)
+                .Include(a => a.Participated)
+                .Where(e => e.Organizations.Any(orga => orga.OrganizationId == orgaId))
+                .ToListAsync();
         }
 
         public async Task<bool> ModifyEventAsync(EventDto eventToModify)

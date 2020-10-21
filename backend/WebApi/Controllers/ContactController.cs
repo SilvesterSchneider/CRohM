@@ -14,6 +14,9 @@ using RepositoryLayer;
 using ServiceLayer;
 using System.Linq;
 using ModelLayer.Helper;
+using WebApi.Helper;
+using WebApi.Wrapper;
+using System;
 
 namespace WebApi.Controllers
 {
@@ -26,14 +29,16 @@ namespace WebApi.Controllers
         private IUserService userService;
         private readonly IModificationEntryService modService;
         private IContactService contactService;
+        private IHistoryService historyService;
 
-        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService)
+        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IHistoryService  historyService)          
         {
             _mapper = mapper;
             this.eventService = eventService;
             this.userService = userService;
             this.modService = modService;
             this.contactService = contactService;
+            this.historyService = historyService;
         }
 
         [HttpGet]
@@ -145,6 +150,38 @@ namespace WebApi.Controllers
             await contactService.DeleteAsync(contact);
             await modService.UpdateContactByDeletionAsync(id);
             return Ok();
+        }
+
+        [HttpGet("{id}/history")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(PagedResponse<List<object>>), Description = "successfully found")]
+        public async Task<IActionResult> GetHistory(long id, [FromQuery] PaginationFilter filter)
+        {
+            PaginationFilter validFilter = new PaginationFilter(filter.PageStart, filter.PageSize);
+
+            List<Event> events = await eventService.GetEventsForContact(id);        
+            List<HistoryElement> history = await historyService.GetHistoryByContactAsync(id);
+
+            List<object> mergedResult = events.Cast<object>().Concat(history.Cast<object>()).ToList();
+            mergedResult.Sort((e1, e2) => DateTime.Compare(getDate(e2), getDate(e1)));
+
+            List<object> pagination = mergedResult.Skip(validFilter.PageStart).Take(validFilter.PageSize).ToList();
+            return Ok(new PagedResponse<List<object>>(pagination, validFilter.PageStart, validFilter.PageSize, mergedResult.Count));
+        }
+
+
+        private DateTime getDate(object element)
+        {
+            if(element is Event)
+            {
+                return ((Event)element).Date;
+            }
+
+            if(element is HistoryElement)
+            {
+                return ((HistoryElement)element).Date;
+            }
+
+            return DateTime.Now;
         }
     }
 }

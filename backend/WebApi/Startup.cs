@@ -42,7 +42,7 @@ namespace WebApi
             var database = Configuration["DBName"] ?? "CRMDB"; 
 
             var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
-            //connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
+            connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -190,8 +190,8 @@ namespace WebApi
             services.AddScoped<IModificationEntryService, ModificationEntryService>();
             services.AddScoped<IUserLoginService, UserLoginService>();
             services.AddScoped<IDataProtectionService, DataProtectionService>();
+            services.AddScoped<IHistoryService, HistoryService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
-
             //###########################Repositories#######################################
 
             services.AddScoped<IAddressRepository, AddressRepository>();
@@ -206,6 +206,7 @@ namespace WebApi
             services.AddScoped<IContactPossibilitiesEntryRepository, ContactPossibilitiesEntryRepository>();
             services.AddScoped<IUserLoginRepository, UserLoginRepository>();
             services.AddScoped<IEventOrganizationRepository, EventOrganizationRepository>();
+            services.AddScoped<IHistoryRepository, HistoryRepository>();
         }
     }
 }

@@ -1,20 +1,17 @@
-import {
-  Component, OnInit, Inject
-} from '@angular/core';
-import { EventDto, TagDto, ModificationEntryDto, ModificationEntryService,
-  MODEL_TYPE, DATA_TYPE } from '../../shared/api-generated/api-generated';
-import { EventService } from '../../shared/api-generated/api-generated';
+import { Component, OnInit, Inject } from '@angular/core';
+import { EventDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, DATA_TYPE } from '../../shared/api-generated/api-generated';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
+import { map } from 'rxjs/operators';
 
-export class ContactDtoExtended {
+export class ContactOrganizationDtoExtended {
   id: number;
   preName: string;
   name: string;
+  modelType: MODEL_TYPE;
   participated: boolean;
   wasInvited: boolean;
-  modelType: MODEL_TYPE;
 }
 
 @Component({
@@ -24,25 +21,19 @@ export class ContactDtoExtended {
 })
 
 export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> implements OnInit {
-  contacts: ContactDtoExtended[] = new Array<ContactDtoExtended>();
-  event: EventDto;
+  contactsOrganizations: ContactOrganizationDtoExtended[] = new Array<ContactOrganizationDtoExtended>();
   eventsForm: FormGroup;
   dataHistory: ModificationEntryDto[] = new Array<ModificationEntryDto>();
   columnsContacts = ['wasInvited', 'participated', 'prename', 'name'];
-  tags: TagDto[] = new Array<TagDto>();
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
-  constructor(
-    public dialogRef: MatDialogRef<EventsInfoComponent>,
-    public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: EventDto,
-    private eventService: EventService,
-    private fb: FormBuilder,
-    private modService: ModificationEntryService
+  constructor(public dialogRef: MatDialogRef<EventsInfoComponent>,
+              public dialog: MatDialog,
+              @Inject(MAT_DIALOG_DATA) public event: EventDto,
+              private fb: FormBuilder,
+              private modService: ModificationEntryService
   ) {
     super(dialogRef, dialog);
-    this.event = data;
-    this.tags = this.event.tags;
   }
 
   getDate(date: string): string {
@@ -62,7 +53,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     this.eventsForm = this.createEventsForm();
     if (this.event.contacts != null) {
       this.event.contacts.forEach(x => {
-        this.contacts.push({
+        this.contactsOrganizations.push({
           id: x.id,
           preName: x.preName,
           name: x.name,
@@ -71,11 +62,13 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
           modelType: MODEL_TYPE.CONTACT
         });
       });
+    }
+    if (this.event.organizations != null) {
       this.event.organizations.forEach(x => {
-        this.contacts.push({
+        this.contactsOrganizations.push({
           id: x.id,
-          preName: '',
-          name: x.name,
+          preName: x.name,
+          name: x.description,
           participated: false,
           wasInvited: false,
           modelType: MODEL_TYPE.ORGANIZATION
@@ -84,19 +77,23 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     }
     if (this.event.participated != null) {
       this.event.participated.forEach(x => {
-        const cont: ContactDtoExtended = this.contacts.find(y => y.id === x.objectId && y.modelType === x.modelType);
+        let cont: ContactOrganizationDtoExtended = null;
+        if (x.modelType === MODEL_TYPE.CONTACT) {
+          cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.CONTACT && y.id === x.objectId);
+        } else {
+          cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.ORGANIZATION && y.id === x.objectId);
+        }
         if (cont != null) {
           cont.participated = x.hasParticipated;
           cont.wasInvited = x.wasInvited;
         }
       });
     }
-    this.modService.getSortedListByTypeAndId(this.event.id, MODEL_TYPE.EVENT).subscribe(x => {
-      x.forEach(a => {
-        this.dataHistory.push(a);
+    this.modService.getSortedListByTypeAndId(this.event.id, MODEL_TYPE.EVENT)
+      .pipe(map(mod => mod.data), map(mod => mod.filter(el => el.dataType !== DATA_TYPE.NONE).sort(this.getSortHistoryFunction)))
+      .subscribe(result => {
+        this.dataHistory = result;
       });
-      this.dataHistory.sort(this.getSortHistoryFunction);
-    });
     this.eventsForm.patchValue(this.event);
     this.eventsForm.get('date').patchValue(this.formatDate(this.event.date));
     this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));
@@ -136,9 +133,5 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
       time: [''],
       duration: ['']
     });
-  }
-
-  close() {
-    this.dialogRef.close();
   }
 }

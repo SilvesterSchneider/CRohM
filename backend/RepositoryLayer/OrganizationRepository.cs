@@ -29,7 +29,6 @@ namespace RepositoryLayer
         {
             Organization org = await Entities
                 .Include(t => t.Tags)
-                .Include(d => d.History)
                 .Include(a => a.Contact)
                 .ThenInclude(b => b.ContactEntries)
                 .Include(x => x.OrganizationContacts)
@@ -51,7 +50,6 @@ namespace RepositoryLayer
         {
             return await Entities
                 .Include(t => t.Tags)
-                .Include(d => d.History)
                 .Include(x => x.Address)
                 .Include(y => y.Contact)
                 .ThenInclude(b => b.ContactEntries)
@@ -66,7 +64,6 @@ namespace RepositoryLayer
         {
             return Entities
                 .Include(x => x.Address)
-                .Include(d => d.History)
                 .Include(y => y.Contact)
                 .ThenInclude(b => b.ContactEntries)
                 .Include(z => z.OrganizationContacts)
