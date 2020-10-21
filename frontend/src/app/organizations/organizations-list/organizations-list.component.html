@@ -59,10 +59,10 @@
             <mat-cell *matCellDef="let element"> {{element.contact.fax}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Zugehörige">
-            <mat-header-cell *matHeaderCellDef> Beschäftigte </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> Mitarbeiter </mat-header-cell>
             <mat-cell *matCellDef="let element">
                 <mat-form-field>
-                    <mat-label>Beschäftigte</mat-label>
+                    <mat-label>Mitarbeiter</mat-label>
                     <mat-select [(ngModel)]="element.employees">
                         <mat-option disabled *ngFor="let employee of element.employees">
                             {{employee.preName + ' ' + employee.name}}
