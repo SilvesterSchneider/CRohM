@@ -11,7 +11,7 @@ import { BaseDialogInput } from '../form/base-dialog-form/base-dialog.component'
 })
 
 export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> implements OnInit {
-    public types: string[] = ['E-Mail', 'Telefonanruf', 'Notiz'];
+    public types: string[] = ['E-Mail', 'Telefonanruf', 'Notiz', 'Besuch'];
     public oppoSuitsForm: FormGroup;
     constructor(
         public dialogRef: MatDialogRef<AddHistoryComponent>,
@@ -35,12 +35,14 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
 
     getObject(): HistoryElementCreateDto {
         let historyToSave: HistoryElementCreateDto;
-        let typeToSave = 0;
+        let typeToSave = HistoryElementType.MAIL;
         const typeText: string = this.oppoSuitsForm.get('type').value;
         if (typeText === this.types[1]) {
             typeToSave = HistoryElementType.PHONE_CALL;
         } else if (typeText === this.types[2]) {
             typeToSave = HistoryElementType.NOTE;
+        } else if (typeText === this.types[3]) {
+            typeToSave = HistoryElementType.VISIT;
         }
         historyToSave = {
             date: this.oppoSuitsForm.get('date').value,

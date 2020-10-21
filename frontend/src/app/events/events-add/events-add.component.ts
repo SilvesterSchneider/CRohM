@@ -8,7 +8,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import {
   MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { EventCreateDto } from '../../shared/api-generated/api-generated';
+import { EventCreateDto, MODEL_TYPE, OrganizationService } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
@@ -24,10 +24,13 @@ export class ItemList {
 }
 
 export class EventContactConnection {
-  contactId: number;
+  objectId: number;
   selected: boolean;
   name: string;
   preName: string;
+  participated: boolean;
+  wasInvited: boolean;
+  modelType: MODEL_TYPE;
 }
 
 @Component({
@@ -73,7 +76,8 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     private contactService: ContactService,
     private eventService: EventService,
     private fb: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private orgaService: OrganizationService
   ) {
     super(dialogRef, dialog);
     if (this.ngControl != null) {
@@ -96,13 +100,31 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
       y.forEach(x => {
         this.filteredItems.push(
           {
-            contactId: x.id,
+            objectId: x.id,
             name: x.name,
             preName: x.preName,
-            selected: false
+            selected: false,
+            modelType: MODEL_TYPE.CONTACT,
+            participated: false,
+            wasInvited: false
           }
         );
       });
+      this.orgaService.get().subscribe(a => {
+        a.forEach(b => {
+          this.filteredItems.push(
+            {
+              objectId: b.id,
+              name: b.name,
+              preName: b.description,
+              selected: false,
+              modelType: MODEL_TYPE.ORGANIZATION,
+              participated: false,
+              wasInvited: false
+            }
+          );
+        });
+      })
     }
     );
   }
@@ -172,27 +194,39 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
 
   toggleSelectAll() {
     this.isAllSelected = !this.isAllSelected;
-    const len = this.filteredItems.length;
-    if (this.isAllSelected) {
-      for (let i = 0; i++; i < len) {
-        this.filteredItems[i].selected = true;
+    this.filteredItems.forEach(x => this.toggleSelectionAll(x, this.isAllSelected));
+  }
+
+  toggleSelectionAll(item: EventContactConnection, isSelected: boolean) {
+    item.selected = isSelected;
+    if (item.selected) {
+      if (this.selectedItems.find(a => a.objectId === item.objectId && a.modelType === item.modelType) == null) {
+        this.selectedItems.push(item);
       }
-      this.selectedItems = this.filteredItems;
-      this.changeCallback(this.selectedItems);
-      this.cd.markForCheck();
     } else {
-      this.selectedItems = [];
+      const i = this.selectedItems.findIndex(value => value.objectId === item.objectId && value.modelType === item.modelType);
+      if (i > -1) {
+        this.selectedItems[i].participated = false;
+        this.selectedItems.splice(i, 1);
+      }
     }
-    this.changeCallback(this.selectedItems);
+    if (this.changeCallback) {
+      this.changeCallback(this.selectedItems);
+    }
   }
 
   toggleSelection(item: EventContactConnection) {
     item.selected = !item.selected;
     if (item.selected) {
-      this.selectedItems.push(item);
+      if (this.selectedItems.find(a => a.objectId === item.objectId && a.modelType === item.modelType) == null) {
+        this.selectedItems.push(item);
+      }
     } else {
-      const i = this.selectedItems.findIndex(value => value.contactId === item.contactId);
-      this.selectedItems.splice(i, 1);
+      const i = this.selectedItems.findIndex(value => value.objectId === item.objectId && value.modelType === item.modelType);
+      if (i > -1) {
+        this.selectedItems[i].participated = false;
+        this.selectedItems.splice(i, 1);
+      }
     }
     if (this.changeCallback) {
       this.changeCallback(this.selectedItems);
@@ -207,7 +241,14 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
   saveValues() {
     const eventToSave: EventCreateDto = this.eventsForm.value;
     eventToSave.contacts = new Array<number>();
-    this.selectedItems.forEach(x => eventToSave.contacts.push(x.contactId));
+    eventToSave.organizations = new Array<number>();
+    this.selectedItems.forEach(x => {
+      if (x.modelType === MODEL_TYPE.CONTACT) {
+        eventToSave.contacts.push(x.objectId)
+      } else {
+        eventToSave.organizations.push(x.objectId);
+      }      
+    });
     this.eventService.post(eventToSave).subscribe(() => this.dialogRef.close());
   }
 

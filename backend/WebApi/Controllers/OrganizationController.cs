@@ -8,6 +8,7 @@ using NSwag.Annotations;
 using ServiceLayer;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using WebApi.Helper;
@@ -27,6 +28,7 @@ namespace WebApi.Controllers
         private readonly ILogger _logger;
         private readonly IContactService contactService;
         private readonly IHistoryService historyService;
+        private readonly IEventService eventService;
 
         public OrganizationController(
             IMapper mapper,
@@ -35,9 +37,11 @@ namespace WebApi.Controllers
             ILoggerFactory logger,
             IModificationEntryService modService,
             IContactService contactService,
-            IHistoryService historyService)
+            IHistoryService historyService,
+            IEventService eventService)
         {
             _mapper = mapper;
+            this.eventService = eventService;
             this.contactService = contactService;
             this.userService = userService;
             this.modService = modService;
@@ -199,15 +203,31 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{id}/history")]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(PagedResponse<List<HistoryElement>>), Description = "successfully found")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(PagedResponse<List<object>>), Description = "successfully found")]
         public async Task<IActionResult> GetHistory(long id, [FromQuery] PaginationFilter filter)
         {
             PaginationFilter validFilter = new PaginationFilter(filter.PageStart, filter.PageSize);
+            List<Event> events = await eventService.GetEventsForOrganization(id);
             List<HistoryElement> history = await historyService.GetHistoryByOrganisationAsync(id, validFilter.PageStart, validFilter.PageSize);
-            int count = await historyService.GetHistoryByOrganisationCountAsync(id);
-
-            return Ok(new PagedResponse<List<HistoryElement>>(history, validFilter.PageStart, validFilter.PageSize, count));
+            List<object> mergedResult = events.Cast<object>().Concat(history.Cast<object>()).ToList();
+            mergedResult.Sort((e1, e2) => DateTime.Compare(getDate(e2), getDate(e1)));
+            List<object> pagination = mergedResult.Skip(validFilter.PageStart).Take(validFilter.PageSize).ToList();
+            return Ok(new PagedResponse<List<object>>(pagination, validFilter.PageStart, validFilter.PageSize, mergedResult.Count));
         }
 
+        private DateTime getDate(object element)
+        {
+            if (element is Event)
+            {
+                return ((Event)element).Date;
+            }
+
+            if (element is HistoryElement)
+            {
+                return ((HistoryElement)element).Date;
+            }
+
+            return DateTime.Now;
+        }
     }
 }

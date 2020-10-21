@@ -4,7 +4,7 @@ import {
   ModificationEntryService, MODEL_TYPE, MODIFICATION, DATA_TYPE,
   ContactPossibilitiesEntryDto, OrganizationDto, ModificationEntryDto, TagDto,
   HistoryElementDto,
-  HistoryElementType, OrganizationService
+  HistoryElementType, OrganizationService, EventDto
 } from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -23,7 +23,7 @@ export class OrganizationsInfoComponent implements OnInit {
   modifications: ModificationEntryDto[] = [];
   modificationsPaginationLength: number;
 
-  history: HistoryElementDto[] = [];
+  history: (EventDto | HistoryElementDto)[] = [];
   historyPaginationLength: number;
 
   displayedColumnsEmployees = ['vorname', 'name'];
@@ -97,6 +97,14 @@ export class OrganizationsInfoComponent implements OnInit {
 
   isMail(element: HistoryElementDto): boolean {
     return element.type === HistoryElementType.MAIL;
+  }
+
+  eventParticipated(element: EventDto): boolean {
+    return !!element.participated && element.participated?.some(part => part.modelType === MODEL_TYPE.ORGANIZATION && part.objectId === this.organization.id && part.hasParticipated);
+  }
+
+  eventNotParticipated(element: EventDto): boolean {
+    return !!element.participated && !element.participated?.some(part => part.modelType === MODEL_TYPE.ORGANIZATION && part.objectId === this.organization.id && part.hasParticipated);
   }
 
   private loadModifications(pageStart: number, pageSize: number) {

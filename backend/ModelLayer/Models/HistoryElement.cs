@@ -9,7 +9,8 @@ namespace ModelLayer.Models
     {
         MAIL = 0,
         PHONE_CALL = 1,
-        NOTE = 2
+        NOTE = 2,
+        VISIT = 3
     }
 
     public class HistoryElement : BaseEntity

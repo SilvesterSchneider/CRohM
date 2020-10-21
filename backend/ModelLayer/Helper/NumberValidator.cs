@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ModelLayer.Helper
 {
@@ -14,11 +15,10 @@ namespace ModelLayer.Helper
             {
                 return true;
             }
-            if (value is string valueString && !valueString.StartsWith("-"))
+            Regex regex = new Regex("^0[0-9- ]*$");
+            if (value is string valueString)
             {
-                long valueLong;
-                string valueFormatted = valueString.Replace("-", "");
-                return long.TryParse(valueFormatted, out valueLong);
+                return regex.IsMatch(valueString);
             }
             else
             {

@@ -21,12 +21,19 @@ namespace WebApi.Controllers
         private readonly IModificationEntryService modService;
         private IEventService eventService;
         private IContactService contactService;
+        private IOrganizationService orgaService;
 
-        public EventController(IMapper mapper, IEventService eventService, IModificationEntryService modService, IUserService userService, IContactService contactService)
+        public EventController(IMapper mapper,
+            IEventService eventService,
+            IModificationEntryService modService,
+            IUserService userService,
+            IContactService contactService,
+            IOrganizationService orgaService)
         {
             this._mapper = mapper;
             this.userService = userService;
             this.modService = modService;
+            this.orgaService = orgaService;
             this.eventService = eventService;
             this.contactService = contactService;
         }
@@ -88,80 +95,32 @@ namespace WebApi.Controllers
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             Event oldOne = await eventService.GetEventByIdWithAllIncludesAsync(id);
             List<Contact> contactsParticipated = new List<Contact>();
+            List<Organization> orgasParticipated = new List<Organization>();
             foreach (ParticipatedDto part in eventToModify.Participated)
             {
-                Contact cont = await contactService.GetByIdAsync(part.ContactId);
-                if (cont != null)
+                if (part.ModelType == MODEL_TYPE.CONTACT)
                 {
-                    contactsParticipated.Add(cont);
+                    Contact cont = await contactService.GetByIdAsync(part.ObjectId);
+                    if (cont != null)
+                    {
+                        contactsParticipated.Add(cont);
+                    }
+                }
+                else if (part.ModelType == MODEL_TYPE.ORGANIZATION)
+                {
+                    Organization orga = await orgaService.GetByIdAsync(part.ObjectId);
+                    if (orga != null)
+                    {
+                        orgasParticipated.Add(orga);
+                    }
                 }
             }
-            await modService.UpdateEventsAsync(userOfChange, oldOne, eventToModify, contactsParticipated);
+            await modService.UpdateEventsAsync(userOfChange, oldOne, eventToModify, contactsParticipated, orgasParticipated);
             if (await eventService.ModifyEventAsync(eventToModify))
             {
                 await modService.CommitChanges();
             }
             return Ok(eventToModify);
-        }
-
-        /// <summary>
-        /// Ein kontakt einem event hinzufügen
-        /// </summary>
-        /// <param name="id">event id</param>
-        /// <param name="contactId">kontakt id</param>
-        /// <returns></returns>
-        [HttpPut("{id}/addContact")]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
-        public async Task<IActionResult> AddContact([FromRoute]long id, [FromBody]long contactId)
-        {
-            EventContact result = await eventService.AddEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
-            if (result != null)
-            {
-                User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
-                string contactName = string.Empty;
-                Contact contactToUse = await contactService.GetByIdAsync(contactId);
-                if (contactToUse != null)
-                {
-                    contactName = contactToUse.PreName + " " + contactToUse.Name;
-                }
-                await modService.ChangeContactsOfEvent(id, contactName, false, userOfChange);
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Fahler beim hinzufügen des Kontakts zum event!");
-            }
-        }
-
-        /// <summary>
-        /// Einen kontakt aus einem event entfernen
-        /// </summary>
-        /// <param name="id">die event id</param>
-        /// <param name="contactId">die kontakt id</param>
-        /// <returns></returns>
-        [HttpPut("{id}/removeContact")]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
-        public async Task<IActionResult> RemoveContact([FromRoute]long id, [FromBody]long contactId)
-        {
-            bool result = await eventService.RemoveEventContactAsync(new EventContact() { EventId = id, ContactId = contactId });
-            if (result)
-            {
-                User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
-                string contactName = string.Empty;
-                Contact contactToUse = await contactService.GetByIdAsync(contactId);
-                if (contactToUse != null)
-                {
-                    contactName = contactToUse.PreName + " " + contactToUse.Name;
-                }
-                await modService.ChangeContactsOfEvent(id, contactName, true, userOfChange);
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Fehler beim löschen eines Kontakts aus einem Event!");
-            }
         }
 
         /// <summary>
@@ -180,6 +139,10 @@ namespace WebApi.Controllers
                 foreach (int contactId in eventToCreate.Contacts)
                 {
                     await eventService.AddEventContactAsync(new EventContact() { ContactId = contactId, EventId = newEvent.Id });
+                }
+                foreach (int orgaId in eventToCreate.Organizations)
+                {
+                    await eventService.AddEventOrganizationAsync(new EventOrganization() { OrganizationId = orgaId, EventId = newEvent.Id });
                 }
                 var uri = $"https://{Request.Host}{Request.Path}/{_mapper.Map<EventDto>(newEvent).Id}";
                 User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
