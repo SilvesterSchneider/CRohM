@@ -20,7 +20,7 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field class="textMargin">
-                    <input matInput placeholder="Passwort" formControlName="password">
+                    <input matInput type="password" placeholder="Passwort" formControlName="password">
                 </mat-form-field>
             </div>
         </div>
@@ -41,6 +41,9 @@
             Speichern
         </button>
     </div>
+</div>
+<div class="margin">
+    Um die Einstellungen zu testen können Sie hier eine Test E-Mail an eine Adresse senden
 </div>
 <div class="mydivclass" [formGroup]="sendMailForm">
     <div class="column">

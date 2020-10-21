@@ -40,7 +40,7 @@ namespace ServiceLayer
         private static string EVENTDATEFIELD = "<Datum>";
         private static string TESTMAIL = "Test-Email";
         private static string EVENTTIMEFIELD = "<Uhrzeit>";
-        private static string MAILSETUP = "Sehr geehrter Herr Administrator\r\rDie Einstellungen für den Email-Server wurden erfolgreich " +
+        private static string MAILSETUP = "Sehr geehrter Administrator\r\rDie Einstellungen für den Email-Server wurden erfolgreich " +
             "übernommen\r\rTechnische Hochschule Nürnberg";
         public static string INVITATION_DEF_CONTENT = STARTFIELD + " " + PRENAMEFIELD + " " + NAMEFIELD +
             "\rWir laden Sie herzlich ein zu unserer Veranstaltung \"" + EVENTNAMEFIELD +
