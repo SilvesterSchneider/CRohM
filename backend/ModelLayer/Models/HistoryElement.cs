@@ -9,7 +9,8 @@ namespace ModelLayer.Models
     {
         MAIL = 0,
         PHONE_CALL = 1,
-        NOTE = 2
+        NOTE = 2,
+        VISIT = 3
     }
 
     public class HistoryElement : BaseEntity
@@ -17,5 +18,7 @@ namespace ModelLayer.Models
         public DateTime Date { get; set; } = DateTime.Now;
         public HistoryElementType Type { get; set; } = HistoryElementType.MAIL;
         public string Comment { get; set; } = "";
+        public Contact contact { get; set; }
+        public Organization organization { get; set; }
     }
 }

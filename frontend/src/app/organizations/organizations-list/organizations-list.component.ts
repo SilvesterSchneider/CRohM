@@ -174,9 +174,9 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		  description: 'Bezeichnung' + this.length,
 		  employees: [],
 		  address: {
-			city: 'Statd' + this.length,
-			country: 'Land' + this.length,
-			street: 'Strasse' + this.length,
+			city: 'Statd',
+			country: 'Land',
+			street: 'Strasse',
 			streetNumber: this.length.toString(),
 			zipcode: '12345'
 		  },

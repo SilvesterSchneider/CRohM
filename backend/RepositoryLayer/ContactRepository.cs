@@ -46,7 +46,6 @@ namespace RepositoryLayer
                 .Include(c => c.Events)
                 .ThenInclude(d => d.Event)
                 .ThenInclude(e => e.Participated)
-                .Include(x => x.History)
                 .ToListAsync();
         }
 
@@ -57,11 +56,11 @@ namespace RepositoryLayer
                 .Include(g => g.OrganizationContacts)
                 .ThenInclude(j => j.Organization)
                 .Include(a => a.Address)
-                .Include(x => x.History)
                 .Include(b => b.ContactPossibilities)
                 .ThenInclude(b => b.ContactEntries)
                 .Include(c => c.Events)
                 .ThenInclude(d => d.Event)
+                .ThenInclude(e => e.Participated)
                 .FirstAsync(x => x.Id == id);
         }
 
@@ -76,7 +75,6 @@ namespace RepositoryLayer
                 .Include(c => c.Events)
                 .ThenInclude(d => d.Event)
                 .ThenInclude(e => e.Participated)
-                .Include(x => x.History)
                 .ToListAsync();
         }
 

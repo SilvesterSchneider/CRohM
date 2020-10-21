@@ -14,7 +14,7 @@ namespace ModelLayer.DataTransferObjects
         public AddressDto Address { get; set; }
 
         public ContactPossibilitiesDto Contact { get; set; }
-
+        public List<EventDto> Events { get; set; } = new List<EventDto>();
         public List<ContactDto> Employees { get; set; } = new List<ContactDto>();
 
         public List<TagDto> Tags { get; set; } = new List<TagDto>();

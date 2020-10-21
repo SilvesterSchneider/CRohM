@@ -12,6 +12,8 @@ using ModelLayer.Models;
 using NSwag.Annotations;
 using RepositoryLayer;
 using ServiceLayer;
+using WebApi.Helper;
+using WebApi.Wrapper;
 
 namespace WebApi.Controllers
 {
@@ -47,19 +49,19 @@ namespace WebApi.Controllers
 
         [HttpGet("id")]
         [Authorize]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(List<ModificationEntryDto>), Description = "successfully found")]
-        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
-        public async Task<IActionResult> GetSortedListByTypeAndId([FromQuery] long id, [FromQuery] MODEL_TYPE modelDataType)
+        [SwaggerResponse(HttpStatusCode.OK, typeof(PagedResponse<List<ModificationEntryDto>>), Description = "successfully found")]
+        public async Task<IActionResult> GetSortedListByTypeAndId([FromQuery] long id, [FromQuery] MODEL_TYPE modelDataType, [FromQuery] PaginationFilter filter)
         {
-            List<ModificationEntry> entries = await modificationEntryRepository.GetModificationEntriesByIdAndModelTypeAsync(id, modelDataType);
-            if (entries != null)
+            if(filter == null)
             {
-                return Ok(mapper.Map<List<ModificationEntryDto>>(entries));
+                List<ModificationEntry> fullResult = await modificationEntryRepository.GetModificationEntriesByIdAndModelTypeAsync(id, modelDataType);
+                return Ok(new PagedResponse<List<ModificationEntryDto>>(mapper.Map<List<ModificationEntryDto>>(fullResult), 0, 0, 0));
+
             }
-            else
-            {
-                return NotFound();
-            }
+            PaginationFilter validFilter = new PaginationFilter(filter.PageStart, filter.PageSize);
+            List<ModificationEntry> entries = await modificationEntryRepository.GetModificationEntriesByIdAndModelTypePaginationAsync(id, modelDataType, validFilter.PageStart, validFilter.PageSize);
+            int totalRecords = await modificationEntryRepository.GetModificationEntriesByIdAndModelTypeCountAsync(id, modelDataType);
+            return Ok(new PagedResponse<List<ModificationEntryDto>>(mapper.Map<List<ModificationEntryDto>>(entries), validFilter.PageStart, validFilter.PageSize, totalRecords));
         }
     }
 }

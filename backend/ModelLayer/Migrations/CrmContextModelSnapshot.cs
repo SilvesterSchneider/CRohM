@@ -15,7 +15,7 @@ namespace ModelLayer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -320,6 +320,32 @@ namespace ModelLayer.Migrations
                     b.ToTable("EventContacts");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.EventOrganization", b =>
+                {
+                    b.Property<long>("EventId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("OrganizationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EventId", "OrganizationId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("EventOrganizations");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
                 {
                     b.Property<long>("Id")
@@ -330,9 +356,6 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("ContactId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -342,17 +365,20 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("OrganizationId")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<long?>("contactId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("organizationId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ContactId");
+                    b.HasIndex("contactId");
 
-                    b.HasIndex("OrganizationId");
+                    b.HasIndex("organizationId");
 
                     b.ToTable("History");
                 });
@@ -457,9 +483,6 @@ namespace ModelLayer.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("ContactId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -469,8 +492,14 @@ namespace ModelLayer.Migrations
                     b.Property<bool>("HasParticipated")
                         .HasColumnType("bit");
 
+                    b.Property<int>("ModelType")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("ObjectId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("WasInvited")
                         .HasColumnType("bit");
@@ -514,7 +543,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "d77fb6b8-8596-411d-a45f-48c17d49b24e",
+                            ConcurrencyStamp = "02bf52ce-4ef7-4e7b-b808-206938907503",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -764,15 +793,30 @@ namespace ModelLayer.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.EventOrganization", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Event", "Event")
+                        .WithMany("Organizations")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelLayer.Models.Organization", "Organization")
+                        .WithMany("Events")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
                 {
-                    b.HasOne("ModelLayer.Models.Contact", null)
+                    b.HasOne("ModelLayer.Models.Contact", "contact")
                         .WithMany("History")
-                        .HasForeignKey("ContactId");
+                        .HasForeignKey("contactId");
 
-                    b.HasOne("ModelLayer.Models.Organization", null)
+                    b.HasOne("ModelLayer.Models.Organization", "organization")
                         .WithMany("History")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("organizationId");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.ModificationEntry", b =>
