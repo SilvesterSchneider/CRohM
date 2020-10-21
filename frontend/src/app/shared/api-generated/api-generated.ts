@@ -1017,6 +1017,69 @@ export class ContactService {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param pageStart (optional) 
+     * @param pageSize (optional) 
+     * @return successfully found
+     */
+    getHistory(id: number, pageStart?: number | undefined, pageSize?: number | undefined): Observable<PagedResponseOfListOfObject> {
+        let url_ = this.baseUrl + "/api/contact/{id}/history?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (pageStart === null)
+            throw new Error("The parameter 'pageStart' cannot be null.");
+        else if (pageStart !== undefined)
+            url_ += "PageStart=" + encodeURIComponent("" + pageStart) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetHistory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetHistory(<any>response_);
+                } catch (e) {
+                    return <Observable<PagedResponseOfListOfObject>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PagedResponseOfListOfObject>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetHistory(response: HttpResponseBase): Observable<PagedResponseOfListOfObject> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <PagedResponseOfListOfObject>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PagedResponseOfListOfObject>(<any>null);
+    }
 }
 
 @Injectable({
@@ -1826,9 +1889,11 @@ export class ModificationEntryService {
     /**
      * @param id (optional) 
      * @param modelDataType (optional) 
+     * @param pageStart (optional) 
+     * @param pageSize (optional) 
      * @return successfully found
      */
-    getSortedListByTypeAndId(id?: number | undefined, modelDataType?: MODEL_TYPE | undefined): Observable<ModificationEntryDto[]> {
+    getSortedListByTypeAndId(id?: number | undefined, modelDataType?: MODEL_TYPE | undefined, pageStart?: number | undefined, pageSize?: number | undefined): Observable<PagedResponseOfListOfModificationEntryDto> {
         let url_ = this.baseUrl + "/api/ModificationEntry/id?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -1838,6 +1903,14 @@ export class ModificationEntryService {
             throw new Error("The parameter 'modelDataType' cannot be null.");
         else if (modelDataType !== undefined)
             url_ += "modelDataType=" + encodeURIComponent("" + modelDataType) + "&";
+        if (pageStart === null)
+            throw new Error("The parameter 'pageStart' cannot be null.");
+        else if (pageStart !== undefined)
+            url_ += "PageStart=" + encodeURIComponent("" + pageStart) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1855,14 +1928,14 @@ export class ModificationEntryService {
                 try {
                     return this.processGetSortedListByTypeAndId(<any>response_);
                 } catch (e) {
-                    return <Observable<ModificationEntryDto[]>><any>_observableThrow(e);
+                    return <Observable<PagedResponseOfListOfModificationEntryDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ModificationEntryDto[]>><any>_observableThrow(response_);
+                return <Observable<PagedResponseOfListOfModificationEntryDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetSortedListByTypeAndId(response: HttpResponseBase): Observable<ModificationEntryDto[]> {
+    protected processGetSortedListByTypeAndId(response: HttpResponseBase): Observable<PagedResponseOfListOfModificationEntryDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1872,19 +1945,15 @@ export class ModificationEntryService {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <ModificationEntryDto[]>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <PagedResponseOfListOfModificationEntryDto>JSON.parse(_responseText, this.jsonParseReviver);
             return _observableOf(result200);
-            }));
-        } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("contact not found", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ModificationEntryDto[]>(<any>null);
+        return _observableOf<PagedResponseOfListOfModificationEntryDto>(<any>null);
     }
 }
 
@@ -2348,6 +2417,69 @@ export class OrganizationService {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param pageStart (optional) 
+     * @param pageSize (optional) 
+     * @return successfully found
+     */
+    getHistory(id: number, pageStart?: number | undefined, pageSize?: number | undefined): Observable<PagedResponseOfListOfHistoryElement> {
+        let url_ = this.baseUrl + "/api/organization/{id}/history?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (pageStart === null)
+            throw new Error("The parameter 'pageStart' cannot be null.");
+        else if (pageStart !== undefined)
+            url_ += "PageStart=" + encodeURIComponent("" + pageStart) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetHistory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetHistory(<any>response_);
+                } catch (e) {
+                    return <Observable<PagedResponseOfListOfHistoryElement>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PagedResponseOfListOfHistoryElement>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetHistory(response: HttpResponseBase): Observable<PagedResponseOfListOfHistoryElement> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <PagedResponseOfListOfHistoryElement>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PagedResponseOfListOfHistoryElement>(<any>null);
     }
 }
 
@@ -3426,6 +3558,19 @@ export interface HistoryElementCreateDto {
     comment: string;
 }
 
+export interface ResponseOfListOfObject {
+    data?: any[] | undefined;
+    succeeded: boolean;
+    errors?: string[] | undefined;
+    message?: string | undefined;
+}
+
+export interface PagedResponseOfListOfObject extends ResponseOfListOfObject {
+    pageStart: number;
+    pageSize: number;
+    totalRecords: number;
+}
+
 export interface SendInfoDTO {
     delete: boolean;
     contactChanges?: any | undefined;
@@ -3500,12 +3645,130 @@ export enum MODIFICATION {
     ADDED = 3,
 }
 
+export interface ResponseOfListOfModificationEntryDto {
+    data?: ModificationEntryDto[] | undefined;
+    succeeded: boolean;
+    errors?: string[] | undefined;
+    message?: string | undefined;
+}
+
+export interface PagedResponseOfListOfModificationEntryDto extends ResponseOfListOfModificationEntryDto {
+    pageStart: number;
+    pageSize: number;
+    totalRecords: number;
+}
+
 export interface OrganizationCreateDto {
     name: string;
     description?: string | undefined;
     address?: AddressCreateDto | undefined;
     contact?: ContactPossibilitiesCreateDto | undefined;
     employees?: ContactCreateDto[] | undefined;
+}
+
+export interface ResponseOfListOfHistoryElement {
+    data?: HistoryElement[] | undefined;
+    succeeded: boolean;
+    errors?: string[] | undefined;
+    message?: string | undefined;
+}
+
+export interface PagedResponseOfListOfHistoryElement extends ResponseOfListOfHistoryElement {
+    pageStart: number;
+    pageSize: number;
+    totalRecords: number;
+}
+
+export interface BaseEntity {
+    id: number;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export interface HistoryElement extends BaseEntity {
+    date: string;
+    type: HistoryElementType;
+    comment?: string | undefined;
+    contact?: Contact | undefined;
+    organization?: Organization | undefined;
+}
+
+export interface Contact extends BaseEntity {
+    gender: GenderTypes;
+    contactPartner?: string | undefined;
+    preName?: string | undefined;
+    address?: Address | undefined;
+    contactPossibilities?: ContactPossibilities | undefined;
+    events?: EventContact[] | undefined;
+    organizationContacts?: OrganizationContact[] | undefined;
+    history?: HistoryElement[] | undefined;
+    tags?: Tag[] | undefined;
+}
+
+export interface Address extends BaseEntity {
+    city?: string | undefined;
+    street?: string | undefined;
+    streetNumber?: string | undefined;
+    zipcode?: string | undefined;
+    country?: string | undefined;
+}
+
+export interface ContactPossibilities extends BaseEntity {
+    phoneNumber?: string | undefined;
+    fax?: string | undefined;
+    mail?: string | undefined;
+    contactEntries?: ContactPossibilitiesEntry[] | undefined;
+}
+
+export interface ContactPossibilitiesEntry extends BaseEntity {
+    contactEntryName?: string | undefined;
+    contactEntryValue?: string | undefined;
+}
+
+export interface EventContact extends BaseEntity {
+    eventId: number;
+    event?: Event | undefined;
+    contactId: number;
+    contact?: Contact | undefined;
+}
+
+export interface Event extends BaseEntity {
+    date: string;
+    time: string;
+    duration: number;
+    contacts?: EventContact[] | undefined;
+    participated?: Participated[] | undefined;
+    tags?: Tag[] | undefined;
+}
+
+export interface Participated extends BaseEntity {
+    contactId: number;
+    hasParticipated: boolean;
+    wasInvited: boolean;
+}
+
+export interface Tag extends BaseEntity {
+    contact?: Contact | undefined;
+    organization?: Organization | undefined;
+    event?: Event | undefined;
+}
+
+export interface Organization extends BaseEntity {
+    address?: Address | undefined;
+    contact?: ContactPossibilities | undefined;
+    organizationContacts?: OrganizationContact[] | undefined;
+    tags?: Tag[] | undefined;
+    history?: HistoryElement[] | undefined;
+}
+
+export interface OrganizationContact extends BaseEntity {
+    id: number;
+    name?: string | undefined;
+    description?: string | undefined;
+    organizationId: number;
+    organization?: Organization | undefined;
+    contactId: number;
+    contact?: Contact | undefined;
 }
 
 export interface RoleDto {

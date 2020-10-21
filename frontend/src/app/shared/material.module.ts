@@ -18,13 +18,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatDividerModule} from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   imports: [
-    NgxChartsModule,
     MatSidenavModule,
     MatToolbarModule,
     MatIconModule,
@@ -47,10 +47,12 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     MatToolbarModule,
     MatTabsModule,
     MatChipsModule,
-    MatProgressSpinnerModule, MatDividerModule
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatPaginatorModule
   ],
   exports: [
-    NgxChartsModule,
     MatSidenavModule,
     MatToolbarModule,
     MatIconModule,
@@ -72,7 +74,10 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     MatDialogModule,
     MatCheckboxModule,
     MatChipsModule,
-    MatProgressSpinnerModule, MatDividerModule
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatPaginatorModule
   ]
 })
 export class MaterialModule { }
