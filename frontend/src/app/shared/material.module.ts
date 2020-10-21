@@ -18,7 +18,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatDividerModule} from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   imports: [
@@ -41,8 +44,13 @@ import {MatDividerModule} from '@angular/material/divider';
     MatSelectModule,
     MatDialogModule,
     MatCheckboxModule,
+    MatToolbarModule,
+    MatTabsModule,
     MatChipsModule,
-    MatProgressSpinnerModule, MatDividerModule
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatPaginatorModule
   ],
   exports: [
     MatSidenavModule,
@@ -60,12 +68,16 @@ import {MatDividerModule} from '@angular/material/divider';
     MatInputModule,
     MatCardModule,
     MatMenuModule,
+    MatTabsModule,
     MatTableModule,
     MatSelectModule,
     MatDialogModule,
     MatCheckboxModule,
     MatChipsModule,
-    MatProgressSpinnerModule, MatDividerModule
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatPaginatorModule
   ]
 })
 export class MaterialModule { }

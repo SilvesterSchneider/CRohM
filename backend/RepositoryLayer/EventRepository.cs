@@ -22,6 +22,13 @@ namespace RepositoryLayer
         Task<Event> GetEventByIdWithAllIncludesAsync(long id);
 
         /// <summary>
+        /// Get all requests for a contact
+        /// </summary>
+        /// <param name="contactId"></param>
+        /// <returns></returns>
+        Task<List<Event>> GetEventsForContact(long contactId);
+
+        /// <summary>
         /// Getter für alle events als liste mit allen includes
         /// </summary>
         /// <returns>liste aller events</returns>
@@ -74,13 +81,13 @@ namespace RepositoryLayer
             eventNew.Duration = eventToCreate.Duration;
             eventNew.Name = eventToCreate.Name;
             eventNew.Time = eventToCreate.Time;
-            eventToCreate.Contacts.ForEach(x => eventNew.Participated.Add(new Participated() { ContactId = x, HasParticipated = false }));
+            eventToCreate.Contacts.ForEach(x => eventNew.Participated.Add(new Participated() { ContactId = x, HasParticipated = false, WasInvited = false }));
             return await CreateAsync(eventNew);
         }
 
         public async Task<List<Event>> GetAllEventsWithAllIncludesAsync()
         {
-            return await Entities.Include(y => y.Contacts).ThenInclude(z => z.Contact).Include(x => x.Participated).ToListAsync();
+            return await Entities.Include(a => a.Tags).Include(y => y.Contacts).ThenInclude(z => z.Contact).Include(x => x.Participated).ToListAsync();
         }
 
         public async Task<Event> GetEventByIdWithAllIncludesAsync(long id)
@@ -91,6 +98,15 @@ namespace RepositoryLayer
                 .ThenInclude(z => z.Contact)
                 .Include(x => x.Participated)
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<Event>> GetEventsForContact(long contactId)
+        {
+            return await Entities
+                .Include(y => y.Contacts)
+                .ThenInclude(z => z.Contact)
+                .Where(e => e.Contacts.Any(contact => contact.ContactId == contactId))
+                .ToListAsync();
         }
 
         public async Task<bool> ModifyEventAsync(EventDto eventToModify)
@@ -122,17 +138,18 @@ namespace RepositoryLayer
                     eventExistent.Contacts.Remove(part);
                     await RemoveEventContactAsync(part);
                 }
-                eventToModify.Participated.ForEach(x =>
+                foreach (ParticipatedDto partNew in eventToModify.Participated)
                 {
-                    Participated participated = eventExistent.Participated.FirstOrDefault(y => y.Id == x.Id);
+                    Participated participated = eventExistent.Participated.FirstOrDefault(y => y.Id == partNew.Id && partNew.Id > 0);
                     if (participated != null)
                     {
-                        participated.HasParticipated = x.HasParticipated;
+                        participated.HasParticipated = partNew.HasParticipated;
+                        participated.WasInvited = partNew.WasInvited;
                     } else
                     {
-                        eventExistent.Participated.Add(new Participated() { ContactId = x.ContactId, HasParticipated = x.HasParticipated });
+                        eventExistent.Participated.Add(new Participated() { ContactId = partNew.ContactId, HasParticipated = partNew.HasParticipated, WasInvited = partNew.WasInvited });
                     }
-                });
+                }
                 
                 foreach (ContactDto contact in eventToModify.Contacts) 
                 {

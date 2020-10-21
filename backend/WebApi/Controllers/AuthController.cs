@@ -51,20 +51,21 @@ namespace WebApi.Controllers
             }
             user.LastLoginDate = DateTime.Now;
             await _userService.UpdateUserAsync(user);
-            await userLoginService.CreateAsync(new UserLogin() { DateTimeOfLastLogin = DateTime.Now, UserId = user.Id } );
+            await userLoginService.CreateAsync(new UserLogin() { DateTimeOfLastLogin = DateTime.Now, UserId = user.Id });
 
             if (user.UserLockEnabled)
             {
                 return BadRequest("Benutzer ist gesperrt! Bitte den Administrator kontaktieren");
-            } 
+            }
 
-            var signInAsync = await _signInService.PasswordSignInAsync(user, credentials.Password);
+            var signInAsync = await _signInService.CheckPasswordSignInAsync(user, credentials.Password);
 
             if (signInAsync.Succeeded)
             {
                 var userDto = _mapper.Map<UserDto>(user);
                 var roles = await _userService.GetRolesAsync(user);
-                userDto.AccessToken = _signInService.CreateToken(user, roles);
+                var claims = await _userService.GetClaimsAsync(user);
+                userDto.AccessToken = _signInService.CreateToken(user, roles, claims);
                 return Ok(userDto);
             }
 
@@ -101,7 +102,7 @@ namespace WebApi.Controllers
             if (!PasswordGuidelines.IsPasswordWithinRestrictions(newPassword))
             {
                 string text = "Passwort sollte eine Länge haben von " + PasswordGuidelines.RequiredMinLength + " bis zu " + PasswordGuidelines.MaxLength + " Zeichen" +
-                    (PasswordGuidelines.RequireDigit ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfNumerics() + " Zahlen" : "") + 
+                    (PasswordGuidelines.RequireDigit ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfNumerics() + " Zahlen" : "") +
                     (PasswordGuidelines.RequireNonAlphanumeric ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfSpecialChars() + " Sonderzeichen" : "") +
                     (PasswordGuidelines.RequireLowercase ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfLowerLetters() + " kleinen Buchstaben" : "") +
                     (PasswordGuidelines.RequireUppercase ? ", eine Anzahl von " + PasswordGuidelines.GetAmountOfUpperLetters() + " großen Buchstaben." : "");
@@ -111,11 +112,11 @@ namespace WebApi.Controllers
             if (result.Succeeded)
             {
                 return Ok(true);
-            } 
-            else 
+            }
+            else
             {
                 return NotFound();
-            }          
+            }
         }
 
         //TODO: implement endpoint for login with refresh token

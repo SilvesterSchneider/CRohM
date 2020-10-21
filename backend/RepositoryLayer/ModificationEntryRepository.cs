@@ -52,6 +52,32 @@ namespace RepositoryLayer
         /// <returns></returns>
         Task<List<ModificationEntry>> GetModificationEntriesByIdAndModelTypeAsync(long id, MODEL_TYPE dataType);
 
+        /// <summary>
+        /// Get all modification entries just for creation of specific model type.
+        /// </summary>
+        /// <param name="modelType">the modeltype to consider</param>
+        /// <returns></returns>
+        Task<List<ModificationEntry>> GetModificationEntriesForCreationByModelType(MODEL_TYPE modelType);
+
+
+        /// <summary>
+        /// get all entries for a specific id and datatype with pagination
+        /// </summary>
+        /// <param name="id">the model id</param>
+        /// <param name="dataType">the datatype</param>
+        /// <param name="pageStart">starting position for pagination</param>
+        /// <param name="pageSize">Number of elements requested by pagination</param>
+        /// <returns></returns>
+        Task<List<ModificationEntry>> GetModificationEntriesByIdAndModelTypePaginationAsync(long id, MODEL_TYPE dataType, int pageStart, int pageSize);
+
+        /// <summary>
+        /// get count of all entries for a specific id and datatype 
+        /// </summary>
+        /// <param name="id">the model id</param>
+        /// <param name="dataType">the datatype</param>
+        /// <returns></returns>
+        Task<int> GetModificationEntriesByIdAndModelTypeCountAsync(long id, MODEL_TYPE dataType);
+
 
         /// <summary>
         /// To be able to delete a user, the foreign key relation in ModificationEntry needs to be set to null 
@@ -127,7 +153,7 @@ namespace RepositoryLayer
 
         public async Task<List<ModificationEntry>> GetSortedModificationEntriesByModelDataTypeAsync(MODEL_TYPE dataType)
         {
-            List<ModificationEntry> list = await Entities.Where(x => x.DataModelType == dataType).ToListAsync();
+            List<ModificationEntry> list = await Entities.Include(u => u.User).Where(x => x.DataModelType == dataType).ToListAsync();
             List<ModificationEntry> listToDelete = new List<ModificationEntry>();
             foreach (ModificationEntry entry in list)
             {
@@ -148,6 +174,26 @@ namespace RepositoryLayer
                 .Where(x => x.DataModelId == id && x.DataModelType == dataType).ToListAsync();
         }
 
+
+        public async Task<List<ModificationEntry>> GetModificationEntriesByIdAndModelTypePaginationAsync(long id, MODEL_TYPE dataType, int pageStart, int pageSize)
+        {
+            return await Entities
+                .Include(x => x.User)
+                .Where(x => x.DataModelId == id && x.DataModelType == dataType)
+                .OrderByDescending(x => x.DateTime)
+                .Skip(pageStart)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetModificationEntriesByIdAndModelTypeCountAsync(long id, MODEL_TYPE dataType)
+        {
+            return await Entities
+                .Include(x => x.User)
+                .Where(x => x.DataModelId == id && x.DataModelType == dataType)
+                .CountAsync();
+        }
+
         public async Task<List<ModificationEntry>> RemoveUserForeignKeys(User user)
         {
             List<ModificationEntry> entities = await Entities.Where(entry => entry.User == user).ToListAsync();
@@ -162,5 +208,9 @@ namespace RepositoryLayer
             return new List<ModificationEntry>();
         }
 
+        public async Task<List<ModificationEntry>> GetModificationEntriesForCreationByModelType(MODEL_TYPE modelType)
+        {
+            return await Entities.Where(entry => entry.DataModelType == modelType && entry.DataType == DATA_TYPE.NONE).ToListAsync();
+        }
     }
 }

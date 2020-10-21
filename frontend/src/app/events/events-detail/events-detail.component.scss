@@ -2,12 +2,34 @@
     margin: 15px;
     min-width: 120px;
   }
+.checkBoxb {
+    margin: 15px;
+    min-width: 120px;
+  }
 .text {
-  margin: 15px;
+  margin: 1px;
   min-width: 100px;
   background-color:rgba(60, 45, 190, 0.3);
   border-radius:5px;
 }
 .margin {
   margin: 15px;
+}
+.list {
+  left: 0px;
+  margin: 1px;
+  max-width: 100px;
+  min-width: 100px;
+}
+.secondList {
+  position: relative;
+  left: -20px;
+  margin: 1px;
+  max-width: 100px;
+  min-width: 100px;
+}
+.autoComplete {
+  margin: 10px;
+  min-width: 300px;
+  max-width: 400px;
 }

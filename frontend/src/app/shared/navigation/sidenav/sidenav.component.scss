@@ -1,7 +1,17 @@
+.userMenu {
+  position: absolute;
+  right: 0px;
+}
 mat-sidenav-container,
 mat-sidenav-content,
 mat-sidenav {
   height: 100%;
+}
+
+.userMenu {
+  margin: 10px;
+  position: absolute;
+  right: 0px;
 }
 
 mat-sidenav {

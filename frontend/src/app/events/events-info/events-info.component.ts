@@ -1,18 +1,16 @@
-import {
-  Component, OnInit, Inject
-} from '@angular/core';
-import { EventDto, TagDto, ModificationEntryDto, ModificationEntryService,
-  MODEL_TYPE, DATA_TYPE } from '../../shared/api-generated/api-generated';
-import { EventService } from '../../shared/api-generated/api-generated';
+import { Component, OnInit, Inject } from '@angular/core';
+import { EventDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, DATA_TYPE } from '../../shared/api-generated/api-generated';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
+import { map } from 'rxjs/operators';
 
 export class ContactDtoExtended {
   id: number;
   preName: string;
   name: string;
   participated: boolean;
+  wasInvited: boolean;
 }
 
 @Component({
@@ -23,24 +21,18 @@ export class ContactDtoExtended {
 
 export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> implements OnInit {
   contacts: ContactDtoExtended[] = new Array<ContactDtoExtended>();
-  event: EventDto;
   eventsForm: FormGroup;
   dataHistory: ModificationEntryDto[] = new Array<ModificationEntryDto>();
-  columnsContacts = ['participated', 'prename', 'name'];
-  tags: TagDto[] = new Array<TagDto>();
+  columnsContacts = ['wasInvited', 'participated', 'prename', 'name'];
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
-  constructor(
-    public dialogRef: MatDialogRef<EventsInfoComponent>,
-    public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: EventDto,
-    private eventService: EventService,
-    private fb: FormBuilder,
-    private modService: ModificationEntryService
+  constructor(public dialogRef: MatDialogRef<EventsInfoComponent>,
+              public dialog: MatDialog,
+              @Inject(MAT_DIALOG_DATA) public event: EventDto,
+              private fb: FormBuilder,
+              private modService: ModificationEntryService
   ) {
     super(dialogRef, dialog);
-    this.event = data;
-    this.tags = this.event.tags;
   }
 
   getDate(date: string): string {
@@ -64,7 +56,8 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
           id: x.id,
           preName: x.preName,
           name: x.name,
-          participated: false
+          participated: false,
+          wasInvited: false
         });
       });
     }
@@ -73,17 +66,15 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
         const cont: ContactDtoExtended = this.contacts.find(y => y.id === x.contactId);
         if (cont != null) {
           cont.participated = x.hasParticipated;
+          cont.wasInvited = x.wasInvited;
         }
       });
     }
-    this.modService.getSortedListByTypeAndId(this.event.id, MODEL_TYPE.EVENT).subscribe(x => {
-      x.forEach(a => {
-        if (a.dataType !== DATA_TYPE.NONE) {
-          this.dataHistory.push(a);
-        }
+    this.modService.getSortedListByTypeAndId(this.event.id, MODEL_TYPE.EVENT)
+      .pipe(map(mod => mod.data), map(mod => mod.filter(el => el.dataType !== DATA_TYPE.NONE).sort(this.getSortHistoryFunction)))
+      .subscribe(result => {
+        this.dataHistory = result;
       });
-      this.dataHistory.sort(this.getSortHistoryFunction);
-    });
     this.eventsForm.patchValue(this.event);
     this.eventsForm.get('date').patchValue(this.formatDate(this.event.date));
     this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));
@@ -123,9 +114,5 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
       time: [''],
       duration: ['']
     });
-  }
-
-  close() {
-    this.dialogRef.close();
   }
 }

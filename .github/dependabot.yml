@@ -8,12 +8,9 @@ updates:
   - package-ecosystem: "npm"
     directory: "/frontend/"
     schedule:
-      interval: "weekly"
-      time: "09:00"
+      interval: "daily"
+      time: "18:00"
       timezone: "Europe/Berlin"
-      day: "saturday"
-    reviewers:
-      - "Pantastisch"
     assignees:
       - "Pantastisch"
     open-pull-requests-limit: 50
@@ -25,12 +22,9 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/backend/"
     schedule:
-      interval: "weekly"
-      time: "09:00"
+      interval: "daily"
+      time: "18:00"
       timezone: "Europe/Berlin"
-      day: "saturday"
-    reviewers:
-      - "Pantastisch"
     assignees:
       - "Pantastisch"
     open-pull-requests-limit: 50
@@ -42,12 +36,9 @@ updates:
   - package-ecosystem: "npm"
     directory: "/tests/"
     schedule:
-      interval: "weekly"
-      time: "09:00"
+      interval: "daily"
+      time: "18:00"
       timezone: "Europe/Berlin"
-      day: "saturday"
-    reviewers:
-      - "Pantastisch"
     assignees:
       - "Pantastisch"
     open-pull-requests-limit: 50
@@ -59,12 +50,9 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      time: "09:00"
+      interval: "daily"
+      time: "18:00"
       timezone: "Europe/Berlin"
-      day: "saturday"
-    reviewers:
-      - "Pantastisch"
     assignees:
       - "Pantastisch"
     open-pull-requests-limit: 50
@@ -76,12 +64,9 @@ updates:
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
-      interval: "weekly"
-      time: "09:00"
+      interval: "daily"
+      time: "18:00"
       timezone: "Europe/Berlin"
-      day: "saturday"
-    reviewers:
-      - "Pantastisch"
     assignees:
       - "Pantastisch"
     open-pull-requests-limit: 50

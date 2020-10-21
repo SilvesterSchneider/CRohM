@@ -41,6 +41,12 @@ const routes: Routes = [
 			contact: ContactsIdResolver2Service
 		}
   },
+  },
+  {
+    path: 'statistics',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./statistics/statistics.module').then(mod => mod.StatisticsModule)
+  }
 ];
 
 @NgModule({
