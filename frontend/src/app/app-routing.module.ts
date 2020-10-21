@@ -41,7 +41,6 @@ const routes: Routes = [
 			contact: ContactsIdResolver2Service
 		}
   },
-  },
   {
     path: 'statistics',
     canActivate: [AuthGuard],

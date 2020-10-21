@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class init : Migration
+    public partial class iit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -210,7 +210,8 @@ namespace ModelLayer.Migrations
                     AddressId = table.Column<long>(nullable: true),
                     ContactPossibilitiesId = table.Column<long>(nullable: true),
                     isApproved = table.Column<bool>(nullable: false),
-                    CreatedByUser = table.Column<long>(nullable: false)
+                    CreatedByUser = table.Column<long>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -267,6 +268,7 @@ namespace ModelLayer.Migrations
                     Description = table.Column<string>(nullable: true),
                     ContactId = table.Column<long>(nullable: false),
                     HasParticipated = table.Column<bool>(nullable: false),
+                    WasInvited = table.Column<bool>(nullable: false),
                     EventId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
@@ -434,21 +436,21 @@ namespace ModelLayer.Migrations
                     Date = table.Column<DateTime>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     Comment = table.Column<string>(nullable: true),
-                    ContactId = table.Column<long>(nullable: true),
-                    OrganizationId = table.Column<long>(nullable: true)
+                    contactId = table.Column<long>(nullable: true),
+                    organizationId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_History", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_History_Contacts_ContactId",
-                        column: x => x.ContactId,
+                        name: "FK_History_Contacts_contactId",
+                        column: x => x.contactId,
                         principalTable: "Contacts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_History_Organizations_OrganizationId",
-                        column: x => x.OrganizationId,
+                        name: "FK_History_Organizations_organizationId",
+                        column: x => x.organizationId,
                         principalTable: "Organizations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -516,7 +518,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "f848e4e4-1e92-45bd-aa5b-850868345de1", "Admin", "ADMIN" });
+                values: new object[] { 1L, "40f233a8-3977-437e-86ce-1454f08a0550", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -546,14 +548,14 @@ namespace ModelLayer.Migrations
                 column: "ContactId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_History_ContactId",
+                name: "IX_History_contactId",
                 table: "History",
-                column: "ContactId");
+                column: "contactId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_History_OrganizationId",
+                name: "IX_History_organizationId",
                 table: "History",
-                column: "OrganizationId");
+                column: "organizationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ModificatonHistory_UserId",

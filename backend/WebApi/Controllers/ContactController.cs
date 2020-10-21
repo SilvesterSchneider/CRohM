@@ -32,8 +32,8 @@ namespace WebApi.Controllers
         private IMailService mailService;
         private IHistoryService historyService;
 
-        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IHistoryService  historyService)          
-        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IMailService mailService)
+   
+        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IMailService mailService, IHistoryService historyService)
         {
             _mapper = mapper;
             this.eventService = eventService;
@@ -214,7 +214,7 @@ namespace WebApi.Controllers
 
             return DateTime.Now;
         }
-        }
+        
 
         //Approve Contact
         [HttpPut("ApproveContact{id}")]
