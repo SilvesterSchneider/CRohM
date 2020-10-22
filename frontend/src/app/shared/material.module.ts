@@ -21,6 +21,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import {MatRadioModule} from '@angular/material/radio';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
@@ -47,8 +49,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatToolbarModule,
     MatTabsModule,
     MatChipsModule,
-    MatProgressSpinnerModule,
-    MatDividerModule,
+    MatRadioModule,
+    MatProgressSpinnerModule, 
+	MatDividerModule,
     MatExpansionModule,
     MatPaginatorModule
   ],
@@ -74,8 +77,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatDialogModule,
     MatCheckboxModule,
     MatChipsModule,
-    MatProgressSpinnerModule,
-    MatDividerModule,
+    MatRadioModule,
+    MatProgressSpinnerModule, 
+	MatDividerModule,
     MatExpansionModule,
     MatPaginatorModule
   ]
