@@ -19,7 +19,7 @@ namespace ServiceLayer
         /// Create a jwt for authorize via http header
         /// </summary>
         /// <param name="user">Create token for this user</param>
-        string CreateToken(User user, List<string> roles);
+        string CreateToken(User user, List<string> roles, IList<Claim> claims);
 
         Task<SignInResult> PasswordSignInAsync(User user, string password);
 
@@ -44,7 +44,7 @@ namespace ServiceLayer
         /// Create a jwt for authorize via http header
         /// </summary>
         /// <param name="user">Create token for this user</param>
-        public string CreateToken(User user, List<string> roles)
+        public string CreateToken(User user, List<string> roles, IList<Claim> claims)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
@@ -62,6 +62,10 @@ namespace ServiceLayer
             foreach (string role in roles)
             {
                 tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+            }
+            foreach (Claim claim in claims)
+            {
+                tokenDescriptor.Subject.AddClaim(new Claim("Claim", claim.Type));
             }
 
             var token = tokenHandler.CreateToken(tokenDescriptor);

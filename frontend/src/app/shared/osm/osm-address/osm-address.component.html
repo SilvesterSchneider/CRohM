@@ -21,7 +21,7 @@
 
     <ng-container [formGroup]="addressForm">
         <mat-form-field class="col-md-9">
-            <input id="street" matInput placeholder="Strasse" formControlName="street">
+            <input id="street" matInput placeholder="Straße" formControlName="street">
         </mat-form-field>
         <mat-form-field class="col-md-3">
             <input id="streetNumber" matInput placeholder="Hausnummer" formControlName="streetNumber">
@@ -36,7 +36,7 @@
         <mat-form-field class="col-md-6">
             <mat-label>Land</mat-label>
             <mat-select id="country" formControlName="country" name="country">
-                <mat-option *ngFor="let country of countries" [value]="country.value">
+                <mat-option *ngFor="let country of countries" [value]="country.value" class="test">
                     {{country.viewValue}}
                 </mat-option>
             </mat-select>

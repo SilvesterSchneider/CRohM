@@ -1,16 +1,18 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
-using Microsoft.AspNetCore.Authorization;
 using NSwag.Annotations;
 using ServiceLayer;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using ModelLayer.Helper;
+using WebApi.Helper;
+using WebApi.Wrapper;
 
 namespace WebApi.Controllers
 {
@@ -24,7 +26,9 @@ namespace WebApi.Controllers
         private readonly IModificationEntryService modService;
         private readonly IOrganizationService _organizationService;
         private readonly ILogger _logger;
-        private IContactService contactService;
+        private readonly IContactService contactService;
+        private readonly IHistoryService historyService;
+        private readonly IEventService eventService;
 
         public OrganizationController(
             IMapper mapper,
@@ -32,14 +36,18 @@ namespace WebApi.Controllers
             IUserService userService,
             ILoggerFactory logger,
             IModificationEntryService modService,
-            IContactService contactService)
+            IContactService contactService,
+            IHistoryService historyService,
+            IEventService eventService)
         {
             _mapper = mapper;
+            this.eventService = eventService;
             this.contactService = contactService;
             this.userService = userService;
             this.modService = modService;
             _organizationService = organizationService;
             _logger = logger.CreateLogger(nameof(OrganizationController));
+            this.historyService = historyService;
         }
 
         // Einsehen aller Organisationen
@@ -165,7 +173,7 @@ namespace WebApi.Controllers
             {
                 contactName = contact.PreName + " " + contact.Name;
             }
-            await modService.ChangeEmployeesOfOrganization(id, contactName, true , userOfChange);
+            await modService.ChangeEmployeesOfOrganization(id, contactName, true, userOfChange);
             return Ok();
         }
 
@@ -205,11 +213,39 @@ namespace WebApi.Controllers
         [HttpPost("{id}/historyElement")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
         public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id)
-        { 
+        {
             await _organizationService.AddHistoryElement(id, _mapper.Map<HistoryElement>(historyToCreate));
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
             await modService.UpdateOrganizationByHistoryElementAsync(userOfChange, id, historyToCreate.Name + ":" + historyToCreate.Comment);
             return Ok();
+        }
+
+        [HttpGet("{id}/history")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(PagedResponse<List<object>>), Description = "successfully found")]
+        public async Task<IActionResult> GetHistory(long id, [FromQuery] PaginationFilter filter)
+        {
+            PaginationFilter validFilter = new PaginationFilter(filter.PageStart, filter.PageSize);
+            List<Event> events = await eventService.GetEventsForOrganization(id);
+            List<HistoryElement> history = await historyService.GetHistoryByOrganisationAsync(id, validFilter.PageStart, validFilter.PageSize);
+            List<object> mergedResult = events.Cast<object>().Concat(history.Cast<object>()).ToList();
+            mergedResult.Sort((e1, e2) => DateTime.Compare(getDate(e2), getDate(e1)));
+            List<object> pagination = mergedResult.Skip(validFilter.PageStart).Take(validFilter.PageSize).ToList();
+            return Ok(new PagedResponse<List<object>>(pagination, validFilter.PageStart, validFilter.PageSize, mergedResult.Count));
+        }
+
+        private DateTime getDate(object element)
+        {
+            if (element is Event)
+            {
+                return ((Event)element).Date;
+            }
+
+            if (element is HistoryElement)
+            {
+                return ((HistoryElement)element).Date;
+            }
+
+            return DateTime.Now;
         }
     }
 }

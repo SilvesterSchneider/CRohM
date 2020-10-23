@@ -1,5 +1,6 @@
 using ModelLayer.Models.Base;
 using System;
+using System.Runtime.Serialization;
 
 namespace ModelLayer.Models
 {
@@ -37,8 +38,13 @@ namespace ModelLayer.Models
     /// </summary>
     public enum MODEL_TYPE
     {
+        [EnumMember(Value = "Kontakt")]
         CONTACT,
+
+        [EnumMember(Value = "Organisation")]
         ORGANIZATION,
+
+        [EnumMember(Value = "Veranstaltung")]
         EVENT
     }
 
@@ -115,7 +121,7 @@ namespace ModelLayer.Models
                 }
                 else if (DataType == DATA_TYPE.HISTORY_ELEMENT)
                 {
-                    return "Historieanzahl";
+                    return "Historienanzahl";
                 }
                 else if (DataType == DATA_TYPE.MAIL || DataType == DATA_TYPE.MAIL_EXTENDED)
                 {
@@ -165,9 +171,13 @@ namespace ModelLayer.Models
                 {
                     return "Einladung";
                 }
-                else 
+                else if (DataType == DATA_TYPE.ZIPCODE)
                 {
                     return "PLZ";
+                }
+                else
+                {
+                    return "Angelegt";
                 }
             }
             set
