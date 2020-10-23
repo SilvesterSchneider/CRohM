@@ -30,7 +30,9 @@ namespace ModelLayer.Models
         TIME,
         PARTICIPATED,
         TAG,
-        INVITATION
+        INVITATION,
+        CONTACT_PARTNER,
+        GENDER
     }
 
     /// <summary>
@@ -174,6 +176,14 @@ namespace ModelLayer.Models
                 else if (DataType == DATA_TYPE.ZIPCODE)
                 {
                     return "PLZ";
+                }
+                else if (DataType == DATA_TYPE.GENDER)
+                {
+                    return "Geschlecht";
+                }
+                else if (DataType == DATA_TYPE.CONTACT_PARTNER)
+                {
+                    return "Ansprechpartner";
                 }
                 else
                 {

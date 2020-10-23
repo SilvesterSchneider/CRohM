@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class ram_init_mk : Migration
+    public partial class ramInit_add_mod : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -544,7 +544,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "02bf52ce-4ef7-4e7b-b808-206938907503", "Admin", "ADMIN" });
+                values: new object[] { 1L, "db6bff84-2230-4195-ab2d-8c897222b166", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
