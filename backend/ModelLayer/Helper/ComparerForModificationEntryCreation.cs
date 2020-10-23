@@ -182,7 +182,7 @@ namespace ModelLayer.Helper
         /// <param name="modification">the modification type</param>
         private static void ComparePlainFields(List<ModificationEntry> listEntries, string oldValue, string newValue, long id, MODEL_TYPE modelType, DATA_TYPE dataType, User userOfModification, MODIFICATION modification)
         {
-            if (!oldValue.Equals(newValue))
+            if (oldValue == null || !oldValue.Equals(newValue))
             {
                 listEntries.Add(GetNewModificationEntry(newValue, oldValue, id, modelType, dataType, userOfModification, modification));
             }
@@ -268,7 +268,9 @@ namespace ModelLayer.Helper
             List<ModificationEntry> listCreation = new List<ModificationEntry>();
             List<ModificationEntry> listDeletion = new List<ModificationEntry>();
             ComparePlainFields(listCreation, oldContact.Name, newContact.Name, newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.NAME, userOfModification, MODIFICATION.MODIFIED);
-            ComparePlainFields(listCreation, oldContact.PreName, newContact.PreName, newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.PRENAME, userOfModification, MODIFICATION.MODIFIED);         
+            ComparePlainFields(listCreation, oldContact.PreName, newContact.PreName, newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.PRENAME, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(listCreation, oldContact.ContactPartner, newContact.ContactPartner, newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.CONTACT_PARTNER, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(listCreation, EnumHelper.GetEnumMemberValue(oldContact.Gender), EnumHelper.GetEnumMemberValue(newContact.Gender), newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.GENDER, userOfModification, MODIFICATION.MODIFIED);
             if (oldContact.History.Count != newContact.History.Count)
             {
                 listCreation.Add(GetNewModificationEntry(newContact.History[newContact.History.Count - 1].Description + ":" + newContact.History[newContact.History.Count - 1].Comment, "", newContact.Id, MODEL_TYPE.CONTACT, DATA_TYPE.HISTORY_ELEMENT, userOfModification, MODIFICATION.ADDED));

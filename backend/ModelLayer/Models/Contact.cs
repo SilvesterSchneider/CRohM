@@ -1,6 +1,7 @@
 using ModelLayer.Models.Base;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace ModelLayer.Models
@@ -9,14 +10,19 @@ namespace ModelLayer.Models
     {
         public enum GenderTypes
         {
+            [EnumMember(Value = "Männlich")]
             MALE,
+
+            [EnumMember(Value = "Weiblich")]
             FEMALE,
+
+            [EnumMember(Value = "Divers")]
             DIVERS
         }
 
-        public GenderTypes Gender { get; set; }
-        public string ContactPartner { get; set; }
-        public string PreName { get; set; } = "";
+        public GenderTypes Gender { get; set; } = GenderTypes.MALE;
+        public string ContactPartner { get; set; } = string.Empty;
+        public string PreName { get; set; } = string.Empty;
         public Address Address { get; set; } = new Address();
         public ContactPossibilities ContactPossibilities { get; set; } = new ContactPossibilities();
         public List<EventContact> Events { get; set; } = new List<EventContact>();
