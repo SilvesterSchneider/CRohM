@@ -39,7 +39,7 @@ namespace WebApi
             var port = Configuration["DBPort"] ?? "1433";
             var user = Configuration["DBUser"] ?? "SA";
             var password = Configuration["DBPassword"] ?? "CRohM2020";
-            var database = Configuration["DBName"] ?? "CRMDB"; 
+            var database = Configuration["DBName"] ?? "CRMDB";
 
             var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
             connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
@@ -119,11 +119,6 @@ namespace WebApi
                     };
                 });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("Admin", policy =>
-                    policy.RequireClaim("Anlegen eines Benutzers"));
-            });
 
             services.AddHealthChecks();
 

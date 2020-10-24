@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Helper;
 using ModelLayer.Models;
@@ -28,8 +29,8 @@ namespace WebApi.Controllers
             this.userService = userService;
             this.roleService = roleService;
         }
-        //[ClaimsAuthorization(ClaimType = "Einsehen und Überarbeiten des Rollenkonzepts",
-        //                    ClaimValue = "Einsehen und Überarbeiten des Rollenkonzepts")]
+
+        [Authorize(Roles = "Einsehen und Überarbeiten des Rollenkonzepts")]
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<RoleDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
@@ -37,8 +38,8 @@ namespace WebApi.Controllers
             List<RoleDto> roles = await roleService.GetAllRolesWithAllClaimsAsync();
             return Ok(roles);
         }
-        //[ClaimsAuthorization(ClaimType = "Einsehen und Überarbeiten des Rollenkonzepts",
-        //                    ClaimValue = "Einsehen und Überarbeiten des Rollenkonzepts")]
+
+        [Authorize(Roles = "Einsehen und Überarbeiten des Rollenkonzepts")]
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<string>), Description = "successfully found")]
         public async Task<IActionResult> GetAllClaims(long id)
@@ -50,8 +51,8 @@ namespace WebApi.Controllers
             }
             return Ok(list);
         }
-        //[ClaimsAuthorization(ClaimType = "Einsehen und Überarbeiten des Rollenkonzepts",
-        //                    ClaimValue = "Einsehen und Überarbeiten des Rollenkonzepts")]
+
+        [Authorize(Roles = "Anlegen eines Benutzers")]
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(RoleDto), Description = "successfully created")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "unsuccessfully request")]
@@ -67,8 +68,8 @@ namespace WebApi.Controllers
 
             return BadRequest();
         }
-        //[ClaimsAuthorization(ClaimType = "Einsehen und Überarbeiten des Rollenkonzepts",
-        //                    ClaimValue = "Einsehen und Überarbeiten des Rollenkonzepts")]
+      
+        [Authorize(Roles = "Einsehen und Überarbeiten des Rollenkonzepts")]
         [HttpPut]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
@@ -84,8 +85,8 @@ namespace WebApi.Controllers
                 return Conflict();
             }
         }
-        //[ClaimsAuthorization(ClaimType = "Einsehen und Überarbeiten des Rollenkonzepts",
-        //                    ClaimValue = "Einsehen und Überarbeiten des Rollenkonzepts")]
+  
+        [Authorize(Roles = "Einsehen und Überarbeiten des Rollenkonzepts")]
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
@@ -101,8 +102,8 @@ namespace WebApi.Controllers
                 return Conflict();
             }
         }
-        //[ClaimsAuthorization(ClaimType = "Einsehen und Überarbeiten des Rollenkonzepts",
-        //                    ClaimValue = "Einsehen und Überarbeiten des Rollenkonzepts")]
+    
+        [Authorize(Roles = "Löschen / Deaktivieren eines Benutzers")]
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
