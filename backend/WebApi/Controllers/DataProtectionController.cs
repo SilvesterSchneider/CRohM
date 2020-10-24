@@ -29,8 +29,8 @@ namespace WebApi.Controllers
             _userService = userService;
         }
 
-        [ClaimsAuthorization(ClaimType = "Mitteilung an einen Kontakt nach Löschung oder Änderung",
-                            ClaimValue = "Mitteilung an einen Kontakt nach Löschung oder Änderung")]
+        //[ClaimsAuthorization(ClaimType = "Mitteilung an einen Kontakt nach Löschung oder Änderung",
+        //                    ClaimValue = "Mitteilung an einen Kontakt nach Löschung oder Änderung")]
        
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "not successful")]

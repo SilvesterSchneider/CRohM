@@ -26,6 +26,7 @@ namespace WebApi.Controllers
             _userService = userService;
             _mapper = mapper;
         }
+        [Authorize(Policy = "Admin")]
 
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<UserDto>), Description = "successfully found")]
@@ -36,8 +37,10 @@ namespace WebApi.Controllers
             return Ok(_mapper.Map<List<UserDto>>(users));
         }
 
-        [ClaimsAuthorization(ClaimType = "Anlegen eines Benutzers",
-                            ClaimValue = "Anlegen eines Benutzers")]
+        //[ClaimsAuthorization(ClaimType = "Anlegen eines Benutzers",
+        //                    ClaimValue = "Anlegen eines Benutzers")]
+        [Authorize(Policy = "Admin")]
+
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(UserDto), Description = "successfully created")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "unsuccessfully request")]
@@ -56,8 +59,8 @@ namespace WebApi.Controllers
             return BadRequest();
         }
         //TODO: ?? warum zuweisung einer neuen Rolle 
-        [ClaimsAuthorization(ClaimType = "Zuweisung einer neuen Rolle zu einem Benutzer",
-                            ClaimValue = "Zuweisung einer neuen Rolle zu einem Benutzer")]
+        //[ClaimsAuthorization(ClaimType = "Zuweisung einer neuen Rolle zu einem Benutzer",
+                          //  ClaimValue = "Zuweisung einer neuen Rolle zu einem Benutzer")]
         [HttpPut]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
