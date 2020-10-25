@@ -13,12 +13,13 @@ import { UpdateRoleDialogComponent } from './roles/update-role/update-role.compo
 import { AddUserDialogComponent } from './user/add-user/add-user.component';
 import { EditUserDialogComponent } from './user/edit-user/edit-user.component';
 import { DeleteEntryDialogModule } from '../shared/form/delete-entry-dialog/delete-entry-dialog.module';
+import { MailComponent } from './mail/mail.component';
 
 
 
 @NgModule({
   declarations: [UserComponent, OverviewComponent, RolesComponent, CreateRoleDialogComponent, UpdateRoleDialogComponent,
-    EditUserDialogComponent, AddUserDialogComponent],
+    EditUserDialogComponent, AddUserDialogComponent, MailComponent],
   imports: [
     DeleteEntryDialogModule,
     CommonModule,

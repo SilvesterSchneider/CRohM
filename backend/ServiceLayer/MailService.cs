@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +25,8 @@ namespace ServiceLayer
 
         bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
         bool CreateAndSendInvitationMail(string mail, string name, string mailContent);
+
+        Task<bool> SendMailToAddress(string subject, string address, string mailContent);
     }
 
     public class MailService : IMailService
@@ -37,6 +38,9 @@ namespace ServiceLayer
         private static string EVENTNAMEFIELD = "<Veranstaltungsname>";
         private static string EVENTDATEFIELD = "<Datum>";
         private static string EVENTTIMEFIELD = "<Uhrzeit>";
+        private static string MAILSETUP = "Sehr geehrter Administrator\r\rDie Einstellungen für den Email-Server wurden erfolgreich " +
+            "übernommen\r\rTechnische Hochschule Nürnberg";
+        private static string TESTMAIL = "Test-Email";
         public static string INVITATION_DEF_CONTENT = STARTFIELD + " " + PRENAMEFIELD + " " + NAMEFIELD +
             "\rWir laden Sie herzlich ein zu unserer Veranstaltung \"" + EVENTNAMEFIELD +
             "\" am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr.\rWir freuen uns auf Ihr Erscheinen.\rTechnische Hochschule Nürnberg";
@@ -160,12 +164,21 @@ namespace ServiceLayer
                 start = "Sehr geehrt";
             }
             string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
-            return FinishMailInvitationSend(finishedcontent, address);
+            return SendFormattedMail("Einladung zur Veranstaltung", finishedcontent, address, null, null);
         }
 
-        private bool FinishMailInvitationSend(string finishedcontent, string address)
+        public async Task<bool> SendMailToAddress(string subject, string address, string mailContent)
         {
-            string[] fields = finishedcontent.Split("\r");
+            if (string.IsNullOrEmpty(mailContent) && subject.Equals(TESTMAIL))
+            {
+                mailContent = MAILSETUP;
+            }
+            return await Task.FromResult(SendFormattedMail(subject, mailContent, address, null, null));
+        }
+
+        private bool SendFormattedMail(string subject, string body, string emailAddressRecipient, Stream attachment, string attachmentType)
+        {
+            string[] fields = body.Split("\r");
             string text = string.Empty;
             foreach (string line in fields)
             {
@@ -173,7 +186,7 @@ namespace ServiceLayer
                 text += line;
                 text += "</p>";
             }
-            return SendMail("Einladung zur Veranstaltung", text, address, null, null);
+            return SendMail(subject, text, emailAddressRecipient, attachment, attachmentType);
         }
 
         public bool CreateAndSendInvitationMail(string mail, string name, string mailContent)
@@ -187,7 +200,7 @@ namespace ServiceLayer
             {
                 finishedcontent = finishedcontent.Replace(NAMEFIELD, string.Empty).Replace(PRENAMEFIELD, name);
             }
-            return FinishMailInvitationSend(finishedcontent, mail);
+            return SendFormattedMail("Einladung zur Veranstaltung", finishedcontent, mail, null, null);
         }
     }
 }
