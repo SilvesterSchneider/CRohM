@@ -16,7 +16,12 @@ export class EventsInvitationComponent implements OnInit {
     private mailService: MailService,
     public dialogRef: MatDialogRef<EventsInvitationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EventDto,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog) {
+      this.dialogRef.backdropClick().subscribe(() => {
+        // Close the dialog
+        dialogRef.close();
+      });
+    }
 
   ngOnInit(): void {
     this.textForm = this.createTextForm();

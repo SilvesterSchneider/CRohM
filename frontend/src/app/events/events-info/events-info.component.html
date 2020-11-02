@@ -109,8 +109,10 @@
 				{{ item.name }}
 			</mat-chip>
 		</mat-chip-list>
-	</div>
-    <button class="margin" mat-raised-button color="primary" title="Schließen" (click)="dialogRef.close()">
-        Schließen
-    </button>
+    </div>
+    <div mat-dialog-actions align="end">
+        <button class="margin" mat-raised-button color="primary" title="Schließen" (click)="dialogRef.close()">
+            Schließen
+        </button>
+    </div>
 </mat-dialog-content>

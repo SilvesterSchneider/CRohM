@@ -70,15 +70,20 @@
                 <a class="editButton" (click)="openEditDialog(element)" type="button">
                     <mat-icon color="primary" class="icon">edit</mat-icon>
                 </a>
-                <a class="infoButton" (click)="openInfo(element.id)" type="button">
-                    <mat-icon color="primary" title="Kontaktinformationen anzeigen" class="icon">list</mat-icon>
+                <a type="button" [matMenuTriggerFor]="menu">
+                    <mat-icon color="primary" class="icon">list</mat-icon>
                 </a>
-                <a (click)="addNote(element.id)" type="button">
-                    <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
-                </a>
-                <a (click)="deleteContact(element)" type="button">
-                    <mat-icon color="primary" title="Kontakt löschen" class="icon">delete</mat-icon>
-                </a>
+                <mat-menu #menu="matMenu">
+                    <a class="infoButton" (click)="openInfo(element.id)" type="button">
+                        <mat-icon color="primary" title="Kontaktinformationen anzeigen" class="icon">info</mat-icon>
+                    </a>
+                    <a (click)="addNote(element.id)" type="button">
+                        <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
+                    </a>
+                    <a (click)="deleteContact(element)" type="button">
+                        <mat-icon color="primary" title="Kontakt löschen" class="icon">delete</mat-icon>
+                    </a>
+                </mat-menu>
             </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

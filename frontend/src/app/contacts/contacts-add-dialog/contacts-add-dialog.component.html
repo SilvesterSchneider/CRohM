@@ -51,10 +51,10 @@
         </div>
         <app-contact-possibilities></app-contact-possibilities>
     </div>
-    <div>
-        <span class="fill-remaining-space"></span>
-        <button mat-raised-button color="primary" title="Abbrechen" (click)="onCancel()">
-            Abbrechen
+    <div mat-dialog-actions align="end">
+        <span></span>
+        <button mat-raised-button color="primary" title="Verwerfen" (click)="onCancel()">
+            Verwerfen
         </button>
         <button id="save" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid"
             (click)="onApprove()">
