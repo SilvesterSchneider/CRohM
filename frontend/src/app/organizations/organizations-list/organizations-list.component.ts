@@ -34,6 +34,9 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	length = 0;
 	isAdminUserLoggedIn = false;
 	dataSource = new MatTableDataSource<OrganizationDto>();
+	selectedRow = 0;
+	selectedCheckBoxList: Array<number> = new Array<number>();
+	isAllSelected = false;
 
 	constructor(public dialog: MatDialog, service: OrganizationService,
 		           private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver, private jwt: JwtService) {
@@ -87,6 +90,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			this.displayedColumns = ['Name', 'Zugehörige', 'Action'];
 		} else {
 			this.displayedColumns = [
+				'Icon',
 				'Name',
 				'Beschreibung',
 				'Strasse',
@@ -111,6 +115,9 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			 this.allOrganizations = x;
 			 this.tagsFilter.updateTagsInAutofill(this.allOrganizations);
 			 this.applyTagFilter();
+			 this.selectedCheckBoxList = new Array<number>();
+			 this.selectedRow = 0;
+			 this.isAllSelected = false;
 		});
 		this.changeDetectorRefs.detectChanges();
 		// this.organizationMock = this.orgaMock.getOrganizationsMock();
@@ -187,5 +194,33 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			phoneNumber: '02342-234234' + this.length
 		  }
 		}).subscribe(x => this.getData());
+	}
+
+	mouseOver(id:number) {
+		this.selectedRow = id;
+	  }
+	  	
+	isSelectedRow(id: number): boolean {
+		const selectedIndex = this.selectedCheckBoxList.find(a => a === id);
+		return this.selectedRow === id || selectedIndex != null;
+	}	
+	onCheckBoxChecked(id:number) {
+		const position = this.selectedCheckBoxList.indexOf(id);
+		if (position > -1) {
+			this.selectedCheckBoxList.splice(position, 1);
+		} else {
+			this.selectedCheckBoxList.push(id);
+		}
+	}
+	changeSelectionAll() {
+		this.isAllSelected = !this.isAllSelected;
+		this.selectedCheckBoxList = new Array<number>();
+		if (this.isAllSelected) {
+		  this.allOrganizations.forEach(x => this.selectedCheckBoxList.push(x.id));
+		} 
+	}
+	
+	isSelectionChecked(id: number) {
+	return this.selectedCheckBoxList.find(x => x === id) != null;
 	}
 }
