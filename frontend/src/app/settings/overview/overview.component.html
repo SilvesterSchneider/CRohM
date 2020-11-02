@@ -5,4 +5,7 @@
     <mat-tab id="tabRoles" label="Rollen">
       <app-roles></app-roles>
     </mat-tab>
+    <mat-tab *ngIf="isAdmin()" id="tabMail" label="E-Mail">
+      <app-mail></app-mail>
+    </mat-tab>
   </mat-tab-group>

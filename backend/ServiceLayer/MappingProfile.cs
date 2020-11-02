@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using ModelLayer;
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 
 namespace ServiceLayer
@@ -207,6 +208,7 @@ namespace ServiceLayer
             CreateMap<HistoryElementCreateDto, HistoryElement>();
             CreateMap<ModificationEntry, ModificationEntryDto>();
             CreateMap<Tag, TagDto>().ReverseMap();
+            CreateMap<MailCredentialsSerializableDto, MailCredentialsSerializable>().ReverseMap();
         }
     }
 }

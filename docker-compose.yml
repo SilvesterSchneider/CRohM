@@ -14,6 +14,12 @@ services:
       - DBUser=SA
       - DBPassword=CRohM2020
       - DBName=CRMDB
+      - MailAddress=crohm_nuernberg@hotmail.com
+      - MailDisplayName=CRMS-Team
+      - MailUserName=crohm_nuernberg@hotmail.com
+      - MailPassword=crohm2020
+      - MailPort=587
+      - MailHost=smtp.office365.com
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_HTTPS_PORT=443
