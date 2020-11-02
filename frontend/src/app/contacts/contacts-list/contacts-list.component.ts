@@ -223,7 +223,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     }).subscribe(x => this.getData());
   }
 
-  mouseOver(id:number) {
+  mouseOver(id: number) {
     this.selectedRow = id;
   }
 
@@ -232,7 +232,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     return this.selectedRow === id || selectedIndex != null;
   }
 
-  onCheckBoxChecked(id:number) {
+  onCheckBoxChecked(id: number) {
     const position = this.selectedCheckBoxList.indexOf(id);
     if (position > -1) {
       this.selectedCheckBoxList.splice(position, 1);
@@ -246,7 +246,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.selectedCheckBoxList = new Array<number>();
     if (this.isAllSelected) {
       this.allContacts.forEach(x => this.selectedCheckBoxList.push(x.id));
-    } 
+    }
   }
 
   isSelectionChecked(id: number) {

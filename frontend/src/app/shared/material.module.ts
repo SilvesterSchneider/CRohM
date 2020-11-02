@@ -50,7 +50,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTabsModule,
     MatChipsModule,
     MatRadioModule,
-    MatProgressSpinnerModule, 
+    MatProgressSpinnerModule,
 	MatDividerModule,
     MatExpansionModule,
     MatPaginatorModule
@@ -78,7 +78,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatCheckboxModule,
     MatChipsModule,
     MatRadioModule,
-    MatProgressSpinnerModule, 
+    MatProgressSpinnerModule,
 	MatDividerModule,
     MatExpansionModule,
     MatPaginatorModule

@@ -124,9 +124,8 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
             }
           );
         });
-      })
-    }
-    );
+      });
+    });
   }
 
   private createOrganizationForm(): FormGroup {
@@ -244,10 +243,10 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     eventToSave.organizations = new Array<number>();
     this.selectedItems.forEach(x => {
       if (x.modelType === MODEL_TYPE.CONTACT) {
-        eventToSave.contacts.push(x.objectId)
+        eventToSave.contacts.push(x.objectId);
       } else {
         eventToSave.organizations.push(x.objectId);
-      }      
+      }
     });
     this.eventService.post(eventToSave).subscribe(() => this.dialogRef.close());
   }

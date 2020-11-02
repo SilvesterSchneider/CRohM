@@ -196,15 +196,15 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		}).subscribe(x => this.getData());
 	}
 
-	mouseOver(id:number) {
+	mouseOver(id: number) {
 		this.selectedRow = id;
-	  }
-	  	
+	}
+
 	isSelectedRow(id: number): boolean {
 		const selectedIndex = this.selectedCheckBoxList.find(a => a === id);
 		return this.selectedRow === id || selectedIndex != null;
-	}	
-	onCheckBoxChecked(id:number) {
+	}
+	onCheckBoxChecked(id: number) {
 		const position = this.selectedCheckBoxList.indexOf(id);
 		if (position > -1) {
 			this.selectedCheckBoxList.splice(position, 1);
@@ -217,9 +217,9 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		this.selectedCheckBoxList = new Array<number>();
 		if (this.isAllSelected) {
 		  this.allOrganizations.forEach(x => this.selectedCheckBoxList.push(x.id));
-		} 
+		}
 	}
-	
+
 	isSelectionChecked(id: number) {
 	return this.selectedCheckBoxList.find(x => x === id) != null;
 	}
