@@ -10,12 +10,13 @@
     margin-top: 10px;
 }
 .selection {
-    width: 22px;
+    width: 25px;
     background: dodgerblue; 
     -moz-border-radius: 30px; 
     -webkit-border-radius: 30px; 
     border-radius: 100px;
     margin-left: -13px;
+    text-align-last: center;
 }
 .mat-column-icon {
     word-wrap: break-word !important;
