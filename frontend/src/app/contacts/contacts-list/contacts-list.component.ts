@@ -111,7 +111,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   openDisclosureDialog(id: number) {
     this.service.getById(id).subscribe((x) => {
-    const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true });
+    const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true, height: '200px' });
 
     dialogRef.afterClosed().subscribe((result) => {
       this.contacts = this.service.getAll();

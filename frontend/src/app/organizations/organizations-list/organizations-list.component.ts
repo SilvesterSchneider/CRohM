@@ -119,7 +119,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	openAddDialog() {
 		console.log('openedAddDialog');
 		const dialogRef = this.dialog.open(OrganizationsAddDialogComponent, {
-			disableClose: true
+			disableClose: true, height: '600px'
 		});
 		dialogRef.afterClosed().subscribe((result) => {
 			this.getData();

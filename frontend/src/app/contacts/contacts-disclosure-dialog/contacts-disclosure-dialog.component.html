@@ -1,4 +1,4 @@
-<mat-dialog-content class="disclosure">
+<mat-dialog-content>
     <div class="row">
         <div class="col-md-12">
             <h2>
@@ -9,14 +9,13 @@
             </p>
         </div>
     </div>
-    <div mat-dialog-actions align="end">
-        <span></span>
-        <button mat-raised-button color="primary" title="Abbrechen" (click)="onCancel()">
-            Abbrechen
-        </button>
-        <button mat-raised-button color="primary" title="Senden" type="submit"
-            (click)="onApprove()">
-            Senden
-        </button>
-    </div>
 </mat-dialog-content>
+<mat-dialog-actions mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" title="Abbrechen" (click)="onCancel()">
+        Abbrechen
+    </button>
+    <button mat-raised-button color="primary" title="Senden" type="submit"
+        (click)="onApprove()">
+        Senden
+    </button>
+</mat-dialog-actions>

@@ -51,14 +51,13 @@
         </div>
         <app-contact-possibilities></app-contact-possibilities>
     </div>
-    <div mat-dialog-actions align="end">
-        <span></span>
-        <button mat-raised-button color="primary" title="Verwerfen" (click)="onCancel()">
-            Verwerfen
-        </button>
-        <button id="save" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid"
-            (click)="onApprove()">
-            Speichern
-        </button>
-    </div>
 </mat-dialog-content>
+<mat-dialog-actions mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" title="Verwerfen" (click)="onCancel()">
+        Verwerfen
+    </button>
+    <button id="save" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid"
+        (click)="onApprove()">
+        Speichern
+    </button>
+</mat-dialog-actions>

@@ -1,4 +1,4 @@
-<mat-dialog-content class="organizationDetails" [formGroup]="organizationForm">
+<mat-dialog-content [formGroup]="organizationForm">
     <div class="row">
         <div class="col-md-12">
             <h3>
@@ -37,14 +37,13 @@
         </div>
         <app-contact-possibilities></app-contact-possibilities>
     </div>
-    <div mat-dialog-actions align="end">
-        <span class="fill-remaining-space"></span>
-        <button mat-raised-button color="primary" title="Verwerfen" (click)="onCancel()">
-            Verwerfen
-        </button>
-        <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!organizationForm.valid"
-            (click)="onApprove()">
-            Speichern
-        </button>
-    </div>
 </mat-dialog-content>
+<mat-dialog-actions mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" title="Verwerfen" (click)="onCancel()">
+        Verwerfen
+    </button>
+    <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!organizationForm.valid"
+        (click)="onApprove()">
+        Speichern
+    </button>
+</mat-dialog-actions>
