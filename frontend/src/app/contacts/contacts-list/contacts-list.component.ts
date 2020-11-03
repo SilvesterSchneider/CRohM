@@ -15,6 +15,7 @@ import { DataProtectionHelperService, DpUpdatePopupComponent } from 'src/app/sha
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
+import { EventsAddComponent } from 'src/app/events/events-add/events-add.component';
 
 @Component({
   selector: 'app-contacts-list',
@@ -251,5 +252,9 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   isSelectionChecked(id: number) {
     return this.selectedCheckBoxList.find(x => x === id) != null;
+  }
+
+  createEvent() {
+    const dialogRef = this.dialog.open(EventsAddComponent, { disableClose: true, data: this.selectedCheckBoxList });
   }
 }
