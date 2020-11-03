@@ -12,7 +12,7 @@ import { EventCreateDto, MODEL_TYPE, OrganizationService } from '../../shared/ap
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 
 export class ItemList {
@@ -66,11 +66,13 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
   errorState: boolean;
   controlType?: string;
   autofilled?: boolean;
+  preselectedContacts: Array<number> = new Array<number>();
 
   constructor(
     public dialogRef: MatDialogRef<EventsAddComponent>,
     @Optional() @Self() public ngControl: NgControl,
     private fm: FocusMonitor,
+    @Inject(MAT_DIALOG_DATA) public data: Array<number>,
     private elRef: ElementRef<HTMLElement>,
     private cd: ChangeDetectorRef,
     private contactService: ContactService,
@@ -87,6 +89,9 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
       this.focused = !!origin;
       this.stateChanges.next();
     });
+    if (data != null && data.length > 0) {
+      this.preselectedContacts = data;
+    }
   }
 
   hasChanged() {
@@ -124,6 +129,14 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
             }
           );
         });
+        if (this.preselectedContacts != null && this.preselectedContacts.length > 0) {
+          this.preselectedContacts.forEach(s => {
+            const cont: EventContactConnection = this.filteredItems.find(z => z.objectId === s && z.modelType === MODEL_TYPE.CONTACT);
+            if (cont != null) {
+              this.toggleSelection(cont);
+            }
+          });
+        }
       });
     });
   }

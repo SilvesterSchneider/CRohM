@@ -253,4 +253,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   isSelectionChecked(id: number) {
     return this.selectedCheckBoxList.find(x => x === id) != null;
   }
+
+  createEvent() {
+    const dialogRef = this.dialog.open(EventsAddComponent, { disableClose: true, data: this.selectedCheckBoxList });
+  }
 }
