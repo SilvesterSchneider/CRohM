@@ -216,4 +216,14 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       }
     }).subscribe(x => this.getData());
   }
+
+  callPhonenumber(phonenumber: string, id: number) {
+    document.location.href = 'tel:' + phonenumber;
+    const dialogRef = this.dialog.open(AddHistoryComponent, { data: phonenumber });
+    dialogRef.afterClosed().subscribe((y) => {
+      if (y) {
+        this.service.postHistoryElement(y, id).subscribe(x => this.getData());
+      }
+    });
+  }
 }

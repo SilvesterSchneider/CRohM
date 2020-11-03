@@ -51,7 +51,9 @@
         </ng-container>
         <ng-container matColumnDef="telefon">
             <mat-header-cell *matHeaderCellDef> Telefonnummer </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.contactPossibilities.phoneNumber}} </mat-cell>
+            <mat-cell *matCellDef="let element"> 
+                <a (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)">{{element.contactPossibilities.phoneNumber}}</a>
+            </mat-cell>
         </ng-container>
         <ng-container matColumnDef="fax">
             <mat-header-cell *matHeaderCellDef> Faxnummer </mat-header-cell>

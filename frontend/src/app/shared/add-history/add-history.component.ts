@@ -1,5 +1,5 @@
-import { OnInit, Component } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { OnInit, Component, Inject } from '@angular/core';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HistoryElementCreateDto, HistoryElementType } from 'src/app/shared/api-generated/api-generated';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BaseDialogInput } from '../form/base-dialog-form/base-dialog.component';
@@ -16,6 +16,7 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
     constructor(
         public dialogRef: MatDialogRef<AddHistoryComponent>,
         public dialog: MatDialog,
+        @Inject(MAT_DIALOG_DATA) public phoneNumber: string,
         private fb: FormBuilder) {
         super(dialogRef, dialog);
     }
@@ -27,6 +28,10 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
             information: ['', Validators.required],
             comment: ['', Validators.required]
         });
+        if (this.phoneNumber != null && this.phoneNumber.length > 0) {
+            this.oppoSuitsForm.get('type').setValue(this.types[1]);
+            this.oppoSuitsForm.get('comment').setValue(this.phoneNumber);
+        }
     }
 
     hasChanged() {
