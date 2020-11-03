@@ -144,7 +144,7 @@ namespace ServiceLayer
                 SmtpClient client = new SmtpClient();
                 client.UseDefaultCredentials = false;
 
-                client.Credentials = new System.Net.NetworkCredential("crohm_nuernberg@hotmail.com", "crohm2020");
+                client.Credentials = new System.Net.NetworkCredential("crohm_nuernberg@hotmail.com", "crohm202020");
 
                 client.Port = 587;
 

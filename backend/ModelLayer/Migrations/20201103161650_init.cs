@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class iit : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -266,7 +266,8 @@ namespace ModelLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    ContactId = table.Column<long>(nullable: false),
+                    ModelType = table.Column<int>(nullable: false),
+                    ObjectId = table.Column<long>(nullable: false),
                     HasParticipated = table.Column<bool>(nullable: false),
                     WasInvited = table.Column<bool>(nullable: false),
                     EventId = table.Column<long>(nullable: true)
@@ -426,6 +427,34 @@ namespace ModelLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EventOrganizations",
+                columns: table => new
+                {
+                    EventId = table.Column<long>(nullable: false),
+                    OrganizationId = table.Column<long>(nullable: false),
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventOrganizations", x => new { x.EventId, x.OrganizationId });
+                    table.ForeignKey(
+                        name: "FK_EventOrganizations_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventOrganizations_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "History",
                 columns: table => new
                 {
@@ -518,7 +547,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "40f233a8-3977-437e-86ce-1454f08a0550", "Admin", "ADMIN" });
+                values: new object[] { 1L, "ef336232-6d6e-4380-ba36-b983ceb3a458", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -546,6 +575,11 @@ namespace ModelLayer.Migrations
                 name: "IX_EventContacts_ContactId",
                 table: "EventContacts",
                 column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventOrganizations_OrganizationId",
+                table: "EventOrganizations",
+                column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_History_contactId",
@@ -640,6 +674,9 @@ namespace ModelLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "EventContacts");
+
+            migrationBuilder.DropTable(
+                name: "EventOrganizations");
 
             migrationBuilder.DropTable(
                 name: "History");

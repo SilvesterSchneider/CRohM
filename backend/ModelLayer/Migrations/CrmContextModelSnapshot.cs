@@ -329,6 +329,32 @@ namespace ModelLayer.Migrations
                     b.ToTable("EventContacts");
                 });
 
+            modelBuilder.Entity("ModelLayer.Models.EventOrganization", b =>
+                {
+                    b.Property<long>("EventId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("OrganizationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EventId", "OrganizationId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("EventOrganizations");
+                });
+
             modelBuilder.Entity("ModelLayer.Models.HistoryElement", b =>
                 {
                     b.Property<long>("Id")
@@ -466,9 +492,6 @@ namespace ModelLayer.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("ContactId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -478,8 +501,14 @@ namespace ModelLayer.Migrations
                     b.Property<bool>("HasParticipated")
                         .HasColumnType("bit");
 
+                    b.Property<int>("ModelType")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("ObjectId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("WasInvited")
                         .HasColumnType("bit");
@@ -523,7 +552,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "40f233a8-3977-437e-86ce-1454f08a0550",
+                            ConcurrencyStamp = "ef336232-6d6e-4380-ba36-b983ceb3a458",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -769,6 +798,21 @@ namespace ModelLayer.Migrations
                     b.HasOne("ModelLayer.Models.Event", "Event")
                         .WithMany("Contacts")
                         .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ModelLayer.Models.EventOrganization", b =>
+                {
+                    b.HasOne("ModelLayer.Models.Event", "Event")
+                        .WithMany("Organizations")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ModelLayer.Models.Organization", "Organization")
+                        .WithMany("Events")
+                        .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
