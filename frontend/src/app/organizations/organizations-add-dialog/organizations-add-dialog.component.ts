@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OrganizationService, OrganizationCreateDto } from 'src/app/shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
+import { OsmAddressComponent } from 'src/app/shared/osm/osm-address/osm-address.component';
 
 @Component({
 	selector: 'app-organizations-add',
@@ -14,6 +15,9 @@ export class OrganizationsAddDialogComponent extends BaseDialogInput implements 
 	@ViewChild(ContactPossibilitiesComponent, { static: true })
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
 	contactPossibilitiesEntriesFormGroup: FormGroup;
+	@ViewChild(OsmAddressComponent, { static: true })
+	addressGroup: OsmAddressComponent;
+	addressForm: FormGroup;
 	public organizationForm: FormGroup;
 	private organization: OrganizationCreateDto;
 
@@ -28,6 +32,7 @@ export class OrganizationsAddDialogComponent extends BaseDialogInput implements 
 
 	public ngOnInit(): void {
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
+		this.addressForm = this.addressGroup.getAddressForm();
 		this.organizationForm = this.createOrganizationForm();
 	}
 
@@ -43,7 +48,7 @@ export class OrganizationsAddDialogComponent extends BaseDialogInput implements 
 		return this.fb.group({
 			name: ['', Validators.required],
 			description: [''],
-			address: this.fb.control(''),
+			address: this.addressForm,
 			contact: this.createContactForm()
 		});
 	}

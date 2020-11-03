@@ -4,7 +4,7 @@ import { ContactService, OrganizationService, ContactDto, OrganizationDto, Event
   ContactPossibilitiesDto,
   ParticipatedDto,
   HistoryElementDto,
-  UserLoginService, GenderTypes, DataProtectionService} from '../shared/api-generated/api-generated';
+  UserLoginService, GenderTypes, DataProtectionService, UsersService} from '../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts/contacts-info/contacts-info.component';
 import { EventsInfoComponent } from '../events/events-info/events-info.component';
@@ -64,6 +64,7 @@ export class HomeComponent implements OnInit {
   public events: EventExtended[] = new Array<EventExtended>();
   AMOUNT_OF_DATASETS = 2;
   public lastLogin: string;
+  loggedInUser: string;
 
   private weekDays: string[] = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
@@ -76,18 +77,19 @@ export class HomeComponent implements OnInit {
     private readonly userLoginService: UserLoginService,
     private readonly jwt: JwtService,
     private readonly route: ActivatedRoute,
-    private readonly dataProtectionService: DataProtectionService ) { }
+    private readonly dataProtectionService: DataProtectionService,
+    private readonly userService: UsersService) { }
 
   public ngOnInit(): void {
-     this.checkIfComingFromLogin().then(isLogin => {
-       if (isLogin){
+    this.checkIfComingFromLogin().then(isLogin => {
+      if (isLogin){
         this.dataProtectionService.isThereAnyDataProtectionOfficerInTheSystem()
-        .subscribe({next: () => {}, error: () =>
+          .subscribe({next: () => {}, error: () =>
         this.dialog.open(DpDisclaimerDialogComponent)});
        }
-     });
+    });
 
-     this.modificationEntryService.getSortedListByType(MODEL_TYPE.CONTACT).subscribe(x => {
+    this.modificationEntryService.getSortedListByType(MODEL_TYPE.CONTACT).subscribe(x => {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
@@ -98,7 +100,7 @@ export class HomeComponent implements OnInit {
         }
       });
     });
-     this.modificationEntryService.getSortedListByType(MODEL_TYPE.ORGANIZATION).subscribe(x => {
+    this.modificationEntryService.getSortedListByType(MODEL_TYPE.ORGANIZATION).subscribe(x => {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
@@ -109,7 +111,7 @@ export class HomeComponent implements OnInit {
         }
       });
     });
-     this.modificationEntryService.getSortedListByType(MODEL_TYPE.EVENT).subscribe(x => {
+    this.modificationEntryService.getSortedListByType(MODEL_TYPE.EVENT).subscribe(x => {
       let modelId = -1;
       let idx = 0;
       x.forEach(a => {
@@ -120,8 +122,17 @@ export class HomeComponent implements OnInit {
         }
       });
     });
-     this.userLoginService.getTheLastLoginTimeOfUserById(this.jwt.getUserId())
-    .subscribe(lastLogin => this.lastLogin = this.getDate(lastLogin));
+    const userId = this.jwt.getUserId();
+    this.userLoginService.getTheLastLoginTimeOfUserById(userId)
+      .subscribe(lastLogin => this.lastLogin = this.getDate(lastLogin));
+    this.userService.get().subscribe(x => {
+      x.forEach(y => {
+        if (y.id === userId) {
+          this.loggedInUser = y.firstName + ' ' + y.lastName;
+          return;
+        }
+      });
+    });
   }
 
   public openContactDetails(contactId: number) {

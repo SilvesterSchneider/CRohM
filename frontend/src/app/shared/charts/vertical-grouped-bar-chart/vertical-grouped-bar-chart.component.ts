@@ -12,6 +12,7 @@ export class VerticalGroupedBarChartComponent implements OnInit {
   yLabel: string;
   legendLabel: string;
   startDate: Date;
+  showDates = true;
   endDate: Date;
   widthPerObject = 100;
   widthGeneral = 400;
@@ -89,5 +90,9 @@ export class VerticalGroupedBarChartComponent implements OnInit {
     } else {
       this.view = [700, this.height];
     }
+  }
+
+  shouldShowDates(value: boolean) {
+    this.showDates = value;
   }
 }

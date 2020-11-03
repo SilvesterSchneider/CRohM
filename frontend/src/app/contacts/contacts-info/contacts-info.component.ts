@@ -103,11 +103,11 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   }
 
   eventParticipated(element: EventDto): boolean {
-    return !!element.participated && element.participated?.some(part => part.contactId === this.contact.id);
+    return !!element.participated && element.participated?.some(part => part.modelType === MODEL_TYPE.CONTACT && part.objectId === this.contact.id && part.hasParticipated);
   }
 
   eventNotParticipated(element: EventDto): boolean {
-    return !!element.participated && !element.participated?.some(part => part.contactId === this.contact.id);
+    return !!element.participated && !element.participated?.some(part => part.modelType === MODEL_TYPE.CONTACT && part.objectId === this.contact.id && part.hasParticipated);
   }
 
   isLocalPhone(element: HistoryElementDto): boolean {
@@ -120,6 +120,10 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
 
   isMail(element: HistoryElementDto): boolean {
     return element.type === HistoryElementType.MAIL;
+  }
+
+  isVisit(element: HistoryElementDto): boolean {
+    return element.type === HistoryElementType.VISIT;
   }
 
   private loadHistory(pageStart: number, pageSize: number) {

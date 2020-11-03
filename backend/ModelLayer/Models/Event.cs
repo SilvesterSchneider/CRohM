@@ -17,6 +17,7 @@ namespace ModelLayer.Models
         public float Duration { get; set; } = 0f;
         //die kontakte die diesem event zugeordnet sind
         public List<EventContact> Contacts { get; set; } = new List<EventContact>();
+        public List<EventOrganization> Organizations { get; set; } = new List<EventOrganization>();
         //die informationen darüber welche personen daran bereits teilgenommen haben oder nicht
         public List<Participated> Participated { get; set; } = new List<Participated>();
 		public List<Tag> Tags { get; set; } = new List<Tag>();

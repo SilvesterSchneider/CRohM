@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using ModelLayer.Helper;
+using System.Net.Mail;
 
 namespace WebApi
 {
@@ -136,6 +137,15 @@ namespace WebApi
             dataContext.Database.Migrate();
             ApplicationDbInitializer.SeedRoles(rolesService);
             ApplicationDbInitializer.SeedUsers(userService);
+            MailCredentialsHelper.CheckIfCredentialsExist(
+                new MailCredentials(
+                    new MailAddress(
+                        Configuration["MailAddress"] ?? "a@b.com",
+                        Configuration["MailDisplayName"] ?? "CRMS-Team"),
+                        new System.Net.NetworkCredential(Configuration["MailUserName"] ?? "c@d.com",
+                        Configuration["MailPassword"] ?? "password"),
+                        int.Parse(Configuration["MailPort"] ?? "587"),
+                        Configuration["MailHost"] ?? "smtp.a.com"));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -206,6 +216,7 @@ namespace WebApi
             services.AddScoped<IUserCheckDateRepository, UserCheckDateRepository>();
             services.AddScoped<IContactPossibilitiesEntryRepository, ContactPossibilitiesEntryRepository>();
             services.AddScoped<IUserLoginRepository, UserLoginRepository>();
+            services.AddScoped<IEventOrganizationRepository, EventOrganizationRepository>();
             services.AddScoped<IHistoryRepository, HistoryRepository>();
         }
     }

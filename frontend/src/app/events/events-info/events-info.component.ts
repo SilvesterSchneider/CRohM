@@ -5,10 +5,11 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 import { map } from 'rxjs/operators';
 
-export class ContactDtoExtended {
+export class ContactOrganizationDtoExtended {
   id: number;
   preName: string;
   name: string;
+  modelType: MODEL_TYPE;
   participated: boolean;
   wasInvited: boolean;
 }
@@ -20,7 +21,7 @@ export class ContactDtoExtended {
 })
 
 export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> implements OnInit {
-  contacts: ContactDtoExtended[] = new Array<ContactDtoExtended>();
+  contactsOrganizations: ContactOrganizationDtoExtended[] = new Array<ContactOrganizationDtoExtended>();
   eventsForm: FormGroup;
   dataHistory: ModificationEntryDto[] = new Array<ModificationEntryDto>();
   columnsContacts = ['wasInvited', 'participated', 'prename', 'name'];
@@ -52,18 +53,36 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     this.eventsForm = this.createEventsForm();
     if (this.event.contacts != null) {
       this.event.contacts.forEach(x => {
-        this.contacts.push({
+        this.contactsOrganizations.push({
           id: x.id,
           preName: x.preName,
           name: x.name,
           participated: false,
-          wasInvited: false
+          wasInvited: false,
+          modelType: MODEL_TYPE.CONTACT
+        });
+      });
+    }
+    if (this.event.organizations != null) {
+      this.event.organizations.forEach(x => {
+        this.contactsOrganizations.push({
+          id: x.id,
+          preName: x.name,
+          name: x.description,
+          participated: false,
+          wasInvited: false,
+          modelType: MODEL_TYPE.ORGANIZATION
         });
       });
     }
     if (this.event.participated != null) {
       this.event.participated.forEach(x => {
-        const cont: ContactDtoExtended = this.contacts.find(y => y.id === x.contactId);
+        let cont: ContactOrganizationDtoExtended = null;
+        if (x.modelType === MODEL_TYPE.CONTACT) {
+          cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.CONTACT && y.id === x.objectId);
+        } else {
+          cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.ORGANIZATION && y.id === x.objectId);
+        }
         if (cont != null) {
           cont.participated = x.hasParticipated;
           cont.wasInvited = x.wasInvited;

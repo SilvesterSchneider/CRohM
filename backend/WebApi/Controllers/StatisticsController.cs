@@ -35,7 +35,10 @@ namespace WebApi.Controllers
             {
                 list = await statisticsService.GetAllCreatedObjects();
             }
-
+            else if (id == STATISTICS_VALUES.ALL_TAGS)
+            {
+                list = await statisticsService.GetAllTags();
+            }
             return Ok(list);
         }
     }

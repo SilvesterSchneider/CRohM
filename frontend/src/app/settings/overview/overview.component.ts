@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 @Component({
   selector: 'app-overview',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OverviewComponent implements OnInit {
 
-  constructor() { }
+  constructor(private jwt: JwtService) { }
 
   public ngOnInit(): void {
   }
 
+  isAdmin(): boolean {
+    return this.jwt.isAdmin();
+  }
 }

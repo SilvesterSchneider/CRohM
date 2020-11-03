@@ -10,6 +10,7 @@ import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
 import { JwtService } from 'src/app/shared/jwt.service';
+import { OsmAddressComponent } from 'src/app/shared/osm/osm-address/osm-address.component';
 
 @Component({
 	selector: 'app-contacts-add-dialog',
@@ -25,6 +26,9 @@ export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialo
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	contactsForm: FormGroup;
+	@ViewChild(OsmAddressComponent, { static: true })
+	addressGroup: OsmAddressComponent;
+	addressForm: FormGroup;
 
 	constructor(
 		public dialogRef: MatDialogRef<ContactsAddDialogComponent>,
@@ -38,6 +42,7 @@ export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialo
 
 	ngOnInit(): void {
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
+		this.addressForm = this.addressGroup.getAddressForm();
 		this.createForm();
 	}
 
@@ -47,7 +52,7 @@ export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialo
 			preName: ['', Validators.required],
 			gender: [this.genderTypes[0], Validators.required],
 			contactPartner: [''],
-			address: this.fb.control(''),
+			address: this.addressForm,
 			contactPossibilities: this.fb.group({
 				// Validiert auf korrektes E-Mail-Format
 				mail: ['', Validators.email],

@@ -29,6 +29,13 @@ namespace RepositoryLayer
         Task<List<Event>> GetEventsForContact(long contactId);
 
         /// <summary>
+        /// Get all events for a specific organization.
+        /// </summary>
+        /// <param name="orgaId"></param>
+        /// <returns></returns>
+        Task<List<Event>> GetEventsForOrganization(long orgaId);
+
+        /// <summary>
         /// Getter für alle events als liste mit allen includes
         /// </summary>
         /// <returns>liste aller events</returns>
@@ -48,29 +55,23 @@ namespace RepositoryLayer
         /// <returns>true wenn korrekt angepasst, ansonsten false</returns>
         Task<bool> ModifyEventAsync(EventDto eventToModify);
 
-        /// <summary>
-        /// Hinzufügen eines eventContacts
-        /// </summary>
-        /// <param name="eventContact">das eventContact</param>
-        /// <returns>das erzeugte EventContact</returns>
         Task<EventContact> AddEventContactAsync(EventContact eventContact);
 
-        /// <summary>
-        /// Löschen eines eventContacts
-        /// </summary>
-        /// <param name="eventContact">das eventContact</param>
-        /// <returns>true wenn alles ok, ansonsten false</returns>
-        Task<bool> RemoveEventContactAsync(EventContact eventContact);
+        Task<EventOrganization> AddEventOrganizationAsync(EventOrganization eventOrganization);
     }
 
     public class EventRepository : BaseRepository<Event>, IEventRepository
     {
         private IContactRepository contactRepo;
         private IEventContactRepository eventContactRepo;
+        private IOrganizationRepository orgaRepo;
+        private IEventOrganizationRepository eventOrgaRepo;
 
-        public EventRepository(CrmContext context, IEventContactRepository eventContactRepo, IContactRepository contactRepo) : base(context)
+        public EventRepository(CrmContext context, IEventContactRepository eventContactRepo, IEventOrganizationRepository eventOrgaRepo, IContactRepository contactRepo, IOrganizationRepository orgaRepo) : base(context)
         {
             this.contactRepo = contactRepo;
+            this.eventOrgaRepo = eventOrgaRepo;
+            this.orgaRepo = orgaRepo;
             this.eventContactRepo = eventContactRepo;
         }
 
@@ -81,7 +82,8 @@ namespace RepositoryLayer
             eventNew.Duration = eventToCreate.Duration;
             eventNew.Name = eventToCreate.Name;
             eventNew.Time = eventToCreate.Time;
-            eventToCreate.Contacts.ForEach(x => eventNew.Participated.Add(new Participated() { ContactId = x, HasParticipated = false, WasInvited = false }));
+            eventToCreate.Contacts.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, WasInvited = false, ModelType = MODEL_TYPE.CONTACT }));
+            eventToCreate.Organizations.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, WasInvited = false, ModelType = MODEL_TYPE.ORGANIZATION }));
             return await CreateAsync(eventNew);
         }
 
@@ -96,6 +98,8 @@ namespace RepositoryLayer
                 .Include(t => t.Tags)
                 .Include(y => y.Contacts)
                 .ThenInclude(z => z.Contact)
+                .Include(a => a.Organizations)
+                .ThenInclude(b => b.Organization)
                 .Include(x => x.Participated)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
@@ -105,7 +109,18 @@ namespace RepositoryLayer
             return await Entities
                 .Include(y => y.Contacts)
                 .ThenInclude(z => z.Contact)
+                .Include(a => a.Participated)
                 .Where(e => e.Contacts.Any(contact => contact.ContactId == contactId))
+                .ToListAsync();
+        }
+
+        public async Task<List<Event>> GetEventsForOrganization(long orgaId)
+        {
+            return await Entities
+                .Include(y => y.Organizations)
+                .ThenInclude(z => z.Organization)
+                .Include(a => a.Participated)
+                .Where(e => e.Organizations.Any(orga => orga.OrganizationId == orgaId))
                 .ToListAsync();
         }
 
@@ -116,6 +131,8 @@ namespace RepositoryLayer
             {
                 List<EventContact> eventContacts = await eventContactRepo.GetAllAsync();
                 eventContacts.RemoveAll(y => y.EventId != eventExistent.Id);
+                List<EventOrganization> eventOrgas = await eventOrgaRepo.GetAllAsync();
+                eventOrgas.RemoveAll(y => y.EventId != eventExistent.Id);
                 eventExistent.Name = eventToModify.Name;
                 eventExistent.Date = eventToModify.Date;
                 eventExistent.Time = eventToModify.Time;
@@ -130,7 +147,7 @@ namespace RepositoryLayer
                 });
                 foreach (EventContact part in eventContactsToDelete)
                 {
-                    Participated participated = eventExistent.Participated.FirstOrDefault(x => x.ContactId == part.ContactId);
+                    Participated participated = eventExistent.Participated.FirstOrDefault(x => x.ObjectId == part.ContactId && x.ModelType == MODEL_TYPE.CONTACT);
                     if (participated != null)
                     {
                         eventExistent.Participated.Remove(participated);
@@ -138,16 +155,36 @@ namespace RepositoryLayer
                     eventExistent.Contacts.Remove(part);
                     await RemoveEventContactAsync(part);
                 }
+
+                List<EventOrganization> eventOrgasToDelete = new List<EventOrganization>();
+                eventOrgas.ForEach(x =>
+                {
+                    if (eventToModify.Organizations.FirstOrDefault(y => y.Id == x.OrganizationId) == null)
+                    {
+                        eventOrgasToDelete.Add(x);
+                    }
+                });
+                foreach (EventOrganization part in eventOrgasToDelete)
+                {
+                    Participated participated = eventExistent.Participated.FirstOrDefault(x => x.ObjectId == part.OrganizationId && x.ModelType == MODEL_TYPE.ORGANIZATION);
+                    if (participated != null)
+                    {
+                        eventExistent.Participated.Remove(participated);
+                    }
+                    eventExistent.Organizations.Remove(part);
+                    await RemoveEventOrganizationAsync(part);
+                }
+
                 foreach (ParticipatedDto partNew in eventToModify.Participated)
                 {
-                    Participated participated = eventExistent.Participated.FirstOrDefault(y => y.Id == partNew.Id && partNew.Id > 0);
+                    Participated participated = eventExistent.Participated.FirstOrDefault(y => y.Id == partNew.Id && partNew.Id > 0 && y.ModelType == partNew.ModelType);
                     if (participated != null)
                     {
                         participated.HasParticipated = partNew.HasParticipated;
                         participated.WasInvited = partNew.WasInvited;
                     } else
                     {
-                        eventExistent.Participated.Add(new Participated() { ContactId = partNew.ContactId, HasParticipated = partNew.HasParticipated, WasInvited = partNew.WasInvited });
+                        eventExistent.Participated.Add(new Participated() { ObjectId = partNew.ObjectId, HasParticipated = partNew.HasParticipated, WasInvited = partNew.WasInvited, ModelType = partNew.ModelType });
                     }
                 }
                 
@@ -156,6 +193,14 @@ namespace RepositoryLayer
                     if (eventContacts.FirstOrDefault(y => y.ContactId == contact.Id) == null)
                     {
                         await AddEventContactAsync(new EventContact() { ContactId = contact.Id, EventId = eventExistent.Id });
+                    }
+                }
+
+                foreach (OrganizationDto orga in eventToModify.Organizations)
+                {
+                    if (eventOrgas.FirstOrDefault(y => y.OrganizationId == orga.Id) == null)
+                    {
+                        await AddEventOrganizationAsync(new EventOrganization() { OrganizationId = orga.Id, EventId = eventExistent.Id });
                     }
                 }
 
@@ -217,12 +262,50 @@ namespace RepositoryLayer
             return null;
         }
 
-        public async Task<bool> RemoveEventContactAsync(EventContact eventContact)
+        private async Task<bool> RemoveEventContactAsync(EventContact eventContact)
         {
             EventContact eventContactToDelete = await eventContactRepo.GetEventContactByEventContactAsync(eventContact);
             if (eventContactToDelete != null)
             {
                 await eventContactRepo.DeleteAsync(eventContactToDelete);
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<EventOrganization> AddEventOrganizationAsync(EventOrganization eventOrganization)
+        {
+            Organization orga = await orgaRepo.GetByIdAsync(eventOrganization.OrganizationId);
+            if (orga != null)
+            {
+                Event eventToInclude = await GetByIdAsync(eventOrganization.EventId);
+                if (eventToInclude != null)
+                {
+                    EventOrganization result = await eventOrgaRepo.CreateAsync(new EventOrganization()
+                    {
+                        Organization = orga,
+                        Event = eventToInclude,
+                        OrganizationId = eventOrganization.OrganizationId,
+                        EventId = eventOrganization.EventId
+                    });
+                    orga.Events.Add(result);
+                    eventToInclude.Organizations.Add(result);
+                    await orgaRepo.UpdateAsync(orga);
+                    await UpdateAsync(eventToInclude);
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        private async Task<bool> RemoveEventOrganizationAsync(EventOrganization eventOrga)
+        {
+            EventOrganization eventOrgaToDelete = await eventOrgaRepo.GetEventOrganizationByEventOrganizationAsync(eventOrga);
+            if (eventOrgaToDelete != null)
+            {
+                await eventOrgaRepo.DeleteAsync(eventOrgaToDelete);
                 return true;
             }
 

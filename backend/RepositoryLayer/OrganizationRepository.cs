@@ -33,6 +33,8 @@ namespace RepositoryLayer
                 .ThenInclude(b => b.ContactEntries)
                 .Include(x => x.OrganizationContacts)
                 .ThenInclude(x => x.Contact)
+                .Include(a => a.Events)
+                .ThenInclude(d => d.Event)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (org != null && org.OrganizationContacts.Any())
@@ -53,6 +55,8 @@ namespace RepositoryLayer
                 .ThenInclude(b => b.ContactEntries)
                 .Include(z => z.OrganizationContacts)
                 .ThenInclude(a => a.Contact)
+                .Include(a => a.Events)
+                .ThenInclude(d => d.Event)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
@@ -65,6 +69,8 @@ namespace RepositoryLayer
                 .Include(z => z.OrganizationContacts)
                 .ThenInclude(a => a.Contact)
                 .Include(t => t.Tags)
+                .Include(a => a.Events)
+                .ThenInclude(d => d.Event)
                 .ToListAsync();
         }
 
@@ -72,6 +78,9 @@ namespace RepositoryLayer
         {
             Organization organization = await Entities
                 .Include(t => t.Tags)
+                .Include(a => a.Events)
+                .ThenInclude(d => d.Event)
+                .Include(d => d.History)
                 .Include(x => x.Address)
                 .Include(y => y.OrganizationContacts)
                 .Include(z => z.Contact)

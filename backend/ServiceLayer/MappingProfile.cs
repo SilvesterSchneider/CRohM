@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using ModelLayer;
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Helper;
 using ModelLayer.Models;
 
 namespace ServiceLayer
@@ -34,8 +35,21 @@ namespace ServiceLayer
                         {
                             return new List<Contact>();
                         }
-                    }));
-
+                    }))
+                .ForMember(dto => dto.Events,
+                    expression => expression.MapFrom((orga, orgaDto) =>
+                    {
+                        if (orga.Events.Any())
+                        {
+                            return orga.Events
+                                .Select(innerEvent => innerEvent.Event)
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<Event>();
+                        }
+                    })); 
             CreateMap<OrganizationDto, Organization>()
                 .ForMember(dto => dto.OrganizationContacts,
                     expression => expression.MapFrom((organizationDto, organization) =>
@@ -50,8 +64,21 @@ namespace ServiceLayer
                         {
                             return new List<OrganizationContact>();
                         }
+                    }))
+                .ForMember(dto => dto.Events,
+                    expression => expression.MapFrom((orgaDto, orga) =>
+                    {
+                        if (orgaDto.Events.Any())
+                        {
+                            return orgaDto.Events
+                                .Select(innerEvent => new EventOrganization() { OrganizationId = orgaDto.Id, EventId = innerEvent.Id })
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<EventOrganization>();
+                        }
                     }));
-
             CreateMap<OrganizationCreateDto, Organization>();
             CreateMap<ContactPossibilitiesDto, ContactPossibilities>().ReverseMap();
             CreateMap<ContactPossibilities, ContactPossibilitiesDto>();
@@ -132,6 +159,20 @@ namespace ServiceLayer
                         {
                             return new List<Contact>();
                         }
+                    }))
+                .ForMember(dto => dto.Organizations,
+                    expression => expression.MapFrom((modelEvent, eventDto) =>
+                    {
+                        if (modelEvent.Organizations.Any())
+                        {
+                            return modelEvent.Organizations
+                                .Select(eventOrga => eventOrga.Organization)
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<Organization>();
+                        }
                     }));
             CreateMap<EventDto, Event>()
                 .ForMember(dto => dto.Contacts,
@@ -146,6 +187,20 @@ namespace ServiceLayer
                         {
                             return new List<EventContact>();
                         }                        
+                    }))
+                .ForMember(dto => dto.Organizations,
+                    expression => expression.MapFrom((eventDto, modelEvent) =>
+                    {
+                        if (eventDto.Organizations.Any())
+                        {
+                            return eventDto.Organizations
+                                .Select(innerOrga => new EventOrganization() { OrganizationId = innerOrga.Id, EventId = eventDto.Id })
+                                .ToList();
+                        }
+                        else
+                        {
+                            return new List<EventOrganization>();
+                        }
                     }));
             CreateMap<EventCreateDto, Event>();
             CreateMap<Participated, ParticipatedDto>().ReverseMap();
@@ -153,6 +208,7 @@ namespace ServiceLayer
             CreateMap<HistoryElementCreateDto, HistoryElement>();
             CreateMap<ModificationEntry, ModificationEntryDto>();
             CreateMap<Tag, TagDto>().ReverseMap();
+            CreateMap<MailCredentialsSerializableDto, MailCredentialsSerializable>().ReverseMap();
         }
     }
 }

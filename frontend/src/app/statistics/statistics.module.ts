@@ -6,6 +6,7 @@ import { EventVisitsComponent } from './event-visits/event-visits.component';
 import { StatisticsRoutingModule } from './statistics-routing.module';
 import { OverviewComponent } from './overview/overview.component';
 import { ObjectsCreationComponent } from './objects-creation/objects-creation.component';
+import { TagsComponent } from './tags/tags.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { ObjectsCreationComponent } from './objects-creation/objects-creation.co
   declarations: [
     EventVisitsComponent,
     OverviewComponent,
-    ObjectsCreationComponent
+    ObjectsCreationComponent,
+    TagsComponent
   ],
 })
 export class StatisticsModule { }

@@ -1,0 +1,60 @@
+<div class="mydivclass" [formGroup]="mailsForm">
+    <div class="column">
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field class="textMargin">
+                    <input matInput placeholder="Mail Adresse" formControlName="mailAddress">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field class="textMargin">
+                    <input matInput placeholder="Anzeigename" formControlName="displayName">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field class="textMargin">
+                    <input matInput placeholder="Benutzername" formControlName="userName">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field class="textMargin">
+                    <input matInput type="password" placeholder="Passwort" formControlName="password">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field class="textMargin">
+                    <input matInput placeholder="Port" formControlName="port">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field class="textMargin">
+                    <input matInput placeholder="Host" formControlName="host">
+                </mat-form-field>
+            </div>
+        </div>
+        <button class="margin" id="saveMail" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!mailsForm.valid"
+            (click)="saveValues()">
+            Speichern
+        </button>
+    </div>
+</div>
+<div class="margin">
+    Um die Einstellungen zu testen können Sie hier eine Test E-Mail an eine Adresse senden
+</div>
+<div class="mydivclass" [formGroup]="sendMailForm">
+    <div class="column">
+        <div class="col-md-3">
+            <mat-form-field class="textMargin">
+                <input matInput placeholder="Ihre E-Mail Adresse" formControlName="address">
+            </mat-form-field>
+        </div>
+    </div>
+    <button class="margin" id="sendMail" mat-raised-button color="primary" title="E-Mail senden" type="submit" [disabled]="!sendMailForm.valid"
+        (click)="sendMail()">
+        E-Mail senden
+    </button>
+</div>

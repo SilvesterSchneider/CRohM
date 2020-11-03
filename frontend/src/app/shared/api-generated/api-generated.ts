@@ -1666,126 +1666,6 @@ export class EventService {
         }
         return _observableOf<void>(<any>null);
     }
-
-    /**
-     * @return successfully updated
-     */
-    addContact(id: number, contactId: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/Event/{id}/addContact";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(contactId);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAddContact(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processAddContact(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processAddContact(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result400: any = null;
-            result400 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
-            return throwException("bad request", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-
-    /**
-     * @return successfully updated
-     */
-    removeContact(id: number, contactId: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/Event/{id}/removeContact";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(contactId);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRemoveContact(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRemoveContact(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processRemoveContact(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result400: any = null;
-            result400 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
-            return throwException("bad request", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
 }
 
 @Injectable({
@@ -1802,10 +1682,11 @@ export class MailService {
     }
 
     /**
+     * @param orgaIds (optional) 
      * @param mailContent (optional) 
      * @return successfully send mails
      */
-    sendInvitationMails(contactIds: number[], mailContent?: string | null | undefined): Observable<boolean> {
+    sendInvitationMails(contactIds: number[], orgaIds?: number[] | null | undefined, mailContent?: string | null | undefined): Observable<boolean> {
         let url_ = this.baseUrl + "/api/Mail?";
         if (mailContent !== undefined && mailContent !== null)
             url_ += "mailContent=" + encodeURIComponent("" + mailContent) + "&";
@@ -1818,6 +1699,7 @@ export class MailService {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "orgaIds": orgaIds !== undefined && orgaIds !== null ? "" + orgaIds : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -1915,6 +1797,172 @@ export class MailService {
             }));
         }
         return _observableOf<string>(<any>null);
+    }
+
+    /**
+     * @return successfully post mail data
+     */
+    saveMailCredentials(data: MailCredentialsSerializableDto): Observable<void> {
+        let url_ = this.baseUrl + "/api/Mail";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(data);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveMailCredentials(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveMailCredentials(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveMailCredentials(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @return successfully get mail data
+     */
+    getEmailCredentials(id: string): Observable<MailCredentialsSerializableDto> {
+        let url_ = this.baseUrl + "/api/Mail/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetEmailCredentials(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetEmailCredentials(<any>response_);
+                } catch (e) {
+                    return <Observable<MailCredentialsSerializableDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<MailCredentialsSerializableDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetEmailCredentials(response: HttpResponseBase): Observable<MailCredentialsSerializableDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <MailCredentialsSerializableDto>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<MailCredentialsSerializableDto>(<any>null);
+    }
+
+    /**
+     * @param subject (optional) 
+     * @param address (optional) 
+     * @param mailContent (optional) 
+     * @return successfully send mail
+     */
+    sendMail(id: string, subject?: string | null | undefined, address?: string | null | undefined, mailContent?: string | null | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/Mail/{id}?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (subject !== undefined && subject !== null)
+            url_ += "subject=" + encodeURIComponent("" + subject) + "&";
+        if (address !== undefined && address !== null)
+            url_ += "address=" + encodeURIComponent("" + address) + "&";
+        if (mailContent !== undefined && mailContent !== null)
+            url_ += "mailContent=" + encodeURIComponent("" + mailContent) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSendMail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSendMail(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSendMail(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <boolean>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
     }
 }
 
@@ -2528,7 +2576,7 @@ export class OrganizationService {
      * @param pageSize (optional) 
      * @return successfully found
      */
-    getHistory(id: number, pageStart?: number | undefined, pageSize?: number | undefined): Observable<PagedResponseOfListOfHistoryElement> {
+    getHistory(id: number, pageStart?: number | undefined, pageSize?: number | undefined): Observable<PagedResponseOfListOfObject> {
         let url_ = this.baseUrl + "/api/organization/{id}/history?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -2558,14 +2606,14 @@ export class OrganizationService {
                 try {
                     return this.processGetHistory(<any>response_);
                 } catch (e) {
-                    return <Observable<PagedResponseOfListOfHistoryElement>><any>_observableThrow(e);
+                    return <Observable<PagedResponseOfListOfObject>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<PagedResponseOfListOfHistoryElement>><any>_observableThrow(response_);
+                return <Observable<PagedResponseOfListOfObject>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetHistory(response: HttpResponseBase): Observable<PagedResponseOfListOfHistoryElement> {
+    protected processGetHistory(response: HttpResponseBase): Observable<PagedResponseOfListOfObject> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2575,7 +2623,7 @@ export class OrganizationService {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <PagedResponseOfListOfHistoryElement>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <PagedResponseOfListOfObject>JSON.parse(_responseText, this.jsonParseReviver);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2583,7 +2631,7 @@ export class OrganizationService {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<PagedResponseOfListOfHistoryElement>(<any>null);
+        return _observableOf<PagedResponseOfListOfObject>(<any>null);
     }
 }
 
@@ -3591,9 +3639,36 @@ export interface OrganizationDto {
     description?: string | undefined;
     address?: AddressDto | undefined;
     contact?: ContactPossibilitiesDto | undefined;
+    events?: EventDto[] | undefined;
     employees?: ContactDto[] | undefined;
     tags?: TagDto[] | undefined;
     history?: HistoryElementDto[] | undefined;
+}
+
+export interface EventDto {
+    id: number;
+    date: string;
+    time: string;
+    name?: string | undefined;
+    duration: number;
+    contacts?: ContactDto[] | undefined;
+    organizations?: OrganizationDto[] | undefined;
+    participated?: ParticipatedDto[] | undefined;
+    tags?: TagDto[] | undefined;
+}
+
+export interface ParticipatedDto {
+    id: number;
+    modelType: MODEL_TYPE;
+    objectId: number;
+    hasParticipated: boolean;
+    wasInvited: boolean;
+}
+
+export enum MODEL_TYPE {
+    CONTACT = 0,
+    ORGANIZATION = 1,
+    EVENT = 2,
 }
 
 export interface TagDto {
@@ -3613,24 +3688,7 @@ export enum HistoryElementType {
     MAIL = 0,
     PHONE_CALL = 1,
     NOTE = 2,
-}
-
-export interface EventDto {
-    id: number;
-    date: string;
-    time: string;
-    name?: string | undefined;
-    duration: number;
-    contacts?: ContactDto[] | undefined;
-    participated?: ParticipatedDto[] | undefined;
-    tags?: TagDto[] | undefined;
-}
-
-export interface ParticipatedDto {
-    id: number;
-    contactId: number;
-    hasParticipated: boolean;
-    wasInvited: boolean;
+    VISIT = 3,
 }
 
 export interface ContactCreateDto {
@@ -3694,6 +3752,16 @@ export interface EventCreateDto {
     name?: string | undefined;
     duration: number;
     contacts?: number[] | undefined;
+    organizations?: number[] | undefined;
+}
+
+export interface MailCredentialsSerializableDto {
+    mailAddress?: string | undefined;
+    displayName?: string | undefined;
+    userName?: string | undefined;
+    password?: string | undefined;
+    port: number;
+    host?: string | undefined;
 }
 
 export interface ModificationEntryDto {
@@ -3736,12 +3804,6 @@ export enum DATA_TYPE {
     INVITATION = 21,
 }
 
-export enum MODEL_TYPE {
-    CONTACT = 0,
-    ORGANIZATION = 1,
-    EVENT = 2,
-}
-
 export enum MODIFICATION {
     CREATED = 0,
     MODIFIED = 1,
@@ -3770,111 +3832,6 @@ export interface OrganizationCreateDto {
     employees?: ContactCreateDto[] | undefined;
 }
 
-export interface ResponseOfListOfHistoryElement {
-    data?: HistoryElement[] | undefined;
-    succeeded: boolean;
-    errors?: string[] | undefined;
-    message?: string | undefined;
-}
-
-export interface PagedResponseOfListOfHistoryElement extends ResponseOfListOfHistoryElement {
-    pageStart: number;
-    pageSize: number;
-    totalRecords: number;
-}
-
-export interface BaseEntity {
-    id: number;
-    name?: string | undefined;
-    description?: string | undefined;
-}
-
-export interface HistoryElement extends BaseEntity {
-    date: string;
-    type: HistoryElementType;
-    comment?: string | undefined;
-    contact?: Contact | undefined;
-    organization?: Organization | undefined;
-}
-
-export interface Contact extends BaseEntity {
-    gender: GenderTypes;
-    contactPartner?: string | undefined;
-    preName?: string | undefined;
-    address?: Address | undefined;
-    contactPossibilities?: ContactPossibilities | undefined;
-    events?: EventContact[] | undefined;
-    organizationContacts?: OrganizationContact[] | undefined;
-    history?: HistoryElement[] | undefined;
-    tags?: Tag[] | undefined;
-}
-
-export interface Address extends BaseEntity {
-    city?: string | undefined;
-    street?: string | undefined;
-    streetNumber?: string | undefined;
-    zipcode?: string | undefined;
-    country?: string | undefined;
-}
-
-export interface ContactPossibilities extends BaseEntity {
-    phoneNumber?: string | undefined;
-    fax?: string | undefined;
-    mail?: string | undefined;
-    contactEntries?: ContactPossibilitiesEntry[] | undefined;
-}
-
-export interface ContactPossibilitiesEntry extends BaseEntity {
-    contactEntryName?: string | undefined;
-    contactEntryValue?: string | undefined;
-}
-
-export interface EventContact extends BaseEntity {
-    eventId: number;
-    event?: Event | undefined;
-    contactId: number;
-    contact?: Contact | undefined;
-}
-
-export interface Event extends BaseEntity {
-    date: string;
-    time: string;
-    duration: number;
-    contacts?: EventContact[] | undefined;
-    participated?: Participated[] | undefined;
-    tags?: Tag[] | undefined;
-}
-
-export interface Participated extends BaseEntity {
-    contactId: number;
-    hasParticipated: boolean;
-    wasInvited: boolean;
-}
-
-export interface Tag extends BaseEntity {
-    contact?: Contact | undefined;
-    organization?: Organization | undefined;
-    event?: Event | undefined;
-}
-
-export interface Organization extends BaseEntity {
-    address?: Address | undefined;
-    contact?: ContactPossibilities | undefined;
-    organizationContacts?: OrganizationContact[] | undefined;
-    tags?: Tag[] | undefined;
-    history?: HistoryElement[] | undefined;
-}
-
-export interface OrganizationContact extends BaseEntity {
-    id: number;
-    name?: string | undefined;
-    description?: string | undefined;
-    organizationId: number;
-    organization?: Organization | undefined;
-    contactId: number;
-    contact?: Contact | undefined;
-}
-
 export interface RoleDto {
     id: number;
     name?: string | undefined;
@@ -3894,6 +3851,7 @@ export interface VerticalGroupedBarDataSet {
 export enum STATISTICS_VALUES {
     ALL_CREATED_OBJECTS = 0,
     INVITED_AND_PARTICIPATED_EVENT_PERSONS = 1,
+    ALL_TAGS = 2,
 }
 
 export interface UserCreateDto {
