@@ -255,6 +255,6 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   createEvent() {
-    const dialogRef = this.dialog.open(EventsAddComponent, { disableClose: true, data: this.selectedCheckBoxList });
+    this.dialog.open(EventsAddComponent, { disableClose: true, data: this.selectedCheckBoxList });
   }
 }
