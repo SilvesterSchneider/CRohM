@@ -82,6 +82,10 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     private orgaService: OrganizationService
   ) {
     super(dialogRef, dialog);
+    this.dialogRef.backdropClick().subscribe(() => {
+			// Close the dialog
+			dialogRef.close();
+		});
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }

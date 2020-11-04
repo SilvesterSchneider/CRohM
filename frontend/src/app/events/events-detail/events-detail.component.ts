@@ -89,6 +89,10 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     private fb: FormBuilder,
     private mailService: MailService) {
     super(dialogRef, dialog);
+    this.dialogRef.backdropClick().subscribe(() => {
+			// Close the dialog
+			dialogRef.close();
+		});
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
