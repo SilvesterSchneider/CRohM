@@ -20,50 +20,62 @@
 
 <div fxLayout="column" fxLayoutGap="100px">
     <mat-table id="contactsTable" #table [dataSource]="dataSource">
+        <ng-container matColumnDef="icon">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-checkbox [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> 
+                <div *ngIf="!isSelectedRow(element.id)" class="selection">
+                    {{element.preName.substring(0,1) + element.name.substring(0,1)}}
+                </div>
+                <mat-checkbox class="checkBox" *ngIf="isSelectedRow(element.id)" [checked]="isSelectionChecked(element.id)" (change)="onCheckBoxChecked(element.id)">
+                </mat-checkbox>
+            </mat-cell>
+        </ng-container>
         <ng-container matColumnDef="vorname">
             <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.preName}}
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.preName}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="nachname">
             <mat-header-cell *matHeaderCellDef> Nachname </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.name}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="stasse">
             <mat-header-cell *matHeaderCellDef> Strasse </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.address.street}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.street}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="hausnummer">
             <mat-header-cell *matHeaderCellDef> Hausnummer </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.address.streetNumber}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.streetNumber}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="plz">
             <mat-header-cell *matHeaderCellDef> PLZ </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.address.zipcode}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.zipcode}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="ort">
             <mat-header-cell *matHeaderCellDef> Ort </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.address.city}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.city}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="land">
             <mat-header-cell *matHeaderCellDef> Land </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.address.country}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.country}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="telefon">
             <mat-header-cell *matHeaderCellDef> Telefonnummer </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.contactPossibilities.phoneNumber}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.phoneNumber}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="fax">
             <mat-header-cell *matHeaderCellDef> Faxnummer </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.contactPossibilities.fax}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.fax}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="mail">
             <mat-header-cell *matHeaderCellDef> E-Mail </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.contactPossibilities.mail}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.mail}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
-            <mat-cell *matCellDef="let element" fxLayoutGap="5px">
+            <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
                 <a (click)="openDisclosureDialog(element.id)" type="button">
                     <mat-icon color="primary" class="icon">description</mat-icon>
                 </a>

@@ -9,3 +9,23 @@
 .tabrow {
     margin-top: 10px;
 }
+.selection {
+    width: 25px;
+    background: dodgerblue; 
+    -moz-border-radius: 30px; 
+    -webkit-border-radius: 30px; 
+    border-radius: 100px;
+    margin-left: -13px;
+    text-align-last: center;
+}
+.mat-column-Icon {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    flex: 0.1 0 3% !important;
+}
+.mat-row:hover {
+    background-color: rgb(218, 218, 218);
+}
+.checkBox {
+    margin-left: -10px;
+}

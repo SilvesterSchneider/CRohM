@@ -1,6 +1,6 @@
 import {
   ElementRef, HostBinding, Component, OnInit, ViewChild, Input, Optional, Self,
-  ChangeDetectorRef, OnDestroy
+  ChangeDetectorRef, OnDestroy, Inject
 } from '@angular/core';
 import { NgControl, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -124,9 +124,8 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
             }
           );
         });
-      })
-    }
-    );
+      });
+    });
   }
 
   private createOrganizationForm(): FormGroup {
@@ -244,10 +243,10 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     eventToSave.organizations = new Array<number>();
     this.selectedItems.forEach(x => {
       if (x.modelType === MODEL_TYPE.CONTACT) {
-        eventToSave.contacts.push(x.objectId)
+        eventToSave.contacts.push(x.objectId);
       } else {
         eventToSave.organizations.push(x.objectId);
-      }      
+      }
     });
     this.eventService.post(eventToSave).subscribe(() => this.dialogRef.close());
   }
