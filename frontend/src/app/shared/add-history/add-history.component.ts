@@ -19,6 +19,10 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
         @Inject(MAT_DIALOG_DATA) public phoneNumber: string,
         private fb: FormBuilder) {
         super(dialogRef, dialog);
+        this.dialogRef.backdropClick().subscribe(() => {
+			// Close the dialog
+			dialogRef.close();
+		});
     }
 
     ngOnInit(): void {

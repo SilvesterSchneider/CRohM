@@ -1,6 +1,6 @@
 import {
   ElementRef, HostBinding, Component, OnInit, ViewChild, Input, Optional, Self,
-  ChangeDetectorRef, OnDestroy
+  ChangeDetectorRef, OnDestroy, Inject
 } from '@angular/core';
 import { NgControl, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -80,6 +80,10 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     private orgaService: OrganizationService
   ) {
     super(dialogRef, dialog);
+    this.dialogRef.backdropClick().subscribe(() => {
+			// Close the dialog
+			dialogRef.close();
+		});
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }

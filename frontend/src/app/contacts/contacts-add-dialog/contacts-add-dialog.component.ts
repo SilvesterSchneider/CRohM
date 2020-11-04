@@ -38,6 +38,10 @@ export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialo
 		private jwt: JwtService
 	) {
 		super(dialogRef, dialog);
+		this.dialogRef.backdropClick().subscribe(() => {
+			// Close the dialog
+			dialogRef.close();
+		});
 	}
 
 	ngOnInit(): void {
