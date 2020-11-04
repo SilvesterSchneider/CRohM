@@ -35,9 +35,9 @@
         </div>
     </div>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions align="end">
     <span class="fill-remaining-space"></span>
-    <button mat-raised-button (click)="onCancel()">Abbrechen</button>
-    <button mat-raised-button [mat-dialog-close]="getObject()" [disabled]="!oppoSuitsForm.valid"
+    <button mat-raised-button color="primary" (click)="onCancel()">Verwerfen</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="getObject()" [disabled]="!oppoSuitsForm.valid"
       color="primary">Speichern</button>
   </div>

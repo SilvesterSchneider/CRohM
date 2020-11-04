@@ -34,6 +34,10 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
               private modService: ModificationEntryService
   ) {
     super(dialogRef, dialog);
+    this.dialogRef.backdropClick().subscribe(() => {
+      // Close the dialog
+      dialogRef.close();
+    });
   }
 
   getDate(date: string): string {
