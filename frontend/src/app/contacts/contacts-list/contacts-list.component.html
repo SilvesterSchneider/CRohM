@@ -4,6 +4,9 @@
     <mat-toolbar-row class="tabrow">
         <span>Kontakte</span>
         <span class="spacer"></span>
+        <a *ngIf="selectedCheckBoxList.length > 0" class="iconMargin" (click)="sendMailToMany()" type="button">
+            <mat-icon color="primary" title="Mail an mehrere Kontakte senden" class="icon">mail</mat-icon>
+        </a>
         <app-tags-filter></app-tags-filter>
         <mat-form-field>
             <mat-label>Suche</mat-label>
@@ -71,7 +74,7 @@
         </ng-container>
         <ng-container matColumnDef="mail">
             <mat-header-cell *matHeaderCellDef> E-Mail </mat-header-cell>
-            <mat-cell *matCellDef="let element" (click)="sendMail(element.contactPossibilities.mail)" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.mail}} </mat-cell>
+            <mat-cell *matCellDef="let element" (click)="sendMail(element)" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.mail}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
