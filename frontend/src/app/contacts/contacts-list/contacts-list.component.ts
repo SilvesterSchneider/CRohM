@@ -15,6 +15,7 @@ import { DataProtectionHelperService, DpUpdatePopupComponent } from 'src/app/sha
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
+import { EventsAddComponent } from 'src/app/events/events-add/events-add.component';
 
 @Component({
   selector: 'app-contacts-list',
@@ -33,6 +34,9 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   flexMediaWatcher: Subscription;
   allContacts: ContactDto[];
   dataSource = new MatTableDataSource<ContactDto>();
+  selectedRow = 0;
+  selectedCheckBoxList: Array<number> = new Array<number>();
+  isAllSelected = false;
 
   constructor(
     private service: ContactService,
@@ -93,7 +97,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       // only display prename and name on larger screens
       this.displayedColumns = ['vorname', 'nachname', 'action'];
     } else {
-      this.displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
+      this.displayedColumns = ['icon', 'vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
     }
   }
 
@@ -105,6 +109,9 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       this.allContacts = x;
       this.tagsFilter.updateTagsInAutofill(this.allContacts);
       this.applyTagFilter();
+      this.selectedCheckBoxList = new Array<number>();
+      this.selectedRow = 0;
+      this.isAllSelected = false;
     });
     this.changeDetectorRefs.detectChanges();
   }
@@ -215,5 +222,35 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         contactEntries: []
       }
     }).subscribe(x => this.getData());
+  }
+
+  mouseOver(id: number) {
+    this.selectedRow = id;
+  }
+
+  isSelectedRow(id: number): boolean {
+    const selectedIndex = this.selectedCheckBoxList.find(a => a === id);
+    return this.selectedRow === id || selectedIndex != null;
+  }
+
+  onCheckBoxChecked(id: number) {
+    const position = this.selectedCheckBoxList.indexOf(id);
+    if (position > -1) {
+      this.selectedCheckBoxList.splice(position, 1);
+    } else {
+      this.selectedCheckBoxList.push(id);
+    }
+  }
+
+  changeSelectionAll() {
+    this.isAllSelected = !this.isAllSelected;
+    this.selectedCheckBoxList = new Array<number>();
+    if (this.isAllSelected) {
+      this.allContacts.forEach(x => this.selectedCheckBoxList.push(x.id));
+    }
+  }
+
+  isSelectionChecked(id: number) {
+    return this.selectedCheckBoxList.find(x => x === id) != null;
   }
 }

@@ -1,6 +1,6 @@
 import {
   ElementRef, HostBinding, Component, OnInit, ViewChild, Input, Optional, Self,
-  ChangeDetectorRef, OnDestroy
+  ChangeDetectorRef, OnDestroy, Inject
 } from '@angular/core';
 import { NgControl, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';

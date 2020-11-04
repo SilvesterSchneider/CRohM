@@ -116,7 +116,8 @@ export class EventsListComponent implements OnInit {
 
   isToday(element: EventDtoGroup): boolean {
     const date: Date = new Date(element.date);
-    if (date.getDate() === new Date(Date.now()).getDate()) {
+    const now: Date = new Date(Date.now());
+    if (date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
       return true;
     } else {
       return false;
