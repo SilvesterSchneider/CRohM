@@ -1,0 +1,22 @@
+<mat-dialog-content>
+    <h4>
+        E-Mail an Kontakt(e) versenden
+    </h4>
+    <div>
+        Die Textbausteine &#060;Nachname&#062; und &#060;Vorname&#062; fügen
+    </div>
+    <div>
+        den Nach- bzw. Vornamen des Empfängers ein.
+    </div>
+    <div [formGroup]="textForm">
+        <textarea class="area" formControlName="text"></textarea>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions mat-dialog-actions align="end">
+    <button mat-raised-button title="Verwerfen" (click)="sendMail(false)">
+        Verwerfen
+    </button>
+    <button id="buttonSend" mat-raised-button color="primary" title="Senden" [disabled]="!textForm.valid" (click)="sendMail(true)">
+        Senden
+    </button>
+</mat-dialog-actions>

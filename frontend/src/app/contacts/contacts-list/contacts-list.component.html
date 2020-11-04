@@ -71,7 +71,7 @@
         </ng-container>
         <ng-container matColumnDef="mail">
             <mat-header-cell *matHeaderCellDef> E-Mail </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.mail}} </mat-cell>
+            <mat-cell *matCellDef="let element" (click)="sendMail(element.contactPossibilities.mail)" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.mail}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
