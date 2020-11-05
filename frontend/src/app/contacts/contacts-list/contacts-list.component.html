@@ -6,6 +6,9 @@
         <span class="spacer"></span>
         <a *ngIf="selectedCheckBoxList.length > 0" class="iconMargin" (click)="sendMailToMany()" type="button">
             <mat-icon color="primary" title="Mail an mehrere Kontakte senden" class="icon">mail</mat-icon>
+		</a>
+        <a *ngIf="selectedCheckBoxList.length > 0" (click)="createEvent()" type="button">
+            <mat-icon color="primary" title="Veranstaltung erstellen" class="iconMargin">event</mat-icon>
         </a>
         <app-tags-filter></app-tags-filter>
         <mat-form-field>
