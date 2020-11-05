@@ -16,7 +16,7 @@ export class LoginComponent {
   password = new FormControl('', Validators.required);
   errorText: string;
   user: UserDto;
-  fieldTextType: boolean = true;
+  fieldTextType = false;
   matDialog: MatDialogRef<ChangePasswordComponent>;
 
   constructor(private jwtService: JwtService, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) { }
@@ -46,6 +46,7 @@ export class LoginComponent {
       this.login();
     }
   }
+
   toggleFieldTextType() {
     this.fieldTextType = !this.fieldTextType;
   }

@@ -6,9 +6,9 @@
                 <input (keyup.enter)="loginWithProof()" matInput type="text" [formControl]="userNameOrEmail" id="login-user" placeholder="Benutzername oder Email">
             </mat-form-field>
             <div class="row">
-                <mat-form-field>
+                <mat-form-field fxFlex="90%" fxFlex.lt-lg="90%" class="margin">
                     <input *ngIf="!fieldTextType" (keyup.enter)="loginWithProof()" matInput type="password" [formControl]="password" id="login-password" placeholder="Passwort">
-                    <input *ngIf="fieldTextType" (keyup.enter)="loginWithProof()" matInput type="text" [formControl]="password" id="login-password" placeholder="Passwort">
+                    <input *ngIf="fieldTextType" (keyup.enter)="loginWithProof()" matInput type="text" [formControl]="password" placeholder="Passwort">
                 </mat-form-field>
                 <a type="button" (click)="toggleFieldTextType()">
                     <mat-icon *ngIf="fieldTextType" color="primary" class="icon">enhanced_encryption</mat-icon>
