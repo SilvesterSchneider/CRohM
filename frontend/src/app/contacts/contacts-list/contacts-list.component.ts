@@ -300,6 +300,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         this.addNoteToMany();
       }
     });
+  }
 
   createEvent() {
     this.dialog.open(EventsAddComponent, { disableClose: true, data: this.selectedCheckBoxList });
