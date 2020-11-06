@@ -22,8 +22,9 @@ import { ConfirmDialogComponent } from './shared/form/confirmdialog/confirmdialo
 import { ChangePasswordComponent } from './login/change-password-dialog/change-password-dialog.component';
 import { StatisticsModule } from './statistics/statistics.module';
 import { LanguageSelectComponent } from './shared/navigation/language-select/language-select.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { MissingTranslationLogger } from './shared/translation/missing-translation-logger';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
-      }
+      },
+      missingTranslationHandler: { provide: MissingTranslationHandler, useClass: MissingTranslationLogger },
     })
   ],
   providers: [
