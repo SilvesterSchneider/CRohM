@@ -41,7 +41,7 @@
 </mat-dialog-content>
 <mat-dialog-actions mat-dialog-actions align="end">
         <span class="fill-remaining-space"></span>
-        <button mat-raised-button color="primary" (click)="onCancel()">Verwerfen</button>
+        <button mat-raised-button color="primary" (click)="onCancel()">{{'common.cancel' | translate}}</button>
         <button mat-raised-button color="primary" [mat-dialog-close]="getObject()" [disabled]="!oppoSuitsForm.valid"
-        color="primary">Speichern</button>
+        color="primary">{{'common.save' | translate}}</button>
 </mat-dialog-actions>

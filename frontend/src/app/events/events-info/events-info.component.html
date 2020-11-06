@@ -3,59 +3,59 @@
         <div class="row">
             <div class="col-md-12">
                 <h3>
-                    Veranstaltungsinformationen
+                    {{'event.info' | translate}}
                 </h3>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input [readonly]="true" matInput placeholder="Bezeichnung" formControlName="name">
+                    <input [readonly]="true" matInput placeholder="{{'common.label' | translate}}" formControlName="name">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input type="date" [readonly]="true" matInput placeholder="Datum" formControlName="date">
+                    <input type="date" [readonly]="true" matInput placeholder="{{'common.date' | translate}}" formControlName="date">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input [readonly]="true" type="time" matInput placeholder="Uhrzeit" formControlName="time">
+                    <input [readonly]="true" type="time" matInput placeholder="{{'common.time' | translate}}" formControlName="time">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input [readonly]="true" matInput placeholder="Dauer" formControlName="duration">
+                    <input [readonly]="true" matInput placeholder="{{'common.durationHours' | translate}}" formControlName="duration">
                 </mat-form-field>
             </div>
         </div>
     </div>
     <div class="col-md-12">
         <h6 *ngIf="contactsOrganizations.length > 0">
-            Teilnehmer
+            {{'event.participant' |translate}}
         </h6>
     </div>
     <div class="col-md-12">
         <mat-table *ngIf="contactsOrganizations.length > 0" #table [dataSource]="contactsOrganizations">
             <ng-container matColumnDef="wasInvited">
-                <mat-header-cell *matHeaderCellDef> Eingeladen </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'event.invited' |translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> 
                     <mat-icon *ngIf="!element.wasInvited">check_box_outline_blank</mat-icon>
                     <mat-icon *ngIf="element.wasInvited">check_box</mat-icon>
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="participated">
-                <mat-header-cell *matHeaderCellDef> Teilgenommen </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'event.participated' |translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> 
                     <mat-icon *ngIf="!element.participated">check_box_outline_blank</mat-icon>
                     <mat-icon *ngIf="element.participated">check_box</mat-icon>
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="prename">
-                <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'contact.firstName' |translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.preName}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'contact.lastName' |translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.name}}
                 </mat-cell>
             </ng-container>
@@ -112,7 +112,7 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions mat-dialog-actions align="end">
-    <button class="margin" mat-raised-button color="primary" title="Schließen" (click)="dialogRef.close()">
-        Schließen
+    <button class="margin" mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="dialogRef.close()">
+        {{'common.cancel' | translate}}
     </button>
 </mat-dialog-actions>

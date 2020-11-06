@@ -20,5 +20,5 @@
   <span class="fill-remaining-space"></span>
   <button mat-raised-button (click)="onCancel()">Abbrechen</button>
   <button id="saveRoleButton" mat-raised-button [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid"
-    color="primary">Speichern</button>
+    color="primary">{{'common.save' | translate}}</button>
 </div>

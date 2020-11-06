@@ -43,7 +43,7 @@
             </button>
             <!--Mit Klick auf 'Hinzufuegen' wird die Funktion addUser() aufgerufen-->
             <button id="saveUserChangesButton" mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid" (click)="editUser()">
-                Speichern
+                {{'common.save' | translate}}
             </button>
         </div>
     </form>

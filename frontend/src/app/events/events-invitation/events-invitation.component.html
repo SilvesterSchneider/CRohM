@@ -13,10 +13,10 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions mat-dialog-actions align="end">
-    <button mat-raised-button title="Verwerfen" (click)="sendMail(false)">
-        Verwerfen
+    <button mat-raised-button title="{{'common.cancel' | translate}}" (click)="sendMail(false)">
+        {{'common.cancel' | translate}}
     </button>
-    <button id="buttonSend" mat-raised-button color="primary" title="Senden" [disabled]="!textForm.valid" (click)="sendMail(true)">
-        Senden
+    <button id="buttonSend" mat-raised-button color="primary" title="{{'common.send' | translate}}" [disabled]="!textForm.valid" (click)="sendMail(true)">
+        {{'common.send' | translate}}
     </button>
 </mat-dialog-actions>

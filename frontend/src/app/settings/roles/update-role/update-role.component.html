@@ -20,8 +20,8 @@
     </form>    
     </div>
   <div mat-dialog-actions>   
-    <button mat-raised-button (click)="onDelete()" color="warn">Löschen</button> 
+    <button mat-raised-button (click)="onDelete()" color="warn">{{'common.delete' | translate}}</button> 
   <span class="fill-remaining-space"></span>
     <button mat-raised-button (click)="onCancle()">Abbrechen</button>
-    <button id="saveUpdateRole" mat-raised-button [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid" color="primary">Speichern</button>
+    <button id="saveUpdateRole" mat-raised-button [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid" color="primary">{{'common.save' | translate}}</button>
   </div>

@@ -39,11 +39,11 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions mat-dialog-actions align="end">
-    <button mat-raised-button color="primary" title="Verwerfen" (click)="onCancel()">
-        Verwerfen
+    <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="onCancel()">
+        {{'common.cancel' | translate}}
     </button>
-    <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!organizationForm.valid"
+    <button mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!organizationForm.valid"
         (click)="onApprove()">
-        Speichern
+        {{'common.save' | translate}}
     </button>
 </mat-dialog-actions>

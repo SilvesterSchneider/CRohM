@@ -36,9 +36,9 @@
                 </mat-form-field>
             </div>
         </div>
-        <button class="margin" id="saveMail" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!mailsForm.valid"
+        <button class="margin" id="saveMail" mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!mailsForm.valid"
             (click)="saveValues()">
-            Speichern
+            {{'common.save' | translate}}
         </button>
     </div>
 </div>

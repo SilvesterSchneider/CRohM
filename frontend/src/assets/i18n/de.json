@@ -11,7 +11,13 @@
         "name": "Name",
         "search": "Suche",
         "action": "Aktion",
-        "filterWithTags": "Filtern mit Tags"
+        "filterWithTags": "Filtern mit Tags",
+        "newTag": "Neuer Tag",
+        "label": "Bezeichnung",
+        "time": "Uhrzeit",
+        "durationHours": "Dauer in Stunden",
+        "selectAll": "Alle selektieren",
+        "calendarWeek": "Kalenderwoche"
     },
     "contact": {
         "contact": "Kontakt",
@@ -46,7 +52,19 @@
     },
     "event": {
         "events": "Veranstaltungen",
-        "create": "Veranstaltung erstellen"
+        "create": "Veranstaltung erstellen",
+        "add": "Veranstaltung hinzufügen",
+        "addDummy": "Dummy Veranstaltung hinzufügen",
+        "invite": "Kontakte/Organisationen einladen",
+        "hidePast": "Veranstaltungen aus der Vergangenheit ausblenden",
+        "edit": "Veranstaltung bearbeiten",
+        "show": "Veranstaltungsinformationen anzeigen",
+        "info": "Veranstaltungsinformationen",
+        "delete": "Veranstaltung löschen",
+        "invitation": "Einladung",
+        "invited": "Eingeladen",
+        "participated": "Hat teilgenommen",
+        "participant": "Teilnehmer"
     },
     "statistic": {
         "statistics": "Statistiken"

@@ -2,27 +2,27 @@
     <div class="column">
         <div class="col-md-12">
             <h3>
-            	 Veranstaltung hinzufügen
+                {{'event.add' | translate}}
             </h3>
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input matInput placeholder="Bezeichnung" formControlName="name">
+                <input matInput placeholder="{{'common.label' | translate}}" formControlName="name">
             </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input type="date" matInput placeholder="Datum" formControlName="date">
+                <input type="date" matInput placeholder="{{'common.date' | translate}}" formControlName="date">
             </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input type="time" matInput placeholder="Uhrzeit" formControlName="time">
+                <input type="time" matInput placeholder="{{'common.time' | translate}}" formControlName="time">
             </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input type="number" matInput placeholder="Dauer in Stunden" formControlName="duration">
+                <input type="number" matInput placeholder="{{'common.durationHours' | translate}}" formControlName="duration">
             </mat-form-field>
         </div>
     </div>
@@ -31,14 +31,14 @@
     <mat-chip *ngFor="let item of selectedItems" [selectable]="selectable">
         {{ item.preName + ' ' + item.name }}
     </mat-chip>
-    <input type="text" #inputTrigger placeholder="Kontakte/Organisationen einladen" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
+    <input type="text" #inputTrigger placeholder="{{'event.invite' | translate}}" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
     [matChipInputFor]="chipList">
 </mat-chip-list>
 
 <mat-autocomplete #autoComplete="matAutocomplete">
     <mat-option>
         <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
-                Alle selektieren
+                {{'common.selectAll' | translate}}
         </mat-checkbox>
   </mat-option>
     <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
@@ -50,11 +50,11 @@
     </mat-option>
 </mat-autocomplete>
 <div mat-dialog-actions align="end" class="margin">
-    <button mat-raised-button color="primary" title="Verwerfen" (click)="exit()">
-        Verwerfen
+    <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="exit()">
+        {{'common.cancel' | translate}}
     </button>
-    <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
-        Speichern
+    <button mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
+        {{'common.save' | translate}}
     </button>    
 </div>
 

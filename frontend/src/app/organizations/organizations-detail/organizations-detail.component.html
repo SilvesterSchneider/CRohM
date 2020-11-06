@@ -49,7 +49,7 @@
 <mat-autocomplete #autoComplete="matAutocomplete">
     <mat-option>
         <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
-            Alle selektieren
+            {{'common.selectAll' | translate}}
         </mat-checkbox>
     </mat-option>
     <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
@@ -62,8 +62,8 @@
 </mat-autocomplete>
 <button mat-raised-button color="primary" type="submit" [disabled]="!organizationForm.valid" (click)="saveValues()"
     routerLink="/organizations">
-    Speichern
+    {{'common.save' | translate}}
 </button>
 <button mat-raised-button color="primary" routerLink="/organizations">
-    Verwerfen
+    {{'common.cancel' | translate}}
 </button>

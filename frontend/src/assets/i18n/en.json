@@ -11,7 +11,13 @@
         "name": "Name",
         "search": "Search",
         "action": "Action",
-        "filterWithTags": "Filter with Tags"
+        "filterWithTags": "Filter with Tags",
+        "newTag": "New Tag",
+        "label": "Label",
+        "time": "Time",
+        "durationHours": "Duration in Hours",
+        "selectAll": "Select all",
+        "calendarWeek": "Calendar Week"
     },
     "contact": {
         "contact": "Contact",
@@ -46,7 +52,19 @@
     },
     "event": {
         "events": "Events",
-        "create": "Create Event"
+        "create": "Create Event",
+        "add": "Add Event",
+        "addDummy": "Add Dummy Event",
+        "invite": "Invite Contacts/Organizations",
+        "hidePast": "Hide events from the past",
+        "edit": "Edit Event",
+        "show": "Show Event Information",
+        "info": "Event Information",
+        "delete": "Delete Event",
+        "invitation": "Invitation",
+        "invited": "Invited",
+        "participated": "Participated",
+        "participant": "Participant"
     },
     "statistic": {
         "statistics": "Statistics"
