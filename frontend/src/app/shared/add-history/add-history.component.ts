@@ -26,27 +26,14 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
     }
 
     ngOnInit(): void {
+        const dateToInsert = this.getDateOfValueAsText(new Date(Date.now()));
         this.oppoSuitsForm = this.fb.group({
             type: [this.types[0], Validators.required],
-            date: [new FormControl(new Date(this.getDate())), Validators.required],
+            date: [new FormControl(new Date(dateToInsert)), Validators.required],
             information: ['', Validators.required],
             comment: ['', Validators.required]
         });
-        this.oppoSuitsForm.get('date').setValue(this.getDate());
-    }
-
-    getDate(): string {
-        const date = new Date(Date.now());
-        let day = date.getDate().toString();
-        if (day.length === 1) {
-            day = '0' + day;
-        }
-        let month = (date.getMonth() + 1).toString();
-        if (month.length === 1) {
-            month = '0' + month;
-        }
-        const text = date.getFullYear().toString() + '-' + month + '-' + day + 'T00:00:00';
-        return text;
+        this.oppoSuitsForm.get('date').setValue(dateToInsert);
     }
 
     hasChanged() {
@@ -66,7 +53,7 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
         }
         const date = new Date(this.oppoSuitsForm.get('date').value);
         historyToSave = {
-            date: this.getDateOfValue(date),
+            date: this.getDateOfValueAsText(date),
             name: this.oppoSuitsForm.get('information').value,
             type: typeToSave,
             comment: this.oppoSuitsForm.get('comment').value,
@@ -74,7 +61,7 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
         return historyToSave;
     }
 
-    getDateOfValue(date: Date): string {
+    getDateOfValueAsText(date: Date): string {
         let day = date.getDate().toString();
         if (day.length === 1) {
             day = '0' + day;
