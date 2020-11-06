@@ -1,12 +1,12 @@
 <div class="row">
     <div class="col-md-12">
         <h3>
-            Adresse
+            {{'contact.address' | translate}}
         </h3>
     </div>
 
     <mat-form-field class="col-md-12">
-        <input matInput type="text" [matAutocomplete]="auto" (input)="onChange($event)" placeholder="Addresssuche..." >
+        <input matInput type="text" [matAutocomplete]="auto" (input)="onChange($event)" placeholder="{{'contact.addressSearch' | translate}}..." >
         <mat-icon color="primary" matSuffix>search</mat-icon>
     </mat-form-field>
 
@@ -21,20 +21,20 @@
 
     <ng-container [formGroup]="addressForm">
         <mat-form-field class="col-md-9">
-            <input id="street" matInput placeholder="Straße" formControlName="street">
+            <input id="street" matInput placeholder="{{'contact.street' | translate}}" formControlName="street">
         </mat-form-field>
         <mat-form-field class="col-md-3">
-            <input id="streetNumber" matInput placeholder="Hausnummer" formControlName="streetNumber">
+            <input id="streetNumber" matInput placeholder="{{'contact.streetNumber' | translate}}" formControlName="streetNumber">
         </mat-form-field>
         <mat-form-field class="col-md-6">
-            <input id="zipcode" matInput placeholder="PLZ" formControlName="zipcode">
+            <input id="zipcode" matInput placeholder="{{'contact.zipcode' | translate}}" formControlName="zipcode">
         </mat-form-field>
         <mat-form-field class="col-md-6">
-            <input id="city" matInput placeholder="Ort" formControlName="city">
+            <input id="city" matInput placeholder="{{'contact.city' | translate}}" formControlName="city">
         </mat-form-field>
 
         <mat-form-field class="col-md-6">
-            <mat-label>Land</mat-label>
+            <mat-label>{{'contact.country' | translate}}</mat-label>
             <mat-select id="country" formControlName="country" name="country">
                 <mat-option *ngFor="let country of countries" [value]="country.value" class="test">
                     {{country.viewValue}}

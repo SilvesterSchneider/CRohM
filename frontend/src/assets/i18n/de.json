@@ -1,0 +1,54 @@
+{
+    "common": {
+        "cancel": "Verwerfen",
+        "save": "Speichern",
+        "send": "Senden",
+        "delete": "Löschen",
+        "add": "Hinzufügen",
+        "overview": "Übersicht",
+        "date": "Datum",
+        "comment": "Kommentar",
+        "name": "Name",
+        "search": "Suche",
+        "action": "Aktion",
+        "filterWithTags": "Filtern mit Tags"
+    },
+    "contact": {
+        "contact": "Kontakt",
+        "contacts": "Kontakte",
+        "new": "Neuer Kontakt",
+        "addDummy": "Dummy Kontakt hinzufügen",
+        "edit": "Kontakt bearbeiten",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "gender": "Geschlecht",
+        "chooseGender": "Geschlecht wählen",
+        "contactPartner": "Ansprechpartner",
+        "addressSearch": "Addresssuche",
+        "address": "Adresse",
+        "street": "Strasse",
+        "streetNumber": "Hausnummer",
+        "city": "Stadt",
+        "zipcode": "PLZ",
+        "country": "Land",
+        "contactPossibilities": "Kontaktmöglichkeiten",
+        "mail": "E-Mail",
+        "phoneNumber": "Telefonnummer",
+        "fax": "Faxnummer",
+        "disclosure": {
+            "generate": "Kontaktauskunft generieren",
+            "description": "Erzeugt eine PDF-Datei mit allen im CRMS gespeicherten Daten zu gewähltem Kontakt gem. Auskunftspflicht EU-DSGVO Art. 15. Die PDF-Datei wird direkt an die E-Mail-Adresse des Kontakts gesendet."
+        }
+    },
+    "organization": {
+        "organization": "Organisation",
+        "organizations": "Organisationen"
+    },
+    "event": {
+        "events": "Veranstaltungen",
+        "create": "Veranstaltung erstellen"
+    },
+    "statistic": {
+        "statistics": "Statistiken"
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "common": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "send": "Send",
+        "delete": "Delete",
+        "add": "Add",
+        "overview": "Overview",
+        "date": "Date",
+        "comment": "Comment",
+        "name": "Name",
+        "search": "Search",
+        "action": "Action",
+        "filterWithTags": "Filter with Tags"
+    },
+    "contact": {
+        "contact": "Contact",
+        "contacts": "Contacts",
+        "new": "New Contact",
+        "addDummy": "Add Dummy Contact",
+        "edit": "Edit Contact",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "gender": "Gender",
+        "chooseGender": "Choose Gender",
+        "contactPartner": "Contactpartner",
+        "addressSearch": "Address Search",
+        "address": "Address",
+        "street": "Street",
+        "streetNumber": "Streetnumber",
+        "city": "City",
+        "zipcode": "Zipcode",
+        "country": "Country",
+        "contactPossibilities": "Contact Possibilities",
+        "mail": "Mail",
+        "phoneNumber": "Phone Number",
+        "fax": "Fax",
+        "disclosure": {
+            "generate": "Generate Disclosure",
+            "description": "Generates a pdf-file with all data stored within the CRMS for the selected contact according to Right of Access Art. 12 GDPR. The pdf-file is  send to the contact's mail adress."
+        }
+    },
+    "organization": {
+        "organization": "Organization",
+        "organizations": "Organizations"
+    },
+    "event": {
+        "events": "Events",
+        "create": "Create Event"
+    },
+    "statistic": {
+        "statistics": "Statistics"
+    }
+}

@@ -4,7 +4,7 @@
         <span class="spacer"></span>
         <app-tags-filter></app-tags-filter>
         <mat-form-field>
-            <mat-label>Suche</mat-label>
+            <mat-label>{{'common.search' | translate}}</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Organisationen...">
         </mat-form-field>
         <button id="addDummy" class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Organisation hinzufügen" (click)="addDummyOrganization()"> 

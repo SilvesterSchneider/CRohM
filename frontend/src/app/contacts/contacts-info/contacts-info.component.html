@@ -4,20 +4,20 @@
             <div class="row">
                 <div class="col-md-12">
                     <h5>
-                        Übersicht
+                        {{'common.overview' | translate}}
                     </h5>
                 </div>
                 <mat-form-field class="col-md-6">
-                    <input [readonly]="true" matInput placeholder="Vorname" formControlName="preName">
+                    <input [readonly]="true" matInput placeholder="{{'contact.firstName' | translate}}" formControlName="preName">
                 </mat-form-field>
                 <mat-form-field class="col-md-6">
-                    <input [readonly]="true" matInput placeholder="Nachname" formControlName="name">
+                    <input [readonly]="true" matInput placeholder="{{'contact.lastName' | translate}}" formControlName="name">
                 </mat-form-field>
                 <mat-form-field class="col-md-6">
-                    <input id="gender" [readonly]="true" matInput placeholder="Geschlecht" formControlName="gender">
+                    <input id="gender" [readonly]="true" matInput placeholder="{{'contact.gender' | translate}}" formControlName="gender">
                 </mat-form-field>
                 <mat-form-field class="col-md-6">
-                    <input id="contactPartner" [readonly]="true" matInput placeholder="Ansprechpartner"
+                    <input id="contactPartner" [readonly]="true" matInput placeholder="{{'contact.contactPartner' | translate}}"
                         formControlName="contactPartner">
                 </mat-form-field>
             </div>
@@ -55,19 +55,19 @@
             <div class="row">
                 <div class="col-md-12">
                     <h5>
-                        Kontaktmöglichkeiten
+                        {{'contact.contactPossibilities' | translate}}
                     </h5>
                 </div>
                 <mat-form-field class="col-md-6">
-                    <input [readonly]="true" matInput placeholder="E-Mail" formControlName="mail">
+                    <input [readonly]="true" matInput placeholder="{{'contact.mail' | translate}}" formControlName="mail">
                 </mat-form-field>
                 <mat-form-field class="col-md-6">
-                    <input [readonly]="true" matInput placeholder="Telefonnummer" formControlName="phoneNumber">
+                    <input [readonly]="true" matInput placeholder="{{'contact.phoneNumber' | translate}}" formControlName="phoneNumber">
                 </mat-form-field>
             </div>
             <div class="row">
                 <mat-form-field class="col-md-6">
-                    <input [readonly]="true" matInput placeholder="Faxnummer" formControlName="fax">
+                    <input [readonly]="true" matInput placeholder="{{'contact.fax' | translate}}" formControlName="fax">
                 </mat-form-field>
             </div>
         </div>

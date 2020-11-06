@@ -2,25 +2,25 @@
     <div class="row">
         <div class="col-md-12">
             <h3>
-                Neuer Kontakt
+                {{'contact.new' | translate}}
             </h3>
         </div>
         <mat-form-field class="col-md-6">
-            <input id="preName" matInput placeholder="Vorname" formControlName="preName">
+            <input id="preName" matInput placeholder="{{'contact.firstName' | translate}}" formControlName="preName">
         </mat-form-field>
         <mat-form-field class="col-md-6">
-            <input id="name" matInput placeholder="Nachname" formControlName="name">
+            <input id="name" matInput placeholder="{{'contact.lastName' | translate}}"  formControlName="name">
         </mat-form-field>
     </div>
     <div class="row">
         <mat-form-field class="col-md-6">
-            <mat-label>Geschlecht wählen</mat-label>
+            <mat-label>{{'contact.chooseGender' | translate}}</mat-label>
             <mat-select id="gender" formControlName="gender">
                 <mat-option [value]="suit" *ngFor="let suit of genderTypes">{{suit}}</mat-option>
             </mat-select>
         </mat-form-field>
         <mat-form-field class="col-md-6">
-            <input id="contactPartner" matInput placeholder="Ansprechpartner" formControlName="contactPartner">
+            <input id="contactPartner" matInput placeholder="{{'contact.contactPartner' | translate}}" formControlName="contactPartner">
         </mat-form-field>
     </div>
 
@@ -29,35 +29,35 @@
     <div class="row">
         <div class="col-md-12">
             <h3>
-                Kontaktmöglichkeiten
+                {{'contact.contactPossibilities' | translate}}
             </h3>
         </div>
     </div>
     <div class="row" formGroupName="contactPossibilities">
         <div class="col-md-3">
             <mat-form-field>
-                <input id="mail" matInput placeholder="E-Mail" formControlName="mail">
+                <input id="mail" matInput placeholder="{{'contact.mail' | translate}}" formControlName="mail">
             </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input id="phoneNumber" matInput placeholder="Telefonnummer" formControlName="phoneNumber">
+                <input id="phoneNumber" matInput placeholder="{{'contact.phoneNumber' | translate}}" formControlName="phoneNumber">
             </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input id="fax" matInput placeholder="Faxnummer" formControlName="fax">
+                <input id="fax" matInput placeholder="{{'contact.fax' | translate}}" formControlName="fax">
             </mat-form-field>
         </div>
         <app-contact-possibilities></app-contact-possibilities>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions mat-dialog-actions align="end">
-    <button mat-raised-button color="primary" title="Verwerfen" (click)="onCancel()">
-        Verwerfen
+    <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="onCancel()">
+        {{'common.cancel' | translate}}
     </button>
-    <button id="save" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid"
+    <button id="save" mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!contactsForm.valid"
         (click)="onApprove()">
-        Speichern
+        {{'common.save' | translate}}
     </button>
 </mat-dialog-actions>

@@ -10,6 +10,7 @@ import { ContactPossibilitiesComponent } from './contactPossibilities/contact-po
 import { AddHistoryComponent } from './add-history/add-history.component';
 import { TagsFilterComponent } from './tags-filter/tags-filter.component';
 import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-chart/vertical-grouped-bar-chart.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-
     HttpClientModule,
     MaterialModule,
     FlexLayoutModule,
-    NgxChartsModule
+    NgxChartsModule,
+    TranslateModule
   ],
   declarations: [
     OsmAddressComponent,
@@ -39,7 +41,8 @@ import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-
     AddHistoryComponent,
     TagsFilterComponent,
     VerticalGroupedBarChartComponent,
-    NgxChartsModule
+    NgxChartsModule,
+    TranslateModule
   ]
 })
 export class SharedModule { }
