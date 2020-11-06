@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslationService } from '../../translation/translation.service';
 
 @Component({
   selector: 'app-language-select',
@@ -7,11 +7,9 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./language-select.component.scss']
 })
 export class LanguageSelectComponent {
+  constructor(public readonly translationService: TranslationService) { }
 
-  constructor(private translate: TranslateService) { }
-
-  public setLanguage(lang: string) {
-    this.translate.use(lang);
+  public getAllLanguages() {
+    return TranslationService.LANGUAGES;
   }
-
 }
