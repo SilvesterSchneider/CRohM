@@ -186,6 +186,12 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
+            List<HistoryElement> historyList = organization.History;
+            for (int index = 0; index < historyList.Count; index++)
+            {
+                await historyService.DeleteAsync(historyList[index]);
+            }
+
             await _organizationService.DeleteAsync(organization);
             await modService.UpdateOrganizationByDeletionAsync(id);
             return Ok();
