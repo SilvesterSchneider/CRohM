@@ -66,7 +66,9 @@
         </ng-container>
         <ng-container matColumnDef="telefon">
             <mat-header-cell *matHeaderCellDef> Telefonnummer </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.phoneNumber}} </mat-cell>
+            <mat-cell *matCellDef="let element"> 
+                <a (mouseover)="mouseOver(element.id)">{{element.contactPossibilities.phoneNumber}}</a>
+            </mat-cell>
         </ng-container>
         <ng-container matColumnDef="fax">
             <mat-header-cell *matHeaderCellDef> Faxnummer </mat-header-cell>
@@ -94,6 +96,9 @@
                     </a>
                     <a (click)="addNote(element.id)" type="button">
                         <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
+                    </a>
+                    <a (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" type="button">
+                        <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">phone</mat-icon>
                     </a>
                     <a (click)="deleteContact(element)" type="button">
                         <mat-icon color="primary" title="Kontakt löschen" class="icon">delete</mat-icon>
