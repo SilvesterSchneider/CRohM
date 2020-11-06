@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './shared/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -21,6 +21,9 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { ConfirmDialogComponent } from './shared/form/confirmdialog/confirmdialog.component';
 import { ChangePasswordComponent } from './login/change-password-dialog/change-password-dialog.component';
 import { StatisticsModule } from './statistics/statistics.module';
+import { LanguageSelectComponent } from './shared/navigation/language-select/language-select.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,8 @@ import { StatisticsModule } from './statistics/statistics.module';
     UserMenuComponent,
     SidenavComponent,
     ConfirmDialogComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    LanguageSelectComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +54,13 @@ import { StatisticsModule } from './statistics/statistics.module';
       config: {
         tokenGetter: () => localStorage.getItem(JwtService.LS_KEY)
       }
+    }),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
     })
   ],
   providers: [
@@ -62,3 +73,8 @@ import { StatisticsModule } from './statistics/statistics.module';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}

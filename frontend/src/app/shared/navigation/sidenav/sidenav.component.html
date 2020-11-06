@@ -14,6 +14,9 @@
         <span class="label">Statistiken</span>
       </a>
       <a>
+        <app-language-select></app-language-select>
+      </a>
+      <a>
         <app-user-menu *ngIf="isLoggedIn()"></app-user-menu>
       </a>
     </mat-nav-list>
@@ -41,7 +44,10 @@
             </div>
           </a>
         </nav>
-        <app-user-menu class="userMenu" *ngIf="isLoggedIn()"></app-user-menu>
+        <div class="userMenu">
+          <app-language-select></app-language-select>
+          <app-user-menu *ngIf="isLoggedIn()"></app-user-menu>
+        </div>
       </div>
       </mat-toolbar>
     <main>
