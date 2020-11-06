@@ -147,6 +147,12 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
+            List<HistoryElement> historyList = contact.History;
+            for (int index = 0; index < historyList.Count; index++)
+            {
+                await historyService.DeleteAsync(historyList[index]);
+            }
+
             await contactService.DeleteAsync(contact);
             await modService.UpdateContactByDeletionAsync(id);
             return Ok();

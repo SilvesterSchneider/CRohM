@@ -1,8 +1,9 @@
 import { OnInit, Component } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { HistoryElementCreateDto, HistoryElementType } from 'src/app/shared/api-generated/api-generated';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BaseDialogInput } from '../form/base-dialog-form/base-dialog.component';
+import { MatMonthView } from '@angular/material/datepicker';
 
 @Component({
     selector: 'app-add-history',
@@ -25,12 +26,14 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
     }
 
     ngOnInit(): void {
+        const dateToInsert = this.getDateOfValueAsText(new Date(Date.now()));
         this.oppoSuitsForm = this.fb.group({
             type: [this.types[0], Validators.required],
-            date: ['', Validators.required],
+            date: [new FormControl(new Date(dateToInsert)), Validators.required],
             information: ['', Validators.required],
             comment: ['', Validators.required]
         });
+        this.oppoSuitsForm.get('date').setValue(dateToInsert);
     }
 
     hasChanged() {
@@ -48,13 +51,27 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
         } else if (typeText === this.types[3]) {
             typeToSave = HistoryElementType.VISIT;
         }
+        const date = new Date(this.oppoSuitsForm.get('date').value);
         historyToSave = {
-            date: this.oppoSuitsForm.get('date').value,
+            date: this.getDateOfValueAsText(date),
             name: this.oppoSuitsForm.get('information').value,
             type: typeToSave,
             comment: this.oppoSuitsForm.get('comment').value,
         };
         return historyToSave;
+    }
+
+    getDateOfValueAsText(date: Date): string {
+        let day = date.getDate().toString();
+        if (day.length === 1) {
+            day = '0' + day;
+        }
+        let month = (date.getMonth() + 1).toString();
+        if (month.length === 1) {
+            month = '0' + month;
+        }
+        const text = date.getFullYear().toString() + '-' + month + '-' + day + 'T00:00:00';
+        return text;
     }
 
     public onCancel(): void {
