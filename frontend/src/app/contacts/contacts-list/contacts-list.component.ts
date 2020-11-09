@@ -17,6 +17,7 @@ import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
 import { EventsAddComponent } from 'src/app/events/events-add/events-add.component';
 import { ContactsSendMailDialogComponent } from '../contacts-send-mail-dialog/contacts-send-mail-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contacts-list',
@@ -47,6 +48,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     private readonly dataProtectionService: DataProtectionService,
     private readonly dsgvoService: DataProtectionHelperService,
     private readonly snackBar: MatSnackBar,
+    private readonly route: Router,
     private jwt: JwtService) {
     this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
       if (change[0].mqAlias !== this.currentScreenWidth) {
@@ -98,7 +100,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       // only display prename and name on larger screens
       this.displayedColumns = ['vorname', 'nachname', 'action'];
     } else {
-      this.displayedColumns = ['icon', 'vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
+      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon', 'ort', 'organisation', 'action'];
     }
   }
 
@@ -242,6 +244,16 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     }).subscribe(x => this.getData());
   }
 
+  callPhonenumber(phonenumber: string, id: number) {
+    document.location.href = 'tel:' + phonenumber;
+    const dialogRef = this.dialog.open(AddHistoryComponent, { data: phonenumber });
+    dialogRef.afterClosed().subscribe((y) => {
+      if (y) {
+        this.service.postHistoryElement(y, id).subscribe(x => this.getData());
+      }
+    });
+  }
+
   mouseOver(id: number) {
     this.selectedRow = id;
   }
@@ -304,5 +316,20 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   createEvent() {
     this.dialog.open(EventsAddComponent, { disableClose: true, data: this.selectedCheckBoxList });
+  }
+
+  getOrganization(id: number): string {
+    const contact = this.allContacts.find(a => a.id === id);
+    if (contact != null && contact.organizations != null && contact.organizations.length > 0) {
+      let orgas = '';
+      contact.organizations.forEach(b => orgas += b.name + ', ');
+      return orgas.substring(0, orgas.length - 2);
+    } else {
+      return '';
+    }
+  }
+
+  changeToOrganizationPage() {
+    this.route.navigate(['/organizations']);
   }
 }

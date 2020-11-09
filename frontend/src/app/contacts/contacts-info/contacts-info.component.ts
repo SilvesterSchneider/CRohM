@@ -103,13 +103,13 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   }
 
   eventParticipated(element: EventDto): boolean {
-    return !!element.participated && element.participated?.some(part => part.modelType === MODEL_TYPE.CONTACT &&
-      part.objectId === this.contact.id && part.hasParticipated);
+    return !!element.participated && element.participated?.some(part => part.modelType ===
+       MODEL_TYPE.CONTACT && part.objectId === this.contact.id && part.hasParticipated);
   }
 
   eventNotParticipated(element: EventDto): boolean {
-    return !!element.participated && !element.participated?.some(part => part.modelType === MODEL_TYPE.CONTACT &&
-      part.objectId === this.contact.id && part.hasParticipated);
+    return !!element.participated && !element.participated?.some(part => part.modelType ===
+       MODEL_TYPE.CONTACT && part.objectId === this.contact.id && part.hasParticipated);
   }
 
   isLocalPhone(element: HistoryElementDto): boolean {

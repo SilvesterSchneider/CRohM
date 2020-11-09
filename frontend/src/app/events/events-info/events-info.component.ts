@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dial
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 import { map } from 'rxjs/operators';
+import { PageEvent } from '@angular/material/paginator';
 
 export class ContactOrganizationDtoExtended {
   id: number;
@@ -24,6 +25,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   contactsOrganizations: ContactOrganizationDtoExtended[] = new Array<ContactOrganizationDtoExtended>();
   eventsForm: FormGroup;
   dataHistory: ModificationEntryDto[] = new Array<ModificationEntryDto>();
+  modificationsPaginationLength: number;
   columnsContacts = ['wasInvited', 'participated', 'prename', 'name'];
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
@@ -93,11 +95,8 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
         }
       });
     }
-    this.modService.getSortedListByTypeAndId(this.event.id, MODEL_TYPE.EVENT)
-      .pipe(map(mod => mod.data), map(mod => mod.filter(el => el.dataType !== DATA_TYPE.NONE).sort(this.getSortHistoryFunction)))
-      .subscribe(result => {
-        this.dataHistory = result;
-      });
+    // Load initial modification entries
+    this.loadModifications(0, 5);
     this.eventsForm.patchValue(this.event);
     this.eventsForm.get('date').patchValue(this.formatDate(this.event.date));
     this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));
@@ -137,5 +136,18 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
       time: [''],
       duration: ['']
     });
+  }
+
+  onPaginationChangedModification(event: PageEvent) {
+    this.loadModifications((event.pageIndex * event.pageSize), event.pageSize);
+  }
+
+  private loadModifications(pageStart: number, pageSize: number) {
+    this.modService.getSortedListByTypeAndId(this.event.id, MODEL_TYPE.EVENT, pageStart, pageSize)
+      .subscribe(result => {
+        this.dataHistory = result.data;
+        this.modificationsPaginationLength = result.totalRecords;
+      });
+
   }
 }

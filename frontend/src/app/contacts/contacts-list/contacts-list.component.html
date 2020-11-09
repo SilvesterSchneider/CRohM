@@ -47,37 +47,23 @@
             <mat-header-cell *matHeaderCellDef> Nachname </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.name}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="stasse">
-            <mat-header-cell *matHeaderCellDef> Strasse </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.street}} </mat-cell>
+        <ng-container matColumnDef="mail">
+            <mat-header-cell *matHeaderCellDef> E-Mail </mat-header-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.mail}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="hausnummer">
-            <mat-header-cell *matHeaderCellDef> Hausnummer </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.streetNumber}} </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="plz">
-            <mat-header-cell *matHeaderCellDef> PLZ </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.zipcode}} </mat-cell>
+        <ng-container matColumnDef="telefon">
+            <mat-header-cell *matHeaderCellDef> Telefonnummer </mat-header-cell>
+            <mat-cell *matCellDef="let element"> 
+                <a (mouseover)="mouseOver(element.id)">{{element.contactPossibilities.phoneNumber}}</a>
+            </mat-cell>
         </ng-container>
         <ng-container matColumnDef="ort">
             <mat-header-cell *matHeaderCellDef> Ort </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.city}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="land">
-            <mat-header-cell *matHeaderCellDef> Land </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.country}} </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="telefon">
-            <mat-header-cell *matHeaderCellDef> Telefonnummer </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.phoneNumber}} </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="fax">
-            <mat-header-cell *matHeaderCellDef> Faxnummer </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.fax}} </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="mail">
-            <mat-header-cell *matHeaderCellDef> E-Mail </mat-header-cell>
-            <mat-cell *matCellDef="let element" (click)="sendMail(element)" (mouseover)="mouseOver(element.id)"> {{element.contactPossibilities.mail}} </mat-cell>
+        <ng-container matColumnDef="organisation">
+            <mat-header-cell *matHeaderCellDef> Organisation(en) </mat-header-cell>
+            <mat-cell (click)="changeToOrganizationPage()" *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{getOrganization(element.id)}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
@@ -97,6 +83,9 @@
                     </a>
                     <a (click)="addNote(element.id)" type="button">
                         <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
+                    </a>
+                    <a (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" type="button">
+                        <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">phone</mat-icon>
                     </a>
                     <a (click)="deleteContact(element)" type="button">
                         <mat-icon color="primary" title="Kontakt löschen" class="icon">delete</mat-icon>

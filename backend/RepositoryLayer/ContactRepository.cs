@@ -38,6 +38,7 @@ namespace RepositoryLayer
         {
             return await Entities
                 .Include(x => x.Address)
+                .Include(a => a.History)
                 .Include(t => t.Tags)
                 .Include(y => y.ContactPossibilities)
                 .ThenInclude(b => b.ContactEntries)
@@ -53,6 +54,7 @@ namespace RepositoryLayer
         {
             return await Entities
                 .Include(t => t.Tags)
+                .Include(a => a.History)
                 .Include(g => g.OrganizationContacts)
                 .ThenInclude(j => j.Organization)
                 .Include(a => a.Address)
@@ -68,6 +70,7 @@ namespace RepositoryLayer
         {
             return await Entities
                 .Include(t => t.Tags)
+                .Include(a => a.History)
                 .Where(x => x.PreName.StartsWith(name) | x.Name.StartsWith(name))
                 .Include(x => x.Address)
                 .Include(y => y.ContactPossibilities)
@@ -82,6 +85,7 @@ namespace RepositoryLayer
         {
             Contact originalContact = await Entities
                 .Include(x => x.Address)
+                .Include(a => a.History)
                 .Include(t => t.Tags)
                 .Include(y => y.ContactPossibilities)
                 .ThenInclude(b => b.ContactEntries)
