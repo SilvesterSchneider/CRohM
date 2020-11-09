@@ -1,6 +1,5 @@
 version: "3.7"
 services:
-
   crms:
     image: crohmcrms/crohm_crms:${CROHM_IMAGE}
     ports:
@@ -11,7 +10,7 @@ services:
     environment:
       - DBServer=172.28.0.1
       - DBPort=${DB_PORT}
-      - DBUser=SA
+      - DBUser=CRMSAdmin
       - DBPassword=CRohM2020
       - DBName=CRMDB
       - MailAddress=crohm_nuernberg@hotmail.com
