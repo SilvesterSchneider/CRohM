@@ -120,7 +120,6 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			 this.isAllSelected = false;
 		});
 		this.changeDetectorRefs.detectChanges();
-		// this.organizationMock = this.orgaMock.getOrganizationsMock();
 	}
 
 	openAddDialog() {

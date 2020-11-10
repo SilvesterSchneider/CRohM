@@ -17,7 +17,8 @@
         "time": "Time",
         "durationHours": "Duration in Hours",
         "selectAll": "Select all",
-        "calendarWeek": "Calendar Week"
+        "calendarWeek": "Calendar Week",
+        "description": "Description"
     },
     "contact": {
         "contact": "Contact",
@@ -38,6 +39,8 @@
         "zipcode": "Zipcode",
         "country": "Country",
         "contactPossibilities": "Contact Possibilities",
+        "addContactPossibility": "Add Contact Possibility",
+        "deleteContactPossibility": "Delete Contact Possibility",
         "mail": "Mail",
         "phoneNumber": "Phone Number",
         "fax": "Fax",
@@ -48,7 +51,12 @@
     },
     "organization": {
         "organization": "Organization",
-        "organizations": "Organizations"
+        "organizations": "Organizations",
+        "addDummy": "Add Dummy Organization",
+        "employees": "Employees",
+        "chooseEmployees": "Choose Employees",
+        "edit": "Edit Organization",
+        "new": "New Organization"
     },
     "event": {
         "events": "Events",
@@ -67,6 +75,10 @@
         "participant": "Participant"
     },
     "statistic": {
-        "statistics": "Statistics"
+        "statistics": "Statistics",
+        "totalTags": "Number of Tags created",
+        "frequencyContact": "Frequency of Contacts",
+        "frequencyOrganization": "Frequency of Organizations",
+        "frequencyEvent": "Frequency of Events"
     }
 }

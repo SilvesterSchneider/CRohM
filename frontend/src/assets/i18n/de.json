@@ -17,7 +17,8 @@
         "time": "Uhrzeit",
         "durationHours": "Dauer in Stunden",
         "selectAll": "Alle selektieren",
-        "calendarWeek": "Kalenderwoche"
+        "calendarWeek": "Kalenderwoche",
+        "description": "Beschreibung"
     },
     "contact": {
         "contact": "Kontakt",
@@ -34,10 +35,12 @@
         "address": "Adresse",
         "street": "Strasse",
         "streetNumber": "Hausnummer",
-        "city": "Stadt",
+        "city": "{{'contact.city' | translate}}",
         "zipcode": "PLZ",
         "country": "Land",
         "contactPossibilities": "Kontaktmöglichkeiten",
+        "addContactPossibility": "Kontaktmöglichkeit hinzufügen",
+        "deleteContactPossibility": "Kontaktmöglichkeit entfernen",
         "mail": "E-Mail",
         "phoneNumber": "Telefonnummer",
         "fax": "Faxnummer",
@@ -48,7 +51,12 @@
     },
     "organization": {
         "organization": "Organisation",
-        "organizations": "Organisationen"
+        "organizations": "Organisationen",
+        "addDummy": "Dummy Organisation hinzufügen",
+        "employees": "Mitarbeiter",
+        "chooseEmployees": "Mitarbeiter auswählen",
+        "edit": "Organisation bearbeiten",
+        "new": "Neue Organisation"
     },
     "event": {
         "events": "Veranstaltungen",
@@ -67,6 +75,10 @@
         "participant": "Teilnehmer"
     },
     "statistic": {
-        "statistics": "Statistiken"
+        "statistics": "Statistiken",
+        "totalTags": "Anzahl sämtlich erstellter Tags",
+        "frequencyContact": "Häufigkeit bei Kontakten",
+        "frequencyOrganization": "Häufigkeit bei Organisationen",
+        "frequencyEvent": "Häufigkeit bei Veranstalltungen"
     }
 }
