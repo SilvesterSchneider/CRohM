@@ -43,6 +43,23 @@ export class JwtService {
     }
   }
 
+  //
+  public hasPermission(permission: string): boolean {
+    const jwt = localStorage.getItem(JwtService.LS_KEY);
+    if (jwt != null && jwt.length > 0 && jwt.indexOf('.') < jwt.lastIndexOf('.')) {
+      let text = jwt.substr(jwt.indexOf('.') + 1);
+      text = text.substr(0, text.indexOf('.'));
+      let decodedText = atob(text);
+      decodedText = decodedText.substr(decodedText.indexOf('[') + 1);
+      decodedText = decodedText.substr(0, decodedText.indexOf(']'));
+      //TODO: Remove before merging, just used for testing
+      //alert(decodedText);
+      return decodedText.includes(permission);
+    }
+
+    return false;
+  }
+
   public isDatenschutzbeauftragter(): boolean {
     return this.isInRole('Datenschutzbeauftragter');
   }
