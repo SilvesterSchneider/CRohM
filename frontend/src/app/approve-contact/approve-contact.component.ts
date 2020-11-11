@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ContactService } from '../shared/api-generated/api-generated';
 
 @Component({
   selector: 'app-approve-contact',
@@ -7,9 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ApproveContactComponent implements OnInit {
 
-  constructor() { }
+  
+  constructor(private approveContact: ContactService, private route: ActivatedRoute){
 
-  ngOnInit(): void {
   }
 
+  approved: boolean = false;
+
+  ngOnInit(): void {
+    this.Approve();
+  }
+
+  Approve(){
+    const id = +this.route.snapshot.paramMap.get('id');
+    this.approveContact.approveContact(id).subscribe((data) => this.approved = true,
+    (error) => this.approved = false);
+  }
 }

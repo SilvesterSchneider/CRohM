@@ -1,4 +1,19 @@
-<p>&nbsp;</p>
-<p><strong>  Herzlichwillkommen beim CRMS der Hochschule N&uuml;rnberg</strong></p>
-<p>  Vielen Dank, dass Sie der Verarbeitung Ihrer Daten zugestimmt haben.</p>
-<p>  Ihre TH-N&uuml;nberg</p>
+<div *ngIf="approved">
+    <h1> Herzlich Willkommen,</h1>
+    <p> vielen Dank, dass Sie der Verarbeitung Ihrer Daten zugestimmt haben.</p>
+    <p>&nbsp;</p>
+    <p> Mit freundlichen Gr&uuml;&szlig;en,</p>
+    <p> Ihr Hochschul-Team</p>
+</div>
+
+<div *ngIf="!approved">
+    <h1> Herzlich Willkommen,</h1>
+    <p> eine Frist von 30 Tagen ist leider abgelaufen, setzen Sie</p>
+    <p> sich bitte mit Ihrer Kontaktperson der Hochschule N&uuml;rnberg in Verbindung,</p>
+    <p> um eine erneute Erfassung in unserem System anzufragen.</p>
+    <p>&nbsp;</p>
+    <p> Mit freundlichen Gr&uuml;&szlig;en,</p>
+    <p> Ihr Hochschul-Team</p>
+    <p>&nbsp;</p>
+
+</div>

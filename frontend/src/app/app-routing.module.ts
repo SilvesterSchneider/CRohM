@@ -5,7 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './shared/routing/auth.guard';
 import { OrganizationsListComponent } from './organizations/organizations-list/organizations-list.component';
 import { ApproveContactComponent } from './approve-contact/approve-contact.component';
-import { ContactsIdResolver2Service } from './approve-contact/contacts-id-resolver2.service';
+
 
 const routes: Routes = [
   {
@@ -37,9 +37,6 @@ const routes: Routes = [
   {
     path: 'ApproveContacte/:id',
     component: ApproveContactComponent,
-    resolve: {
-			contact: ContactsIdResolver2Service
-		}
   },
   {
     path: 'statistics',
@@ -50,7 +47,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-  providers: [ ContactsIdResolver2Service ]
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }

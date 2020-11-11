@@ -217,9 +217,9 @@ namespace WebApi.Controllers
         
 
         //Approve Contact
-        [HttpPut("ApproveContact{id}")]
+        [HttpGet("ApproveContact/{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully found")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "not found")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "not found")]
         public async Task<IActionResult> ApproveContact(long id)
         {
             if (await contactService.ApproveContact(id))
@@ -227,9 +227,8 @@ namespace WebApi.Controllers
                 return Ok();
             }
             else {
-                return BadRequest();
+                return NotFound();
             }
-            
         }
     }
 }

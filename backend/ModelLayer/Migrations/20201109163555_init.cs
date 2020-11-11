@@ -547,7 +547,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "ef336232-6d6e-4380-ba36-b983ceb3a458", "Admin", "ADMIN" });
+                values: new object[] { 1L, "a2719c50-384f-4207-8d16-946b1decb2e6", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",

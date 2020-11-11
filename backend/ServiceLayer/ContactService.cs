@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ServiceLayer
@@ -84,13 +85,18 @@ namespace ServiceLayer
         }
 
         public async Task<bool> ApproveContact(long id) {
-            Contact contact = await GetByIdAsync(id);
-            if (contact != null) {
-                contact.isApproved = true;
-                return await UpdateAsync(contact, id);
-            }
-            return false;
 
+            Contact contact;
+            List<Contact> unapproved = await GetAllUnapprovedContactsAllIncludesAsync();
+            foreach (Contact c in unapproved) {
+                if (c.Id == id) {
+                    contact = c;
+                    contact.isApproved = true;
+                    return await UpdateAsync(contact, id);
+                }
+            }
+
+            return false;
         }
     }
 }
