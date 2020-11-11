@@ -12,7 +12,7 @@ import { JwtService } from 'src/app/shared/jwt.service';
 import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataProtectionHelperService, DpUpdatePopupComponent } from 'src/app/shared/data-protection';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
 
@@ -24,10 +24,14 @@ import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.comp
 
 export class ContactsListComponent implements OnInit, OnDestroy {
   @ViewChild(TagsFilterComponent, { static: true })
-	tagsFilter: TagsFilterComponent;
+  tagsFilter: TagsFilterComponent;
   contacts: Observable<ContactDto[]>;
   displayedColumns = [];
   isAdminUserLoggedIn = false;
+  permissionAdd = false;
+  permissionModfiy = false;
+  permissionDelete = false;
+
   length = 0;
   currentScreenWidth = '';
   flexMediaWatcher: Subscription;
@@ -82,6 +86,9 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
     this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
     this.getData();
+    this.permissionAdd = this.jwt.hasPermission('Anlegen eines Kontakts');
+    this.permissionModfiy = this.jwt.hasPermission('Einsehen und Bearbeiten aller Kontakte');
+    this.permissionDelete = this.jwt.hasPermission('Löschen eines Kontakts');
   }
 
   ngOnDestroy(): void {
@@ -111,13 +118,13 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   openDisclosureDialog(id: number) {
     this.service.getById(id).subscribe((x) => {
-    const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true });
+      const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      this.contacts = this.service.getAll();
+      dialogRef.afterClosed().subscribe((result) => {
+        this.contacts = this.service.getAll();
+      });
     });
-  });
-}
+  }
 
   openAddDialog() {
     const dialogRef = this.dialog.open(ContactsAddDialogComponent, {
@@ -136,19 +143,21 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         this.deleteContact(contact);
       } else {
         if (editDialogResult.newContact && editDialogResult.oldContact && this.jwt.isDatenschutzbeauftragter()) {
-        const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
+          const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, { disableClose: true });
 
-        dialogDSGVORef.afterClosed().subscribe(sendMessage => {
-          if (sendMessage) {
-            const diff = this.dsgvoService.getDiffOfObjects( editDialogResult.newContact, editDialogResult.oldContact, ['unchanged']);
-            this.dataProtectionService.sendUpdateMessage({delete: false, contactChanges: diff, contact}).subscribe({error: err => {
-              this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
-                duration: 2000,
+          dialogDSGVORef.afterClosed().subscribe(sendMessage => {
+            if (sendMessage) {
+              const diff = this.dsgvoService.getDiffOfObjects(editDialogResult.newContact, editDialogResult.oldContact, ['unchanged']);
+              this.dataProtectionService.sendUpdateMessage({ delete: false, contactChanges: diff, contact }).subscribe({
+                error: err => {
+                  this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
+                    duration: 2000,
+                  });
+                }
               });
-            }});
-          }
-        });
-      }
+            }
+          });
+        }
         this.getData();
       }
     });
@@ -161,24 +170,27 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
 
     deleteDialogRef.afterClosed().subscribe((deleteResult) => {
-      if (deleteResult?.delete ) {
+      if (deleteResult?.delete) {
         this.service.delete(contact.id).subscribe(x => {
           this.service.getAll().subscribe(fu => {
             this.dataSource.data = fu;
-           });
+          });
         });
         if (this.jwt.isDatenschutzbeauftragter()) {
-        const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
+          const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, { disableClose: true });
 
-        dialogDSGVORef.afterClosed().subscribe(sendMessage => {
-          if (sendMessage) {
-            this.dataProtectionService.sendUpdateMessage({delete: true, contactChanges: null, contact}).subscribe({error: err => {
-              this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
-                duration: 3000,
+          dialogDSGVORef.afterClosed().subscribe(sendMessage => {
+            if (sendMessage) {
+              this.dataProtectionService.sendUpdateMessage({ delete: true, contactChanges: null, contact }).subscribe({
+                error: err => {
+                  this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
+                    duration: 3000,
+                  });
+                }
               });
-            }});
-          }
-        }); }
+            }
+          });
+        }
       }
     });
   }
@@ -210,7 +222,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       },
       contactPossibilities: {
         fax: '01234-123' + this.length,
-        mail: 'a.b@fu.com' ,
+        mail: 'a.b@fu.com',
         phoneNumber: '0172-9344333' + this.length,
         contactEntries: []
       }
