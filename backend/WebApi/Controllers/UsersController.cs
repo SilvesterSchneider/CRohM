@@ -54,7 +54,7 @@ namespace WebApi.Controllers
 
             return BadRequest();
         }
-      
+
         // TODO: Check passt, die Berechtigung hier?
         [Authorize(Roles = "Zuweisung einer neuen Rolle zu einem Benutzer")]
         [HttpPut]
@@ -74,6 +74,7 @@ namespace WebApi.Controllers
         }
 
         // put updates user with id {id} via frontend
+        [Authorize(Roles = "Löschen / Deaktivieren eines Benutzers")]
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
