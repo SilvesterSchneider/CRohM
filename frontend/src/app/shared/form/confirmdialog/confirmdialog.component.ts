@@ -1,5 +1,6 @@
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 
 
@@ -19,10 +20,10 @@ export class ConfirmDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogModel) {
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogModel, private translate: TranslateService) {
     // Update view with given values
-    this.title = data.title;
-    this.message = data.message;
+    this.title = translate.instant(data.title);
+    this.message = translate.instant(data.message);
   }
 
   ngOnInit() {

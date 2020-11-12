@@ -1,6 +1,7 @@
 {
     "common": {
         "cancel": "Cancel",
+        "confirmCancel": "Do you really want to cancel?",
         "save": "Save",
         "send": "Send",
         "delete": "Delete",
@@ -18,7 +19,36 @@
         "durationHours": "Duration in Hours",
         "selectAll": "Select all",
         "calendarWeek": "Calendar Week",
-        "description": "Description"
+        "description": "Description",
+        "warning": "Warning",
+        "tags": "Tags",
+        "history": "History",
+        "addHistory": "Add History Entry",
+        "chooseHistoryType": "Select History Entry Type",
+        "topic": "Topic",
+        "dataChanges": "Data Changes",
+        "editor": "Editor",
+        "attribute": "Attribute",
+        "oldValue": "Old Value",
+        "newValue": "New Value",
+        "type": "Type",
+        "at": "at",
+        "edit": "Edit",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "yes": "Yes",
+        "no": "No",
+        "confirmDelete": "Are you sure you want to delete this entry?"
+    },
+    "home": {
+        "title": "CRohM - Customer Relationship Management System",
+        "lastLogin1": "You",
+        "lastLogin2": "were last logged in on",
+        "recentlyAdded": "Recently added data",
+        "createdBy": "Created by",
+        "editedBy": "Edited by",
+        "showDetails": "Show Details",
+        "openOverview": "Open Overview"
     },
     "contact": {
         "contact": "Contact",
@@ -38,12 +68,14 @@
         "city": "City",
         "zipcode": "Zipcode",
         "country": "Country",
+        "contactPossibility": "Contact Possibility",
         "contactPossibilities": "Contact Possibilities",
         "addContactPossibility": "Add Contact Possibility",
         "deleteContactPossibility": "Delete Contact Possibility",
         "mail": "Mail",
         "phoneNumber": "Phone Number",
         "fax": "Fax",
+        "phoneOrEmail": "Phone number or e-mail address",
         "disclosure": {
             "generate": "Generate Disclosure",
             "description": "Generates a pdf-file with all data stored within the CRMS for the selected contact according to Right of Access Art. 12 GDPR. The pdf-file is  send to the contact's mail adress."
@@ -56,7 +88,8 @@
         "employees": "Employees",
         "chooseEmployees": "Choose Employees",
         "edit": "Edit Organization",
-        "new": "New Organization"
+        "new": "New Organization",
+        "affiliation": "Organizational affiliations"
     },
     "event": {
         "events": "Events",
@@ -72,13 +105,62 @@
         "invitation": "Invitation",
         "invited": "Invited",
         "participated": "Participated",
-        "participant": "Participant"
+        "participant": "Participant",
+        "sendInvitation": "Send invitation to Participants",
+        "inviteDescription": "The text modules &#060;Last name&#062; and &#060;First name&#062; insert &#10;&#13; the last or first name of the recipient."
     },
     "statistic": {
         "statistics": "Statistics",
         "totalTags": "Number of Tags created",
         "frequencyContact": "Frequency of Contacts",
         "frequencyOrganization": "Frequency of Organizations",
-        "frequencyEvent": "Frequency of Events"
+        "frequencyEvent": "Frequency of Events",
+        "numberInvited": "Number of all invited persons:",
+        "numberParticipants": "Total number of event participants:",
+        "percentParticipated": "Percentage of all participants:",
+        "numberCreatedContacts": "Number of all created contacts:",
+        "numberCreatedOrganizations": "Number of all created organizations:",
+        "numberCreatedEvents": "Number of all created organizations:",
+        "created": "Created objects",
+        "participants": "Event participants"
+    },
+    "settings": {
+        "setPassword": "Set Password for",
+        "displayName": "Display Name",
+        "username": "Username",
+        "password": "Password",
+        "port": "Port",
+        "host": "Host",
+        "testMail": "To test the settings you can send a test e-mail to the following address:",
+        "sendMail": "Send Mail",
+        "users": "Users",
+        "user": "User",
+        "roles": "Roles",
+        "role": "Role",
+        "permission": "Permission",
+        "permissions": "Permissions",
+        "createRole": "Create Role",
+        "editRole": "Edit Role",
+        "addUser": "Create User",
+        "editUser": "Edit User",
+        "groupPermissions": "Group Permissions",
+        "options": "Options",
+        "resetPassword": "Reset Password",
+        "lockUser": "Lock User",
+        "unlockUser": "Unlock User"
+    },
+    "dpDisclaimer": {
+        "noDp": "No data protection officer has yet been appointed.",
+        "noDp2": "Meet the legal requirements by appointing a data protection officer as administrator now.",
+        "ignore": "Ignore",
+        "select": "Determine one now",
+        "sendMessage": "Send Message",
+        "changedData": "As data protection officer you have changed or deleted data of the contact. If you would like to send the notification required under Art. 19 EU-DSGVO by e-mail to the contact?",
+        "yesAuto": "Yes, send e-mail automatically",
+        "no": "No, don't send"
+    },
+    "validation": {
+        "nameRequired": "Name of the contact entry required!",
+        "mailPhoneRequired": "Phone number or e-mail address required!"
     }
 }

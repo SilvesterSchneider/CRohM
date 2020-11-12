@@ -1,7 +1,7 @@
 <div style="text-align:center">
-    <h1>CRohM - Customer Relationship Management System</h1>
-    <div>Sie ({{loggedInUser}}) waren zuletzt eingeloggt am {{lastLogin}}</div>
-    <div>Kürzlich hinzugefügte Daten </div>
+    <h1>{{'home.title' | translate}}</h1>
+    <div>{{'home.lastLogin1' | translate}} ({{loggedInUser}}) {{'home.lastLogin2' | translate}} {{lastLogin | date:'fullDate'}} {{'common.at' | translate}} {{lastLogin | date: 'mediumTime'}}</div>
+    <div>{{'home.recentlyAdded' | translate}}</div>
     <div class="row">
         <div class="column">
             <div class="spacer"></div>       
@@ -9,17 +9,17 @@
         <div *ngIf="contacts.length > 0" class="column">
             <mat-card *ngFor="let contact of contacts" class="example-card">
                 <small *ngIf="contact.created">
-                    Angelegt von
+                    {{'home.createdBy' | translate}}
                 </small>
                 <small *ngIf="!contact.created">
-                    Bearbeitet von
+                    {{'home.editedBy' | translate}}
                 </small>
                 <small>
                     {{contact.userName}}
                 </small>
                 <mat-card-header class="header">
                     <div mat-card-avatar class="header"></div>
-                    <mat-card-title class="text">Kontakt</mat-card-title>
+                    <mat-card-title class="text">{{'contact.contact' | translate}}</mat-card-title>
                     <mat-card-subtitle class="text">{{contact.preName + " " + contact.name}}</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content class="content">
@@ -27,7 +27,7 @@
                         {{'contact.city' | translate}}: {{contact.address.city}}
                     </p>
                     <p>
-                        Telefonnr.: {{contact.contactPossibilities.phoneNumber}}
+                        {{'contact.phoneNumber' | translate}}: {{contact.contactPossibilities.phoneNumber}}
                     </p>
                     <p>
                         {{'contact.mail' | translate}}: {{contact.contactPossibilities.mail}}
@@ -35,10 +35,10 @@
                 </mat-card-content>
                 <mat-card-actions class="actions">
                     <div class="buttonMargin">
-                        <button class="button" (click)="openContactDetails(contact.id)" mat-raised-button color="primary">Details anzeigen</button>
+                        <button class="button" (click)="openContactDetails(contact.id)" mat-raised-button color="primary">{{'home.showDetails' | translate}}</button>
                     </div>
                     <div class="buttonMargin">
-                        <button class="button" routerLink="contacts" mat-raised-button color="primary">Öffne Übersicht</button>
+                        <button class="button" routerLink="contacts" mat-raised-button color="primary">{{'home.openOverview' | translate}}</button>
                     </div>
                 </mat-card-actions>
             </mat-card>
@@ -49,17 +49,17 @@
         <div *ngIf="organizations.length > 0" class="column">
             <mat-card *ngFor="let organization of organizations" class="example-card">
                 <small *ngIf="organization.created">
-                    Angelegt von
+                    {{'home.createdBy' | translate}}
                 </small>
                 <small *ngIf="!organization.created">
-                    Bearbeitet von
+                    {{'home.editedBy' | translate}}
                 </small>
                 <small>
                     {{organization.userName}}
                 </small>
                 <mat-card-header class="header">
                     <div mat-card-avatar class="header"></div>
-                    <mat-card-title class="text">Organisation</mat-card-title>
+                    <mat-card-title class="text">{{'organization.organization' | translate}}</mat-card-title>
                     <mat-card-subtitle class="text">{{organization.name + " " + organization.description}}</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content class="content">
@@ -67,7 +67,7 @@
                         {{'contact.city' | translate}}: {{organization.address.city}}
                     </p>
                     <p>
-                        Telefonnr.: {{organization.contact.phoneNumber}}
+                        {{'contact.phoneNumber' | translate}}: {{organization.contact.phoneNumber}}
                     </p>
                     <p>
                         {{'contact.mail' | translate}}: {{organization.contact.mail}}
@@ -75,10 +75,10 @@
                 </mat-card-content>
                 <mat-card-actions class="actions">
                     <div class="buttonMargin">
-                        <button class="button" (click)="openOrganizationDetails(organization.id)" mat-raised-button color="primary">Details anzeigen</button>
+                        <button class="button" (click)="openOrganizationDetails(organization.id)" mat-raised-button color="primary">{{'home.showDetails' | translate}}</button>
                     </div>
                     <div class="buttonMargin">
-                        <button class="button" routerLink="organizations" mat-raised-button color="primary">Öffne Übersicht</button>
+                        <button class="button" routerLink="organizations" mat-raised-button color="primary">{{'home.openOverview' | translate}}</button>
                     </div>
                 </mat-card-actions>
             </mat-card>
@@ -89,10 +89,10 @@
         <div *ngIf="events.length > 0" class="column">
             <mat-card *ngFor="let event of events" class="example-card">
                 <small *ngIf="event.created">
-                    Angelegt von
+                    {{'home.createdBy' | translate}}
                 </small>
                 <small *ngIf="!event.created">
-                    Bearbeitet von
+                    {{'home.editedBy' | translate}}
                 </small>
                 <small>
                     {{event.userName}}
@@ -104,21 +104,21 @@
                 </mat-card-header>
                 <mat-card-content class="content">
                     <p>
-                        Datum: {{event.date | date:'shortDate'}}
+                        {{'common.date' | translate}}: {{event.date | date:'shortDate'}}
                     </p>
                     <p>
-                        Uhrzeit: {{event.time | date:'shortTime'}}
+                        {{'common.time' | translate}}: {{event.time | date:'shortTime'}}
                     </p>
                     <p>
-                        Dauer: {{event.duration}} stunden
+                        {{'common.durationHours' | translate}}: {{event.duration}}
                     </p>
                 </mat-card-content>
                 <mat-card-actions class="actions">
                     <div class="buttonMargin">
-                        <button class="button" (click)="openEventDetails(event.id)" mat-raised-button color="primary">Details anzeigen</button>
+                        <button class="button" (click)="openEventDetails(event.id)" mat-raised-button color="primary">{{'home.showDetails' | translate}}</button>
                     </div>
                     <div class="buttonMargin">
-                        <button class="button" routerLink="events" mat-raised-button color="primary">Öffne Übersicht</button>
+                        <button class="button" routerLink="events" mat-raised-button color="primary">{{'home.openOverview' | translate}}</button>
                     </div>
                 </mat-card-actions>
             </mat-card>

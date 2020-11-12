@@ -64,37 +64,37 @@
         </mat-table>
     </div>
     <div class="col-md-12">
-        <h6 *ngIf="dataHistory.length > 0">Datenveränderungen</h6>
+        <h6 *ngIf="dataHistory.length > 0">{{'common.dataChanges' | translate}}</h6>
     </div>
     <div class="col-md-12">
         <mat-table *ngIf="dataHistory.length > 0" #table [dataSource]="dataHistory">
             <ng-container matColumnDef="datum">
-                <mat-header-cell *matHeaderCellDef> Datum </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{getDate(element.dateTime)}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="bearbeiter">
-                <mat-header-cell *matHeaderCellDef> Bearbeiter </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.editor' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.user?.firstName + " " + element.user?.lastName}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="feldname">
-                <mat-header-cell *matHeaderCellDef> Eigenschaft </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.attribute' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.propertyName}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="alterWert">
-                <mat-header-cell *matHeaderCellDef> Alter Wert </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.oldValue' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.oldValue}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="neuerWert">
-                <mat-header-cell *matHeaderCellDef> Neuer Wert </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.newValue' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.actualValue}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="kommentar">
-                <mat-header-cell *matHeaderCellDef> Kommentar </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.comment' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.comment}}
                 </mat-cell>
             </ng-container>
@@ -103,7 +103,7 @@
         </mat-table>
     </div>
 	<div *ngIf="event.tags.length > 0" class="col-md-12">
-		<h5>Tags</h5>
+		<h5>{{'common.tags' | translate}}</h5>
 		<mat-chip-list #chipList>
 			<mat-chip *ngFor="let item of event.tags">
 				{{ item.name }}

@@ -1,6 +1,7 @@
 {
     "common": {
         "cancel": "Verwerfen",
+        "confirmCancel": "Wollen Sie den Vorgang wirklich abbrechen?",
         "save": "Speichern",
         "send": "Senden",
         "delete": "Löschen",
@@ -18,7 +19,36 @@
         "durationHours": "Dauer in Stunden",
         "selectAll": "Alle selektieren",
         "calendarWeek": "Kalenderwoche",
-        "description": "Beschreibung"
+        "description": "Beschreibung",
+        "warning": "Warnung",
+        "tags": "Tags",
+        "history": "Historie",
+        "addHistory": "Historieneintrag hinzufügen",
+        "chooseHistoryType": "Historieneintragstyp wählen",
+        "topic": "Thema",
+        "dataChanges": "Datenveränderungen",
+        "editor": "Bearbeiter",
+        "attribute": "Eigenschaft",
+        "oldValue": "Alter Wert",
+        "newValue": "Neuer Wert",
+        "type": "Typ",
+        "at": "um",
+        "edit": "Bearbeiten",
+        "startDate": "Startdatum",
+        "endDate": "Enddatum",
+        "yes": "Ja",
+        "no": "Nein",
+        "confirmDelete": "Sind Sie sich sicher, dass Sie diesen Eintrag löschen möchten?"
+    },
+    "home": {
+        "title": "CRohM - Customer Relationship Management System",
+        "lastLogin1": "Sie",
+        "lastLogin2": "waren zuletzt eingeloggt am",
+        "recentlyAdded": "Kürzlich hinzugefügte Daten",
+        "createdBy": "Angelegt von",
+        "editedBy": "Bearbeitet von",
+        "showDetails": "Details anzeigen",
+        "openOverview": "Öffne Übersicht"
     },
     "contact": {
         "contact": "Kontakt",
@@ -35,15 +65,17 @@
         "address": "Adresse",
         "street": "Strasse",
         "streetNumber": "Hausnummer",
-        "city": "{{'contact.city' | translate}}",
+        "city": "Stadt",
         "zipcode": "PLZ",
         "country": "Land",
+        "contactPossibility": "Kontaktmöglichkeit",
         "contactPossibilities": "Kontaktmöglichkeiten",
         "addContactPossibility": "Kontaktmöglichkeit hinzufügen",
         "deleteContactPossibility": "Kontaktmöglichkeit entfernen",
         "mail": "E-Mail",
         "phoneNumber": "Telefonnummer",
         "fax": "Faxnummer",
+        "phoneOrEmail": "Telefonnummer oder E-Mail Adresse",
         "disclosure": {
             "generate": "Kontaktauskunft generieren",
             "description": "Erzeugt eine PDF-Datei mit allen im CRMS gespeicherten Daten zu gewähltem Kontakt gem. Auskunftspflicht EU-DSGVO Art. 15. Die PDF-Datei wird direkt an die E-Mail-Adresse des Kontakts gesendet."
@@ -56,7 +88,8 @@
         "employees": "Mitarbeiter",
         "chooseEmployees": "Mitarbeiter auswählen",
         "edit": "Organisation bearbeiten",
-        "new": "Neue Organisation"
+        "new": "Neue Organisation",
+        "affiliation": "Organisationszugehörigkeiten"
     },
     "event": {
         "events": "Veranstaltungen",
@@ -72,13 +105,62 @@
         "invitation": "Einladung",
         "invited": "Eingeladen",
         "participated": "Hat teilgenommen",
-        "participant": "Teilnehmer"
+        "participant": "Teilnehmer",
+        "sendInvitation": "Einladung an Teilnehmer versenden",
+        "inviteDescription": "Die Textbausteine &#060;Nachname&#062; und &#060;Vorname&#062; fügen &#10;&#13; den Nach- bzw. Vornamen des Empfängers ein."
     },
     "statistic": {
         "statistics": "Statistiken",
         "totalTags": "Anzahl sämtlich erstellter Tags",
         "frequencyContact": "Häufigkeit bei Kontakten",
         "frequencyOrganization": "Häufigkeit bei Organisationen",
-        "frequencyEvent": "Häufigkeit bei Veranstalltungen"
+        "frequencyEvent": "Häufigkeit bei Veranstalltungen",
+        "numberInvited": "Anzahl sämtlich eingeladener Personen:",
+        "numberParticipants": "Gesamte Anzahl von Veranstaltungsteilnehmern:",
+        "percentParticipated": "Prozentualer Anteil aller Teilnehmer:",
+        "numberCreatedContacts": "Anzahl sämtlich erstellter Kontakte:",
+        "numberCreatedOrganizations": "Anzahl sämtlich erstellter Organisationen:",
+        "numberCreatedEvents": "Anzahl sämtlich erstellter Veranstaltungen:",
+        "created": "Erstellte Objekte",
+        "participants": "Veranstaltungsteilnehmer"
+    },
+    "settings": {
+        "setPassword": "Passwort festlegen für",
+        "displayName": "Anzeigename",
+        "username": "Benutzername",
+        "password": "Passwort",
+        "port": "Port",
+        "host": "Host",
+        "testMail": "Um die Einstellungen zu testen können Sie hier eine Test E-Mail an eine Adresse senden:",
+        "sendMail": "E-Mail senden",
+        "users": "Benutzer",
+        "user": "Benutzer",
+        "roles": "Rollen",
+        "role": "Rolle",
+        "permission": "Berechtigung",
+        "permissions": "Berechtigungen",
+        "createRole": "Rolle erstellen",
+        "editRole": "Rolle bearbeiten",
+        "addUser": "Benutzer erstellen",
+        "editUser": "Benutzer bearbeiten",
+        "groupPermissions": "Gruppenberechtigungen",
+        "options": "Optionen",
+        "resetPassword": "Passwort zurücksetzen",
+        "lockUser": "Benutzer sperren",
+        "unlockUser": "Sperre aufheben"
+    },
+    "dpDisclaimer": {
+        "noDp": "Es wurde noch kein Datenschutzbeauftragter bestimmt.",
+        "noDp2": "Erfüllen Sie die gesetzlichen Auflagen indem Sie als Administrator jetzt einen Datenschutzbeauftragten bestimmen.",
+        "ignore": "Ignorieren",
+        "select": "Jetzt einen bestimmen",
+        "sendMessage": "Mitteilung senden",
+        "changedData": "Sie haben als Datenschutzbeauftragter Daten des Kontakts geändert bzw. gelöscht. Möchten Sie die gem. Art. 19 EU-DSGVO notwendige Mitteilung darüber per E-Mail an den Kontakt senden?",
+        "yesAuto": "Ja, E-Mail automatisch senden",
+        "no": "Nein, nicht senden"
+    },
+    "validation": {
+        "nameRequired": "Name des Kontakteintrags erforderlich!",
+        "mailPhoneRequired": "Telefonnummer oder E-Mail Adresse erforderlich!"
     }
 }

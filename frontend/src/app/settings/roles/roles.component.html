@@ -1,12 +1,12 @@
 <mat-toolbar>
     <mat-toolbar-row>
-        <span>Rollen</span>
+        <span>{{'settings.roles' | translate}}</span>
         <span class="fill-remaining-space"></span>
         <div>
             <form >
             <mat-form-field>
               <mat-label>{{'common.search' | translate}}</mat-label>
-              <input matInput (keyup)="applyFilter($event)" placeholder="Rolle..." >
+              <input matInput (keyup)="applyFilter($event)" placeholder="{{'settings.role' | translate}}..." >
             </mat-form-field>
           </form>
         </div>
@@ -25,7 +25,7 @@
 
         <!-- column for permissions -->
         <ng-container *ngIf="col == 'permission'"> 
-            <mat-header-cell *matHeaderCellDef (click)="openUpdateDialog(col)">  Berechtigung </mat-header-cell>           
+            <mat-header-cell *matHeaderCellDef (click)="openUpdateDialog(col)">  {{'settings.permissions' | translate}} </mat-header-cell>           
             <mat-cell *matCellDef="let element "> 
                 {{element[col]}}
             </mat-cell>

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -25,6 +25,11 @@ import { LanguageSelectComponent } from './shared/navigation/language-select/lan
 import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MissingTranslationLogger } from './shared/translation/missing-translation-logger';
+import { TranslationService } from './shared/translation/translation.service';
+import localeDe from '@angular/common/locales/de';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeDe);
 
 @NgModule({
   declarations: [
@@ -51,11 +56,13 @@ import { MissingTranslationLogger } from './shared/translation/missing-translati
     StatisticsModule,
     EventsModule,
     OrganizationsModule,
+    // Configure where JWT is stored / read from
     JwtModule.forRoot({
       config: {
         tokenGetter: () => localStorage.getItem(JwtService.LS_KEY)
       }
     }),
+    // Configure Translation Module
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -66,10 +73,17 @@ import { MissingTranslationLogger } from './shared/translation/missing-translati
     })
   ],
   providers: [
+    // Use ProgressSpinnerInterceptor
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ProgressSpinnerInterceptor,
       multi: true,
+    },
+    // Provide locale using translationService
+    {
+      provide: LOCALE_ID,
+      deps: [TranslationService],
+      useFactory: (translationService) => translationService.getLocale()
     }
   ],
   bootstrap: [AppComponent]

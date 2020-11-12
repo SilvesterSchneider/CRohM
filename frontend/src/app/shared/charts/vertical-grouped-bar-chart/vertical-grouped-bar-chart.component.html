@@ -14,7 +14,7 @@
     </ngx-charts-bar-vertical-2d>
     <div *ngIf="showDates" class="col-md-3">
         <mat-form-field>
-            <input matInput [matDatepicker]="pickera" placeholder="Startdatum"
+            <input matInput [matDatepicker]="pickera" placeholder="{{'common.startDate' | translate}}"
                 (dateChange)="addEventStart('change', $event)">
             <mat-datepicker-toggle matSuffix [for]="pickera"></mat-datepicker-toggle>
             <mat-datepicker #pickera></mat-datepicker>
@@ -22,7 +22,7 @@
     </div>
     <div *ngIf="showDates" class="col-md-3">
         <mat-form-field>
-            <input matInput [matDatepicker]="picker" placeholder="Enddatum"
+            <input matInput [matDatepicker]="picker" placeholder="{{'common.endDate' | translate}}"
                 (dateChange)="addEventEnd('change', $event)">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
