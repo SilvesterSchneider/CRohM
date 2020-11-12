@@ -33,7 +33,7 @@ export class EventDtoGroup implements EventDto {
 
 export class EventsListComponent implements OnInit {
   @ViewChild(TagsFilterComponent, { static: true })
-	tagsFilter: TagsFilterComponent;
+  tagsFilter: TagsFilterComponent;
   @ViewChild(MatSort) sort: MatSort;
   events: Observable<EventDto[]>;
   allEvents: EventDtoGroup[] = new Array<EventDtoGroup>();
@@ -44,6 +44,9 @@ export class EventsListComponent implements OnInit {
   isAdminUserLoggedIn = false;
   length = 0;
   dataSourceFiltered = new MatTableDataSource<EventDtoGroup>();
+  permissionAdd = false;
+  permissionModify = false;
+  permissionDelete = false;
 
   constructor(
     private service: EventService,
@@ -68,6 +71,9 @@ export class EventsListComponent implements OnInit {
     this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
     this.init();
     this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
+    this.permissionAdd = this.jwt.hasPermission('Anlegen einer Veranstaltung');
+    this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten einer Veranstaltung');
+    this.permissionDelete = this.jwt.hasPermission('Löschen einer Veranstaltung');
   }
 
   applyTagFilter() {

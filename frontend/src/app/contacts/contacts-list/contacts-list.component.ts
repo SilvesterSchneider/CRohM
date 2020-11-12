@@ -29,8 +29,10 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   displayedColumns = [];
   isAdminUserLoggedIn = false;
   permissionAdd = false;
-  permissionModfiy = false;
+  permissionModify = false;
   permissionDelete = false;
+  permissionAddHistory = false;
+  permissionInformContact = false;
 
   length = 0;
   currentScreenWidth = '';
@@ -87,8 +89,10 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
     this.getData();
     this.permissionAdd = this.jwt.hasPermission('Anlegen eines Kontakts');
-    this.permissionModfiy = this.jwt.hasPermission('Einsehen und Bearbeiten aller Kontakte');
+    this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten aller Kontakte');
     this.permissionDelete = this.jwt.hasPermission('Löschen eines Kontakts');
+    this.permissionAddHistory = this.jwt.hasPermission('Hinzufügen eines Historieneintrags bei Kontakt oder Organisation');
+    this.permissionInformContact = this.jwt.hasPermission('Auskunft gegenüber eines Kontakts zu dessen Daten');
   }
 
   ngOnDestroy(): void {
