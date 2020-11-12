@@ -84,11 +84,11 @@
           </mat-autocomplete>
     </div>
 </div>
-    <div mat-dialog-actions>
+    <div mat-dialog-actions align="end">
         <button mat-raised-button (click)="onDelete()" color="warn">Löschen</button>
         <span class="fill-remaining-space"></span>
-        <button mat-raised-button color="primary" title="Abbrechen" (click)="onCancel()">
-            Abbrechen
+        <button mat-raised-button color="primary" title="Verwerfen" (click)="onCancel()">
+            Verwerfen
         </button>
         <button id="saveEdit" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!contactsForm.valid"
             (click)="onApprove()">

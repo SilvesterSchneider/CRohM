@@ -100,11 +100,13 @@ export class OrganizationsInfoComponent implements OnInit {
   }
 
   eventParticipated(element: EventDto): boolean {
-    return !!element.participated && element.participated?.some(part => part.modelType === MODEL_TYPE.ORGANIZATION && part.objectId === this.organization.id && part.hasParticipated);
+    return !!element.participated && element.participated?.some(part => part.modelType === MODEL_TYPE.ORGANIZATION &&
+       part.objectId === this.organization.id && part.hasParticipated);
   }
 
   eventNotParticipated(element: EventDto): boolean {
-    return !!element.participated && !element.participated?.some(part => part.modelType === MODEL_TYPE.ORGANIZATION && part.objectId === this.organization.id && part.hasParticipated);
+    return !!element.participated && !element.participated?.some(part => part.modelType === MODEL_TYPE.ORGANIZATION &&
+       part.objectId === this.organization.id && part.hasParticipated);
   }
 
   private loadModifications(pageStart: number, pageSize: number) {

@@ -89,6 +89,10 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     private fb: FormBuilder,
     private mailService: MailService) {
     super(dialogRef, dialog);
+    this.dialogRef.backdropClick().subscribe(() => {
+			// Close the dialog
+			dialogRef.close();
+		});
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
@@ -246,6 +250,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   }
 
   private createEventsForm(): FormGroup {
+    alert(this.event.date);
     return this.fb.group({
       name: ['', Validators.required],
       date: [new FormControl(new Date(this.event.date)), Validators.required],

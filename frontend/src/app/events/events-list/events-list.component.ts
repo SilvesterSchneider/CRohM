@@ -11,6 +11,7 @@ import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialo
 import { JwtService } from 'src/app/shared/jwt.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
+import { BlockScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 
 export class EventDtoGroup implements EventDto {
   id: number;
@@ -114,14 +115,15 @@ export class EventsListComponent implements OnInit {
 
   callEdit(id: number) {
     this.service.getById(id).subscribe(x => {
-      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, minWidth: '450px' });
+      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, minWidth: '450px', height: '600px' });
       dialogRef.afterClosed().subscribe(y => this.init());
     });
   }
 
   isToday(element: EventDtoGroup): boolean {
     const date: Date = new Date(element.date);
-    if (date.getDate() === new Date(Date.now()).getDate()) {
+    const now: Date = new Date(Date.now());
+    if (date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
       return true;
     } else {
       return false;
