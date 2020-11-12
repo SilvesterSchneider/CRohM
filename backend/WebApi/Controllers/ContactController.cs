@@ -31,7 +31,7 @@ namespace WebApi.Controllers
         private IContactService contactService;
         private IHistoryService historyService;
 
-        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IHistoryService  historyService)          
+        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IHistoryService  historyService)
         {
             _mapper = mapper;
             this.eventService = eventService;
@@ -41,7 +41,7 @@ namespace WebApi.Controllers
             this.historyService = historyService;
         }
 
-        [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")] 
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")]
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
@@ -107,7 +107,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [Authorize(Roles = "Anlegen eines Kontaktes")]
+        [Authorize(Roles = "Anlegen eines Kontakts")]
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(ContactDto), Description = "successfully created")]
         public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate)
@@ -122,6 +122,7 @@ namespace WebApi.Controllers
         }
 
         // creates new contact in db via frontend
+        [Authorize(Roles ="Anlegen eines Kontakts")]
         [Authorize(Roles = "Hinzufügen eines Historieneintrags bei Kontakt oder Organisation")]
         [HttpPost("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
@@ -169,7 +170,7 @@ namespace WebApi.Controllers
         {
             PaginationFilter validFilter = new PaginationFilter(filter.PageStart, filter.PageSize);
 
-            List<Event> events = await eventService.GetEventsForContact(id);        
+            List<Event> events = await eventService.GetEventsForContact(id);
             List<HistoryElement> history = await historyService.GetHistoryByContactAsync(id);
 
             List<object> mergedResult = events.Cast<object>().Concat(history.Cast<object>()).ToList();
