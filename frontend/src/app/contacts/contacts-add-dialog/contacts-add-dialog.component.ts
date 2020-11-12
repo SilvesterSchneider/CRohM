@@ -18,7 +18,19 @@ import { OsmAddressComponent } from 'src/app/shared/osm/osm-address/osm-address.
 	styleUrls: ['./contacts-add-dialog.component.scss']
 })
 export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialogComponent> implements OnInit {
-	public genderTypes: string[] = ['Männlich', 'Weiblich', 'Divers'];
+	public genderTypes = [
+		{
+			translate: 'common.male',
+			type: GenderTypes.MALE
+		},
+		{
+			translate: 'common.female',
+			type: GenderTypes.FEMALE
+		},
+		{
+			translate: 'common.diverse',
+			type: GenderTypes.DIVERS
+		}];
 	contactCreateDto: ContactCreateDto = { name: 'n', preName: 'n', gender: GenderTypes.MALE };
 	adressCreateDto: AddressCreateDto = { country: '', street: '', streetNumber: '', zipcode: '', city: '' };
 	contactPossibilitiesCreateDto: ContactPossibilitiesCreateDto = { mail: '', phoneNumber: '', fax: '' };
@@ -73,14 +85,7 @@ export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialo
 		this.contactCreateDto.name = this.contactsForm.value.name;
 		this.contactCreateDto.preName = this.contactsForm.value.preName;
 		this.contactCreateDto.contactPartner = this.contactsForm.value.contactPartner;
-		const genderText: string = this.contactsForm.get('gender').value;
-		let gender: GenderTypes = GenderTypes.MALE;
-		if (genderText === this.genderTypes[1]) {
-			gender = GenderTypes.FEMALE;
-		} else if (genderText === this.genderTypes[2]) {
-			gender = GenderTypes.DIVERS;
-		}
-		this.contactCreateDto.gender = gender;
+		this.contactCreateDto.gender = this.contactsForm.get('gender').value;
 		this.adressCreateDto.country = this.contactsForm.value.address.country;
 		this.adressCreateDto.city = this.contactsForm.value.address.city;
 		this.adressCreateDto.zipcode = this.contactsForm.value.address.zipcode;

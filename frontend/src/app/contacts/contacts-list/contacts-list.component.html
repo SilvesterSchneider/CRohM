@@ -90,16 +90,16 @@
                 </a>
                 <mat-menu #menu="matMenu">
                     <a (click)="openInfo(element.id)" type="button">
-                        <mat-icon color="primary" title="Kontaktinformationen anzeigen" class="icon">info</mat-icon>
+                        <mat-icon color="primary" title="{{'contact.showContactInfo' | translate}}" class="icon">info</mat-icon>
                     </a>
                     <a (click)="addNote(element.id)" type="button">
-                        <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
+                        <mat-icon color="primary" title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
                     </a>
                     <a (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" type="button">
-                        <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">phone</mat-icon>
+                        <mat-icon color="primary" title="{{'common.call' | translate}}" class="icon">phone</mat-icon>
                     </a>
                     <a (click)="deleteContact(element)" type="button">
-                        <mat-icon color="primary" title="Kontakt löschen" class="icon">delete</mat-icon>
+                        <mat-icon color="primary" title="{{'contact.delete' | translate}}" class="icon">delete</mat-icon>
                     </a>
                 </mat-menu>
             </mat-cell>

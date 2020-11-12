@@ -38,7 +38,20 @@
         "endDate": "End Date",
         "yes": "Yes",
         "no": "No",
-        "confirmDelete": "Are you sure you want to delete this entry?"
+        "confirmDelete": "Are you sure you want to delete this entry?",
+        "call": "Call",
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Logout",
+        "male": "Male",
+        "female": "Female",
+        "diverse": "Diverse",
+        "germany": "Germany",
+        "switzerland": "Switzerland",
+        "austria": "Austria",
+        "phoneCall": "Phone Call",
+        "note": "Note",
+        "visit": "Visit"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",
@@ -76,6 +89,8 @@
         "phoneNumber": "Phone Number",
         "fax": "Fax",
         "phoneOrEmail": "Phone number or e-mail address",
+        "showContactInfo": "Show contact information",
+        "delete": "Delete Contact",
         "disclosure": {
             "generate": "Generate Disclosure",
             "description": "Generates a pdf-file with all data stored within the CRMS for the selected contact according to Right of Access Art. 12 GDPR. The pdf-file is  send to the contact's mail adress."
@@ -89,7 +104,8 @@
         "chooseEmployees": "Choose Employees",
         "edit": "Edit Organization",
         "new": "New Organization",
-        "affiliation": "Organizational affiliations"
+        "affiliation": "Organizational affiliations",
+        "showInfo": "Display organizational information"
     },
     "event": {
         "events": "Events",
@@ -107,7 +123,7 @@
         "participated": "Participated",
         "participant": "Participant",
         "sendInvitation": "Send invitation to Participants",
-        "inviteDescription": "The text modules &#060;Last name&#062; and &#060;First name&#062; insert &#10;&#13; the last or first name of the recipient."
+        "inviteDescription": "The text modules <lastname> and <firstname> insert the last or first name of the recipient."
     },
     "statistic": {
         "statistics": "Statistics",
@@ -122,7 +138,11 @@
         "numberCreatedOrganizations": "Number of all created organizations:",
         "numberCreatedEvents": "Number of all created organizations:",
         "created": "Created objects",
-        "participants": "Event participants"
+        "participants": "Event participants",
+        "data": "Data",
+        "objects": "Objects",
+        "numberObjects": "Number of created objects",
+        "numberTags": "Number of tags"
     },
     "settings": {
         "setPassword": "Set Password for",

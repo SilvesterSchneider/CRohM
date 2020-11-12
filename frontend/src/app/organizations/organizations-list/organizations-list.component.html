@@ -89,14 +89,14 @@
                     <mat-icon color="primary" class="icon">edit</mat-icon>
                 </a>
                 <a (click)="openInfo(element.id)" type="button">
-                    <mat-icon color="primary" title="Organisationsinformationen anzeigen" class="icon">info</mat-icon>
+                    <mat-icon color="primary" title="{{'organization.showInfo' | translate}}" class="icon">info</mat-icon>
                 </a>
                 <a type="button" [matMenuTriggerFor]="menu">
                     <mat-icon color="primary" class="icon">list</mat-icon>
                 </a>
                 <mat-menu #menu="matMenu">
                     <a (click)="addNote(element.id)" type="button">
-                        <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
+                        <mat-icon color="primary" title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
                     </a>
                     <a (click)="deleteOrganization(element.id)" type="button">
                         <mat-icon color="primary" class="icon">delete</mat-icon>

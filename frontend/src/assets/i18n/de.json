@@ -38,7 +38,20 @@
         "endDate": "Enddatum",
         "yes": "Ja",
         "no": "Nein",
-        "confirmDelete": "Sind Sie sich sicher, dass Sie diesen Eintrag löschen möchten?"
+        "confirmDelete": "Sind Sie sich sicher, dass Sie diesen Eintrag löschen möchten?",
+        "call": "Anrufen",
+        "profile": "Profil",
+        "settings": "Einstellungen",
+        "logout": "Logout",
+        "male": "Männlich",
+        "female": "Weiblich",
+        "diverse": "Divers",
+        "germany": "Deutschland",
+        "switzerland": "Schweiz",
+        "austria": "Österreich",
+        "phoneCall": "Telefonanruf",
+        "note": "Notiz",
+        "visit": "Besuch"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",
@@ -76,6 +89,8 @@
         "phoneNumber": "Telefonnummer",
         "fax": "Faxnummer",
         "phoneOrEmail": "Telefonnummer oder E-Mail Adresse",
+        "showContactInfo": "Kontaktinformationen anzeigen",
+        "delete": "Kontakt löschen",
         "disclosure": {
             "generate": "Kontaktauskunft generieren",
             "description": "Erzeugt eine PDF-Datei mit allen im CRMS gespeicherten Daten zu gewähltem Kontakt gem. Auskunftspflicht EU-DSGVO Art. 15. Die PDF-Datei wird direkt an die E-Mail-Adresse des Kontakts gesendet."
@@ -89,7 +104,8 @@
         "chooseEmployees": "Mitarbeiter auswählen",
         "edit": "Organisation bearbeiten",
         "new": "Neue Organisation",
-        "affiliation": "Organisationszugehörigkeiten"
+        "affiliation": "Organisationszugehörigkeiten",
+        "showInfo": "Organisationsinformationen anzeigen"
     },
     "event": {
         "events": "Veranstaltungen",
@@ -107,7 +123,7 @@
         "participated": "Hat teilgenommen",
         "participant": "Teilnehmer",
         "sendInvitation": "Einladung an Teilnehmer versenden",
-        "inviteDescription": "Die Textbausteine &#060;Nachname&#062; und &#060;Vorname&#062; fügen &#10;&#13; den Nach- bzw. Vornamen des Empfängers ein."
+        "inviteDescription": "Die Textbausteine <Nachname> und <Vorname> fügen den Nach- bzw. Vornamen des Empfängers ein."
     },
     "statistic": {
         "statistics": "Statistiken",
@@ -122,7 +138,11 @@
         "numberCreatedOrganizations": "Anzahl sämtlich erstellter Organisationen:",
         "numberCreatedEvents": "Anzahl sämtlich erstellter Veranstaltungen:",
         "created": "Erstellte Objekte",
-        "participants": "Veranstaltungsteilnehmer"
+        "participants": "Veranstaltungsteilnehmer",
+        "data": "Daten",
+        "objects": "Objekte",
+        "numberObjects": "Anzahl erzeugter Objekte",
+        "numberTags": "Anzahl Tags"
     },
     "settings": {
         "setPassword": "Passwort festlegen für",

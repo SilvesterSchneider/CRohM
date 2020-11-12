@@ -37,7 +37,7 @@
             <mat-label>{{'contact.country' | translate}}</mat-label>
             <mat-select id="country" formControlName="country" name="country">
                 <mat-option *ngFor="let country of countries" [value]="country.value" class="test">
-                    {{country.viewValue}}
+                    {{country.viewValue | translate}}
                 </mat-option>
             </mat-select>
         </mat-form-field>

@@ -14,7 +14,7 @@ export class TranslationService {
     {
       label: 'English (English)',
       short: 'en',
-      locale: 'en_US'
+      locale: 'en-US'
     }];
   private readonly LS_KEY = 'language';
   private readonly DEFAULT_LANGUAGE = TranslationService.LANGUAGES[0];

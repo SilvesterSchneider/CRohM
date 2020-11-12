@@ -28,6 +28,7 @@ import { MissingTranslationLogger } from './shared/translation/missing-translati
 import { TranslationService } from './shared/translation/translation.service';
 import localeDe from '@angular/common/locales/de';
 import { registerLocaleData } from '@angular/common';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 registerLocaleData(localeDe);
 
@@ -82,6 +83,11 @@ registerLocaleData(localeDe);
     // Provide locale using translationService
     {
       provide: LOCALE_ID,
+      deps: [TranslationService],
+      useFactory: (translationService) => translationService.getLocale()
+    },
+    {
+      provide: MAT_DATE_LOCALE,
       deps: [TranslationService],
       useFactory: (translationService) => translationService.getLocale()
     }

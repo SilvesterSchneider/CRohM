@@ -10,7 +10,7 @@
             <mat-form-field>
                 <mat-label>{{'common.chooseHistoryType' | translate}}</mat-label>
                 <mat-select formControlName="type" class="dateClass">
-                    <mat-option [value]="suit" *ngFor="let suit of types">{{suit}}</mat-option>
+                    <mat-option [value]="suit.type" *ngFor="let suit of types">{{suit.translate | translate}}</mat-option>
                 </mat-select>
             </mat-form-field>
             </div>

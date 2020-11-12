@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MODEL_TYPE, StatisticsService, STATISTICS_VALUES, VerticalGroupedBarDataSet, VerticalGroupedBarDto } from 'src/app/shared/api-generated/api-generated';
+import { TranslateService } from '@ngx-translate/core';
+import { StatisticsService, STATISTICS_VALUES, VerticalGroupedBarDataSet, VerticalGroupedBarDto } from 'src/app/shared/api-generated/api-generated';
 import { VerticalGroupedBarChartComponent } from 'src/app/shared/charts/vertical-grouped-bar-chart/vertical-grouped-bar-chart.component';
 
 @Component({
@@ -16,14 +17,14 @@ export class TagsComponent implements OnInit {
   valueEvents: boolean;
   data: VerticalGroupedBarDto[];
 
-  constructor(private statistics: StatisticsService) { }
+  constructor(private statistics: StatisticsService, private translate: TranslateService) { }
 
   ngOnInit(): void {
     this.statistics.getVerticalGroupedBarDataByType(STATISTICS_VALUES.ALL_TAGS).subscribe(x => {
       this.data = x;
       this.chart.setSizes(80, 400, 400);
       this.chart.setChangeCallback((visibleData: VerticalGroupedBarDto[]) => this.calculateTheAmounts(visibleData));
-      this.chart.setLabels('Tags', 'Anzahl Tags', 'Objekte');
+      this.chart.setLabels(this.translate.instant('common.tags'), this.translate.instant('statistic.numberTags'), this.translate.instant('statistic.objects'));
       this.chart.setData(x);
       this.chart.shouldShowDates(false);
       if (x.length === 0) {

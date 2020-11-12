@@ -16,7 +16,7 @@
         <mat-form-field class="col-md-6">
             <mat-label>{{'contact.chooseGender' | translate}}</mat-label>
             <mat-select id="gender" formControlName="gender">
-                <mat-option [value]="suit" *ngFor="let suit of genderTypes">{{suit}}</mat-option>
+                <mat-option [value]="suit.type" *ngFor="let suit of genderTypes">{{suit.translate | translate}}</mat-option>
             </mat-select>
         </mat-form-field>
         <mat-form-field class="col-md-6">
