@@ -63,45 +63,49 @@
             <mat-row *matRowDef="let row; columns: columnsContacts;"></mat-row>
         </mat-table>
     </div>
-    <div class="col-md-12">
-        <h6 *ngIf="dataHistory.length > 0">{{'common.dataChanges' | translate}}</h6>
-    </div>
-    <div class="col-md-12">
+
+    <mat-expansion-panel *ngIf="dataHistory.length > 0" togglePosition="after" class="extensionPanel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h5>{{'common.dataChanges' | translate}}</h5>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
         <mat-table *ngIf="dataHistory.length > 0" #table [dataSource]="dataHistory">
             <ng-container matColumnDef="datum">
-                <mat-header-cell *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{getDate(element.dateTime)}}
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{getDate(element.dateTime)}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="bearbeiter">
-                <mat-header-cell *matHeaderCellDef> {{'common.editor' | translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.user?.firstName + " " + element.user?.lastName}}
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.editor' | translate}} </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.user?.firstName + " " + element.user?.lastName}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="feldname">
-                <mat-header-cell *matHeaderCellDef> {{'common.attribute' | translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.propertyName}}
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.attribute' | translate}} </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.propertyName}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="alterWert">
-                <mat-header-cell *matHeaderCellDef> {{'common.oldValue' | translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.oldValue}}
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.oldValue' | translate}} </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.oldValue}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="neuerWert">
-                <mat-header-cell *matHeaderCellDef> {{'common.newValue' | translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.actualValue}}
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.newValue' | translate}} </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.actualValue}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="kommentar">
-                <mat-header-cell *matHeaderCellDef> {{'common.comment' | translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.comment}}
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.comment' | translate}} </mat-header-cell>
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.comment}}
                 </mat-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="displayedColumnsDataChangeHistory"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumnsDataChangeHistory;"></mat-row>
         </mat-table>
-    </div>
+        <mat-paginator (page)="onPaginationChangedModification($event)" [pageSizeOptions]="[5, 10, 20]" [length]="modificationsPaginationLength"></mat-paginator>
+    </mat-expansion-panel>
 	<div *ngIf="event.tags.length > 0" class="col-md-12">
 		<h5>{{'common.tags' | translate}}</h5>
 		<mat-chip-list #chipList>
