@@ -156,8 +156,6 @@
         "users": "Benutzer",
         "user": "Benutzer",
         "roles": "Rollen",
-        "role": "Rolle",
-        "permission": "Berechtigung",
         "permissions": "Berechtigungen",
         "createRole": "Rolle erstellen",
         "editRole": "Rolle bearbeiten",
@@ -167,7 +165,33 @@
         "options": "Optionen",
         "resetPassword": "Passwort zurücksetzen",
         "lockUser": "Benutzer sperren",
-        "unlockUser": "Sperre aufheben"
+        "unlockUser": "Sperre aufheben",
+        "permission": {
+            "permission": "Berechtigung",
+            "deleteContact": "Löschen eines Kontakts",
+            "createUser": "Anlegen eines Benutzers",
+            "createContact": "Anlegen eines Kontakts",
+            "mapRoleUser": "Zuweisung einer neuen Rolle zu einem Benutzer",
+            "resetPassword": "Rücksetzen eines Passworts eines Benutzers",
+            "deleteUser": "Löschen / Deaktivieren eines Benutzers",
+            "changeRoleConcept": "Einsehen und Überarbeiten des Rollenkonzepts",
+            "editAllContacts": "Einsehen und Bearbeiten aller Kontakte",
+            "disclosure": "Auskunft gegenüber eines Kontakts zu dessen Daten",
+            "messageContact": "Mitteilung an einen Kontakt nach Löschung oder Änderung",
+            "createOrganization": "Anlegen einer Organisation",
+            "editAllOrganization": "Einsehen und Bearbeiten aller Organisationen",
+            "mapContactOrganization": "Zuordnen eines Kontakts zu einer Organisation",
+            "deleteOrganization": "Löschen einer Organisation",
+            "createHistory": "Hinzufügen eines Historieneintrags bei Kontakt oder Organisation",
+            "createEvent": "Anlegen einer Veranstaltung",
+            "editEvent": "Einsehen und Bearbeiten einer Veranstaltung",
+            "deleteEvent": "Löschen einer Veranstaltung"
+        },
+        "role": {
+            "role": "Rolle",
+            "admin": "Admin",
+            "datasecurity": "Datenschutzbeauftragter"
+        }
     },
     "dpDisclaimer": {
         "noDp": "Es wurde noch kein Datenschutzbeauftragter bestimmt.",

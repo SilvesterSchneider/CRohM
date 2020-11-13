@@ -7,10 +7,10 @@
       <input id="roleNameInputField" matInput placeholder="{{'common.name' | translate}}" formControlName="name">
     </mat-form-field>
 
-    <mat-form-field *ngIf="permissions != null && permissions.length > 0" class="full-width">
+    <mat-form-field *ngIf="permissionsTranslate != null && permissionsTranslate.length > 0" class="full-width">
       <mat-label>{{'settings.permissions' | translate}}</mat-label>
       <mat-select id="permissionSelection" formControlName="permissions" multiple>
-        <mat-option *ngFor="let permission of permissions" [value]="permission">{{permission}}</mat-option>
+        <mat-option *ngFor="let permission of permissionsTranslate" [value]="permission.value">{{permission.label | translate}}</mat-option>
       </mat-select>
     </mat-form-field>
 

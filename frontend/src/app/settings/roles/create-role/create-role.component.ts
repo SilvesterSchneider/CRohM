@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormBuilder, Validators, } from '@angular/forms';
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
-import { RoleDto } from 'src/app/shared/api-generated/api-generated';
+import { RolesTranslationService } from '../roles-translation.service';
 
 @Component({
   selector: 'app-create-role',
@@ -10,6 +10,7 @@ import { RoleDto } from 'src/app/shared/api-generated/api-generated';
   styleUrls: ['./create-role.component.scss']
 })
 export class CreateRoleDialogComponent extends BaseDialogInput<CreateRoleDialogComponent> implements OnInit {
+  public permissionsTranslate: {value: string, label: string}[] = [];
   public roleForm = this.fb.group({
     name: ['', Validators.required],
     permissions: ['']
@@ -20,6 +21,8 @@ export class CreateRoleDialogComponent extends BaseDialogInput<CreateRoleDialogC
     @Inject(MAT_DIALOG_DATA) public permissions: string[],
     private readonly fb: FormBuilder) {
     super(dialogRef, dialog);
+
+    this.permissionsTranslate = permissions.map(permission => RolesTranslationService.mapPermission(permission));
   }
 
   public ngOnInit(): void {

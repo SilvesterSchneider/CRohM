@@ -156,8 +156,6 @@
         "users": "Users",
         "user": "User",
         "roles": "Roles",
-        "role": "Role",
-        "permission": "Permission",
         "permissions": "Permissions",
         "createRole": "Create Role",
         "editRole": "Edit Role",
@@ -167,7 +165,33 @@
         "options": "Options",
         "resetPassword": "Reset Password",
         "lockUser": "Lock User",
-        "unlockUser": "Unlock User"
+        "unlockUser": "Unlock User",
+        "permission": {
+            "permission": "Permission",
+            "deleteContact": "Delete Contact",
+            "createUser": "Create User",
+            "createContact": "Create Contact",
+            "mapRoleUser": "Assigning a new role to a user",
+            "resetPassword": "Resetting a password of a user",
+            "deleteUser": "Delete / deactivate a user",
+            "changeRoleConcept": "Review and revision of the role concept",
+            "editAllContacts": "View and edit all contacts",
+            "disclosure": "Send Disclosure to a contact about their data",
+            "messageContact": "Notification to a contact after deletion or change",
+            "createOrganization": "Create an organization",
+            "editAllOrganization": "View and edit all organizations",
+            "mapContactOrganization": "Assign a contact to an organization",
+            "deleteOrganization": "Delete an organization",
+            "createHistory": "Adding a history entry for contact or organization",
+            "createEvent": "Create an event",
+            "editEvent": "Viewing and editing an event",
+            "deleteEvent": "Delete an event"
+        },
+        "role": {
+            "role": "Role",
+            "admin": "Admin",
+            "datasecurity": "Data protection officer"
+        }
     },
     "dpDisclaimer": {
         "noDp": "No data protection officer has yet been appointed.",

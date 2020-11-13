@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dial
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
 import { DeleteEntryDialogComponent } from '../../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { RoleDto } from 'src/app/shared/api-generated/api-generated';
+import { RolesTranslationService } from '../roles-translation.service';
 
 @Component({
   selector: 'app-update-role',
@@ -12,7 +13,7 @@ import { RoleDto } from 'src/app/shared/api-generated/api-generated';
 })
 export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogComponent> implements OnInit {
   permissionGroup: RoleDto;
-  permissions: string[];
+  permissions: {value: string, label: string}[] = [];
   public roleForm = this.fb.group({
     id: [''],
     name: ['', Validators.required],
@@ -29,7 +30,7 @@ export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogC
   public ngOnInit(): void {
     if (this.data != null && this.data !== undefined) {
       this.permissionGroup = this.data.role;
-      this.permissions = this.data.permissions;
+      this.permissions = this.data.permissions.map(perm => RolesTranslationService.mapPermission(perm));
       this.updateForm();
     }
   }

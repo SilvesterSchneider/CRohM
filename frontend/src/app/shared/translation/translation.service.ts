@@ -35,8 +35,6 @@ export class TranslationService {
   }
 
   public getLocale() {
-    const test = TranslationService.LANGUAGES.find((lang) => lang.short === this.getLanguage()).locale ?? this.DEFAULT_LANGUAGE.locale;
-    console.log(test);
-    return test;
+    return TranslationService.LANGUAGES.find((lang) => lang.short === this.getLanguage()).locale ?? this.DEFAULT_LANGUAGE.locale;
   }
 }
