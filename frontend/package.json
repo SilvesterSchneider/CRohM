@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.1002.0",
-    "@angular/cli": "^10.2.0",
+    "@angular/cli": "^11.0.1",
     "@angular/compiler-cli": "^10.0.9",
     "@angular/language-service": "^11.0.0",
     "@compodoc/compodoc": "^1.1.11",
