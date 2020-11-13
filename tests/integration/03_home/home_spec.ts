@@ -6,7 +6,7 @@ describe('Home Tests', () => {
         loginAsAdmin();
 
         cy.url().should('equal', Cypress.config().baseUrl + '/?from=login');
-        cy.get('#dataProtectionOfficeDisclaimer').should('have.text', 'Warnmeldung');
+        cy.get('#dataProtectionOfficeDisclaimer').should('have.text', 'Warnung');
         cy.get('#resolveButton').should('exist');
         cy.get('#ignoreButton').should('exist');
     });

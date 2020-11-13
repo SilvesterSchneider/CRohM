@@ -90,10 +90,10 @@ export class RolesTranslationService {
     }];
 
     public static mapRole(role: string) {
-        return RolesTranslationService.ROLES.find(r => r.value === role);
+        return RolesTranslationService.ROLES.find(r => r.value === role) ?? { value: role, label: role };
     }
 
     public static mapPermission(permission: string) {
-        return RolesTranslationService.PERMISSIONS.find(r => r.value === permission);
+        return RolesTranslationService.PERMISSIONS.find(r => r.value === permission) ?? { value: permission, label: permission };
     }
 }
