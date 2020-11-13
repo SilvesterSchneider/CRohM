@@ -37,12 +37,12 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             var server = Configuration["DBServer"] ?? "localhost";
-            var port = Configuration["DBPort"] ?? "1433";
-            var user = Configuration["DBUser"] ?? "CRMSAdmin";
+            var port = Configuration["DBPort"] ?? "";
+            var user = Configuration["DBUser"] ?? "sa";
             var password = Configuration["DBPassword"] ?? "CRohM2020";
             var database = Configuration["DBName"] ?? "CRMDB";
 
-            var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
+            var connectionString = $"Server={server}\\SQLEXPRESS" + (string.IsNullOrEmpty(port) ? "" : "," + port) + $";Database={database};User Id={user};Password={password}";
 
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
