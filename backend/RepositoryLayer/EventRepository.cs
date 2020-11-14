@@ -89,7 +89,14 @@ namespace RepositoryLayer
 
         public async Task<List<Event>> GetAllEventsWithAllIncludesAsync()
         {
-            return await Entities.Include(a => a.Tags).Include(y => y.Contacts).ThenInclude(z => z.Contact).Include(x => x.Participated).ToListAsync();
+            return await Entities
+                .Include(a => a.Tags)
+                .Include(b => b.Organizations)
+                .ThenInclude(c => c.Organization)
+                .Include(y => y.Contacts)
+                .ThenInclude(z => z.Contact)
+                .Include(x => x.Participated)
+                .ToListAsync();
         }
 
         public async Task<Event> GetEventByIdWithAllIncludesAsync(long id)

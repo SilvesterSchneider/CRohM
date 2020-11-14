@@ -3,6 +3,9 @@
     <div class="margin">
         Anzahl sämtlich erstellter Tags: {{totalTags}}
     </div>
+    <div>
+        Sortierung nach:
+    </div>
     <mat-radio-group class="example-radio-group" aria-label="Sortierung nach">
         <mat-radio-button (click)="setClicked(true, false, false)" checked="true" value="valueContacts">Häufigkeit bei Kontakten</mat-radio-button>
         <mat-radio-button (click)="setClicked(false, true, false)" value="valueOrganizations">Häufigkeit bei Organisationen</mat-radio-button>
