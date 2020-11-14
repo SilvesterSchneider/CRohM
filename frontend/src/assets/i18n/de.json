@@ -51,7 +51,8 @@
         "austria": "Österreich",
         "phoneCall": "Telefonanruf",
         "note": "Notiz",
-        "visit": "Besuch"
+        "visit": "Besuch",
+        "sendMailToMany": "Mail an mehrere Kontakte senden"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",
@@ -123,6 +124,7 @@
         "participated": "Hat teilgenommen",
         "participant": "Teilnehmer",
         "sendInvitation": "Einladung an Teilnehmer versenden",
+        "sendMail": "E-Mail an {{text}} versenden",
         "inviteDescription": "Die Textbausteine <Nachname> und <Vorname> fügen den Nach- bzw. Vornamen des Empfängers ein."
     },
     "statistic": {
