@@ -3698,6 +3698,8 @@ export enum DATA_TYPE {
     PARTICIPATED = 19,
     TAG = 20,
     INVITATION = 21,
+    CONTACT_PARTNER = 22,
+    GENDER = 23,
 }
 
 export enum MODIFICATION {

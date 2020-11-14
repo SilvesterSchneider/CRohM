@@ -17,6 +17,7 @@ import { JwtService } from '../../shared/jwt.service';
 import { TagsFilterComponent } from '../../shared/tags-filter/tags-filter.component';
 import { DataProtectionHelperService } from '../../shared/data-protection/data-protection-service.service';
 import { DpUpdatePopupComponent } from '../../shared/data-protection/dp-update-popup/dp-update-popup.component';
+import { ContactsSendMailDialogComponent } from '../contacts-send-mail-dialog/contacts-send-mail-dialog.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -207,6 +208,23 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
   }
 
+  addNoteToMany() {
+    const dialogRef = this.dialog.open(AddHistoryComponent);
+    dialogRef.afterClosed().subscribe(y => {
+      if (y) {
+        this.addNoteLoop(0, y);
+      }
+    });
+  }
+
+  addNoteLoop(index: number, y: any) {
+    if (index < this.selectedCheckBoxList.length) {
+      this.service.postHistoryElement(y, this.selectedCheckBoxList[index]).subscribe(x => this.addNoteLoop(++index, y));
+    } else {
+      this.getData();
+    }
+  }
+
   openInfo(id: number) {
     this.service.getById(id).subscribe((x) => this.dialog.open(ContactsInfoComponent, { data: x }));
   }
@@ -270,6 +288,36 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   isSelectionChecked(id: number) {
     return this.selectedCheckBoxList.find(x => x === id) != null;
+  }
+
+  sendMail(contact: ContactDto) {
+    if (contact.contactPossibilities.mail != null && contact.contactPossibilities.mail.length > 0) {
+      const dataForDialog = [contact.preName + ' ' + contact.name, contact.contactPossibilities.mail ];
+      const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+      dialogRef.afterClosed().subscribe(x => {
+        if (x.send) {
+          this.addNote(contact.id);
+        }
+      });
+    }
+  }
+
+  sendMailToMany() {
+    const dataForDialog: string[] = new Array<string>();
+    dataForDialog.push('Kontakte');
+    this.selectedCheckBoxList.forEach(a => {
+      const cont = this.allContacts.find(b => b.id === a);
+      const mail = cont.contactPossibilities.mail;
+      if (cont != null && mail != null && mail.length > 0) {
+        dataForDialog.push(mail);
+      }
+    });
+    const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+    dialogRef.afterClosed().subscribe(x => {
+      if (x.send) {
+        this.addNoteToMany();
+      }
+    });
   }
 
   createEvent() {
