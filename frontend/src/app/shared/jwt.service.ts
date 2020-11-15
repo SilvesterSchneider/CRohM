@@ -54,8 +54,8 @@ export class JwtService {
       permission = decodeURIComponent(permission);
       decodedText = decodedText.substr(decodedText.indexOf('[') + 1);
       decodedText = decodedText.substr(0, decodedText.indexOf(']'));
-      //TODO: Remove before merging, just used for testing
-      //alert(permission + ':' + decodedText);
+      // TODO: Remove before merging, just used for testing
+      // alert(permission + ':' + decodedText);
       return decodedText.includes(permission);
     }
 

@@ -43,8 +43,12 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	selectedCheckBoxList: Array<number> = new Array<number>();
 	isAllSelected = false;
 
-	constructor(public dialog: MatDialog, service: OrganizationService,
-		private changeDetectorRefs: ChangeDetectorRef, private mediaObserver: MediaObserver, private jwt: JwtService) {
+	constructor(
+		public dialog: MatDialog,
+		service: OrganizationService,
+		private changeDetectorRefs: ChangeDetectorRef,
+		private mediaObserver: MediaObserver,
+		private jwt: JwtService) {
 		this.service = service;
 		this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
 			if (change[0].mqAlias !== this.currentScreenWidth) {
