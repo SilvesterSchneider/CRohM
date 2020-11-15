@@ -72,9 +72,9 @@ export class EventsListComponent implements OnInit {
     this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
     this.init();
     this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
-    this.permissionAdd = this.isAdminUserLoggedIn || this.jwt.hasPermission('Anlegen einer Veranstaltung');
-    this.permissionModify = this.isAdminUserLoggedIn || this.jwt.hasPermission('Einsehen und Bearbeiten einer Veranstaltung');
-    this.permissionDelete = this.isAdminUserLoggedIn || this.jwt.hasPermission('Löschen einer Veranstaltung');
+    this.permissionAdd = this.jwt.hasPermission('Anlegen einer Veranstaltung');
+    this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten einer Veranstaltung');
+    this.permissionDelete = this.jwt.hasPermission('Löschen einer Veranstaltung');
   }
 
   applyTagFilter() {

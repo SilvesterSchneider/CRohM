@@ -78,10 +78,10 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
 		this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
 		this.getData();
-		this.permissionAdd = this.isAdminUserLoggedIn || this.jwt.hasPermission('Anlegen einer Organisation');
-		this.permissionDelete = this.isAdminUserLoggedIn || this.jwt.hasPermission('Löschen einer Organisation');
-		this.permissionModify = this.isAdminUserLoggedIn || this.jwt.hasPermission('Einsehen und Bearbeiten aller Organisationen');
-		this.permissionAddHistory = this.isAdminUserLoggedIn || this.jwt.hasPermission('Hinzufügen eines Historieneintrags bei Kontakt oder Organisation');
+		this.permissionAdd = this.jwt.hasPermission('Anlegen einer Organisation');
+		this.permissionDelete = this.jwt.hasPermission('Löschen einer Organisation');
+		this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten aller Organisationen');
+		this.permissionAddHistory = this.jwt.hasPermission('Hinzufügen eines Historieneintrags bei Kontakt oder Organisation');
 	}
 
 	applyTagFilter() {
