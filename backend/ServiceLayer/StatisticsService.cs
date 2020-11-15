@@ -72,12 +72,21 @@ namespace ServiceLayer
             List<Event> events = await eventService.GetAllEventsWithAllIncludesAsync();
             foreach (Event ev in events)
             {
+                int count = 0;
                 if (ev.Contacts != null && ev.Contacts.Count > 0)
                 {
+                    count = ev.Contacts.Count;
+                }
+                if (ev.Organizations != null && ev.Organizations.Count > 0)
+                {
+                    count += ev.Organizations.Count;
+                }
+                if (count > 0)
+                { 
                     VerticalGroupedBarDto dto = new VerticalGroupedBarDto();
                     dto.Name = ev.Date.ToString("yyyy-MM-dd");
                     dto.Series = new List<VerticalGroupedBarDataSet>();
-                    dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_INVITED_CONTACTS, Value = ev.Contacts.Count });
+                    dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_INVITED_CONTACTS, Value = count });
                     dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_PARTICIPATED_CONTACS, Value = ev.Participated.FindAll(a => a.HasParticipated).Count });
                     list.Add(dto);
                 }
