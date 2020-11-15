@@ -87,7 +87,7 @@ namespace ServiceLayer
         public async Task<bool> ApproveContact(long id) {
 
             Contact contact;
-            List<Contact> unapproved = await GetAllUnapprovedContactsAllIncludesAsync();
+            List<Contact> unapproved = await GetAllUnapprovedContactsWithAllIncludesAsync();
             foreach (Contact c in unapproved) {
                 if (c.Id == id) {
                     contact = c;

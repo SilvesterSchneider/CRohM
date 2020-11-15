@@ -23,7 +23,7 @@ namespace ServiceLayer
 
         public async Task DelecteContactsWithoutApproval()
         {
-            List<Contact> contacts = await GetAllUnapprovedContactsAllIncludesAsync();
+            List<Contact> contacts = await GetAllUnapprovedContactsWithAllIncludesAsync();
             foreach (Contact c in contacts){
                 if (c.CreationDate.AddDays(30) < DateTime.Now){
                     await DeleteAsync(c);

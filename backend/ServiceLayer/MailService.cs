@@ -54,7 +54,7 @@ namespace ServiceLayer
 
         public bool ApproveContactCreation(string benutzer, string email)
         {
-            string body = "<h3> Bitte bestätigen Sie die aufnahme Ihrer Kontaktdaten für die TH-Nürnberg </h3> " +
+            string body = "<h3> Bitte bestätigen Sie die Aufnahme Ihrer Kontaktdaten für die TH-Nürnberg </h3> " +
                    "<p> "+benutzer+"</p>";
 
             return SendMail("Zugangsdaten", body, email, null, "");

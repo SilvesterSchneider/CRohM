@@ -25,7 +25,7 @@ namespace RepositoryLayer
         /// <returns></returns>
         Task<List<Contact>> GetAllContactsWithAllIncludesAsync();
         Task<List<Contact>> GetAllContactsAndUnapprovedWithAllIncludesAsync(long userid);
-        Task<List<Contact>> GetAllUnapprovedContactsAllIncludesAsync();
+        Task<List<Contact>> GetAllUnapprovedContactsWithAllIncludesAsync();
         Task<bool> UpdateAsync(Contact contact, long id);
     }
 
@@ -67,7 +67,7 @@ namespace RepositoryLayer
             return contacts;
         }
 
-        public async Task<List<Contact>> GetAllUnapprovedContactsAllIncludesAsync()
+        public async Task<List<Contact>> GetAllUnapprovedContactsWithAllIncludesAsync()
         {
             List<Contact> contacts = await Entities
                 .Include(x => x.Address)
