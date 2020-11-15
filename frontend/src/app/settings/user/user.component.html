@@ -1,4 +1,3 @@
-
 <mat-toolbar>
     <mat-toolbar-row>
         <span>Benutzer</span>
@@ -6,8 +5,8 @@
         <mat-form-field>
             <input matInput placeholder="Suche">
         </mat-form-field>
-        <button button="submit" mat-mini-fab color="primary" (click)="openAddDialog()">
-            <mat-icon>add</mat-icon> 
+        <button button="submit" [disabled]="!permissionAddUser" mat-mini-fab color="primary" (click)="openAddDialog()">
+            <mat-icon>add</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
@@ -33,19 +32,26 @@
         <mat-header-cell *matHeaderCellDef> Nachname </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.lastName}} </mat-cell>
     </ng-container>
-    
-  <ng-container  matColumnDef="options">
-    <mat-header-cell *matHeaderCellDef> Optionen </mat-header-cell>
-    <mat-cell *matCellDef="let element"> 
-        <!-- <button mat-icon-button (click)="OnDelete(element.id)"> <mat-icon>delete</mat-icon></button> -->
-        <button class="editUserButton" mat-icon-button (click)="openEditDialog(element.id)" title="Bearbeiten"> <mat-icon>edit</mat-icon></button>
-        <button mat-icon-button (click)="OnPasswordReset(element.id)" title="Passwort zurücksetzen"> <mat-icon>lock</mat-icon></button>
-        <button mat-icon-button (click)="SetLockoutState(element.id)"> 
-            <mat-icon *ngIf=!element.userLockEnabled title="Benutzer sperren">done</mat-icon>
-            <mat-icon *ngIf=element.userLockEnabled title="Sperre aufheben">clear</mat-icon>
-        </button>
-    </mat-cell>
-  </ng-container>
+
+    <ng-container matColumnDef="options">
+        <mat-header-cell *matHeaderCellDef> Optionen </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <!-- <button mat-icon-button (click)="OnDelete(element.id)"> <mat-icon>delete</mat-icon></button> -->
+            <button class="editUserButton" [disabled]="!permissionEditUser" mat-icon-button
+                (click)="openEditDialog(element.id)" title="Bearbeiten">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button [disabled]="!permissionResetPasswort" (click)="OnPasswordReset(element.id)"
+                title="Passwort zurücksetzen">
+                <mat-icon>lock</mat-icon>
+            </button>
+            <button mat-icon-button [disabled]="!permissionLockUser" (click)="SetLockoutState(element.id)">
+                <mat-icon *ngIf=!element.userLockEnabled title="Benutzer sperren">done
+                </mat-icon>
+                <mat-icon *ngIf=element.userLockEnabled title="Sperre aufheben">clear</mat-icon>
+            </button>
+        </mat-cell>
+    </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>

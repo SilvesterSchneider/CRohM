@@ -7,25 +7,28 @@
             <mat-label>Suche</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Organisationen...">
         </mat-form-field>
-        <button id="addDummy" class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Organisation hinzufügen" (click)="addDummyOrganization()"> 
+        <button id="addDummy" class="button" [disabled]="!permissionAdd" mat-raised-button color="primary"
+            title="Dummy Organisation hinzufügen" (click)="addDummyOrganization()">
             <mat-icon>add</mat-icon> Dummy Organisation hinzufügen
         </button>
-        <button class="button" button="submit" mat-mini-fab color="primary" (click)="openAddDialog()">
-            <mat-icon>add</mat-icon> 
+        <button class="button" button="submit" [disabled]="!permissionAdd" mat-mini-fab color="primary"
+            (click)="openAddDialog()">
+            <mat-icon>add</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
 <div fxLayout="column" fxLayoutGap="100px">
     <mat-table id="tableOrganization" #table [dataSource]="dataSource">
         <ng-container matColumnDef="Icon">
-            <mat-header-cell *matHeaderCellDef> 
-                <mat-checkbox [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>    
+            <mat-header-cell *matHeaderCellDef>
+                <mat-checkbox [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>
             </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)">
                 <div *ngIf="!isSelectedRow(element.id)" class="selection">
-                 {{element.name.substring(0,2)}}
+                    {{element.name.substring(0,2)}}
                 </div>
-                <mat-checkbox class="checkBox" *ngIf="isSelectedRow(element.id)" [checked]="isSelectionChecked(element.id)" (change)="onCheckBoxChecked(element.id)">
+                <mat-checkbox class="checkBox" *ngIf="isSelectedRow(element.id)"
+                    [checked]="isSelectionChecked(element.id)" (change)="onCheckBoxChecked(element.id)">
                 </mat-checkbox>
             </mat-cell>
         </ng-container>
@@ -39,31 +42,38 @@
         </ng-container>
         <ng-container matColumnDef="Strasse">
             <mat-header-cell *matHeaderCellDef> Strasse </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.street}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.street}}
+            </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Hausnummer">
             <mat-header-cell *matHeaderCellDef> Hausnummer </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.streetNumber}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.streetNumber}}
+            </mat-cell>
         </ng-container>
         <ng-container matColumnDef="PLZ">
             <mat-header-cell *matHeaderCellDef> PLZ </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.zipcode}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.zipcode}}
+            </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Stadt">
             <mat-header-cell *matHeaderCellDef> Stadt </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.city}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.city}}
+            </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Land">
             <mat-header-cell *matHeaderCellDef> Land </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.country}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.country}}
+            </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Telefonnummer">
             <mat-header-cell *matHeaderCellDef> Telefonnummer </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contact.phoneNumber}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contact.phoneNumber}}
+            </mat-cell>
         </ng-container>
         <ng-container matColumnDef="E-Mail">
             <mat-header-cell *matHeaderCellDef> E-Mail </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contact.mail}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contact.mail}}
+            </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Faxnummer">
             <mat-header-cell *matHeaderCellDef> Faxnummer </mat-header-cell>
@@ -85,22 +95,25 @@
         <ng-container matColumnDef="Action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
-                <a class="editOrganization" (click)="openEditDialog(element.id)" type="button">
-                    <mat-icon color="primary" class="icon">edit</mat-icon>
-                </a>
-                <a (click)="openInfo(element.id)" type="button">
-                    <mat-icon color="primary" title="Organisationsinformationen anzeigen" class="icon">info</mat-icon>
-                </a>
-                <a type="button" [matMenuTriggerFor]="menu">
+                <button type="button" mat-icon-button [disabled]="!permissionModify"
+                    (click)="openEditDialog(element.id)" color="primary" class="editOrganization">
+                    <mat-icon title="Organisation bearbeiten" class="icon">edit</mat-icon>
+                </button>
+                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)" color="primary">
+                    <mat-icon title="Organisationsinformationen anzeigen" class="icon">info</mat-icon>
+                </button>
+                <button type="button" [matMenuTriggerFor]="menu">
                     <mat-icon color="primary" class="icon">list</mat-icon>
-                </a>
+                </button>
                 <mat-menu #menu="matMenu">
-                    <a (click)="addNote(element.id)" type="button">
-                        <mat-icon color="primary" title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
-                    </a>
-                    <a (click)="deleteOrganization(element.id)" type="button">
-                        <mat-icon color="primary" class="icon">delete</mat-icon>
-                    </a>
+                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
+                        color="primary">
+                        <mat-icon title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteOrganization(element.id)"
+                        color="primary">
+                        <mat-icon title="Organisation Löschen" class="icon">delete</mat-icon>
+                    </button>
                 </mat-menu>
             </mat-cell>
         </ng-container>
