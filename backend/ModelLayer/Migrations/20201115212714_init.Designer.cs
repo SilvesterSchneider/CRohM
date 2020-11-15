@@ -10,14 +10,14 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20201109163555_init")]
+    [Migration("20201115212714_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.9")
+                .HasAnnotation("ProductVersion", "3.1.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -554,7 +554,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "a2719c50-384f-4207-8d16-946b1decb2e6",
+                            ConcurrencyStamp = "7a36f4b0-0b24-415a-99a9-597705851596",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

@@ -95,8 +95,6 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
     this.getDataWithUnapproved();
     this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
-    this.getDataWithUnapproved();
-    this.getData();
     this.permissionAdd = this.jwt.hasPermission('Anlegen eines Kontakts');
     this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten aller Kontakte');
     this.permissionDelete = this.jwt.hasPermission('Löschen eines Kontakts');
