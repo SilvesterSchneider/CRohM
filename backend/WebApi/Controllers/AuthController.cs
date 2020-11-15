@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -21,16 +23,19 @@ namespace WebApi.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private IUserLoginService userLoginService;
+        private IRoleService roleService;
 
         public AuthController(
             ISignInService signInService,
             IUserService userService,
             IMapper mapper,
-            IUserLoginService userLoginService)
+            IUserLoginService userLoginService,
+            IRoleService roleService)
         {
             _signInService = signInService;
             _userService = userService;
             _mapper = mapper;
+            this.roleService = roleService;
             this.userLoginService = userLoginService;
         }
 
@@ -64,12 +69,34 @@ namespace WebApi.Controllers
             {
                 var userDto = _mapper.Map<UserDto>(user);
                 var roles = await _userService.GetRolesAsync(user);
-                var claims = await _userService.GetClaimsAsync(user);
+                List<Claim> claims = await GetAllClaimsOfUser(roles);
                 userDto.AccessToken = _signInService.CreateToken(user, roles, claims);
                 return Ok(userDto);
             }
 
             return BadRequest("Login fehlgeschlagen!");
+        }
+
+        private async Task<List<Claim>> GetAllClaimsOfUser(List<string> roles)
+        {
+            List<Claim> claims = new List<Claim>();
+            foreach (string roleText in roles)
+            {
+                Role role = await roleService.FindRoleByNameAsync(roleText);
+                if (role != null)
+                {
+                    IList<Claim> claimsToCheck = await roleService.GetClaimsAsync(role);
+                    foreach (Claim claim in claimsToCheck)
+                    {
+                        if (!claims.Contains(claim))
+                        {
+                            claims.Add(claim);
+                        }
+                    }
+                }
+            }
+
+            return claims;
         }
 
         /// <summary>

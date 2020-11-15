@@ -41,7 +41,7 @@ describe('Login Tests', () => {
         cy.contains('CRohM - Customer Relationship Management System').should('exist');
     });
 
-    it('should not appear disclaimer beacause data protection officer is in system',()=>{        
+  /*  it('should not appear disclaimer beacause data protection officer is in system',()=>{        
         loginAsAdmin();
 
         // make admin to data protection officer
@@ -71,7 +71,7 @@ describe('Login Tests', () => {
        
 
            
-    })
+    }) */
 
     it('should not accept a wrong password', () => {
         // Login with credentials admin/wrongpassword

@@ -45,6 +45,7 @@ namespace WebApi.Controllers
 
         }
 
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")]
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
@@ -82,6 +83,7 @@ namespace WebApi.Controllers
             return Ok(contactDto);
         }
 
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")]
         [HttpGet("PartName")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get([FromQuery]string name)
@@ -93,6 +95,8 @@ namespace WebApi.Controllers
         }
 
         // put updates contact with id {id} via frontend
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")]
+        [Authorize(Roles = "Mitteilung an einen Kontakt nach Löschung oder Änderung")]
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
@@ -117,7 +121,7 @@ namespace WebApi.Controllers
             }
         }
 
-        // creates new contact in db via frontend
+        [Authorize(Roles = "Anlegen eines Kontakts")]
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(ContactDto), Description = "successfully created")]
         public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate)
@@ -148,6 +152,8 @@ namespace WebApi.Controllers
         }
 
         // creates new contact in db via frontend
+        [Authorize(Roles ="Anlegen eines Kontakts")]
+        [Authorize(Roles = "Hinzufügen eines Historieneintrags bei Kontakt oder Organisation")]
         [HttpPost("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
         public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id)
@@ -159,6 +165,8 @@ namespace WebApi.Controllers
         }
 
         // sends disclosure per mail
+        [Authorize(Roles = "Auskunft gegenüber eines Kontakts zu dessen Daten")]
+        [Authorize(Roles = "Mitteilung an einen Kontakt nach Löschung oder Änderung")]
         [HttpPost("{id}/disclosure")] // template ^= zusammen mit basis ganz oben -> pfad für http request
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
         public async Task<IActionResult> SendDisclosureById([FromRoute] long id)
@@ -168,6 +176,8 @@ namespace WebApi.Controllers
         }
 
         // deletes with id {id} contact via frontend
+        [Authorize(Roles = "Löschen eines Kontakts")]
+        [Authorize(Roles = "Mitteilung an einen Kontakt nach Löschung oder Änderung")]
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
@@ -189,13 +199,14 @@ namespace WebApi.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Einsehen und Bearbeiten einer Veranstaltung")]
         [HttpGet("{id}/history")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(PagedResponse<List<object>>), Description = "successfully found")]
         public async Task<IActionResult> GetHistory(long id, [FromQuery] PaginationFilter filter)
         {
             PaginationFilter validFilter = new PaginationFilter(filter.PageStart, filter.PageSize);
 
-            List<Event> events = await eventService.GetEventsForContact(id);        
+            List<Event> events = await eventService.GetEventsForContact(id);
             List<HistoryElement> history = await historyService.GetHistoryByContactAsync(id);
 
             List<object> mergedResult = events.Cast<object>().Concat(history.Cast<object>()).ToList();

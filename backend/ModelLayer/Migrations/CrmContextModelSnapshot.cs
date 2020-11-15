@@ -169,12 +169,6 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("ContactPossibilitiesId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("CreatedByUser")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -186,9 +180,6 @@ namespace ModelLayer.Migrations
 
                     b.Property<string>("PreName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isApproved")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -552,7 +543,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "a2719c50-384f-4207-8d16-946b1decb2e6",
+                            ConcurrencyStamp = "228ad9b0-9b43-44cc-b0db-c185b4ec9059",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

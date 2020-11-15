@@ -7,14 +7,17 @@
             <mat-label>Suche</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Veranstaltungen...">
         </mat-form-field>
-        <mat-checkbox class="button" [checked]="checkboxSelected" title="Veranstaltungen aus der Vergangenheit ausblenden" (change)="toggleSelection()">
+        <mat-checkbox class="button" [checked]="checkboxSelected"
+            title="Veranstaltungen aus der Vergangenheit ausblenden" (change)="toggleSelection()">
             Veranstaltungen aus der Vergangenheit ausblenden
         </mat-checkbox>
-        <button id="addDummyEventButton" class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="Dummy Veranstaltung hinzufügen" (click)="addDummyEvent()"> 
+        <button id="addDummyEventButton" class="button" [disabled]="!permissionAdd" mat-raised-button color="primary"
+            title="Dummy Veranstaltung hinzufügen" (click)="addDummyEvent()">
             <mat-icon>add</mat-icon> Dummy Veranstaltung hinzufügen
         </button>
-        <button id="addEventButton" class="button" button="submit" mat-mini-fab color="primary" (click)="addEvent()">
-            <mat-icon>add</mat-icon> 
+        <button id="addEventButton" class="button" button="submit" [disabled]="!permissionAdd" mat-mini-fab
+            color="primary" (click)="addEvent()">
+            <mat-icon>add</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
@@ -23,34 +26,40 @@
     <mat-table mat-table [dataSource]="dataSourceFiltered">
         <ng-container matColumnDef="bezeichnung">
             <mat-header-cell *matHeaderCellDef> Bezeichnung </mat-header-cell>
-            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element"> {{element.name}}
+            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element">
+                {{element.name}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="datum">
             <mat-header-cell *matHeaderCellDef> Datum </mat-header-cell>
-            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element"> {{element.date | date:'dd-MM-yyyy'}} </mat-cell>
+            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element">
+                {{element.date | date:'dd-MM-yyyy'}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="uhrzeit">
             <mat-header-cell *matHeaderCellDef> Uhrzeit </mat-header-cell>
-            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element"> {{element.time | date:'HH:mm:ss'}} </mat-cell>
+            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element">
+                {{element.time | date:'HH:mm:ss'}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
-                <a class="editButton" (click)="callEdit(element.id)" type="button">
-                    <mat-icon color="primary" class="icon" title="Veranstaltung bearbeiten">edit</mat-icon>
-                </a>
-                <a (click)="openInfo(element.id)" type="button">
-                    <mat-icon color="primary" class="icon" title="Veranstaltungsinformationen anzeigen">info</mat-icon>
-                </a>
-                <a (click)="deleteEvent(element.id)" type="button">
-                    <mat-icon color="primary" class="icon" title="Veranstaltung löschen">delete</mat-icon>
-                </a>
+                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="callEdit(element.id)" color="primary"
+                    class="editButton" (click)="callEdit(element.id)">
+                    <mat-icon class="icon" title="Veranstaltung bearbeiten">edit</mat-icon>
+                </button>
+                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)" color="primary">
+                    <mat-icon class="icon" title="Veranstaltungsinformationen anzeigen">info</mat-icon>
+                </button>
+                <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteEvent(element.id)"
+                    color="primary">
+                    <mat-icon class="icon" title="Veranstaltung löschen">delete</mat-icon>
+                </button>
             </mat-cell>
         </ng-container>
         <!-- Group header -->
         <ng-container matColumnDef="groupHeader">
-            <mat-cell colspan="999" *matCellDef="let groupBy"><strong>Kalenderwoche {{groupBy.weekNumber}}</strong></mat-cell>
+            <mat-cell colspan="999" *matCellDef="let groupBy"><strong>Kalenderwoche {{groupBy.weekNumber}}</strong>
+            </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
