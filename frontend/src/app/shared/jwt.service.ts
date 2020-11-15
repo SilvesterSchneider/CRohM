@@ -50,10 +50,12 @@ export class JwtService {
       let text = jwt.substr(jwt.indexOf('.') + 1);
       text = text.substr(0, text.indexOf('.'));
       let decodedText = atob(text);
+      decodedText = decodeURIComponent(escape(window.atob(text)));
+      permission = decodeURIComponent(permission);
       decodedText = decodedText.substr(decodedText.indexOf('[') + 1);
       decodedText = decodedText.substr(0, decodedText.indexOf(']'));
       //TODO: Remove before merging, just used for testing
-      //alert(decodedText);
+      //alert(permission + ':' + decodedText);
       return decodedText.includes(permission);
     }
 

@@ -71,31 +71,31 @@
         <ng-container matColumnDef="action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
-                <button mat-icon-button [disabled]="!permissionInformContact" (click)="openDisclosureDialog(element.id)"
+                <button type="button" mat-icon-button [disabled]="!permissionInformContact" (click)="openDisclosureDialog(element.id)"
                     color="primary">
                     <mat-icon title="Kontaktauskunft" class="icon">description</mat-icon>
                 </button>
-                <button mat-icon-button [disabled]="!permissionModify" (click)="openEditDialog(element)"
+                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openEditDialog(element)"
                     color="primary">
                     <mat-icon title="Kontakt bearbeiten" class="icon">edit</mat-icon>
                 </button>
-                <a type="button" [matMenuTriggerFor]="menu">
+                <button type="button" [matMenuTriggerFor]="menu">
                     <mat-icon color="primary" class="icon">list</mat-icon>
-                </a>
+                </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-icon-button [disabled]="!permissionModify" class="infoButton"
+                    <button type="button" mat-icon-button [disabled]="!permissionModify" class="infoButton"
                         (click)="openInfo(element.id)" color="primary">
                         <mat-icon title="Kontaktinformationen anzeigen" class="icon">info</mat-icon>
                     </button>
-                    <button mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
+                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
                         color="primary">
                         <mat-icon title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
                     </button>
-                    <button mat-icon-button [disabled]="!permissionAddHistory"
+                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
                         (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" color="primary">
                         <mat-icon title="Historieneintrag hinzufügen" class="icon">phone</mat-icon>
                     </button>
-                    <button mat-icon-button [disabled]="!permissionDelete" (click)="deleteContact(element)"
+                    <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteContact(element)"
                         color="primary">
                         <mat-icon title="Kontakt löschen" class="icon">delete</mat-icon>
                     </button>
