@@ -229,7 +229,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     if (index < this.selectedCheckBoxList.length) {
       this.service.postHistoryElement(y, this.selectedCheckBoxList[index]).subscribe(x => this.addNoteLoop(++index, y));
     } else {
-      this.getData();
+      this.getDataWithUnapproved();
     }
   }
 
@@ -263,7 +263,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(AddHistoryComponent, { data: phonenumber });
     dialogRef.afterClosed().subscribe((y) => {
       if (y) {
-        this.service.postHistoryElement(y, id).subscribe(x => this.getData());
+        this.service.postHistoryElement(y, id).subscribe(x => this.getDataWithUnapproved());
       }
     });
   }

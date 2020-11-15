@@ -27,7 +27,6 @@ import { ContactsSendMailDialogComponent } from './contacts-send-mail-dialog/con
 		ContactsInfoComponent,
 		ContactsDisclosureDialogComponent,
 		ContactsSendMailDialogComponent
-		ContactsDisclosureDialogComponent,
 	]
 })
 export class ContactsModule {}
