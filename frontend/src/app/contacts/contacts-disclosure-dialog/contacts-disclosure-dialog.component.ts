@@ -19,6 +19,10 @@ export class ContactsDisclosureDialogComponent extends BaseDialogInput<ContactsD
 		  private service: ContactService)
 	{
 	super(dialogRef, dialog);
+	this.dialogRef.backdropClick().subscribe(() => {
+		// Close the dialog
+		dialogRef.close();
+	});
 	this.contact = data;
 	}
 

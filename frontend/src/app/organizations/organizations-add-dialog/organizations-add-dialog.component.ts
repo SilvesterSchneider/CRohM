@@ -28,6 +28,10 @@ export class OrganizationsAddDialogComponent extends BaseDialogInput implements 
 		private readonly service: OrganizationService
 	) {
 		super(dialogRef, dialog);
+		this.dialogRef.backdropClick().subscribe(() => {
+			// Close the dialog
+			dialogRef.close();
+		});
 	}
 
 	public ngOnInit(): void {

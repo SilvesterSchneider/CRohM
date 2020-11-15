@@ -205,7 +205,8 @@
         </mat-table>
         <mat-paginator (page)="onPaginationChangedModification($event)" [pageSizeOptions]="[5, 10, 20]" [length]="modificationsPaginationLength"></mat-paginator>
     </mat-expansion-panel>
-
-    <button class="contactDetails" mat-raised-button color="primary" title="Schließen" type="submit"
+    <div mat-dialog-actions align="end">
+        <button class="contactDetails" mat-raised-button color="primary" title="Schließen" type="submit"
         (click)="dialogRef.close()">Schließen</button>
+    </div>
 </mat-dialog-content>

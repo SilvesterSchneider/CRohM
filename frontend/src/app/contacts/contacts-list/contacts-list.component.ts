@@ -15,6 +15,9 @@ import { DataProtectionHelperService, DpUpdatePopupComponent } from 'src/app/sha
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
+import { EventsAddComponent } from 'src/app/events/events-add/events-add.component';
+import { ContactsSendMailDialogComponent } from '../contacts-send-mail-dialog/contacts-send-mail-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contacts-list',
@@ -33,6 +36,9 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   flexMediaWatcher: Subscription;
   allContacts: ContactDto[];
   dataSource = new MatTableDataSource<ContactDto>();
+  selectedRow = 0;
+  selectedCheckBoxList: Array<number> = new Array<number>();
+  isAllSelected = false;
 
   constructor(
     private service: ContactService,
@@ -42,6 +48,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     private readonly dataProtectionService: DataProtectionService,
     private readonly dsgvoService: DataProtectionHelperService,
     private readonly snackBar: MatSnackBar,
+    private readonly route: Router,
     private jwt: JwtService) {
     this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
       if (change[0].mqAlias !== this.currentScreenWidth) {
@@ -94,7 +101,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       // only display prename and name on larger screens
       this.displayedColumns = ['vorname', 'nachname', 'action'];
     } else {
-      this.displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
+      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon', 'ort', 'organisation', 'action'];
     }
   }
 
@@ -107,6 +114,9 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       this.allContacts = x;
       this.tagsFilter.updateTagsInAutofill(this.allContacts);
       this.applyTagFilter();
+      this.selectedCheckBoxList = new Array<number>();
+      this.selectedRow = 0;
+      this.isAllSelected = false;
     });
     this.changeDetectorRefs.detectChanges();
   }
@@ -125,7 +135,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   openDisclosureDialog(id: number) {
     this.service.getById(id).subscribe((x) => {
-    const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true });
+    const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true, height: '200px' });
 
     dialogRef.afterClosed().subscribe((result) => {
       this.contacts = this.service.getWithUnapproved();
@@ -206,6 +216,23 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
   }
 
+  addNoteToMany() {
+    const dialogRef = this.dialog.open(AddHistoryComponent);
+    dialogRef.afterClosed().subscribe(y => {
+      if (y) {
+        this.addNoteLoop(0, y);
+      }
+    });
+  }
+
+  addNoteLoop(index: number, y: any) {
+    if (index < this.selectedCheckBoxList.length) {
+      this.service.postHistoryElement(y, this.selectedCheckBoxList[index]).subscribe(x => this.addNoteLoop(++index, y));
+    } else {
+      this.getData();
+    }
+  }
+
   openInfo(id: number) {
     this.service.getById(id).subscribe((x) => this.dialog.open(ContactsInfoComponent, { data: x }));
   }
@@ -229,5 +256,94 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         contactEntries: []
       }
     }).subscribe(x => this.getDataWithUnapproved());
+  }
+
+  callPhonenumber(phonenumber: string, id: number) {
+    document.location.href = 'tel:' + phonenumber;
+    const dialogRef = this.dialog.open(AddHistoryComponent, { data: phonenumber });
+    dialogRef.afterClosed().subscribe((y) => {
+      if (y) {
+        this.service.postHistoryElement(y, id).subscribe(x => this.getData());
+      }
+    });
+  }
+
+  mouseOver(id: number) {
+    this.selectedRow = id;
+  }
+
+  isSelectedRow(id: number): boolean {
+    const selectedIndex = this.selectedCheckBoxList.find(a => a === id);
+    return this.selectedRow === id || selectedIndex != null;
+  }
+
+  onCheckBoxChecked(id: number) {
+    const position = this.selectedCheckBoxList.indexOf(id);
+    if (position > -1) {
+      this.selectedCheckBoxList.splice(position, 1);
+    } else {
+      this.selectedCheckBoxList.push(id);
+    }
+  }
+
+  changeSelectionAll() {
+    this.isAllSelected = !this.isAllSelected;
+    this.selectedCheckBoxList = new Array<number>();
+    if (this.isAllSelected) {
+      this.allContacts.forEach(x => this.selectedCheckBoxList.push(x.id));
+    }
+  }
+
+  isSelectionChecked(id: number) {
+    return this.selectedCheckBoxList.find(x => x === id) != null;
+  }
+
+  sendMail(contact: ContactDto) {
+    if (contact.contactPossibilities.mail != null && contact.contactPossibilities.mail.length > 0) {
+      const dataForDialog = [contact.preName + ' ' + contact.name, contact.contactPossibilities.mail ];
+      const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+      dialogRef.afterClosed().subscribe(x => {
+        if (x.send) {
+          this.addNote(contact.id);
+        }
+      });
+    }
+  }
+
+  sendMailToMany() {
+    const dataForDialog: string[] = new Array<string>();
+    dataForDialog.push('Kontakte');
+    this.selectedCheckBoxList.forEach(a => {
+      const cont = this.allContacts.find(b => b.id === a);
+      const mail = cont.contactPossibilities.mail;
+      if (cont != null && mail != null && mail.length > 0) {
+        dataForDialog.push(mail);
+      }
+    });
+    const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+    dialogRef.afterClosed().subscribe(x => {
+      if (x.send) {
+        this.addNoteToMany();
+      }
+    });
+  }
+
+  createEvent() {
+    this.dialog.open(EventsAddComponent, { disableClose: true, data: this.selectedCheckBoxList });
+  }
+
+  getOrganization(id: number): string {
+    const contact = this.allContacts.find(a => a.id === id);
+    if (contact != null && contact.organizations != null && contact.organizations.length > 0) {
+      let orgas = '';
+      contact.organizations.forEach(b => orgas += b.name + ', ');
+      return orgas.substring(0, orgas.length - 2);
+    } else {
+      return '';
+    }
+  }
+
+  changeToOrganizationPage() {
+    this.route.navigate(['/organizations']);
   }
 }

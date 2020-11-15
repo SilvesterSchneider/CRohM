@@ -49,9 +49,12 @@
         </div>
     </mat-option>
 </mat-autocomplete>
-<button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
-    Speichern
-</button>
-<button mat-raised-button color="primary" title="Verwerfen" (click)="exit()">
-    Verwerfen
-</button>
+<div mat-dialog-actions align="end" class="margin">
+    <button mat-raised-button color="primary" title="Verwerfen" (click)="exit()">
+        Verwerfen
+    </button>
+    <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
+        Speichern
+    </button>    
+</div>
+

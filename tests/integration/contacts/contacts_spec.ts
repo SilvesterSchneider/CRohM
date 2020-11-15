@@ -67,10 +67,9 @@ describe('Contacts Tests', () => {
             .click()
         cy.get('#contactPartner').type('matis');
         cy.get('#saveEdit').click();
-        cy.wait(2000);
-        cy.get('.infoButton').click();
+        cy.wait(3000);
+        cy.get('.editButton').click();
         cy.wait(4000);
-        cy.get('#gender').should("have.value", 'Männlich');
         cy.get('#contactPartner').should("have.value", 'razvanmatis');
     });
 });

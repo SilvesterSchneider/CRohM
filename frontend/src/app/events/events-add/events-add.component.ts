@@ -1,6 +1,6 @@
 import {
   ElementRef, HostBinding, Component, OnInit, ViewChild, Input, Optional, Self,
-  ChangeDetectorRef, OnDestroy
+  ChangeDetectorRef, OnDestroy, Inject
 } from '@angular/core';
 import { NgControl, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -12,7 +12,7 @@ import { EventCreateDto, MODEL_TYPE, OrganizationService } from '../../shared/ap
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 
 export class ItemList {
@@ -66,11 +66,13 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
   errorState: boolean;
   controlType?: string;
   autofilled?: boolean;
+  preselectedContacts: Array<number> = new Array<number>();
 
   constructor(
     public dialogRef: MatDialogRef<EventsAddComponent>,
     @Optional() @Self() public ngControl: NgControl,
     private fm: FocusMonitor,
+    @Inject(MAT_DIALOG_DATA) public data: Array<number>,
     private elRef: ElementRef<HTMLElement>,
     private cd: ChangeDetectorRef,
     private contactService: ContactService,
@@ -80,6 +82,10 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     private orgaService: OrganizationService
   ) {
     super(dialogRef, dialog);
+    this.dialogRef.backdropClick().subscribe(() => {
+			// Close the dialog
+			dialogRef.close();
+		});
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
@@ -87,6 +93,9 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
       this.focused = !!origin;
       this.stateChanges.next();
     });
+    if (data != null && data.length > 0) {
+      this.preselectedContacts = data;
+    }
   }
 
   hasChanged() {
@@ -124,9 +133,16 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
             }
           );
         });
-      })
-    }
-    );
+        if (this.preselectedContacts != null && this.preselectedContacts.length > 0) {
+          this.preselectedContacts.forEach(s => {
+            const cont: EventContactConnection = this.filteredItems.find(z => z.objectId === s && z.modelType === MODEL_TYPE.CONTACT);
+            if (cont != null) {
+              this.toggleSelection(cont);
+            }
+          });
+        }
+      });
+    });
   }
 
   private createOrganizationForm(): FormGroup {
@@ -244,10 +260,10 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     eventToSave.organizations = new Array<number>();
     this.selectedItems.forEach(x => {
       if (x.modelType === MODEL_TYPE.CONTACT) {
-        eventToSave.contacts.push(x.objectId)
+        eventToSave.contacts.push(x.objectId);
       } else {
         eventToSave.organizations.push(x.objectId);
-      }      
+      }
     });
     this.eventService.post(eventToSave).subscribe(() => this.dialogRef.close());
   }
