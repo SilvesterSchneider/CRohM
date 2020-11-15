@@ -52,7 +52,8 @@
         "phoneCall": "Phone Call",
         "note": "Note",
         "visit": "Visit",
-        "sendMailToMany": "Send mail to multiple contacts"
+        "sendMailToMany": "Send mail to multiple contacts",
+        "orderBy": "Sortierung nach"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",
