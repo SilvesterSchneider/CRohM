@@ -3,6 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './shared/routing/auth.guard';
+import { OrganizationsListComponent } from './organizations/organizations-list/organizations-list.component';
+import { ApproveContactComponent } from './approve-contact/approve-contact.component';
+
 
 const routes: Routes = [
   {
@@ -30,6 +33,10 @@ const routes: Routes = [
     path: 'events',
     canActivate: [AuthGuard],
     loadChildren: () => import('./events/events.module').then(mod => mod.EventsModule)
+  },
+  {
+    path: 'ApproveContacte/:id',
+    component: ApproveContactComponent,
   },
   {
     path: 'statistics',

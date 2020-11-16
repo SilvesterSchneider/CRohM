@@ -176,7 +176,7 @@ namespace WebApi
             {
                 spa.Options.SourcePath = "wwwroot";
             });
-            new UserCheckThread(serviceProvider.CreateScope().ServiceProvider.GetService<IUserCheckDateService>(), configuration).runScheduledService().Wait();
+            new UserCheckThread(serviceProvider.CreateScope().ServiceProvider.GetService<IUserCheckDateService>(), serviceProvider.CreateScope().ServiceProvider.GetService<IContactCheckDateService>(), configuration).runScheduledService().Wait();
         }
 
         private void AddDependencyInjection(IServiceCollection services)
@@ -198,6 +198,7 @@ namespace WebApi
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IUserCheckDateService, UserCheckDateService>();
+            services.AddScoped<IContactCheckDateService, ContactCheckDateService>();
             services.AddScoped<IModificationEntryService, ModificationEntryService>();
             services.AddScoped<IUserLoginService, UserLoginService>();
             services.AddScoped<IDataProtectionService, DataProtectionService>();

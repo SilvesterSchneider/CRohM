@@ -21,6 +21,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { ConfirmDialogComponent } from './shared/form/confirmdialog/confirmdialog.component';
 import { ChangePasswordComponent } from './login/change-password-dialog/change-password-dialog.component';
 import { StatisticsModule } from './statistics/statistics.module';
+import { ApproveContactComponent } from './approve-contact/approve-contact.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { StatisticsModule } from './statistics/statistics.module';
     UserMenuComponent,
     SidenavComponent,
     ConfirmDialogComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    ApproveContactComponent
   ],
   imports: [
     BrowserModule,

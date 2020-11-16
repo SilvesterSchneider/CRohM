@@ -20,12 +20,14 @@ namespace WebApi.Helper
         {
             private DateTime dateTime = DateTime.MinValue;
             private IUserCheckDateService userCheckSevice;
+            private IContactCheckDateService contactCheckService;
             private TimeSpan addToCheckDate;
 
             public async Task Execute(IJobExecutionContext context)
             {
                 JobDataMap jobData = context.JobDetail.JobDataMap;
                 userCheckSevice = jobData.Get("service") as IUserCheckDateService;
+                contactCheckService = jobData.Get("service1") as IContactCheckDateService;
                 addToCheckDate = jobData.GetTimeSpanValue("addToCheckDate");
                 await CheckAction();
             }
@@ -38,17 +40,20 @@ namespace WebApi.Helper
                     dateTime = DateTime.Now.AddDays(addToCheckDate.TotalDays);
                     await userCheckSevice.UpdateAsync(dateTime);
                     await userCheckSevice.CheckAllUsersAsync();
+                    await contactCheckService.DelecteContactsWithoutApproval();
                 }
             }
         }
 
         private IUserCheckDateService userCheckSevice;
+        private IContactCheckDateService contactCheckDateService;
         private IConfiguration Configuration;
 
 
-        public UserCheckThread(IUserCheckDateService userCheckSevice, IConfiguration configuration)
+        public UserCheckThread(IUserCheckDateService userCheckSevice,IContactCheckDateService contactcheckDateService, IConfiguration configuration)
         {
             this.userCheckSevice = userCheckSevice;
+            this.contactCheckDateService = contactcheckDateService;
             this.Configuration = configuration;
         }
 
@@ -67,6 +72,7 @@ namespace WebApi.Helper
             // job data map
             JobDataMap jobData = new JobDataMap();
             jobData.Add("service", userCheckSevice);
+            jobData.Add("service1", contactCheckDateService);
 
             TimeSpan addToCheckDate = TimeSpan.FromDays(1);
             TimeSpan.TryParse(Configuration["DeleteInactiveUsers:AddToCheckDate"], out addToCheckDate);

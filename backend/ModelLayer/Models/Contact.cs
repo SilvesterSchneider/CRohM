@@ -29,6 +29,11 @@ namespace ModelLayer.Models
         public List<OrganizationContact> OrganizationContacts { get; set; } = new List<OrganizationContact>();
         public List<HistoryElement> History { get; set; } = new List<HistoryElement>();
         public List<Tag> Tags { get; set; } = new List<Tag>();
+
+        public bool isApproved {get; set; } = false;
+        public long CreatedByUser { get; set; } = 0;
+        public DateTime CreationDate { get; set; } = DateTime.Now;
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

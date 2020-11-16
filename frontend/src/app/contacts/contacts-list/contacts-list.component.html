@@ -15,7 +15,7 @@
             <mat-label>Suche</mat-label>
             <input class="input" matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
         </mat-form-field>
-        <button id="addDummyButton" class="button" [disabled]=!permissionAdd mat-raised-button color="primary"
+        <button id="addDummyButton" class="button" *ngIf=isAdminUserLoggedIn [disabled]="!permissionAdd" mat-raised-button color="primary"
             title="Dummy Kontakt hinzufügen" (click)="addDummyContact()">
             <mat-icon>add</mat-icon> Dummy Kontakt hinzufügen
         </button>

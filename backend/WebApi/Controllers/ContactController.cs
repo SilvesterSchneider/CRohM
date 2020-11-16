@@ -29,9 +29,11 @@ namespace WebApi.Controllers
         private IUserService userService;
         private readonly IModificationEntryService modService;
         private IContactService contactService;
+        private IMailService mailService;
         private IHistoryService historyService;
 
-        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IHistoryService  historyService)
+   
+        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IMailService mailService, IHistoryService historyService)
         {
             _mapper = mapper;
             this.eventService = eventService;
@@ -39,6 +41,8 @@ namespace WebApi.Controllers
             this.modService = modService;
             this.contactService = contactService;
             this.historyService = historyService;
+            this.mailService = mailService;
+
         }
 
         [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")]
@@ -52,7 +56,17 @@ namespace WebApi.Controllers
             return Ok(contactsDto);
         }
 
-        [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")]
+        [HttpGet("WithUnapproved")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
+        public async Task<IActionResult> GetWithUnapproved()
+        {
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            var contacts = await contactService.GetAllUnapprovedContactsWithAllIncludesByUserIdAsync(userOfChange.Id);
+            var contactsDto = _mapper.Map<List<ContactDto>>(contacts);
+
+            return Ok(contactsDto);
+        }
+
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
@@ -116,9 +130,25 @@ namespace WebApi.Controllers
 
             var contactDto = _mapper.Map<ContactDto>(contact);
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+
+            contact.CreatedByUser = userOfChange.Id;
             await modService.CreateNewContactEntryAsync(userOfChange, contact.Id);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
-            return Created(uri, contactDto);
+
+            //Send Mail to Approve
+            mailService.ApproveContactCreation($"https://localhost:4200/ApproveContacte/" + contactDto.Id, contactDto.ContactPossibilities.Mail);
+
+            var ret = Created(uri, contactDto);
+            //Anweisung von Markus zu Testzwecken -> Von Admin angelegt ist automatisch Approved
+            if (userOfChange.Id == 1)
+            {
+                
+                Contact created = contactService.GetById(contactDto.Id);
+                created.isApproved = true;
+                await contactService.UpdateAsync(created, created.Id);
+            }
+            return ret;
+             
         }
 
         // creates new contact in db via frontend
@@ -200,6 +230,14 @@ namespace WebApi.Controllers
             }
 
             return DateTime.Now;
+        }
+
+        //Approve Contact
+        [HttpGet("ApproveContact/{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(ApproveDto), Description = "successfully performed action")]
+        public async Task<IActionResult> ApproveContact(long id)
+        {
+            return Ok(new ApproveDto() { ApprovedState = await contactService.ApproveContact(id) });
         }
     }
 }

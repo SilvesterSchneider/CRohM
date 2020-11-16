@@ -5,6 +5,7 @@ import { ContactsDetailComponent } from './contacts-detail/contacts-detail.compo
 import { ContactsDetailResolverService } from './contacts-detail-resolver.service';
 
 const contactsRoutes: Routes = [
+
 	{
 		path: '',
 		component: ContactsListComponent
