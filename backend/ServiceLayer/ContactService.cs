@@ -2,8 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using ModelLayer.DataTransferObjects;
 
 namespace ServiceLayer
 {
@@ -20,7 +23,7 @@ namespace ServiceLayer
 
         Task SendDisclosure(long id);
 
-        Task<bool> ApproveContact(long id);
+        Task<ApprovedStatus> ApproveContact(long id);
     }
 
     public class ContactService : ContactRepository, IContactService
@@ -84,19 +87,29 @@ namespace ServiceLayer
             return await Task.FromResult(contact.ToString());
         }
 
-        public async Task<bool> ApproveContact(long id) {
-
-            Contact contact;
+        public async Task<ApprovedStatus> ApproveContact(long id) {
+            long maxId = Entities.Max(a => a.Id);
+            if (id > maxId)
+            {
+                return ApprovedStatus.InvalidId; // Invalid ID received!
+            }
             List<Contact> unapproved = await GetAllUnapprovedContactsWithAllIncludesAsync();
             foreach (Contact c in unapproved) {
                 if (c.Id == id) {
-                    contact = c;
-                    contact.isApproved = true;
-                    return await UpdateAsync(contact, id);
+                    c.isApproved = true;
+                    bool result = await UpdateAsync(c, id);
+                    if (result)
+                    {
+                        return ApprovedStatus.Approved; // OK
+                    }
+                    else
+                    {
+                        return ApprovedStatus.ErrorInSaving; // failure at trying to save the changes
+                    }
                 }
             }
 
-            return false;
+            return ApprovedStatus.AlreadyApprovedOrDeleted; // not found as already confirmed or deleted
         }
     }
 }

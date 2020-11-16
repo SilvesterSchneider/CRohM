@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ContactService } from '../shared/api-generated/api-generated';
+import { ApprovedStatus, ApproveDto, ContactService } from '../shared/api-generated/api-generated';
 
 @Component({
   selector: 'app-approve-contact',
@@ -9,12 +9,11 @@ import { ContactService } from '../shared/api-generated/api-generated';
 })
 export class ApproveContactComponent implements OnInit {
 
-  
   constructor(private approveContact: ContactService, private route: ActivatedRoute){
 
   }
 
-  approved: boolean = false;
+  approved: ApprovedStatus;
 
   ngOnInit(): void {
     this.Approve();
@@ -22,7 +21,24 @@ export class ApproveContactComponent implements OnInit {
 
   Approve(){
     const id = +this.route.snapshot.paramMap.get('id');
-    this.approveContact.approveContact(id).subscribe((data) => this.approved = true,
-    (error) => this.approved = false);
+    this.approveContact.approveContact(id).subscribe(data => {
+      this.approved = data.approvedState;
+    });
+  }
+
+  isInvalid(): boolean {
+    return this.approved === ApprovedStatus.InvalidId;
+  }
+
+  isApproved(): boolean {
+    return this.approved === ApprovedStatus.Approved;
+  }
+
+  isAlreadyApprovedOrDeleted(): boolean {
+    return this.approved === ApprovedStatus.AlreadyApprovedOrDeleted;
+  }
+
+  isError(): boolean {
+    return this.approved === ApprovedStatus.ErrorInSaving;
   }
 }

@@ -7,7 +7,7 @@
             <mat-label>Suche</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Organisationen...">
         </mat-form-field>
-        <button id="addDummy" class="button" [disabled]="!permissionAdd" mat-raised-button color="primary"
+        <button id="addDummy" class="button" *ngIf="isAdminUserLoggedIn" [disabled]="!permissionAdd" mat-raised-button color="primary"
             title="Dummy Organisation hinzufügen" (click)="addDummyOrganization()">
             <mat-icon>add</mat-icon> Dummy Organisation hinzufügen
         </button>

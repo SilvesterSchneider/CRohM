@@ -1,4 +1,4 @@
-<div *ngIf="approved">
+<div class="margin" *ngIf="isApproved()">
     <h1> Herzlich Willkommen,</h1>
     <p> vielen Dank, dass Sie der Verarbeitung Ihrer Daten zugestimmt haben.</p>
     <p>&nbsp;</p>
@@ -6,7 +6,7 @@
     <p> Ihr Hochschul-Team</p>
 </div>
 
-<div *ngIf="!approved">
+<div class="margin" *ngIf="isAlreadyApprovedOrDeleted()">
     <h1> Herzlich Willkommen,</h1>
     <p> der Verarbeitung wurde bereits zugestimmt oder es ist eine Frist von 30 Tagen bereits abgelaufen.</p>
     <p> Setzen Sie sich bitte mit Ihrer Kontaktperson der Hochschule N&uuml;rnberg in Verbindung,</p>
@@ -15,5 +15,26 @@
     <p> Mit freundlichen Gr&uuml;&szlig;en,</p>
     <p> Ihr Hochschul-Team</p>
     <p>&nbsp;</p>
+</div>
 
+<div class="margin" *ngIf="isInvalid()">
+    <h1> Herzlich Willkommen,</h1>
+    <p> Sie haben offensichtlich einen ung&uuml;ltigen Link zur Speicherung Ihrer Daten aufgerufen.</p>
+    <p> Setzen Sie sich bitte mit Ihrer Kontaktperson der Hochschule N&uuml;rnberg in Verbindung,</p>
+    <p> um eine erneute Erfassung in unserem System anzufragen, fall Sie Interesse daran haben.</p>
+    <p>&nbsp;</p>
+    <p> Mit freundlichen Gr&uuml;&szlig;en,</p>
+    <p> Ihr Hochschul-Team</p>
+    <p>&nbsp;</p>
+</div>
+
+<div class="margin" *ngIf="isError()">
+    <h1> Herzlich Willkommen,</h1>
+    <p> Leider konnten Ihre Daten nicht korrekt abgespeichert werden.</p>
+    <p> Setzen Sie sich bitte mit Ihrer Kontaktperson der Hochschule N&uuml;rnberg in Verbindung,</p>
+    <p> um eine erneute Erfassung in unserem System anzufragen.</p>
+    <p>&nbsp;</p>
+    <p> Mit freundlichen Gr&uuml;&szlig;en,</p>
+    <p> Ihr Hochschul-Team</p>
+    <p>&nbsp;</p>
 </div>

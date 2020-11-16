@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetWithUnapproved()
         {
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
-            var contacts = await contactService.GetAllContactsAndUnapprovedWithAllIncludesAsync(userOfChange.Id);
+            var contacts = await contactService.GetAllUnapprovedContactsWithAllIncludesByUserIdAsync(userOfChange.Id);
             var contactsDto = _mapper.Map<List<ContactDto>>(contacts);
 
             return Ok(contactsDto);
@@ -231,21 +231,13 @@ namespace WebApi.Controllers
 
             return DateTime.Now;
         }
-        
 
         //Approve Contact
         [HttpGet("ApproveContact/{id}")]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully found")]
-        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "not found")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(ApproveDto), Description = "successfully performed action")]
         public async Task<IActionResult> ApproveContact(long id)
         {
-            if (await contactService.ApproveContact(id))
-            {
-                return Ok();
-            }
-            else {
-                return NotFound();
-            }
+            return Ok(new ApproveDto() { ApprovedState = await contactService.ApproveContact(id) });
         }
     }
 }
