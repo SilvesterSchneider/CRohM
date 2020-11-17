@@ -38,7 +38,7 @@ namespace WebApi
         {
             var server = Configuration["DBServer"] ?? "localhost";
             var port = Configuration["DBPort"] ?? "";
-            var user = Configuration["DBUser"] ?? "sa";
+            var user = Configuration["DBUser"] ?? "SA";
             var password = Configuration["DBPassword"] ?? "CRohM2020";
             var database = Configuration["DBName"] ?? "CRMDB";
 
