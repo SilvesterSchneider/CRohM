@@ -7,7 +7,8 @@ using System.Text;
 
 namespace ModelLayer.Helper
 {
-    public class MailCredentialsHelper {
+    public class MailCredentialsHelper
+    {
         private const string FILENAME = "\\mailCredentials.info";
         private static MailCredentials mailCredentials;
 
@@ -72,7 +73,7 @@ namespace ModelLayer.Helper
                 {
                     binaryFormatter.Serialize(stream, objectToWrite);
                 }
-                catch (Exception e)
+                catch
                 {
                 }
             }
@@ -93,7 +94,7 @@ namespace ModelLayer.Helper
                 {
                     return (T)binaryFormatter.Deserialize(stream);
                 }
-                catch (Exception e)
+                catch
                 {
                     return default(T);
                 }
@@ -173,7 +174,7 @@ namespace ModelLayer.Helper
             Port = port;
             Host = host;
         }
-         
+
         public MailAddress MailAddress { get; private set; }
         public NetworkCredential NetworkCredential { get; private set; }
         public int Port { get; private set; }
