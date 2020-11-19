@@ -42,7 +42,7 @@ import { ApproveContactComponent } from './approve-contact/approve-contact.compo
     SidenavComponent,
     ConfirmDialogComponent,
     ChangePasswordComponent,
-    LanguageSelectComponent
+    LanguageSelectComponent,
     ApproveContactComponent
   ],
   imports: [
