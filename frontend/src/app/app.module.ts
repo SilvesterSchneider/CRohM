@@ -31,6 +31,7 @@ import { registerLocaleData } from '@angular/common';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 registerLocaleData(localeDe);
+import { ApproveContactComponent } from './approve-contact/approve-contact.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ registerLocaleData(localeDe);
     ConfirmDialogComponent,
     ChangePasswordComponent,
     LanguageSelectComponent
+    ApproveContactComponent
   ],
   imports: [
     BrowserModule,

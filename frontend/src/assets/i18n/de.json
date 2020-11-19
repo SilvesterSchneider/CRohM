@@ -107,7 +107,8 @@
         "edit": "Organisation bearbeiten",
         "new": "Neue Organisation",
         "affiliation": "Organisationszugehörigkeiten",
-        "showInfo": "Organisationsinformationen anzeigen"
+        "showInfo": "Organisationsinformationen anzeigen",
+        "delete": "Organisation löschen"
     },
     "event": {
         "events": "Veranstaltungen",

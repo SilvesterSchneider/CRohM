@@ -7,25 +7,28 @@
             <mat-label>{{'common.search' | translate}}</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="{{'organization.organizations' | translate}}...">
         </mat-form-field>
-        <button id="addDummy" class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="{{'organization.addDummy' | translate}}" (click)="addDummyOrganization()"> 
+        <button id="addDummy" class="button" *ngIf="isAdminUserLoggedIn" [disabled]="!permissionAdd" mat-raised-button color="primary"
+            title="{{'organization.addDummy' | translate}}" (click)="addDummyOrganization()">
             <mat-icon>add</mat-icon> {{'organization.addDummy' | translate}}
         </button>
-        <button class="button" button="submit" mat-mini-fab color="primary" (click)="openAddDialog()">
-            <mat-icon>add</mat-icon> 
+        <button class="button" button="submit" [disabled]="!permissionAdd" mat-mini-fab color="primary"
+            (click)="openAddDialog()">
+            <mat-icon>add</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
 <div fxLayout="column" fxLayoutGap="100px">
     <mat-table id="tableOrganization" #table [dataSource]="dataSource">
         <ng-container matColumnDef="Icon">
-            <mat-header-cell *matHeaderCellDef> 
-                <mat-checkbox [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>    
+            <mat-header-cell *matHeaderCellDef>
+                <mat-checkbox [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>
             </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)">
                 <div *ngIf="!isSelectedRow(element.id)" class="selection">
-                 {{element.name.substring(0,2)}}
+                    {{element.name.substring(0,2)}}
                 </div>
-                <mat-checkbox class="checkBox" *ngIf="isSelectedRow(element.id)" [checked]="isSelectionChecked(element.id)" (change)="onCheckBoxChecked(element.id)">
+                <mat-checkbox class="checkBox" *ngIf="isSelectedRow(element.id)"
+                    [checked]="isSelectionChecked(element.id)" (change)="onCheckBoxChecked(element.id)">
                 </mat-checkbox>
             </mat-cell>
         </ng-container>
@@ -85,22 +88,25 @@
         <ng-container matColumnDef="Action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
-                <a class="editOrganization" (click)="openEditDialog(element.id)" type="button">
-                    <mat-icon color="primary" class="icon">edit</mat-icon>
-                </a>
-                <a (click)="openInfo(element.id)" type="button">
-                    <mat-icon color="primary" title="{{'organization.showInfo' | translate}}" class="icon">info</mat-icon>
-                </a>
-                <a type="button" [matMenuTriggerFor]="menu">
+                <button type="button" mat-icon-button [disabled]="!permissionModify"
+                    (click)="openEditDialog(element.id)" color="primary" class="editOrganization">
+                    <mat-icon title="{{'organization.edit' | translate}}" class="icon">edit</mat-icon>
+                </button>
+                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)" color="primary">
+                    <mat-icon title="{{'organization.showInfo' | translate}}" class="icon">info</mat-icon>
+                </button>
+                <button type="button" [matMenuTriggerFor]="menu">
                     <mat-icon color="primary" class="icon">list</mat-icon>
-                </a>
+                </button>
                 <mat-menu #menu="matMenu">
-                    <a (click)="addNote(element.id)" type="button">
-                        <mat-icon color="primary" title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
-                    </a>
-                    <a (click)="deleteOrganization(element.id)" type="button">
-                        <mat-icon color="primary" class="icon">delete</mat-icon>
-                    </a>
+                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
+                        color="primary">
+                        <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteOrganization(element.id)"
+                        color="primary">
+                        <mat-icon title="{{'organization.delete' | translate}}" class="icon">delete</mat-icon>
+                    </button>
                 </mat-menu>
             </mat-cell>
         </ng-container>

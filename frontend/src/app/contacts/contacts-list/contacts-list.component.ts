@@ -32,6 +32,12 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   contacts: Observable<ContactDto[]>;
   displayedColumns = [];
   isAdminUserLoggedIn = false;
+  permissionAdd = false;
+  permissionModify = false;
+  permissionDelete = false;
+  permissionAddHistory = false;
+  permissionInformContact = false;
+
   length = 0;
   currentScreenWidth = '';
   flexMediaWatcher: Subscription;
@@ -88,8 +94,13 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
+    this.getDataWithUnapproved();
     this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
-    this.getData();
+    this.permissionAdd = this.jwt.hasPermission('Anlegen eines Kontakts');
+    this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten aller Kontakte');
+    this.permissionDelete = this.jwt.hasPermission('Löschen eines Kontakts');
+    this.permissionAddHistory = this.jwt.hasPermission('Hinzufügen eines Historieneintrags bei Kontakt oder Organisation');
+    this.permissionInformContact = this.jwt.hasPermission('Auskunft gegenüber eines Kontakts zu dessen Daten');
   }
 
   ngOnDestroy(): void {
@@ -105,6 +116,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     }
   }
 
+  /* Rausgeflogen, weil
   private getData() {
     this.contacts = this.service.getAll();
     this.contacts.subscribe(x => {
@@ -119,23 +131,32 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     });
     this.changeDetectorRefs.detectChanges();
   }
+*/
+  private getDataWithUnapproved() {
+    this.contacts = this.service.getWithUnapproved();
+    this.contacts.subscribe(x => {
+      this.length = x.length;
+      this.dataSource.data = x;
+      this.allContacts = x;
+      this.tagsFilter.updateTagsInAutofill(this.allContacts);
+      this.applyTagFilter();
+    });
+    this.changeDetectorRefs.detectChanges();
+  }
 
   openDisclosureDialog(id: number) {
     this.service.getById(id).subscribe((x) => {
       const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true, height: '200px' });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        this.contacts = this.service.getAll();
-      });
-    });
-  }
+      dialogRef.afterClosed().subscribe(result => this.contacts = this.service.getWithUnapproved());
+  });
+}
 
   openAddDialog() {
     const dialogRef = this.dialog.open(ContactsAddDialogComponent, {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe((result) => {
-      this.getData();
+      this.getDataWithUnapproved();
     });
   }
 
@@ -162,7 +183,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
             }
           });
         }
-        this.getData();
+        this.getDataWithUnapproved();
       }
     });
   }
@@ -176,7 +197,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     deleteDialogRef.afterClosed().subscribe((deleteResult) => {
       if (deleteResult?.delete) {
         this.service.delete(contact.id).subscribe(x => {
-          this.service.getAll().subscribe(fu => {
+          this.service.getWithUnapproved().subscribe(fu => {
             this.dataSource.data = fu;
           });
         });
@@ -203,7 +224,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(AddHistoryComponent);
     dialogRef.afterClosed().subscribe((y) => {
       if (y) {
-        this.service.postHistoryElement(y, id).subscribe(x => this.getData());
+        this.service.postHistoryElement(y, id).subscribe(x => this.getDataWithUnapproved());
       }
     });
   }
@@ -221,7 +242,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     if (index < this.selectedCheckBoxList.length) {
       this.service.postHistoryElement(y, this.selectedCheckBoxList[index]).subscribe(x => this.addNoteLoop(++index, y));
     } else {
-      this.getData();
+      this.getDataWithUnapproved();
     }
   }
 
@@ -247,7 +268,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         phoneNumber: '0172-9344333' + this.length,
         contactEntries: []
       }
-    }).subscribe(x => this.getData());
+    }).subscribe(x => this.getDataWithUnapproved());
   }
 
   callPhonenumber(phonenumber: string, id: number) {
@@ -255,7 +276,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(AddHistoryComponent, { data: phonenumber });
     dialogRef.afterClosed().subscribe((y) => {
       if (y) {
-        this.service.postHistoryElement(y, id).subscribe(x => this.getData());
+        this.service.postHistoryElement(y, id).subscribe(x => this.getDataWithUnapproved());
       }
     });
   }

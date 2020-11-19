@@ -7,14 +7,17 @@
             <mat-label>{{'common.search' | translate}}</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="{{'event.events' | translate }}...">
         </mat-form-field>
-        <mat-checkbox class="button" [checked]="checkboxSelected" title="{{'event.hidePast' | translate}}" (change)="toggleSelection()">
+        <mat-checkbox class="button" [checked]="checkboxSelected" title="{{'event.hidePast' | translate}}"
+            (change)="toggleSelection()">
             {{'event.hidePast' | translate}}
         </mat-checkbox>
-        <button id="addDummyEventButton" class="button" *ngIf="isAdminUserLoggedIn" mat-raised-button color="primary" title="{{'event.addDummy' | translate}}" (click)="addDummyEvent()"> 
+        <button id="addDummyEventButton" class="button" *ngIf="isAdminUserLoggedIn" [disabled]="!permissionAdd"
+            mat-raised-button color="primary" title="{{'event.addDummy' | translate}}" (click)="addDummyEvent()">
             <mat-icon>add</mat-icon> {{'event.addDummy' | translate}}
         </button>
-        <button id="addEventButton" class="button" button="submit" mat-mini-fab color="primary" (click)="addEvent()">
-            <mat-icon>add</mat-icon> 
+        <button id="addEventButton" class="button" button="submit" [disabled]="!permissionAdd" mat-mini-fab
+            color="primary" (click)="addEvent()">
+            <mat-icon>add</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
@@ -23,34 +26,42 @@
     <mat-table mat-table [dataSource]="dataSourceFiltered">
         <ng-container matColumnDef="bezeichnung">
             <mat-header-cell *matHeaderCellDef> {{'common.label' | translate}} </mat-header-cell>
-            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element"> {{element.name}}
+            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element">
+                {{element.name}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="datum">
             <mat-header-cell *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
-            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element"> {{element.date | date:'dd-MM-yyyy'}} </mat-cell>
+            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element">
+                {{element.date | date:'dd-MM-yyyy'}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="uhrzeit">
             <mat-header-cell *matHeaderCellDef> {{'common.time' | translate}} </mat-header-cell>
-            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element"> {{element.time | date:'HH:mm:ss'}} </mat-cell>
+            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element">
+                {{element.time | date:'HH:mm:ss'}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
-                <a class="editButton" (click)="callEdit(element.id)" type="button">
-                    <mat-icon color="primary" class="icon" title="{{'event.edit' | translate}}">edit</mat-icon>
-                </a>
-                <a (click)="openInfo(element.id)" type="button">
-                    <mat-icon color="primary" class="icon" title="{{'event.show' | translate}}">info</mat-icon>
-                </a>
-                <a (click)="deleteEvent(element.id)" type="button">
-                    <mat-icon color="primary" class="icon" title="{{'event.delete' | translate}}">delete</mat-icon>
-                </a>
+                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="callEdit(element.id)"
+                    color="primary" class="editButton" (click)="callEdit(element.id)">
+                    <mat-icon class="icon" title="{{'event.edit' | translate}}">edit</mat-icon>
+                </button>
+                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)"
+                    color="primary">
+                    <mat-icon class="icon" title="{{'event.show' | translate}}">info</mat-icon>
+                </button>
+                <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteEvent(element.id)"
+                    color="primary">
+                    <mat-icon class="icon" title="{{'event.delete' | translate}}">delete</mat-icon>
+                </button>
             </mat-cell>
         </ng-container>
         <!-- Group header -->
         <ng-container matColumnDef="groupHeader">
-            <mat-cell colspan="999" *matCellDef="let groupBy"><strong>{{'common.calendarWeek' | translate}} {{groupBy.weekNumber}}</strong></mat-cell>
+            <mat-cell colspan="999" *matCellDef="let groupBy"><strong>{{'common.calendarWeek' | translate}}
+                    {{groupBy.weekNumber}}</strong>
+            </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>

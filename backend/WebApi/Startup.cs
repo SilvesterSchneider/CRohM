@@ -40,7 +40,7 @@ namespace WebApi
             var port = Configuration["DBPort"] ?? "1433";
             var user = Configuration["DBUser"] ?? "SA";
             var password = Configuration["DBPassword"] ?? "CRohM2020";
-            var database = Configuration["DBName"] ?? "CRMDB"; 
+            var database = Configuration["DBName"] ?? "CRMDB";
 
             var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
             //connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
@@ -120,6 +120,7 @@ namespace WebApi
                     };
                 });
 
+
             services.AddHealthChecks();
 
         }
@@ -175,7 +176,7 @@ namespace WebApi
             {
                 spa.Options.SourcePath = "wwwroot";
             });
-            new UserCheckThread(serviceProvider.CreateScope().ServiceProvider.GetService<IUserCheckDateService>(), configuration).runScheduledService().Wait();
+            new UserCheckThread(serviceProvider.CreateScope().ServiceProvider.GetService<IUserCheckDateService>(), serviceProvider.CreateScope().ServiceProvider.GetService<IContactCheckDateService>(), configuration).runScheduledService().Wait();
         }
 
         private void AddDependencyInjection(IServiceCollection services)
@@ -197,6 +198,7 @@ namespace WebApi
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IUserCheckDateService, UserCheckDateService>();
+            services.AddScoped<IContactCheckDateService, ContactCheckDateService>();
             services.AddScoped<IModificationEntryService, ModificationEntryService>();
             services.AddScoped<IUserLoginService, UserLoginService>();
             services.AddScoped<IDataProtectionService, DataProtectionService>();

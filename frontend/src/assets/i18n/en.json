@@ -107,7 +107,8 @@
         "edit": "Edit Organization",
         "new": "New Organization",
         "affiliation": "Organizational affiliations",
-        "showInfo": "Display organizational information"
+        "showInfo": "Display organizational information",
+        "delete": "Delete Organization"
     },
     "event": {
         "events": "Events",

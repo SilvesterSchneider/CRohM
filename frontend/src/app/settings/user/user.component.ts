@@ -6,6 +6,8 @@ import { MatTable } from '@angular/material/table';
 import { AddUserDialogComponent } from './add-user/add-user.component';
 import { EditUserDialogComponent } from './edit-user/edit-user.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
+import { JwtService } from 'src/app/shared/jwt.service';
+
 
 
 @Component({
@@ -18,14 +20,24 @@ export class UserComponent implements OnInit {
   @ViewChild(MatTable) table: MatTable<any>;
   dataSource = new BehaviorSubject<UserDto[]>([]);
   displayedColumns: string[] = ['username', 'mail', 'firstname', 'lastname', 'options'];
+  permissionAddUser = false;
+  permissionLockUser = false;
+  permissionResetPasswort = false;
+  permissionEditUser = false;
+
 
   constructor(// private readonly fb: FormBuilder,
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private jwt: JwtService) { }
 
   public ngOnInit(): void {
     this.GetData();
+    this.permissionAddUser = this.jwt.hasPermission('Anlegen eines Benutzers');
+    this.permissionLockUser = this.jwt.hasPermission('Löschen / Deaktivieren eines Benutzers');
+    this.permissionResetPasswort = this.jwt.hasPermission('Rücksetzen eines Passworts eines Benutzers');
+    this.permissionEditUser = this.jwt.hasPermission('Zuweisung einer neuen Rolle zu einem Benutzer');
   }
 
   /**
@@ -48,8 +60,8 @@ export class UserComponent implements OnInit {
    */
   openEditDialog(userId: number): void {
     this.usersService.get().subscribe(x => {
-        this.finalizeOpenEditDialog(x.find(a => a.id === userId));
-      });
+      this.finalizeOpenEditDialog(x.find(a => a.id === userId));
+    });
   }
 
   finalizeOpenEditDialog(user: UserDto) {
@@ -96,5 +108,3 @@ export class UserComponent implements OnInit {
     this.usersService.updateLockoutState(userId).subscribe(x => this.GetData());
   }
 }
-
-

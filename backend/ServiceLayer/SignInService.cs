@@ -65,7 +65,7 @@ namespace ServiceLayer
             }
             foreach (Claim claim in claims)
             {
-                tokenDescriptor.Subject.AddClaim(new Claim("Claim", claim.Type));
+                tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, claim.Type));
             }
 
             var token = tokenHandler.CreateToken(tokenDescriptor);

@@ -19,7 +19,9 @@ namespace ServiceLayer
 
         bool PasswordReset(string newPassword, string mailAddress);
 
-        bool Registration(string benutzer, string passwort, string email);
+        public bool ApproveContactCreation(string benutzer, string email);
+
+        public bool Registration(string benutzer, string passwort, string email);
 
         bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
 
@@ -62,6 +64,14 @@ namespace ServiceLayer
         public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
         {
             return SendMail(subject, body, address, new MemoryStream(attachment), attachmentType);
+        }
+
+        public bool ApproveContactCreation(string benutzer, string email)
+        {
+            string body = "<h3> Bitte bestätigen Sie die Aufnahme Ihrer Kontaktdaten für die TH-Nürnberg </h3> " +
+                   "<p> "+benutzer+"</p>";
+
+            return SendMail("Zugangsdaten", body, email, null, "");
         }
 
         public static string GetMailForInvitationAsTemplate(string eventName, string date, string time)
@@ -195,7 +205,7 @@ namespace ServiceLayer
                 SmtpClient client = new SmtpClient();
                 client.UseDefaultCredentials = false;
 
-                client.Credentials = new System.Net.NetworkCredential("crohm_nuernberg@hotmail.com", "crohm2020");
+                client.Credentials = new System.Net.NetworkCredential("crohm_nuernberg@hotmail.com", "crohm202020");
 
                 client.Port = 587;
 
