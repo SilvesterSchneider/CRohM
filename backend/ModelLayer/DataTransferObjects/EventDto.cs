@@ -8,9 +8,9 @@ namespace ModelLayer.DataTransferObjects
     {
         public long Id { get; set; }
         public DateTime Date { get; set; }
-        public DateTime Time { get; set; }
+        public DateTime Start { get; set; }
         public string Name { get; set; }
-        public float Duration { get; set; }
+        public DateTime End { get; set; }
         public List<ContactDto> Contacts { get; set; } = new List<ContactDto>();
         public List<OrganizationDto> Organizations { get; set; } = new List<OrganizationDto>();
         public List<ParticipatedDto> Participated { get; set; } = new List<ParticipatedDto>();
@@ -20,9 +20,9 @@ namespace ModelLayer.DataTransferObjects
     public class EventCreateDto
     {
         public DateTime Date { get; set; }
-        public DateTime Time { get; set; }
+        public DateTime Start { get; set; }
         public string Name { get; set; }
-        public float Duration { get; set; }
+        public DateTime End { get; set; }
         public List<int> Contacts { get; set; } = new List<int>();
         public List<int> Organizations { get; set; } = new List<int>();
     }

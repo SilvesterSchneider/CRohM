@@ -79,9 +79,9 @@ namespace RepositoryLayer
         {
             Event eventNew = new Event();
             eventNew.Date = eventToCreate.Date;
-            eventNew.Duration = eventToCreate.Duration;
+            eventNew.End = eventToCreate.End;
             eventNew.Name = eventToCreate.Name;
-            eventNew.Time = eventToCreate.Time;
+            eventNew.Start = eventToCreate.Start;
             eventToCreate.Contacts.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, WasInvited = false, ModelType = MODEL_TYPE.CONTACT }));
             eventToCreate.Organizations.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, WasInvited = false, ModelType = MODEL_TYPE.ORGANIZATION }));
             return await CreateAsync(eventNew);
@@ -142,8 +142,8 @@ namespace RepositoryLayer
                 eventOrgas.RemoveAll(y => y.EventId != eventExistent.Id);
                 eventExistent.Name = eventToModify.Name;
                 eventExistent.Date = eventToModify.Date;
-                eventExistent.Time = eventToModify.Time;
-                eventExistent.Duration = eventToModify.Duration;
+                eventExistent.Start = eventToModify.Start;
+                eventExistent.End = eventToModify.End;
                 List<EventContact> eventContactsToDelete = new List<EventContact>();
                 eventContacts.ForEach(x =>
                 { 
