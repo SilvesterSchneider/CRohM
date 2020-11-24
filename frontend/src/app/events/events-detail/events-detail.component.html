@@ -20,22 +20,22 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input type="time" matInput placeholder="Uhrzeit" formControlName="time">
+                    <input type="time" matInput placeholder="Beginn" formControlName="start">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input type="number" matInput placeholder="Dauer in Stunden" formControlName="duration">
+                    <input type="time" matInput placeholder="Ende" formControlName="end">
                 </mat-form-field>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="text">
-            Eingeladen 
+            Eingeladen
         </div>
         <div class="text">
-            Hat teilgenommen 
+            Hat teilgenommen
         </div>
         <div class="text">
             Teilnehmer
@@ -54,18 +54,21 @@
                 </mat-checkbox>
                 {{ item.preName + ' ' + item.name }}
             </mat-chip>
-            <input id="textInput" class="autoComplete" type="text" #inputTrigger placeholder="Kontakte/Organisationen einladen" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
-            [matChipInputFor]="chipList">
+            <input id="textInput" class="autoComplete" type="text" #inputTrigger
+                placeholder="Kontakte/Organisationen einladen" matInput [matAutocomplete]="autoComplete"
+                [formControl]="itemControl" [matChipInputFor]="chipList">
         </mat-chip-list>
         <mat-autocomplete #autoComplete="matAutocomplete">
             <mat-option>
-                <mat-checkbox id="contactInput" [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
-                        Alle selektieren
+                <mat-checkbox id="contactInput" [checked]="isAllSelected" (change)="toggleSelectAll()"
+                    (click)="$event.stopPropagation()">
+                    Alle selektieren
                 </mat-checkbox>
             </mat-option>
             <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
                 <div (click)="optionClicked($event, item);">
-                    <mat-checkbox [checked]="item.selected" (change)="toggleSelection(item)" (click)="$event.stopPropagation()">
+                    <mat-checkbox [checked]="item.selected" (change)="toggleSelection(item)"
+                        (click)="$event.stopPropagation()">
                         {{ item.preName + ' ' + item.name }}
                     </mat-checkbox>
                 </div>
@@ -73,27 +76,17 @@
         </mat-autocomplete>
     </div>
     <mat-chip-list class="margin" #chipList>
-        <mat-chip 
-                (keyup.backspace)="removeTag()" 
-                *ngFor="let item of selectedTags" 
-                [selectable]="selectableTag"
-                [removable]="removable"
-                (removed)="remove(item)">
-                {{ item.name }}
-                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-            </mat-chip>
-            <input 
-                placeholder="Neuer tag..." 
-                #tagInput
-                [matAutocomplete]="auto"
-                #inputTrigger 
-                [matChipInputFor]="chipList" 
-                [formControl]="tagsControl"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                (keyup.enter)="addTag($event)">
+        <mat-chip (keyup.backspace)="removeTag()" *ngFor="let item of selectedTags" [selectable]="selectableTag"
+            [removable]="removable" (removed)="remove(item)">
+            {{ item.name }}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Neuer tag..." #tagInput [matAutocomplete]="auto" #inputTrigger [matChipInputFor]="chipList"
+            [formControl]="tagsControl" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (keyup.enter)="addTag($event)">
     </mat-chip-list>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-        <mat-option *ngFor="let item of filteredTagsObservable | async" [value]="item" >
+        <mat-option *ngFor="let item of filteredTagsObservable | async" [value]="item">
             {{item}}
         </mat-option>
     </mat-autocomplete>
@@ -101,7 +94,8 @@
 <mat-dialog-actions mat-dialog-actions align="end">
     <div class="column">
         <div mat-dialog-actions align="end" class="marginTop">
-            <button id="invitationButton" mat-raised-button color="primary" title="Einladung" (click)="callInvitation()">
+            <button id="invitationButton" mat-raised-button color="primary" title="Einladung"
+                (click)="callInvitation()">
                 Einladung
             </button>
         </div>
@@ -109,7 +103,8 @@
             <button mat-raised-button color="primary" title="Verwerfen" (click)="close()">
                 Verwerfen
             </button>
-                    <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
+            <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!eventsForm.valid"
+                (click)="saveValues()">
                 Speichern
             </button>
         </div>

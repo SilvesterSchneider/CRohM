@@ -30,10 +30,10 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
   constructor(public dialogRef: MatDialogRef<EventsInfoComponent>,
-              public dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public event: EventDto,
-              private fb: FormBuilder,
-              private modService: ModificationEntryService
+    public dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public event: EventDto,
+    private fb: FormBuilder,
+    private modService: ModificationEntryService
   ) {
     super(dialogRef, dialog);
     this.dialogRef.backdropClick().subscribe(() => {
@@ -99,7 +99,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     this.loadModifications(0, 5);
     this.eventsForm.patchValue(this.event);
     this.eventsForm.get('date').patchValue(this.formatDate(this.event.date));
-    this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));
+    this.eventsForm.get('start').patchValue(this.formatTime(this.event.start));
   }
 
   formatDate(date: string): any {
@@ -133,8 +133,8 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     return this.fb.group({
       name: [''],
       date: [''],
-      time: [''],
-      duration: ['']
+      start: [''],
+      end: ['']
     });
   }
 

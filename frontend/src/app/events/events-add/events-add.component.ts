@@ -6,7 +6,8 @@ import { NgControl, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
-  MatAutocompleteTrigger} from '@angular/material/autocomplete';
+  MatAutocompleteTrigger
+} from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { EventCreateDto, MODEL_TYPE, OrganizationService } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
@@ -83,9 +84,9 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
   ) {
     super(dialogRef, dialog);
     this.dialogRef.backdropClick().subscribe(() => {
-			// Close the dialog
-			dialogRef.close();
-		});
+      // Close the dialog
+      dialogRef.close();
+    });
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
@@ -149,8 +150,8 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     return this.fb.group({
       name: ['', Validators.required],
       date: ['', Validators.required],
-      time: ['', Validators.required],
-      duration: ['', Validators.required]
+      start: ['', Validators.required],
+      end: ['', Validators.required]
     });
   }
 

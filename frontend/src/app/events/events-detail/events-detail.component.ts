@@ -71,7 +71,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredTagsObservable: Observable<string[]>;
   allTags: string[] = ['Lehrbeauftragter', 'Kunde', 'Politiker', 'Unternehmen', 'Behörde', 'Bildungseinrichtung',
-   'Institute', 'Ministerium', 'Emeriti', 'Alumni'];
+    'Institute', 'Ministerium', 'Emeriti', 'Alumni'];
   removable = true;
   selectableTag = true;
 
@@ -90,9 +90,9 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     private mailService: MailService) {
     super(dialogRef, dialog);
     this.dialogRef.backdropClick().subscribe(() => {
-			// Close the dialog
-			dialogRef.close();
-		});
+      // Close the dialog
+      dialogRef.close();
+    });
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
@@ -233,7 +233,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       });
     }
     this.eventsForm.patchValue(this.event);
-    this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));
+    this.eventsForm.get('start').patchValue(this.formatTime(this.event.start));
   }
 
   private formatTime(date) {
@@ -253,8 +253,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     return this.fb.group({
       name: ['', Validators.required],
       date: [new FormControl(new Date(this.event.date)), Validators.required],
-      time: ['', Validators.required],
-      duration: ['', Validators.required]
+      start: ['', Validators.required],
+      end: ['', Validators.required]
     });
   }
 
@@ -388,8 +388,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   saveValues() {
     const eventToSave: EventDto = this.eventsForm.value;
     this.event.date = new Date(new Date(eventToSave.date).getTime()).toDateString();
-    this.event.duration = eventToSave.duration;
-    this.event.time = eventToSave.time;
+    this.event.end = eventToSave.end;
+    this.event.start = eventToSave.start;
     const contacts: ContactDto[] = new Array<ContactDto>();
     const organizations: OrganizationDto[] = new Array<OrganizationDto>();
     const participants: ParticipatedDto[] = new Array<ParticipatedDto>();
@@ -399,7 +399,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
         if (contact != null) {
           contacts.push(contact);
           const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-             MODEL_TYPE.CONTACT);
+            MODEL_TYPE.CONTACT);
           if (partExistend == null) {
             participants.push(
               {
@@ -421,7 +421,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
         if (orga != null) {
           organizations.push(orga);
           const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-             MODEL_TYPE.ORGANIZATION);
+            MODEL_TYPE.ORGANIZATION);
           if (partExistend == null) {
             participants.push(
               {
@@ -453,5 +453,3 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     super.confirmDialog();
   }
 }
-
-
