@@ -17,15 +17,15 @@ export class EventsInvitationComponent implements OnInit {
     public dialogRef: MatDialogRef<EventsInvitationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EventDto,
     public dialog: MatDialog) {
-      this.dialogRef.backdropClick().subscribe(() => {
-        // Close the dialog
-        dialogRef.close();
-      });
-    }
+    this.dialogRef.backdropClick().subscribe(() => {
+      // Close the dialog
+      dialogRef.close();
+    });
+  }
 
   ngOnInit(): void {
     this.textForm = this.createTextForm();
-    this.mailService.getSendInvitationText(this.data.name, this.getDate(this.data.date), this.getTime(this.data.time)).subscribe(x => {
+    this.mailService.getSendInvitationText(this.data.name, this.getDate(this.data.date), this.getTime(this.data.start)).subscribe(x => {
       this.textForm.get('text').setValue(x);
     });
   }
@@ -36,8 +36,8 @@ export class EventsInvitationComponent implements OnInit {
     });
   }
 
-  private getTime(time: string): string {
-    const date: Date = new Date(time);
+  private getTime(start: string): string {
+    const date: Date = new Date(start);
     let result = '';
     let hours = date.getHours().toString();
     if (hours.length === 1) {

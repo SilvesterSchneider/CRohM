@@ -16,10 +16,10 @@ import { BlockScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay
 export class EventDtoGroup implements EventDto {
   id: number;
   date: string;
-  time: string;
+  start: string;
   name?: string;
   tags: TagDto[];
-  duration: number;
+  end: string;
   contacts?: ContactDto[];
   participated?: ParticipatedDto[];
   weekNumber: number;
@@ -60,7 +60,7 @@ export class EventsListComponent implements OnInit {
     this.dataSourceFiltered.filter = filterValue.trim().toLowerCase();
     this.dataSourceFiltered.filterPredicate = ((data, filter) => {
       if (data.name.trim().toLowerCase().includes(filter) || data.date.trim().toLowerCase().includes(filter) ||
-        data.time.trim().toLowerCase().includes(filter)) {
+        data.start.trim().toLowerCase().includes(filter)) {
         return true;
       } else {
         return false;
@@ -98,11 +98,11 @@ export class EventsListComponent implements OnInit {
 
   funtionGetSortedData(a: EventDto, b: EventDto): number {
     const dateA = new Date(a.date);
-    const timeA = new Date(a.time);
+    const timeA = new Date(a.start);
     dateA.setHours(timeA.getHours());
     dateA.setMinutes(timeA.getMinutes());
     const dateB = new Date(b.date);
-    const timeB = new Date(b.time);
+    const timeB = new Date(b.start);
     dateB.setHours(timeB.getHours());
     dateB.setMinutes(timeB.getMinutes());
     return (dateA.getTime() - dateB.getTime());
@@ -154,7 +154,7 @@ export class EventsListComponent implements OnInit {
     this.weekNumber = 0;
     let eventsFiltered: EventDto[] = new Array<EventDto>();
     if (this.checkboxSelected) {
-      eventsFiltered = events.filter(x => this.getDate(x.date, x.time) >= new Date(Date.now()).getTime());
+      eventsFiltered = events.filter(x => this.getDate(x.date, x.start) >= new Date(Date.now()).getTime());
     } else {
       eventsFiltered = events;
     }
@@ -164,10 +164,10 @@ export class EventsListComponent implements OnInit {
         this.weekNumber = week;
         this.dataSource.push({
           date: x.date,
-          duration: x.duration,
+          end: x.end,
           id: x.id,
           tags: x.tags,
-          time: x.time,
+          start: x.start,
           contacts: x.contacts,
           name: x.name,
           participated: x.participated,
@@ -176,10 +176,10 @@ export class EventsListComponent implements OnInit {
         });
         this.allEvents.push({
           date: x.date,
-          duration: x.duration,
+          end: x.end,
           id: x.id,
           tags: x.tags,
-          time: x.time,
+          start: x.start,
           contacts: x.contacts,
           name: x.name,
           participated: x.participated,
@@ -190,9 +190,9 @@ export class EventsListComponent implements OnInit {
       this.allEvents.push({
         date: x.date,
         tags: x.tags,
-        duration: x.duration,
+        end: x.end,
         id: x.id,
-        time: x.time,
+        start: x.start,
         contacts: x.contacts,
         name: x.name,
         participated: x.participated,
@@ -202,9 +202,9 @@ export class EventsListComponent implements OnInit {
       this.dataSource.push({
         date: x.date,
         tags: x.tags,
-        duration: x.duration,
+        end: x.end,
         id: x.id,
-        time: x.time,
+        start: x.start,
         contacts: x.contacts,
         name: x.name,
         participated: x.participated,
@@ -238,10 +238,10 @@ export class EventsListComponent implements OnInit {
   addDummyEvent() {
     this.service.post({
       name: 'Veranstaltung' + this.length,
-      duration: this.length,
+      end: '20:' + this.length % 59,
       contacts: [],
       date: '2020-' + (new Date(Date.now()).getMonth() + 2) + '-' + (this.length + 1) % 30,
-      time: '20:' + this.length % 59
+      start: '20:' + this.length % 59
     }).subscribe(x => this.init());
   }
 

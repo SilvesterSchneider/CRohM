@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ContactService, OrganizationService, ContactDto, OrganizationDto, EventDto, EventService,
+import {
+  ContactService, OrganizationService, ContactDto, OrganizationDto, EventDto, EventService,
   ModificationEntryService, MODEL_TYPE, MODIFICATION, ModificationEntryDto, AddressDto,
   ContactPossibilitiesDto,
   ParticipatedDto,
   HistoryElementDto,
-  UserLoginService, GenderTypes, DataProtectionService, UsersService} from '../shared/api-generated/api-generated';
+  UserLoginService, GenderTypes, DataProtectionService, UsersService
+} from '../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts/contacts-info/contacts-info.component';
 import { EventsInfoComponent } from '../events/events-info/events-info.component';
@@ -46,9 +48,9 @@ export class EventExtended implements EventDto {
   contacts?: ContactDto[];
   participated?: ParticipatedDto[];
   date: string;
-  time: string;
+  start: string;
   name?: string;
-  duration: number;
+  end: string;
   userName: string;
   created: boolean;
 }
@@ -82,11 +84,13 @@ export class HomeComponent implements OnInit {
 
   public ngOnInit(): void {
     this.checkIfComingFromLogin().then(isLogin => {
-      if (isLogin){
+      if (isLogin) {
         this.dataProtectionService.isThereAnyDataProtectionOfficerInTheSystem()
-          .subscribe({next: () => {}, error: () =>
-        this.dialog.open(DpDisclaimerDialogComponent)});
-       }
+          .subscribe({
+            next: () => { }, error: () =>
+              this.dialog.open(DpDisclaimerDialogComponent)
+          });
+      }
     });
 
     this.modificationEntryService.getSortedListByType(MODEL_TYPE.CONTACT).subscribe(x => {
@@ -136,22 +140,22 @@ export class HomeComponent implements OnInit {
   }
 
   public openContactDetails(contactId: number) {
-    this.contactsService.getById(contactId).subscribe(x => this.dialog.open(ContactsInfoComponent, {data: x}));
+    this.contactsService.getById(contactId).subscribe(x => this.dialog.open(ContactsInfoComponent, { data: x }));
   }
 
   public openOrganizationDetails(organizationId: number) {
-    this.organizationService.getById(organizationId).subscribe(x => this.dialog.open(OrganizationsInfoComponent, {data: x}));
+    this.organizationService.getById(organizationId).subscribe(x => this.dialog.open(OrganizationsInfoComponent, { data: x }));
   }
 
   public openEventDetails(eventId: number) {
-    this.eventsService.getById(eventId).subscribe(x => this.dialog.open(EventsInfoComponent, {data: x}));
+    this.eventsService.getById(eventId).subscribe(x => this.dialog.open(EventsInfoComponent, { data: x }));
   }
 
-  private checkIfComingFromLogin(): Promise<boolean>{
+  private checkIfComingFromLogin(): Promise<boolean> {
     return new Promise(resolve => {
       this.route.queryParams.pipe(
         filter(params => params.from))
-      .subscribe(params => resolve(params.from === 'login'));
+        .subscribe(params => resolve(params.from === 'login'));
     });
   }
 
@@ -164,35 +168,35 @@ export class HomeComponent implements OnInit {
 
   private addEvent(entry: ModificationEntryDto) {
     this.eventsService.getById(entry.dataModelId).subscribe(event => {
-          this.events.push({
-            date: event.date,
-            time: event.time,
-            duration: event.duration,
-            name: event.name,
-            id: event.id,
-            contacts: event.contacts,
-            participated: event.participated,
-            userName: entry.user?.userName,
-            created: entry.modificationType === MODIFICATION.CREATED
-          });
-        }
-      );
+      this.events.push({
+        date: event.date,
+        start: event.start,
+        end: event.end,
+        name: event.name,
+        id: event.id,
+        contacts: event.contacts,
+        participated: event.participated,
+        userName: entry.user?.userName,
+        created: entry.modificationType === MODIFICATION.CREATED
+      });
+    }
+    );
   }
 
   private addOrganization(entry: ModificationEntryDto) {
     this.organizationService.getById(entry.dataModelId).subscribe(y => {
-          this.organizations.push({
-            address: y.address,
-            contact: y.contact,
-            description: y.description,
-            name: y.name,
-            id: y.id,
-            employees: y.employees,
-            userName: entry.user?.userName,
-            created: entry.modificationType === MODIFICATION.CREATED
-          });
-        }
-      );
+      this.organizations.push({
+        address: y.address,
+        contact: y.contact,
+        description: y.description,
+        name: y.name,
+        id: y.id,
+        employees: y.employees,
+        userName: entry.user?.userName,
+        created: entry.modificationType === MODIFICATION.CREATED
+      });
+    }
+    );
   }
 
   private addContact(entry: ModificationEntryDto) {
@@ -211,6 +215,6 @@ export class HomeComponent implements OnInit {
         organizations: y.organizations,
         userName: entry.user?.userName,
         created: entry.modificationType === MODIFICATION.CREATED
-    }));
+      }));
   }
 }
