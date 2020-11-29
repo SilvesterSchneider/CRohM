@@ -19,14 +19,18 @@ export class SidenavComponent implements OnInit {
           label: 'Organisationen',
           link: './organizations',
           index: 1
+      },  {
+          label: 'Kalender',
+          link: './calendar',
+          index: 2
       }, {
           label: 'Veranstaltungen',
           link: './events',
-          index: 2
+          index: 3
       }, {
         label: 'Statistiken',
         link: './statistics',
-        index: 3
+        index: 4
     }
     ];
    }
