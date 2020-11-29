@@ -18,19 +18,30 @@ export class ObjectsCreationComponent implements OnInit {
   constructor(private statistics: StatisticsService, private translate: TranslateService) { }
 
   ngOnInit(): void {
-    this.statistics.getVerticalGroupedBarDataByType(STATISTICS_VALUES.ALL_CREATED_OBJECTS).subscribe(x => {
+    this.statistics.getVerticalGroupedBarDataByType(STATISTICS_VALUES.ALL_CREATED_OBJECTS).subscribe(stats => {
+
+      stats.forEach(res => res.series.map(series => {
+        switch (series.name) {
+          case 'Kontakte': series.name = this.translate.instant('contact.contacts'); break;
+          case 'Organisationen': series.name = this.translate.instant('organization.organizations'); break;
+          case 'Veranstaltungen': series.name = this.translate.instant('event.events'); break;
+        }
+        return series;
+      }));
+
       this.chart.setSizes(80, 400, 400);
       this.chart.setChangeCallback((visibleData: VerticalGroupedBarDto[]) => this.calculateTheAmounts(visibleData));
       this.chart.setLabels(this.translate.instant('statistic.data'),
         this.translate.instant('statistic.numberObjects'),
         this.translate.instant('statistic.objects'));
-      this.chart.setData(x);
-      if (x.length === 0) {
+      this.chart.setData(stats);
+
+      if (stats.length === 0) {
         this.totalContacts = 0;
         this.totalOrganizations = 0;
         this.totalEvents = 0;
       } else {
-        this.calculateTheAmounts(x);
+        this.calculateTheAmounts(stats);
       }
     });
   }
@@ -40,15 +51,15 @@ export class ObjectsCreationComponent implements OnInit {
     this.totalOrganizations = 0;
     this.totalEvents = 0;
     visibleData.forEach(x => {
-      const contactSet = x.series.find(a => a.name === 'Kontakte');
+      const contactSet = x.series.find(a => a.name === this.translate.instant('contact.contacts'));
       if (contactSet != null) {
         this.totalContacts += contactSet.value;
       }
-      const orgaSet = x.series.find(a => a.name === 'Organisationen');
+      const orgaSet = x.series.find(a => a.name === this.translate.instant('organization.organizations'));
       if (orgaSet != null) {
         this.totalOrganizations += orgaSet.value;
       }
-      const eventSet = x.series.find(a => a.name === 'Veranstaltungen');
+      const eventSet = x.series.find(a => a.name === this.translate.instant('event.events'));
       if (eventSet != null) {
         this.totalEvents += eventSet.value;
       }

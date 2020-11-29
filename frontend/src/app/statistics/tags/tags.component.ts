@@ -20,17 +20,27 @@ export class TagsComponent implements OnInit {
   constructor(private statistics: StatisticsService, private translate: TranslateService) { }
 
   ngOnInit(): void {
-    this.statistics.getVerticalGroupedBarDataByType(STATISTICS_VALUES.ALL_TAGS).subscribe(x => {
-      this.data = x;
+    this.statistics.getVerticalGroupedBarDataByType(STATISTICS_VALUES.ALL_TAGS).subscribe(stats => {
+      console.log(stats);
+      stats.forEach(res => res.series.map(series => {
+        switch (series.name) {
+          case 'Kontakt': series.name = this.translate.instant('contact.contact'); break;
+          case 'Organisation': series.name = this.translate.instant('organization.organization'); break;
+          case 'Veranstaltung': series.name = this.translate.instant('event.events'); break;
+        }
+        return series;
+      }));
+
+      this.data = stats;
       this.chart.setSizes(80, 400, 400);
       this.chart.setChangeCallback((visibleData: VerticalGroupedBarDto[]) => this.calculateTheAmounts(visibleData));
       this.chart.setLabels(this.translate.instant('common.tags'), this.translate.instant('statistic.numberTags'), this.translate.instant('statistic.objects'));
-      this.chart.setData(x);
+      this.chart.setData(stats);
       this.chart.shouldShowDates(false);
-      if (x.length === 0) {
+      if (stats.length === 0) {
         this.totalTags = 0;
       } else {
-        this.calculateTheAmounts(x);
+        this.calculateTheAmounts(stats);
       }
       this.updateData();
     });
@@ -58,11 +68,11 @@ export class TagsComponent implements OnInit {
   }
 
   sortFunction(firstObject: VerticalGroupedBarDto, secondObject: VerticalGroupedBarDto): number {
-    let searchText = 'Kontakt';
+    let searchText = this.translate.instant('contact.contact');
     if (this.valueOrganizations) {
-      searchText = 'Organisation';
+      searchText = this.translate.instant('organization.organization');
     } else if (this.valueEvents) {
-      searchText = 'Veranstaltung';
+      searchText = this.translate.instant('event.events');
     }
     const vertA: VerticalGroupedBarDataSet = firstObject.series.find(a => a.name === searchText);
     const vertB: VerticalGroupedBarDataSet = secondObject.series.find(a => a.name === searchText);

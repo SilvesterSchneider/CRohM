@@ -53,7 +53,7 @@
         "note": "Note",
         "visit": "Visit",
         "sendMailToMany": "Send mail to multiple contacts",
-        "orderBy": "Sortierung nach"
+        "orderBy": "Order by"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",
