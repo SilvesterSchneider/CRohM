@@ -13,12 +13,13 @@ import {
   CalendarMonthViewComponent,
   CalendarView,
 } from 'angular-calendar';
-import { EventService } from '../shared/api-generated/api-generated';
+import { EventDto, EventService } from '../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { EventColor } from 'calendar-utils';
 import { EventsDetailComponent } from '../events/events-detail/events-detail.component';
 import { EventsAddComponent } from '../events/events-add/events-add.component';
 import { JwtService } from '../shared/jwt.service';
+import { min } from 'rxjs/operators';
 
 const colors: any = {
   cyan: {
@@ -121,16 +122,29 @@ export class CalendarComponent implements OnInit {
     this.activeDayIsOpen = false;
   }
 
+  funtionGetSortedData(a: EventDto, b: EventDto): number {
+    const dateA = new Date(a.date);
+    const timeA = new Date(a.time);
+    dateA.setHours(timeA.getHours());
+    dateA.setMinutes(timeA.getMinutes());
+    const dateB = new Date(b.date);
+    const timeB = new Date(b.time);
+    dateB.setHours(timeB.getHours());
+    dateB.setMinutes(timeB.getMinutes());
+    return (dateA.getTime() - dateB.getTime());
+  }
+
   init() {
     this.events = new Array<CalendarEventExtended>();
     this.eventService.get().subscribe(x => {
+      const xSort: EventDto[] = x.sort(this.funtionGetSortedData);
       let idx = 0;
-      x.forEach(a => {
+      xSort.forEach(a => {
         this.events.push(
           {
             start: this.getStartDate(a.date, a.time),
             end: this.getEndDate(a.date, a.time, a.duration),
-            title: a.name,
+            title: this.getTime(a.time) + ' ' + a.name,
             color: idx % 3 === 0 ? colors.cyan : (idx % 2 === 0 ? colors.blue : colors.yellow),
             actions: this.actions,
             allDay: false,
@@ -141,6 +155,15 @@ export class CalendarComponent implements OnInit {
         idx++;
       });
     });
+  }
+
+  getTime(time: string) {
+    const date = new Date(time);
+    let minutes = date.getMinutes().toString();
+    if (minutes.length == 1) {
+      minutes = '0' + minutes;
+    }
+    return date.getHours() + ':' + minutes;
   }
 
   getEndDate(date: string, time: string, duration: number): Date {
