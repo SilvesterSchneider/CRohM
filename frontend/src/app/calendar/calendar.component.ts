@@ -21,8 +21,8 @@ import { EventsAddComponent } from '../events/events-add/events-add.component';
 import { JwtService } from '../shared/jwt.service';
 
 const colors: any = {
-  red: {
-    primary: '#ad2121',
+  cyan: {
+    primary: '#00FFFF',
     secondary: '#FAE3E3',
   },
   blue: {
@@ -124,21 +124,22 @@ export class CalendarComponent implements OnInit {
   init() {
     this.events = new Array<CalendarEventExtended>();
     this.eventService.get().subscribe(x => {
+      let idx = 0;
       x.forEach(a => {
         this.events.push(
           {
             start: this.getStartDate(a.date, a.time),
             end: this.getEndDate(a.date, a.time, a.duration),
             title: a.name,
-            color: this.events.length % 3 === 0 ? colors.red : this.events.length % 2 === 0 ? colors.blue : colors.yellow,
+            color: idx % 3 === 0 ? colors.cyan : (idx % 2 === 0 ? colors.blue : colors.yellow),
             actions: this.actions,
             allDay: false,
             draggable: false,
             id: a.id
           }
         );
+        idx++;
       });
-      this.refresh.subscribe();
     });
   }
 
@@ -162,5 +163,33 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.permissionAdd = this.jwt.hasPermission('Anlegen einer Veranstaltung');
     this.init();
+  }
+
+  getKw(date: Date): number {
+    // In JavaScript the Sunday has value 0 as return value of getDay() function.
+    // So we have to order them first ascending from Monday to Sunday
+    // Monday: ((1+6) % 7) = 0
+    // Tuesday ((2+6) % 7) = 1
+    // Wednesday: ((3+6) % 7) = 2
+    // Thursday: ((4+6) % 7) = 3
+    // Friday: ((5+6) % 7) = 4
+    // Saturday: ((6+6) % 7) = 5
+    // Sunday: ((0+6) % 7) = 6
+    // (3 - result) is necessary to get the Thursday of the current week.
+    // If we want to have Tuesday it would be (1-result)
+    const currentThursday = new Date(date.getTime() + (3 - ((date.getDay() + 6) % 7)) * 86400000);
+
+    // At the beginnig or end of a year the thursday could be in another year.
+    const yearOfThursday = currentThursday.getFullYear();
+
+    // Get first Thursday of the year
+    const firstThursday = new Date(new Date(yearOfThursday, 0, 4).getTime() +
+      (3 - ((new Date(yearOfThursday, 0, 4).getDay() + 6) % 7)) * 86400000);
+
+    // +1 we start with week number 1
+    // +0.5 an easy and dirty way to round result (in combinationen with Math.floor)
+    const weekNumber = Math.floor(1 + 0.5 + (currentThursday.getTime() - firstThursday.getTime()) / 86400000 / 7);
+
+    return weekNumber;
   }
 }
