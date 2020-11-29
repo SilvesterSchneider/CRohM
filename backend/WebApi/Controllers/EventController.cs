@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-
+using System.Linq;
 
 namespace WebApi.Controllers
 {
@@ -24,15 +24,18 @@ namespace WebApi.Controllers
         private IEventService eventService;
         private IContactService contactService;
         private IOrganizationService orgaService;
+        private IMailService mailService;
 
         public EventController(IMapper mapper,
             IEventService eventService,
             IModificationEntryService modService,
             IUserService userService,
             IContactService contactService,
-            IOrganizationService orgaService)
+            IOrganizationService orgaService,
+            IMailService mailService)
         {
             this._mapper = mapper;
+            this.mailService = mailService;
             this.userService = userService;
             this.modService = modService;
             this.orgaService = orgaService;
@@ -167,12 +170,16 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> Delete(long id, [FromBody]bool sendMail)
         {
             Event eventToDelete = await eventService.GetEventByIdWithAllIncludesAsync(id);
             if (eventToDelete == null)
             {
                 return NotFound();
+            }
+            if (sendMail)
+            {
+                await mailService.SendEventDeletedMessage(eventToDelete.Contacts, eventToDelete.Organizations);
             }
             await eventService.DeleteAsync(eventToDelete);
             await modService.UpdateEventByDeletionAsync(id);

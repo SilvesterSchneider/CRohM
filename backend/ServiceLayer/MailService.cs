@@ -6,6 +6,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using static ModelLayer.Models.Contact;
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Models;
 
 namespace ServiceLayer
 {
@@ -29,6 +30,8 @@ namespace ServiceLayer
         bool CreateAndSendInvitationMail(string mail, string name, string mailContent);
 
         Task<bool> SendMailToAddress(string subject, string address, string mailContent);
+
+        Task<bool> SendEventDeletedMessage(List<EventContact> contactMails, List<EventOrganization> orgas);
     }
 
     public class MailService : IMailService
@@ -46,6 +49,11 @@ namespace ServiceLayer
         public static string INVITATION_DEF_CONTENT = STARTFIELD + " " + PRENAMEFIELD + " " + NAMEFIELD +
             "\rWir laden Sie herzlich ein zu unserer Veranstaltung \"" + EVENTNAMEFIELD +
             "\" am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr.\rWir freuen uns auf Ihr Erscheinen.\rTechnische Hochschule Nürnberg";
+        private static string EVENT_CANCELATION_CONTENT = "<p>" + STARTFIELD + NAMEFIELD + ", </p>" +
+            "<p> leider musste die Veranstaltung '" + EVENTNAMEFIELD + "', </p>" +
+            "<p> welche am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr stattfinden sollte, </p>" +
+            "<p> abgesagt werden.</p>";
+        private static string EVENT_CANCELATION_SUBJECT = "Absage einer Veranstaltung der technischen Hochschule";
 
         public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
         {
@@ -164,15 +172,7 @@ namespace ServiceLayer
 
         public bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender)
         {
-            string start = "Sehr geehrter Herr";
-            if (gender == GenderTypes.FEMALE)
-            {
-                start = "Sehr geehrte Frau";
-            }
-            else if (gender == GenderTypes.DIVERS)
-            {
-                start = "Sehr geehrt";
-            }
+            string start = GetGenderTitle(gender);
             string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
             return SendFormattedMail("Einladung zur Veranstaltung", finishedcontent, address, null, null);
         }
@@ -211,6 +211,52 @@ namespace ServiceLayer
                 finishedcontent = finishedcontent.Replace(NAMEFIELD, string.Empty).Replace(PRENAMEFIELD, name);
             }
             return SendFormattedMail("Einladung zur Veranstaltung", finishedcontent, mail, null, null);
+        }
+
+        public async Task<bool> SendEventDeletedMessage(List<EventContact> contactMails, List<EventOrganization> orgas)
+        {
+            bool ok = true;
+            foreach (EventContact contact in contactMails)
+            {
+                if (!await SendEventCancelInfo(contact.Contact.ContactPossibilities.Mail, GetGenderTitle(contact.Contact.Gender), contact.Contact.Name, contact.Event.Name, contact.Event.Date, contact.Event.Time)) {
+                    ok = false;
+                }
+            }
+
+            foreach (EventOrganization orga in orgas)
+            {
+                if (!await SendEventCancelInfo(orga.Organization.Contact.Mail, GetGenderTitle(GenderTypes.MALE), orga.Organization.Name, orga.Event.Name, orga.Event.Date, orga.Event.Time))
+                {
+                    ok = false;
+                }
+            }
+
+            return ok;
+        }
+
+        private string GetGenderTitle(GenderTypes gender)
+        {
+            string start = "Sehr geehrter Herr ";
+            if (gender == GenderTypes.FEMALE)
+            {
+                start = "Sehr geehrte Frau ";
+            }
+            else if (gender == GenderTypes.DIVERS)
+            {
+                start = "Sehr geehrt ";
+            }
+            return start;
+        }
+
+        private async Task<bool> SendEventCancelInfo(string mail, string beginning, string name, string eventName, DateTime date, DateTime time)
+        {
+            string content = EVENT_CANCELATION_CONTENT
+                .Replace(STARTFIELD, beginning)
+                .Replace(NAMEFIELD, name)
+                .Replace(EVENTNAMEFIELD, eventName)
+                .Replace(EVENTDATEFIELD, date.ToString("yyyy-MM-dd"))
+                .Replace(EVENTTIMEFIELD, time.ToString("hh:mm"));
+            return await Task.FromResult(SendMail(EVENT_CANCELATION_SUBJECT, content, mail, null, null));
         }
     }
 }
