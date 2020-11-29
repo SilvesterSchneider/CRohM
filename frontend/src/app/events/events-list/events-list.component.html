@@ -11,8 +11,8 @@
             title="Veranstaltungen aus der Vergangenheit ausblenden" (change)="toggleSelection()">
             Veranstaltungen aus der Vergangenheit ausblenden
         </mat-checkbox>
-        <button id="addDummyEventButton" class="button" *ngIf="isAdminUserLoggedIn" [disabled]="!permissionAdd" mat-raised-button color="primary"
-            title="Dummy Veranstaltung hinzufügen" (click)="addDummyEvent()">
+        <button id="addDummyEventButton" class="button" *ngIf="isAdminUserLoggedIn" [disabled]="!permissionAdd"
+            mat-raised-button color="primary" title="Dummy Veranstaltung hinzufügen" (click)="addDummyEvent()">
             <mat-icon>add</mat-icon> Dummy Veranstaltung hinzufügen
         </button>
         <button id="addEventButton" class="button" button="submit" [disabled]="!permissionAdd" mat-mini-fab
@@ -38,16 +38,17 @@
         <ng-container matColumnDef="uhrzeit">
             <mat-header-cell *matHeaderCellDef> Uhrzeit </mat-header-cell>
             <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element">
-                {{element.time | date:'HH:mm:ss'}} </mat-cell>
+                {{element.start | date:'HH:mm:ss'}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
-                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="callEdit(element.id)" color="primary"
-                    class="editButton" (click)="callEdit(element.id)">
+                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="callEdit(element.id)"
+                    color="primary">
                     <mat-icon class="icon" title="Veranstaltung bearbeiten">edit</mat-icon>
                 </button>
-                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)" color="primary">
+                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)"
+                    color="primary">
                     <mat-icon class="icon" title="Veranstaltungsinformationen anzeigen">info</mat-icon>
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteEvent(element.id)"

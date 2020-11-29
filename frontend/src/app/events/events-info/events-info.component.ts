@@ -100,6 +100,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     this.eventsForm.patchValue(this.event);
     this.eventsForm.get('date').patchValue(this.formatDate(this.event.date));
     this.eventsForm.get('start').patchValue(this.formatTime(this.event.start));
+    this.eventsForm.get('end').patchValue(this.formatTime(this.event.end));
   }
 
   formatDate(date: string): any {
