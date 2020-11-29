@@ -44,9 +44,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(string), Description = "successfully get mail text")]
-        public async Task<IActionResult> GetSendInvitationText(string eventName, string date, string time)
+        public async Task<IActionResult> GetSendInvitationText(string eventName, string date, string start)
         {
-            string text = MailService.GetMailForInvitationAsTemplate(eventName, date, time);
+            string text = MailService.GetMailForInvitationAsTemplate(eventName, date, start);
             return await Task.FromResult(Ok(text));
         }
 
