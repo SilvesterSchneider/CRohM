@@ -29,9 +29,11 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   columnsContacts = ['wasInvited', 'participated', 'prename', 'name'];
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
-  constructor(public dialogRef: MatDialogRef<EventsInfoComponent>,
+  constructor(
+    public dialogRef: MatDialogRef<EventsInfoComponent>,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public event: EventDto,
+    @Inject(MAT_DIALOG_DATA)
+    public event: EventDto,
     private fb: FormBuilder,
     private modService: ModificationEntryService
   ) {
