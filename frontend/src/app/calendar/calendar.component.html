@@ -1,5 +1,8 @@
-<div class="row text-center">
-    <div class="col-md-4">
+<mat-toolbar>
+  <mat-toolbar-row class="tabrow">
+    <span>Kalender</span>
+    <span class="spacer"></span>
+    <div class="column">
       <div class="btn-group">
         <div
           class="btn btn-primary"
@@ -8,14 +11,14 @@
           [(viewDate)]="viewDate"
           (viewDateChange)="closeOpenMonthViewDay()"
         >
-          Previous
+          Zurück
         </div>
         <div
           class="btn btn-outline-secondary"
           mwlCalendarToday
           [(viewDate)]="viewDate"
         >
-          Today
+          Heute
         </div>
         <div
           class="btn btn-primary"
@@ -24,40 +27,50 @@
           [(viewDate)]="viewDate"
           (viewDateChange)="closeOpenMonthViewDay()"
         >
-          Next
+          Weiter
         </div>
       </div>
     </div>
-    <div class="col-md-4">
+    <span class="spacer"></span>
+    <div class="column">
       <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
     </div>
-    <div class="col-md-4">
+    <span class="spacer"></span>
+    <div class="column">
       <div class="btn-group">
         <div
           class="btn btn-primary"
           (click)="setView(CalendarView.Month)"
           [class.active]="view === CalendarView.Month"
         >
-          Month
+          Monat
         </div>
         <div
           class="btn btn-primary"
           (click)="setView(CalendarView.Week)"
           [class.active]="view === CalendarView.Week"
         >
-          Week
+          Woche
         </div>
         <div
           class="btn btn-primary"
           (click)="setView(CalendarView.Day)"
           [class.active]="view === CalendarView.Day"
         >
-          Day
+          Tag
         </div>
       </div>
     </div>
-  </div>
-  <br />
+    <span class="spacer"></span>
+    <div class="column">
+      <button id="addEventButton" class="button" button="submit" [disabled]="!permissionAdd" mat-mini-fab
+        color="primary" (click)="addEvent()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="cal">
   <div [ngSwitch]="view">
     <mwl-calendar-month-view
       *ngSwitchCase="CalendarView.Month"
@@ -86,4 +99,4 @@
     >
     </mwl-calendar-day-view>
   </div>
-  
+</div>

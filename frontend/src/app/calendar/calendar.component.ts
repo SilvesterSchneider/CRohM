@@ -1,4 +1,4 @@
-import { Component, OnInit ,ChangeDetectionStrategy,
+import { Component, OnInit,
   ViewChild,
   TemplateRef} from '@angular/core';
 
@@ -17,6 +17,8 @@ import { EventService } from '../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { EventColor } from 'calendar-utils';
 import { EventsDetailComponent } from '../events/events-detail/events-detail.component';
+import { EventsAddComponent } from '../events/events-add/events-add.component';
+import { JwtService } from '../shared/jwt.service';
 
 const colors: any = {
   red: {
@@ -60,7 +62,7 @@ export class CalendarComponent implements OnInit {
   CalendarView = CalendarView;
 
   viewDate: Date = new Date();
-
+  permissionAdd = false;
   modalData: {
     action: string;
     event: CalendarEventExtended;
@@ -80,9 +82,9 @@ export class CalendarComponent implements OnInit {
 
   events: CalendarEventExtended[] = new Array<CalendarEventExtended>();
 
-  constructor(private eventService: EventService, private dialog: MatDialog) {}
+  constructor(private eventService: EventService, private dialog: MatDialog, private jwt: JwtService) {}
 
-  activeDayIsOpen: boolean = true;
+  activeDayIsOpen = true;
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -96,6 +98,11 @@ export class CalendarComponent implements OnInit {
       }
       this.viewDate = date;
     }
+  }
+
+  addEvent() {
+    const dialogRef = this.dialog.open(EventsAddComponent, { disableClose: true });
+    dialogRef.afterClosed().subscribe(x => this.init());
   }
 
   handleEvent(action: string, event: CalendarEventExtended): void {
@@ -153,6 +160,7 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.permissionAdd = this.jwt.hasPermission('Anlegen einer Veranstaltung');
     this.init();
   }
 }
