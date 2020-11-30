@@ -234,6 +234,7 @@ namespace ServiceLayer
         public bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender)
         {
             string start = GetGenderTitle(gender);
+            string genderEn = GetGenderTitleEnglish(gender);
             string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
             finishedcontent = finishedcontent.Replace(NAMEFIELDEN, name).Replace(STARTFIELDEN, genderEn).Replace(PRENAMEFIELDEN, preName);
             return SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, address, null, null);
@@ -309,6 +310,20 @@ namespace ServiceLayer
             else if (gender == GenderTypes.DIVERS)
             {
                 start = "Sehr geehrt ";
+            }
+            return start;
+        }
+
+        private string GetGenderTitleEnglish(GenderTypes gender)
+        {
+            string start = "Dear mister ";
+            if (gender == GenderTypes.FEMALE)
+            {
+                start = "Dear misses ";
+            }
+            else if (gender == GenderTypes.DIVERS)
+            {
+                start = "Dear ";
             }
             return start;
         }
