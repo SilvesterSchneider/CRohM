@@ -86,7 +86,7 @@ export class UserComponent implements OnInit {
 
   public OnDelete(userId: number) {
     const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-      data: 'Benutzer',
+      data: 'settings.user',
       disableClose: true
     });
 

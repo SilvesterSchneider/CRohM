@@ -4,6 +4,7 @@ import { UsersService, RoleDto, UserDto,
     RoleService } from '../../../shared/api-generated/api-generated';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
+import { RolesTranslationService } from '../../roles/roles-translation.service';
 
 /**
  * Komponente fuer den Modal-Dialog zum Editieren eines Nutzers
@@ -59,6 +60,10 @@ export class EditUserDialogComponent extends BaseDialogInput<EditUserDialogCompo
                 }
             );
         });
+    }
+
+    getRoleLabel(role: string){
+        return RolesTranslationService.mapRole(role).label;
     }
 
     preselectPermissions() {

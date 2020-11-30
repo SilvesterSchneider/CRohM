@@ -4,17 +4,17 @@
             <div class="row">
                 <div class="col-md-12">
                     <h5>
-                        Übersicht
+                        {{'common.overview' | translate}}
                     </h5>
                 </div>
                 <div class="col-md-3">
                     <mat-form-field>
-                        <input [readonly]="true" matInput placeholder="Name" formControlName="name">
+                        <input [readonly]="true" matInput placeholder="{{'common.name' | translate}}" formControlName="name">
                     </mat-form-field>
                 </div>
                 <div class="col-md-3">
                     <mat-form-field>
-                        <input [readonly]="true" matInput placeholder="Beschreibung" formControlName="description">
+                        <input [readonly]="true" matInput placeholder="{{'common.description' | translate}}" formControlName="description">
                     </mat-form-field>
                 </div>
             </div>
@@ -23,36 +23,36 @@
                 <div class="row">
                     <div class="col-md-12">
                         <h5>
-                            Adressdaten
+                            {{'contact.address' | translate}}
                         </h5>
                     </div>
                     <div class="col-md">
                         <mat-form-field>
-                            <input [readonly]="true" matInput placeholder="Strasse" formControlName="street">
+                            <input [readonly]="true" matInput placeholder="{{'contact.street' | translate}}" formControlName="street">
                         </mat-form-field>
                     </div>
                     <div class="col-md">
                         <mat-form-field>
-                            <input [readonly]="true" matInput placeholder="Hausnummer" formControlName="streetNumber">
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md">
-                        <mat-form-field>
-                            <input [readonly]="true" matInput placeholder="Stadt" formControlName="city">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md">
-                        <mat-form-field>
-                            <input [readonly]="true" matInput placeholder="PLZ" formControlName="zipcode">
+                            <input [readonly]="true" matInput placeholder="{{'contact.streetNumber' | translate}}" formControlName="streetNumber">
                         </mat-form-field>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md">
                         <mat-form-field>
-                            <input [readonly]="true" matInput placeholder="Land" formControlName="country">
+                            <input [readonly]="true" matInput placeholder="{{'contact.city' | translate}}" formControlName="city">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md">
+                        <mat-form-field>
+                            <input [readonly]="true" matInput placeholder="{{'contact.zipcode' | translate}}" formControlName="zipcode">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+                        <mat-form-field>
+                            <input [readonly]="true" matInput placeholder="{{'contact.country' | translate}}" formControlName="country">
                         </mat-form-field>
                     </div>
                 </div>
@@ -62,39 +62,39 @@
             <div class="row">
                 <div class="col-md-12">
                     <h5>
-                        Kontaktmöglichkeiten
+                        {{'contact.contactPossibilities' | translate}}
                     </h5>
                 </div>
                 <div class="col-md">
                     <mat-form-field>
-                        <input [readonly]="true" matInput placeholder="E-Mail" formControlName="mail">
+                        <input [readonly]="true" matInput placeholder="{{'contact.mail' | translate}}" formControlName="mail">
                     </mat-form-field>
                 </div>
                 <div class="col-md">
                     <mat-form-field>
-                        <input [readonly]="true" matInput placeholder="Telefonnummer" formControlName="phoneNumber">
+                        <input [readonly]="true" matInput placeholder="{{'contact.phoneNumber' | translate}}" formControlName="phoneNumber">
                     </mat-form-field>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md">
                     <mat-form-field>
-                        <input [readonly]="true" matInput placeholder="Faxnummer" formControlName="fax">
+                        <input [readonly]="true" matInput placeholder="{{'contact.fax' | translate}}" formControlName="fax">
                     </mat-form-field>
                 </div>
             </div>
         </div>
     </div>
     <div *ngIf="organization.contact.contactEntries.length > 0" class="col-md-12">
-        <h5>Weitere Kontaktmöglichkeiten</h5>
+        <h5>{{'contact.contactPossibilities' | translate}}</h5>
         <mat-table #table [dataSource]="organization.contact.contactEntries">
             <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.name' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.contactEntryName}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="kontakt">
-                <mat-header-cell *matHeaderCellDef> Kontakt </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'contact.contact' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.contactEntryValue}}
                 </mat-cell>
             </ng-container>
@@ -104,15 +104,15 @@
     </div>
 
     <div *ngIf="organization.employees.length > 0" class="col-md-12">
-        <h5>Mitarbeiter</h5>
+        <h5>{{'organization.employees' | translate}}</h5>
         <mat-table #table [dataSource]="organization.employees">
             <ng-container matColumnDef="vorname">
-                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'contact.firstName' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.preName}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'contact.lastName' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.name}}
                 </mat-cell>
             </ng-container>
@@ -122,7 +122,7 @@
     </div>
 
     <div *ngIf="tags.length > 0" class="col-md-12">
-        <h5>Tags</h5>
+        <h5>{{'common.tags' | translate}}</h5>
         <mat-chip-list #chipList>
             <mat-chip *ngFor="let item of tags">
                 {{ item.name }}
@@ -134,7 +134,7 @@
     <mat-expansion-panel *ngIf="history.length > 0" togglePosition="after" class="extensionPanel before">
         <mat-expansion-panel-header>
             <mat-panel-title>
-                <h5>Historie</h5>
+                <h5>{{'common.history' | translate}}</h5>
             </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-table #table [dataSource]="history">
@@ -149,17 +149,17 @@
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="datum">
-                <mat-header-cell *matHeaderCellDef> Datum </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{getDate(element.date)}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef> Thema </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.topic' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.name}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="kommentar">
-                <mat-header-cell *matHeaderCellDef> Kommentar </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.comment' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.comment}}
                 </mat-cell>
             </ng-container>
@@ -171,32 +171,32 @@
     <mat-expansion-panel *ngIf="modifications.length > 0" togglePosition="after" class="extensionPanel">
         <mat-expansion-panel-header>
             <mat-panel-title>
-                <h5>Datenveränderungen</h5>
+                <h5>{{'common.dataChanges' | translate}}</h5>
             </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-table #table [dataSource]="modifications">
             <ng-container matColumnDef="datum">
-                <mat-header-cell *matHeaderCellDef> Datum </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{getDate(element.dateTime)}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="bearbeiter">
-                <mat-header-cell *matHeaderCellDef> Bearbeiter </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.editor' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.user?.firstName + " " + element.user?.lastName}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="feldname">
-                <mat-header-cell *matHeaderCellDef> Eigenschaft </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.attribute' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.propertyName}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="alterWert">
-                <mat-header-cell *matHeaderCellDef> Alter Wert </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.oldValue' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.oldValue}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="neuerWert">
-                <mat-header-cell *matHeaderCellDef> Neuer Wert </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> {{'common.newValue' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.actualValue}}
                 </mat-cell>
             </ng-container>
@@ -206,7 +206,7 @@
         <mat-paginator (page)="onPaginationChangedModification($event)" [pageSizeOptions]="[5, 10, 20]" [length]="modificationsPaginationLength"></mat-paginator>
     </mat-expansion-panel>
     <div mat-dialog-actions align="end">
-        <button class="contactDetails" mat-raised-button color="primary" title="Schließen" type="submit"
-        (click)="dialogRef.close()">Schließen</button>
+        <button class="contactDetails" mat-raised-button color="primary" title="{{'common.cancel' | translate}}" type="submit"
+        (click)="dialogRef.close()">{{'common.cancel' | translate}}</button>
     </div>
 </mat-dialog-content>

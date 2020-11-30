@@ -1,12 +1,12 @@
 <div>
     <app-vertical-grouped-bar-chart></app-vertical-grouped-bar-chart>
     <div class="margin">
-        Anzahl sämtlich eingeladener Personen: {{totalInvitations}}
+        {{'statistic.numberInvited' | translate}} {{totalInvitations}}
     </div>
     <div class="margin">
-        Gesamte Anzahl von Veranstaltungsteilnehmern: {{totalParticipations}}
+        {{'statistic.numberParticipants' | translate}} {{totalParticipations}}
     </div>
     <div class="margin">
-        Prozentualer Anteil aller Teilnehmer: {{relation | number : '.2-2'}}%
+        {{'statistic.percentParticipated' | translate}} {{relation | number : '.2-2'}}%
     </div>
 </div>
