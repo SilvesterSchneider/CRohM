@@ -12,6 +12,11 @@
         </div>
         <div class="col-md-3">
             <mat-form-field>
+                <textarea matInput placeholder="Beschreibung" formControlName="description"></textarea>
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
                 <input type="date" matInput placeholder="Datum" formControlName="date">
             </mat-form-field>
         </div>
@@ -25,6 +30,12 @@
                 <input type="number" matInput placeholder="Dauer in Stunden" formControlName="duration">
             </mat-form-field>
         </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input type="text" matInput placeholder="Ort" formControlName="location">
+            </mat-form-field>
+        </div>
+
     </div>
 
 <mat-chip-list #chipList>
