@@ -190,7 +190,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   deleteContact(contact: ContactDto) {
     const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-      data: 'Kontakt',
+      data: 'contact.contact',
       disableClose: true
     });
 

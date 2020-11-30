@@ -176,7 +176,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 
 	deleteOrganization(id: number) {
 		const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-			data: 'Organisation',
+			data: 'organization.organization',
 			disableClose: true
 		});
 

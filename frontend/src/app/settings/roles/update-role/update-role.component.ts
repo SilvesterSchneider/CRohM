@@ -45,7 +45,7 @@ export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogC
 
   public onDelete(): void {
     const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-      data: 'Rolle',
+      data: 'settings.role.role',
       disableClose: true
     });
 

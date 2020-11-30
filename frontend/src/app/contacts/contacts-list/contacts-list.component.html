@@ -74,11 +74,11 @@
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
                 <button type="button" mat-icon-button [disabled]="!permissionInformContact" (click)="openDisclosureDialog(element.id)"
                     color="primary">
-                    <mat-icon title="Kontaktauskunft" class="icon">description</mat-icon>
+                    <mat-icon title="{{'contact.disclosure.disclosure' | translate}}" class="icon">description</mat-icon>
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openEditDialog(element)"
                     color="primary" class="editButton">
-                    <mat-icon title="Kontakt bearbeiten" class="icon">edit</mat-icon>
+                    <mat-icon title="{{'contact.edit' | translate}}" class="icon">edit</mat-icon>
                 </button>
                 <button type="button" [matMenuTriggerFor]="menu">
                     <mat-icon color="primary" class="icon">list</mat-icon>

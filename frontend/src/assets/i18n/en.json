@@ -53,7 +53,9 @@
         "note": "Note",
         "visit": "Visit",
         "sendMailToMany": "Send mail to multiple contacts",
-        "orderBy": "Order by"
+        "orderBy": "Order by",
+        "selectLanguage": "Select Language",
+        "usermenu": "User Menu"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",
@@ -94,6 +96,7 @@
         "showContactInfo": "Show contact information",
         "delete": "Delete Contact",
         "disclosure": {
+            "disclosure": "Disclosure",
             "generate": "Generate Disclosure",
             "description": "Generates a pdf-file with all data stored within the CRMS for the selected contact according to Right of Access Art. 12 GDPR. The pdf-file is  send to the contact's mail adress."
         }
@@ -111,6 +114,7 @@
         "delete": "Delete Organization"
     },
     "event": {
+        "event": "Event",
         "events": "Events",
         "create": "Create Event",
         "add": "Add Event",

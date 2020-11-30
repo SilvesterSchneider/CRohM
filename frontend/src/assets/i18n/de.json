@@ -53,7 +53,9 @@
         "note": "Notiz",
         "visit": "Besuch",
         "sendMailToMany": "Mail an mehrere Kontakte senden",
-        "orderBy": "Sortierung nach"
+        "orderBy": "Sortierung nach",
+        "selectLanguage": "Sprachauswahl",
+        "usermenu": "Benutzermenü"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",
@@ -94,6 +96,7 @@
         "showContactInfo": "Kontaktinformationen anzeigen",
         "delete": "Kontakt löschen",
         "disclosure": {
+            "disclosure": "Kontaktauskunft",
             "generate": "Kontaktauskunft generieren",
             "description": "Erzeugt eine PDF-Datei mit allen im CRMS gespeicherten Daten zu gewähltem Kontakt gem. Auskunftspflicht EU-DSGVO Art. 15. Die PDF-Datei wird direkt an die E-Mail-Adresse des Kontakts gesendet."
         }
@@ -111,6 +114,7 @@
         "delete": "Organisation löschen"
     },
     "event": {
+        "event": "Veranstaltung",
         "events": "Veranstaltungen",
         "create": "Veranstaltung erstellen",
         "add": "Veranstaltung hinzufügen",
