@@ -3,58 +3,58 @@
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field class="textMargin">
-                    <input matInput placeholder="Mail Adresse" formControlName="mailAddress">
+                    <input matInput placeholder="{{'contact.mail' | translate}}" formControlName="mailAddress">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field class="textMargin">
-                    <input matInput placeholder="Anzeigename" formControlName="displayName">
+                    <input matInput placeholder="{{'settings.displayName' | translate}}" formControlName="displayName">
                 </mat-form-field>
             </div>
         </div>
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field class="textMargin">
-                    <input matInput placeholder="Benutzername" formControlName="userName">
+                    <input matInput placeholder="{{'settings.username' | translate}}" formControlName="userName">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field class="textMargin">
-                    <input matInput type="password" placeholder="Passwort" formControlName="password">
+                    <input matInput type="password" placeholder="{{'settings.password' | translate}}" formControlName="password">
                 </mat-form-field>
             </div>
         </div>
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field class="textMargin">
-                    <input matInput placeholder="Port" formControlName="port">
+                    <input matInput placeholder="{{'settings.port' | translate}}" formControlName="port">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field class="textMargin">
-                    <input matInput placeholder="Host" formControlName="host">
+                    <input matInput placeholder="{{'settings.host' | translate}}" formControlName="host">
                 </mat-form-field>
             </div>
         </div>
-        <button class="margin" id="saveMail" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!mailsForm.valid"
+        <button class="margin" id="saveMail" mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!mailsForm.valid"
             (click)="saveValues()">
-            Speichern
+            {{'common.save' | translate}}
         </button>
     </div>
 </div>
 <div class="margin">
-    Um die Einstellungen zu testen können Sie hier eine Test E-Mail an eine Adresse senden
+    {{'settings.testMail' | translate}}
 </div>
 <div class="mydivclass" [formGroup]="sendMailForm">
     <div class="column">
         <div class="col-md-3">
             <mat-form-field class="textMargin">
-                <input matInput placeholder="Ihre E-Mail Adresse" formControlName="address">
+                <input matInput placeholder="{{'contact.mail' | translate}}" formControlName="address">
             </mat-form-field>
         </div>
     </div>
-    <button class="margin" id="sendMail" mat-raised-button color="primary" title="E-Mail senden" type="submit" [disabled]="!sendMailForm.valid"
+    <button class="margin" id="sendMail" mat-raised-button color="primary" title="{{'settings.sendMail' | translate}}" type="submit" [disabled]="!sendMailForm.valid"
         (click)="sendMail()">
-        E-Mail senden
+        {{'settings.sendMail' | translate}}
     </button>
 </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { ContactService, UsersService, DataProtectionService, GenderTypes } from '../../shared/api-generated/api-generated';
+import { ContactService, DataProtectionService, GenderTypes } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
@@ -8,14 +8,15 @@ import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialo
 import { ContactsEditDialogComponent } from '../contacts-edit-dialog/contacts-edit-dialog.component';
 import { ContactsAddDialogComponent } from '../contacts-add-dialog/contacts-add-dialog.component';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
-import { JwtService } from 'src/app/shared/jwt.service';
-import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataProtectionHelperService, DpUpdatePopupComponent } from 'src/app/shared/data-protection';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
-import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
-import { EventsAddComponent } from 'src/app/events/events-add/events-add.component';
+import { EventsAddComponent } from '../../events/events-add/events-add.component';
+import { AddHistoryComponent } from '../../shared/add-history/add-history.component';
+import { JwtService } from '../../shared/jwt.service';
+import { TagsFilterComponent } from '../../shared/tags-filter/tags-filter.component';
+import { DataProtectionHelperService } from '../../shared/data-protection/data-protection-service.service';
+import { DpUpdatePopupComponent } from '../../shared/data-protection/dp-update-popup/dp-update-popup.component';
 import { ContactsSendMailDialogComponent } from '../contacts-send-mail-dialog/contacts-send-mail-dialog.component';
 import { Router } from '@angular/router';
 
@@ -189,7 +190,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   deleteContact(contact: ContactDto) {
     const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-      data: 'Kontakt',
+      data: 'contact.contact',
       disableClose: true
     });
 

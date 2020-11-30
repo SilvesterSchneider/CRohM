@@ -12,7 +12,7 @@ import { OrganizationsInfoComponent } from '../organizations/organizations-info/
 import { JwtService } from '../shared/jwt.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { DpDisclaimerDialogComponent } from '../shared/data-protection';
+import { DpDisclaimerDialogComponent } from '../shared/data-protection/dp-disclaimer-dialog/dp-disclaimer-dialog.component';
 
 export class ContactExtended implements ContactDto {
   id: number;
@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
   public organizations: OrganizationExtended[] = new Array<OrganizationExtended>();
   public events: EventExtended[] = new Array<EventExtended>();
   AMOUNT_OF_DATASETS = 2;
-  public lastLogin: string;
+  public lastLogin: Date;
   loggedInUser: string;
 
   private weekDays: string[] = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
@@ -124,7 +124,7 @@ export class HomeComponent implements OnInit {
     });
     const userId = this.jwt.getUserId();
     this.userLoginService.getTheLastLoginTimeOfUserById(userId)
-      .subscribe(lastLogin => this.lastLogin = this.getDate(lastLogin));
+      .subscribe(lastLogin => this.lastLogin = new Date(lastLogin));
     this.userService.get().subscribe(x => {
       x.forEach(y => {
         if (y.id === userId) {
@@ -153,13 +153,6 @@ export class HomeComponent implements OnInit {
         filter(params => params.from))
       .subscribe(params => resolve(params.from === 'login'));
     });
-  }
-
-  private getDate(lastLogin: string): string {
-    const date = new Date(lastLogin);
-    return this.weekDays[date.getDay()] + ' den ' + date.getDate().toString() + '-' + (date.getMonth() + 1).toString()
-      + '-' + date.getFullYear().toString() + ' um ' + date.getHours().toString() + ':' + date.getMinutes().toString()
-      + '.' + date.getSeconds().toString() + ' Uhr';
   }
 
   private addEvent(entry: ModificationEntryDto) {

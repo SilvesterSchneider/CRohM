@@ -14,6 +14,7 @@ import { AddUserDialogComponent } from './user/add-user/add-user.component';
 import { EditUserDialogComponent } from './user/edit-user/edit-user.component';
 import { DeleteEntryDialogModule } from '../shared/form/delete-entry-dialog/delete-entry-dialog.module';
 import { MailComponent } from './mail/mail.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 
@@ -29,6 +30,7 @@ import { MailComponent } from './mail/mail.component';
     ReactiveFormsModule,
     MatDialogModule,
     FormsModule,
+    TranslateModule
   ], entryComponents: [CreateRoleDialogComponent, UpdateRoleDialogComponent]
 })
 export class SettingsModule { }

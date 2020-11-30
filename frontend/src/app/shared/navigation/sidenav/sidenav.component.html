@@ -2,19 +2,22 @@
   <mat-sidenav #sidenav role="navigation">
     <mat-nav-list>
       <a mat-list-item routerLink="/contacts">
-        <span class="label">Kontakte</span>
+        <span class="label">{{'contact.contacts' | translate}}</span>
       </a>
       <a mat-list-item routerLink="/organizations">
-        <span class="label">Organisationen</span>
+        <span class="label">{{'organization.organizations' | translate}}</span>
       </a>
       <a mat-list-item routerLink="/calendar">
         <span class="label">Kalender</span>
       </a>
       <a mat-list-item routerLink="/events">
-        <span class="label">Veranstaltungen</span>
+        <span class="label">{{'event.events' | translate}}</span>
       </a>
       <a mat-list-item routerLink="/statistics">
-        <span class="label">Statistiken</span>
+        <span class="label">{{'statistic.statistics' | translate}}</span>
+      </a>
+      <a>
+        <app-language-select></app-language-select>
       </a>
       <a>
         <app-user-menu *ngIf="isLoggedIn()"></app-user-menu>
@@ -40,11 +43,14 @@
               routerLinkActive #rla="routerLinkActive"
               [active]="rla.isActive">
             <div style="color:white; margin-left: 10px; font-size: larger;">
-              {{link.label}}
+              {{link.label | translate}}
             </div>
           </a>
         </nav>
-        <app-user-menu class="userMenu" *ngIf="isLoggedIn()"></app-user-menu>
+        <div class="userMenu">
+          <app-language-select></app-language-select>
+          <app-user-menu *ngIf="isLoggedIn()"></app-user-menu>
+        </div>
       </div>
       </mat-toolbar>
     <main>

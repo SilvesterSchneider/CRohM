@@ -133,7 +133,6 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			this.isAllSelected = false;
 		});
 		this.changeDetectorRefs.detectChanges();
-		// this.organizationMock = this.orgaMock.getOrganizationsMock();
 	}
 
 	openAddDialog() {
@@ -177,7 +176,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 
 	deleteOrganization(id: number) {
 		const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-			data: 'Organisation',
+			data: 'organization.organization',
 			disableClose: true
 		});
 
