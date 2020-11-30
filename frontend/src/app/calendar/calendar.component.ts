@@ -110,8 +110,24 @@ export class CalendarComponent implements OnInit {
     this.modalData = { event, action };
     this.eventService.getById(event.id).subscribe(x => {
       const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, minWidth: '450px', height: '600px' });
-      dialogRef.afterClosed().subscribe(y => this.init());
+      dialogRef.afterClosed().subscribe(y => {
+        if (y.save) {
+          this.eventService.getById(event.id).subscribe(y => {
+            this.updateEvent(y);
+          });
+        }
+      });
     });
+  }
+
+  updateEvent(y: EventDto) {
+    let ev = this.events.find(a => a.id === y.id);
+    if (ev != null) {
+      ev.start = this.getStartDate(y.date, y.time);
+      ev.end = this.getEndDate(y.date, y.time, y.duration);
+      ev.title = this.getTime(y.time) + ' ' + y.name;
+    }
+    this.refresh.next();
   }
 
   setView(view: CalendarView) {
