@@ -1,0 +1,10 @@
+<button mat-icon-button id="language-select" [matMenuTriggerFor]="languageSelect" title="{{'common.selectLanguage' | translate }}">
+    <mat-icon>language</mat-icon>
+</button>
+<mat-menu #languageSelect="matMenu">
+    <button *ngFor="let lang of getAllLanguages()" mat-menu-item
+        (click)="this.translationService.setLanguage(lang.short)">
+        {{lang.label}}
+        <mat-icon *ngIf="this.translationService.getLanguage() === lang.short">checkmark</mat-icon>
+    </button>
+</mat-menu>

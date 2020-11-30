@@ -10,6 +10,9 @@ import { ContactPossibilitiesComponent } from './contactPossibilities/contact-po
 import { AddHistoryComponent } from './add-history/add-history.component';
 import { TagsFilterComponent } from './tags-filter/tags-filter.component';
 import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-chart/vertical-grouped-bar-chart.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { DpDisclaimerDialogComponent } from './data-protection/dp-disclaimer-dialog/dp-disclaimer-dialog.component';
+import { DpUpdatePopupComponent } from './data-protection/dp-update-popup/dp-update-popup.component';
 
 @NgModule({
   imports: [
@@ -19,13 +22,16 @@ import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-
     HttpClientModule,
     MaterialModule,
     FlexLayoutModule,
-    NgxChartsModule
+    NgxChartsModule,
+    TranslateModule
   ],
   declarations: [
     OsmAddressComponent,
     ContactPossibilitiesComponent,
     AddHistoryComponent, TagsFilterComponent,
-    VerticalGroupedBarChartComponent
+    VerticalGroupedBarChartComponent,
+    DpDisclaimerDialogComponent,
+    DpUpdatePopupComponent
   ],
   exports: [
     CommonModule,
@@ -39,7 +45,10 @@ import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-
     AddHistoryComponent,
     TagsFilterComponent,
     VerticalGroupedBarChartComponent,
-    NgxChartsModule
+    NgxChartsModule,
+    TranslateModule,
+    DpDisclaimerDialogComponent,
+    DpUpdatePopupComponent
   ]
 })
 export class SharedModule { }

@@ -132,7 +132,7 @@ export class EventsListComponent implements OnInit {
 
   deleteEvent(id: number) {
     const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-      data: 'Event',
+      data: 'event.event',
       disableClose: true
     });
 
