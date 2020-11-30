@@ -82,8 +82,8 @@ namespace RepositoryLayer
             eventNew.Duration = eventToCreate.Duration;
             eventNew.Name = eventToCreate.Name;
             eventNew.Time = eventToCreate.Time;
-            eventToCreate.Contacts.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, WasInvited = false, ModelType = MODEL_TYPE.CONTACT }));
-            eventToCreate.Organizations.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, WasInvited = false, ModelType = MODEL_TYPE.ORGANIZATION }));
+            eventToCreate.Contacts.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, EventStatus = ParticipatedStatus.NOT_INVITED, ModelType = MODEL_TYPE.CONTACT }));
+            eventToCreate.Organizations.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, EventStatus = ParticipatedStatus.NOT_INVITED, ModelType = MODEL_TYPE.ORGANIZATION }));
             return await CreateAsync(eventNew);
         }
 
@@ -187,11 +187,10 @@ namespace RepositoryLayer
                     Participated participated = eventExistent.Participated.FirstOrDefault(y => y.Id == partNew.Id && partNew.Id > 0 && y.ModelType == partNew.ModelType);
                     if (participated != null)
                     {
-                        participated.HasParticipated = partNew.HasParticipated;
-                        participated.WasInvited = partNew.WasInvited;
+                        participated.EventStatus = partNew.EventStatus;
                     } else
                     {
-                        eventExistent.Participated.Add(new Participated() { ObjectId = partNew.ObjectId, HasParticipated = partNew.HasParticipated, WasInvited = partNew.WasInvited, ModelType = partNew.ModelType });
+                        eventExistent.Participated.Add(new Participated() { ObjectId = partNew.ObjectId, EventStatus = partNew.EventStatus, ModelType = partNew.ModelType });
                     }
                 }
                 

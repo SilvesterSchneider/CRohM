@@ -66,10 +66,10 @@ namespace ModelLayer.Helper
         {
             foreach (ParticipatedDto part in participatedNew)
             {
-                if (part.WasInvited)
+                if (part.EventStatus == ParticipatedStatus.INVITED)
                 {
                     Participated partToCheck = participatedOld.FirstOrDefault(a => a.ObjectId == part.ObjectId && a.ModelType == part.ModelType);
-                    if (partToCheck == null || !partToCheck.WasInvited)
+                    if (partToCheck == null || partToCheck.EventStatus != ParticipatedStatus.INVITED)
                     {
                         string name = string.Empty;
                         if (part.ModelType == MODEL_TYPE.CONTACT)
@@ -227,7 +227,7 @@ namespace ModelLayer.Helper
             foreach (Participated partOld in oldOnes)
             {
                 ParticipatedDto newPart = newOnes.Find(a => a.Id == partOld.Id);
-                if (newPart != null && newPart.HasParticipated != partOld.HasParticipated)
+                if (newPart != null && newPart.EventStatus != partOld.EventStatus)
                 {
                     string name = string.Empty;
                     if (newPart.ModelType == MODEL_TYPE.CONTACT)
@@ -247,7 +247,7 @@ namespace ModelLayer.Helper
                         }
                     }
                     
-                    listEntries.Add(GetNewModificationEntry(name + ":" + newPart.HasParticipated.ToString(), name + ":" + partOld.HasParticipated.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
+                    listEntries.Add(GetNewModificationEntry(name + ":" + newPart.EventStatus.ToString(), name + ":" + partOld.EventStatus.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
                 }
             }
         }
@@ -299,7 +299,7 @@ namespace ModelLayer.Helper
                 {
                     listCreation.Add(GetNewModificationEntry(contacts.FirstOrDefault(b => b.ContactId == id).Contact.Name, string.Empty, eventId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, usernameOfModification, MODIFICATION.CREATED));
                 }
-                else if (!participated.FirstOrDefault(a => a.ObjectId == id).WasInvited)
+                else if (participated.FirstOrDefault(a => a.ObjectId == id).EventStatus != ParticipatedStatus.INVITED)
                 {
                     listCreation.Add(GetNewModificationEntry(contacts.FirstOrDefault(b => b.ContactId == id).Contact.Name, string.Empty, eventId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, usernameOfModification, MODIFICATION.MODIFIED));
                 }

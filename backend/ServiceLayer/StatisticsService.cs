@@ -87,7 +87,7 @@ namespace ServiceLayer
                     dto.Name = ev.Date.ToString("yyyy-MM-dd");
                     dto.Series = new List<VerticalGroupedBarDataSet>();
                     dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_INVITED_CONTACTS, Value = count });
-                    dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_PARTICIPATED_CONTACS, Value = ev.Participated.FindAll(a => a.HasParticipated).Count });
+                    dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_PARTICIPATED_CONTACS, Value = ev.Participated.FindAll(a => a.EventStatus == ParticipatedStatus.PARTICIPATED).Count });
                     list.Add(dto);
                 }
             }

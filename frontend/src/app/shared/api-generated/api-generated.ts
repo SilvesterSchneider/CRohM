@@ -3660,14 +3660,21 @@ export interface ParticipatedDto {
     id: number;
     modelType: MODEL_TYPE;
     objectId: number;
-    hasParticipated: boolean;
-    wasInvited: boolean;
+    eventStatus: ParticipatedStatus;
 }
 
 export enum MODEL_TYPE {
     CONTACT = 0,
     ORGANIZATION = 1,
     EVENT = 2,
+}
+
+export enum ParticipatedStatus {
+    NOT_INVITED = 0,
+    INVITED = 1,
+    AGREED = 2,
+    CANCELLED = 3,
+    PARTICIPATED = 4,
 }
 
 export interface TagDto {
