@@ -35,8 +35,8 @@ export class EventsServiceMock {
             id: EventsServiceMock.nextId++,
             name: eventInner.name,
             date: eventInner.date,
-            time: eventInner.time,
-            duration: eventInner.duration,
+            start: eventInner.start,
+            end: eventInner.end,
             contacts: contactsToSet
         };
         EVENTS.push(this.contactInner);

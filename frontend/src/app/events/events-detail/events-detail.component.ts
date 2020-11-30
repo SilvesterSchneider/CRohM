@@ -14,10 +14,19 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { ContactDto, EventDto, MailService, MODEL_TYPE, OrganizationDto, OrganizationService, ParticipatedDto, TagDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 import { EventsInvitationComponent } from '../events-invitation/events-invitation.component';
+
+// Validator fuer Start frueher als Ende?
+const MyAwesomeRangeValidator: ValidatorFn = (fg: FormGroup) => {
+  const start = fg.get('start').value;
+  const end = fg.get('end').value;
+  return start !== null && end !== null && start < end
+    ? null
+    : { range: true };
+};
 
 export class EventContactConnection {
   objectId: number;
@@ -255,7 +264,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       date: [new FormControl(new Date(this.event.date)), Validators.required],
       start: ['', Validators.required],
       end: ['', Validators.required]
-    });
+    }, { validator: MyAwesomeRangeValidator });  // Einbau des Validators der Start/Ende validiert
   }
 
   setDescribedByIds(ids: string[]) {

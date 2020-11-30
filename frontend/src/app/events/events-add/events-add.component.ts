@@ -12,9 +12,18 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { EventCreateDto, MODEL_TYPE, OrganizationService } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
+import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
+
+// Validator fuer Start frueher als Ende?
+const MyAwesomeRangeValidator: ValidatorFn = (fg: FormGroup) => {
+  const start = fg.get('start').value;
+  const end = fg.get('end').value;
+  return start !== null && end !== null && start < end
+    ? null
+    : { range: true };
+};
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -146,13 +155,15 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     });
   }
 
+
+
   private createOrganizationForm(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
       date: ['', Validators.required],
       start: ['', Validators.required],
       end: ['', Validators.required]
-    });
+    }, { validator: MyAwesomeRangeValidator });  // Einbau des Validators der Start/Ende validiert
   }
 
   setDescribedByIds(ids: string[]) {
