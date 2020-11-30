@@ -3,7 +3,6 @@ import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dial
 import { HistoryElementCreateDto, HistoryElementType } from 'src/app/shared/api-generated/api-generated';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BaseDialogInput } from '../form/base-dialog-form/base-dialog.component';
-import { MatMonthView } from '@angular/material/datepicker';
 
 @Component({
     selector: 'app-add-history',
@@ -12,7 +11,23 @@ import { MatMonthView } from '@angular/material/datepicker';
 })
 
 export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> implements OnInit {
-    public types: string[] = ['E-Mail', 'Telefonanruf', 'Notiz', 'Besuch'];
+    public types = [
+        {
+            translate: 'contact.mail',
+            type: HistoryElementType.MAIL
+        },
+        {
+            translate: 'common.phoneCall',
+            type: HistoryElementType.PHONE_CALL
+        },
+        {
+            translate: 'common.note',
+            type: HistoryElementType.NOTE
+        },
+        {
+            translate: 'common.visit',
+            type: HistoryElementType.VISIT
+        }];
     public oppoSuitsForm: FormGroup;
     constructor(
         public dialogRef: MatDialogRef<AddHistoryComponent>,
@@ -21,9 +36,9 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
         private fb: FormBuilder) {
         super(dialogRef, dialog);
         this.dialogRef.backdropClick().subscribe(() => {
-			// Close the dialog
-			dialogRef.close();
-		});
+            // Close the dialog
+            dialogRef.close();
+        });
     }
 
     ngOnInit(): void {
@@ -50,20 +65,11 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
 
     getObject(): HistoryElementCreateDto {
         let historyToSave: HistoryElementCreateDto;
-        let typeToSave = HistoryElementType.MAIL;
-        const typeText: string = this.oppoSuitsForm.get('type').value;
-        if (typeText === this.types[1]) {
-            typeToSave = HistoryElementType.PHONE_CALL;
-        } else if (typeText === this.types[2]) {
-            typeToSave = HistoryElementType.NOTE;
-        } else if (typeText === this.types[3]) {
-            typeToSave = HistoryElementType.VISIT;
-        }
         const date = new Date(this.oppoSuitsForm.get('date').value);
         historyToSave = {
             date: this.getDateOfValueAsText(date),
             name: this.oppoSuitsForm.get('information').value,
-            type: typeToSave,
+            type: this.oppoSuitsForm.get('type').value,
             comment: this.oppoSuitsForm.get('comment').value,
         };
         return historyToSave;

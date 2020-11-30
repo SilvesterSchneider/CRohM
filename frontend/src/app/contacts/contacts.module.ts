@@ -10,7 +10,6 @@ import { ContactsEditDialogComponent } from './contacts-edit-dialog/contacts-edi
 import { ContactsDetailComponent } from './contacts-detail/contacts-detail.component';
 import { ContactsInfoComponent } from './contacts-info/contacts-info.component';
 import { ContactsDisclosureDialogComponent } from './contacts-disclosure-dialog/contacts-disclosure-dialog.component';
-import { DataProtectionModule } from '../shared/data-protection';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { ContactsSendMailDialogComponent } from './contacts-send-mail-dialog/contacts-send-mail-dialog.component';
 
@@ -18,7 +17,7 @@ import { ContactsSendMailDialogComponent } from './contacts-send-mail-dialog/con
 	imports: [
 		SharedModule,
 		FormsModule,
-		ReactiveFormsModule, MaterialModule, MatDialogModule, ContactsRoutingModule, MatSnackBarModule, DataProtectionModule ],
+		ReactiveFormsModule, MaterialModule, MatDialogModule, ContactsRoutingModule, MatSnackBarModule ],
 	declarations: [
 		ContactsListComponent,
 		ContactsAddDialogComponent,

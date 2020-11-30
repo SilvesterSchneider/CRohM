@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DeleteEntryDialogComponent } from './delete-entry-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 
@@ -11,7 +12,8 @@ import {MatButtonModule} from '@angular/material/button';
   imports: [
     MatDialogModule,
     CommonModule,
-    MatButtonModule
+    MatButtonModule,
+    TranslateModule
   ],
   entryComponents: [DeleteEntryDialogComponent],
   exports: [DeleteEntryDialogComponent]

@@ -1,23 +1,21 @@
-<!-- Copyright (c) 2019 Christ Electronic System GmbH -->
-<!-- All Rights Reserved. -->
 <mat-toolbar>
     <mat-toolbar-row class="tabrow">
-        <span>Kontakte</span>
+        <span>{{'contact.contacts' | translate}}</span>
         <span class="spacer"></span>
         <a *ngIf="selectedCheckBoxList.length > 0" class="iconMargin" (click)="sendMailToMany()" type="button">
-            <mat-icon color="primary" title="Mail an mehrere Kontakte senden" class="icon">mail</mat-icon>
+            <mat-icon color="primary" title="{{'common.sendMailToMany' | translate}}" class="icon">mail</mat-icon>
 		</a>
         <a *ngIf="selectedCheckBoxList.length > 0" (click)="createEvent()" type="button">
-            <mat-icon color="primary" title="Veranstaltung erstellen" class="iconMargin">event</mat-icon>
+            <mat-icon color="primary" title="{{'event.create' | translate}}" class="iconMargin">event</mat-icon>
         </a>
         <app-tags-filter></app-tags-filter>
         <mat-form-field>
-            <mat-label>Suche</mat-label>
-            <input class="input" matInput (keyup)="applyFilter($event)" placeholder="Kontakte...">
+            <mat-label>{{'common.search' | translate}}</mat-label>
+            <input class="input" matInput (keyup)="applyFilter($event)" placeholder="{{'contact.contacts' | translate}}...">
         </mat-form-field>
         <button id="addDummyButton" class="button" *ngIf=isAdminUserLoggedIn [disabled]="!permissionAdd" mat-raised-button color="primary"
-            title="Dummy Kontakt hinzufügen" (click)="addDummyContact()">
-            <mat-icon>add</mat-icon> Dummy Kontakt hinzufügen
+            title="{{'contact.addDummy' | translate}}" (click)="addDummyContact()">
+            <mat-icon>add</mat-icon> {{'contact.addDummy' | translate}}
         </button>
         <button id="addButton" class="button" [disabled]="!permissionAdd" button="submit" mat-mini-fab color="primary"
             (click)="openAddDialog()">
@@ -42,45 +40,45 @@
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="vorname">
-            <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> {{'contact.firstName' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.preName}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="nachname">
-            <mat-header-cell *matHeaderCellDef> Nachname </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> {{'contact.lastName' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.name}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="mail">
-            <mat-header-cell *matHeaderCellDef> E-Mail </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> {{'contact.mail' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)">
                 {{element.contactPossibilities.mail}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="telefon">
-            <mat-header-cell *matHeaderCellDef> Telefonnummer </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> {{'contact.phoneNumber' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element">
                 <a (mouseover)="mouseOver(element.id)">{{element.contactPossibilities.phoneNumber}}</a>
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="ort">
-            <mat-header-cell *matHeaderCellDef> Ort </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> {{'contact.city' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.city}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="organisation">
-            <mat-header-cell *matHeaderCellDef> Organisation(en) </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> {{'organization.organizations' | translate}} </mat-header-cell>
             <mat-cell (click)="changeToOrganizationPage()" *matCellDef="let element"
                 (mouseover)="mouseOver(element.id)"> {{getOrganization(element.id)}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
-            <mat-header-cell mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
+            <mat-header-cell mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
                 <button type="button" mat-icon-button [disabled]="!permissionInformContact" (click)="openDisclosureDialog(element.id)"
                     color="primary">
-                    <mat-icon title="Kontaktauskunft" class="icon">description</mat-icon>
+                    <mat-icon title="{{'contact.disclosure.disclosure' | translate}}" class="icon">description</mat-icon>
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openEditDialog(element)"
                     color="primary" class="editButton">
-                    <mat-icon title="Kontakt bearbeiten" class="icon">edit</mat-icon>
+                    <mat-icon title="{{'contact.edit' | translate}}" class="icon">edit</mat-icon>
                 </button>
                 <button type="button" [matMenuTriggerFor]="menu">
                     <mat-icon color="primary" class="icon">list</mat-icon>
@@ -88,19 +86,19 @@
                 <mat-menu #menu="matMenu">
                     <button type="button" mat-icon-button [disabled]="!permissionModify" class="infoButton"
                         (click)="openInfo(element.id)" color="primary">
-                        <mat-icon title="Kontaktinformationen anzeigen" class="icon">info</mat-icon>
+                        <mat-icon title="{{'contact.showContactInfo' | translate}}" class="icon">info</mat-icon>
                     </button>
                     <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
                         color="primary">
-                        <mat-icon title="Historieneintrag hinzufügen" class="icon">note_add</mat-icon>
+                        <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
                     </button>
                     <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
                         (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" color="primary">
-                        <mat-icon title="Historieneintrag hinzufügen" class="icon">phone</mat-icon>
+                        <mat-icon title="{{'common.call' | translate}}" class="icon">phone</mat-icon>
                     </button>
                     <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteContact(element)"
                         color="primary">
-                        <mat-icon title="Kontakt löschen" class="icon">delete</mat-icon>
+                        <mat-icon title="{{'contact.delete' | translate}}" class="icon">delete</mat-icon>
                     </button>
                 </mat-menu>
             </mat-cell>
