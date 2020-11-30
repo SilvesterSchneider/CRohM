@@ -160,7 +160,7 @@ export class CalendarComponent implements OnInit {
   getTime(time: string) {
     const date = new Date(time);
     let minutes = date.getMinutes().toString();
-    if (minutes.length == 1) {
+    if (minutes.length === 1) {
       minutes = '0' + minutes;
     }
     return date.getHours() + ':' + minutes;

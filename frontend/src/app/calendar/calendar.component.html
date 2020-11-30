@@ -87,8 +87,12 @@
     </div>
     <div *ngIf="day.events.length > 0">
         <div *ngFor="let event of day.events; index as i">
-            <ng-template *ngIf="i < 4; then showEventsBlock; else showMoreBlock">
-            </ng-template>
+          <ng-template *ngIf="i < 4; then showEventsBlock">
+          </ng-template>
+          <ng-template *ngIf="i === 4; then showMoreBlock">
+          </ng-template>
+          <ng-template *ngIf="i > 4 then showNothing">
+          </ng-template>
             <ng-template #showEventsBlock>
                 <div class="cal-events" [ngStyle]="{ backgroundColor: event.color?.primary }"
                 [ngClass]="event?.cssClass" (mwlClick)="eventClicked.emit({event: event})" [mwlCalendarTooltip]="event.title | calendarEventTitle: 'monthTooltip':event"
@@ -99,6 +103,8 @@
             </ng-template>
             <ng-template #showMoreBlock>
               <div>...</div>
+            </ng-template>
+            <ng-template #showNothing>
             </ng-template>
         </div>
     </div>
