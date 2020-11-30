@@ -8,7 +8,7 @@ Backend:	1. Microsoft SQL Server Express installieren
 				2. Wenn keine Migrationen im Ordner ModelLayer\Migrations vorhanden sind oder falls gelöscht werden musste weil fehlerhaft
 					1. "add-migration init" ausführen in Konsole
 				3. "update-database" ausführen in Konsole
-
+ 
 Frontend:	1. Visual Studio Code installieren
 			2. Node JS installieren
 			3. Visual Studio Code starten und frontend Projekt öffnen
