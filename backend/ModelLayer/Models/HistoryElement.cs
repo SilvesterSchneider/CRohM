@@ -13,6 +13,14 @@ namespace ModelLayer.Models
         VISIT = 3
     }
 
+    public enum HistoryState
+    {
+        DEFAULT = 0,
+        INVITE = 1,
+        ACCEPT = 2,
+        CANCEL = 3
+    }
+
     public class HistoryElement : BaseEntity
     {
         public DateTime Date { get; set; } = DateTime.Now;
@@ -20,5 +28,7 @@ namespace ModelLayer.Models
         public string Comment { get; set; } = "";
         public Contact contact { get; set; }
         public Organization organization { get; set; }
+        public bool Arrived { get; set; } = false;
+        public HistoryState State { get; set; } = HistoryState.DEFAULT;
     }
 }

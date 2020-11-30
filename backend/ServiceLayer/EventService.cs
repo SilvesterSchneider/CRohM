@@ -1,3 +1,4 @@
+using System;
 using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer;
@@ -16,17 +17,19 @@ namespace ServiceLayer
         private IMailService mailService;
         private IContactRepository contactRepo;
         private IOrganizationRepository orgaRepo;
+        private readonly IHistoryService _historyService;
 
         public EventService(CrmContext context,
             IEventContactRepository eventContactRepo,
             IEventOrganizationRepository eventOrgaRepo,
             IContactRepository contactRepo,
             IMailService mailService,
-            IOrganizationRepository orgaRepo) : base(context, eventContactRepo, eventOrgaRepo, contactRepo, orgaRepo)
+            IOrganizationRepository orgaRepo, IHistoryService historyService) : base(context, eventContactRepo, eventOrgaRepo, contactRepo, orgaRepo)
         {
             this.mailService = mailService;
             this.contactRepo = contactRepo;
             this.orgaRepo = orgaRepo;
+            _historyService = historyService;
         }
 
         public async Task<bool> SendInvitationMailsAsync(List<long> contacts, List<long> orgaIds, string mailContent)
@@ -38,11 +41,18 @@ namespace ServiceLayer
                 if (contact != null)
                 {
                     mailService.CreateAndSendInvitationMail(contact.ContactPossibilities.Mail, contact.PreName, contact.Name, mailContent, contact.Gender);
+                    await _historyService.CreateAsync(new HistoryElement()
+                    {
+                        contact = contact,
+                        Date = DateTime.UtcNow,
+                        Type = HistoryElementType.VISIT,
+                        State = HistoryState.INVITE,
+                    });
                 }
                 else
                 {
                     ok = false;
-                }                
+                }
             }
             foreach (long orgaId in orgaIds)
             {
@@ -50,13 +60,20 @@ namespace ServiceLayer
                 if (orga != null)
                 {
                     mailService.CreateAndSendInvitationMail(orga.Contact.Mail, orga.Name, mailContent);
+                    await _historyService.CreateAsync(new HistoryElement()
+                    {
+                        organization = orga,
+                        Date = DateTime.UtcNow,
+                        Type = HistoryElementType.VISIT,
+                        State = HistoryState.INVITE,
+                    });
                 }
                 else
                 {
                     ok = false;
                 }
             }
-            return ok; 
+            return ok;
         }
     }
 }
