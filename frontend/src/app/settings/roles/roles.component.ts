@@ -5,6 +5,8 @@ import { UpdateRoleDialogComponent } from './update-role/update-role.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { RoleDto, RoleService } from 'src/app/shared/api-generated/api-generated';
 import { MatTableDataSource } from '@angular/material/table';
+import { RolesTranslationService } from './roles-translation.service';
+import { TranslateService } from '@ngx-translate/core';
 
 interface LooseTableObject {
   [key: string]: any;
@@ -23,7 +25,7 @@ export class RolesComponent implements OnInit {
   public displayedColumns: string[] = ['permission'];
   public dataSource = new MatTableDataSource();
 
-  constructor(public dialog: MatDialog, private permissionService: RoleService) { }
+  constructor(public dialog: MatDialog, private permissionService: RoleService, private translate: TranslateService) { }
 
   public ngOnInit(): void {
     this.fillFieldsWithData();
@@ -110,11 +112,13 @@ export class RolesComponent implements OnInit {
     this.tableData = [];
     this.permissions.forEach(perm => {
       const temp: LooseTableObject = {};
-      temp.permission = perm;
+      temp.permission = this.translate.instant(RolesTranslationService.mapPermission(perm).label);
       this.permissionGroups.forEach(role => {
-        temp[role.name] = false;
+        const roleName = this.translate.instant(RolesTranslationService.mapRole(role.name).label);
+
+        temp[roleName] = false;
         if (role.claims.find(a => a === perm)) {
-          temp[role.name] = true;
+          temp[roleName] = true;
         }
       });
       this.tableData.push(temp);
@@ -125,7 +129,7 @@ export class RolesComponent implements OnInit {
   private createDynamicColums() {
     this.displayedColumns = ['permission'];
     this.permissionGroups.forEach(role => {
-      this.displayedColumns.push(role.name);
+      this.displayedColumns.push(this.translate.instant(RolesTranslationService.mapRole(role.name).label));
     });
   }
 

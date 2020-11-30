@@ -1,11 +1,11 @@
 
 
-  <h1 mat-dialog-title>{{data}} löschen</h1>
+  <h1 mat-dialog-title>{{data | translate}} {{'common.delete' | translate}}</h1>
   <div style="padding-bottom: 1em;" mat-dialog-content>
-    Sind Sie sich sicher, dass Sie diesen Eintrag löschen möchten?
+    {{'common.confirmDelete' | translate}}
     </div>
   <div mat-dialog-actions>   
   <span class="fill-remaining-space"></span>
-    <button mat-raised-button (click)="onCancle()">Abbrechen</button>
-    <button mat-raised-button (click)="onDelete()" color="warn">Löschen</button> 
+    <button mat-raised-button (click)="onCancle()">{{'common.cancel' | translate}}</button>
+    <button mat-raised-button (click)="onDelete()" color="warn">{{'common.delete' | translate}}</button> 
   </div>

@@ -5,8 +5,7 @@ import { ContactDto, GenderTypes, TagDto } from '../../shared/api-generated/api-
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
-import { JwtService } from 'src/app/shared/jwt.service';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -20,7 +19,19 @@ import { OsmAddressComponent } from 'src/app/shared/osm/osm-address/osm-address.
 export class ContactsEditDialogComponent extends BaseDialogInput implements OnInit {
 	@ViewChild(ContactPossibilitiesComponent, { static: true })
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
-	public genderTypes: string[] = ['Männlich', 'Weiblich', 'Divers'];
+	public genderTypes = [
+		{
+			translate: 'common.male',
+			type: GenderTypes.MALE
+		},
+		{
+			translate: 'common.female',
+			type: GenderTypes.FEMALE
+		},
+		{
+			translate: 'common.diverse',
+			type: GenderTypes.DIVERS
+		}];
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	contactsForm: FormGroup;
 	contact: ContactDto;
@@ -35,8 +46,8 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	selectedTags: TagDto[] = new Array<TagDto>();
 	separatorKeysCodes: number[] = [ENTER, COMMA];
 	filteredTagsObservable: Observable<string[]>;
-	allTags: string[] = [ 'Lehrbeauftragter', 'Kunde', 'Politiker', 'Unternehmen', 'Behörde', 'Bildungseinrichtung',
-	 'Institute', 'Ministerium', 'Emeriti', 'Alumni'];
+	allTags: string[] = ['Lehrbeauftragter', 'Kunde', 'Politiker', 'Unternehmen', 'Behörde', 'Bildungseinrichtung',
+		'Institute', 'Ministerium', 'Emeriti', 'Alumni'];
 	removable = true;
 	selectable = true;
 
@@ -45,9 +56,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		@Inject(MAT_DIALOG_DATA) public data: ContactDto,
 		public dialog: MatDialog,
 		private readonly fb: FormBuilder,
-		private readonly contactService: ContactService,
-		private readonly jwtService: JwtService,
-	) {
+		private readonly contactService: ContactService) {
 		super(dialogRef, dialog);
 		this.contact = data;
 		this.dialogRef.backdropClick().subscribe(() => {
@@ -67,24 +76,18 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.addressForm = this.addressGroup.getAddressForm();
 		this.initForm();
 		this.contactsForm.patchValue(this.contact);
-		this.contactsForm.get('gender').setValue(this.getGenderText(this.contact.gender));
+		this.contactsForm.get('gender').setValue(this.getGender(this.contact.gender));
 	}
 
-	private getGenderText(value: number): string {
-		if (value === GenderTypes.MALE) {
-			return this.genderTypes[0];
-		} else if (value === GenderTypes.FEMALE) {
-			return this.genderTypes[1];
-		} else {
-			return this.genderTypes[2];
-		}
+	private getGender(value: number) {
+		return this.genderTypes.find(type => type.type === value).type;
 	}
 
 	private _filter(value: string): string[] {
 		const tagValue = value.toLowerCase();
 
 		return this.allTags.filter(tag => tag.toLowerCase().indexOf(tagValue) === 0);
-	  }
+	}
 
 	addTag(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
@@ -113,13 +116,13 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	selected(event: MatAutocompleteSelectedEvent): void {
 		if (this.selectedTags.find(a => a.name === event.option.viewValue) == null) {
 			this.selectedTags.push({
-			  id: 0,
-			  name: event.option.viewValue
+				id: 0,
+				name: event.option.viewValue
 			});
 			this.tagInput.nativeElement.value = '';
 			this.tagsControl.setValue(null);
-		  }
-	  }
+		}
+	}
 
 	initForm() {
 		this.contactsForm = this.fb.group({
@@ -148,7 +151,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	}
 
 	public onApprove(): void {
-		this.newContact =  this.contactsForm.value;
+		this.newContact = this.contactsForm.value;
 
 		const idAddress = this.contact.address.id;
 		const idContactPossibilities = this.contact.contactPossibilities.id;
@@ -161,14 +164,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
 		this.contact.tags = this.selectedTags;
-		const genderText: string = this.contactsForm.get('gender').value;
-		let gender: GenderTypes = GenderTypes.MALE;
-		if (genderText === this.genderTypes[1]) {
-			gender = GenderTypes.FEMALE;
-		} else if (genderText === this.genderTypes[2]) {
-			gender = GenderTypes.DIVERS;
-		}
-		this.contact.gender = gender;
+		this.contact.gender = this.contactsForm.get('gender').value;
 		this.newContact.tags = this.selectedTags;
 		this.contactService.put(this.contact.id, this.contact).subscribe(x => {
 			this.dialogRef.close({ delete: false, id: 0, oldContact: this.copy, newContact: this.newContact });

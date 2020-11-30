@@ -3,6 +3,7 @@ import { Validators, FormControl, FormBuilder } from '@angular/forms';
 import { UsersService, RoleDto, RoleService } from '../../../shared/api-generated/api-generated';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
+import { RolesTranslationService } from '../../roles/roles-translation.service';
 
 /**
  * Komponente fuer den Modal-Dialog zum Hinzufuegen eines Nutzers
@@ -44,6 +45,10 @@ export class AddUserDialogComponent extends BaseDialogInput<AddUserDialogCompone
 
     initPermissions() {
         this.permissionService.get().subscribe(x => this.permissionGroups = x);
+    }
+
+    getRoleLabel(role: string){
+        return RolesTranslationService.mapRole(role).label;
     }
 
     hasChanged() {

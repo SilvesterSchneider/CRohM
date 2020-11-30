@@ -1,35 +1,35 @@
-<h2 mat-dialog-title>Benutzer bearbeiten</h2>
+<h2 mat-dialog-title>{{'settings.editUser' | translate}}</h2>
 
 <div mat-dialog-content>
     <form [formGroup]="userForm">
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput placeholder="Vorname" formControlName="firstName">
+                    <input matInput placeholder="{{'contact.firstName' | translate}}" formControlName="firstName">
                 </mat-form-field>
             </div>
         </div>
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput placeholder="Nachname" formControlName="lastName">
+                    <input matInput placeholder="{{'contact.lastName' | translate}}" formControlName="lastName">
                 </mat-form-field>
             </div>
         </div>
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput placeholder="E-Mail" formControlName="email">
+                    <input matInput placeholder="{{'contact.mail' | translate}}" formControlName="email">
                 </mat-form-field>
             </div>
         </div>
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
-                    <mat-label>Gruppenberechtigungen</mat-label>
+                    <mat-label>{{'settings.groupPermissions' | translate}}</mat-label>
                     <mat-select id="permissionSelectionForUser" [formControl]="groupPermission" multiple>
                         <mat-option *ngFor="let groupPermission of permissionGroups" [value]="groupPermission.name">
-                            {{groupPermission.name}}
+                            {{getRoleLabel(groupPermission.name) | translate}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -39,11 +39,11 @@
         <div mat-dialog-actions>
             <!--Mit Klick auf 'Abbrechen' wird der ConfirmDialog aufgerufen-->
             <button mat-raised-button (click)="confirmDialog()">
-                Abbrechen
+                {{'common.cancel' | translate}}
             </button>
             <!--Mit Klick auf 'Hinzufuegen' wird die Funktion addUser() aufgerufen-->
             <button id="saveUserChangesButton" mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid" (click)="editUser()">
-                Speichern
+                {{'common.save' | translate}}
             </button>
         </div>
     </form>

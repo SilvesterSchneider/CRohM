@@ -1,16 +1,16 @@
 
 
   <div mat-dialog-title id="dataProtectionOfficeDisclaimer">
-    <span id="title">Warnmeldung</span>
+    <span id="title">{{'common.warning' | translate}}</span>
   </div>
   <div mat-dialog-content>
-    Es wurde noch kein Datenschutzbeauftragter bestimmt.
+    {{'dpDisclaimer.noDp' | translate}}
     <br>
-    Erfüllen Sie die gesetzlichen Auflagen indem Sie als Administrator jetzt einen Datenschutzbeauftragten bestimmen.   
+    {{'dpDisclaimer.noDp2' | translate}}
     </div>
   <div mat-dialog-actions>   
     
   <span class="fill-remaining-space"></span>
-    <button id="ignoreButton" mat-raised-button [matDialogClose]="false" id="ignoreButton" >Ignorieren</button>
-    <button mat-raised-button (click)="onResolve()" color="primary" id="resolveButton">Jetzt einen bestimmen</button>
+    <button id="ignoreButton" mat-raised-button [matDialogClose]="false" id="ignoreButton" >{{'dpDisclaimer.ignore' | translate}}</button>
+    <button mat-raised-button (click)="onResolve()" color="primary" id="resolveButton">{{'dpDisclaimer.select' | translate}}</button>
   </div>
