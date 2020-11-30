@@ -25,7 +25,7 @@ namespace ModelLayer.Models
         ZIPCODE,
         DESCRIPTION,
         CONTACTS,
-        DURATION,
+        END,
         DATE,
         TIME,
         PARTICIPATED,
@@ -149,9 +149,9 @@ namespace ModelLayer.Models
                 {
                     return "Hausnr.";
                 }
-                else if (DataType == DATA_TYPE.DURATION)
+                else if (DataType == DATA_TYPE.END)
                 {
-                    return "Dauer";
+                    return "Ende";
                 }
                 else if (DataType == DATA_TYPE.DATE)
                 {

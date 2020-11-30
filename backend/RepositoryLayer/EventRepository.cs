@@ -76,8 +76,10 @@ namespace RepositoryLayer
         }
 
         public async Task<Event> CreateNewEventAsync(EventCreateDto eventToCreate)
-        {
+        { 
             Event eventNew = new Event();
+            if (eventToCreate.Start >= eventToCreate.End)
+                return await CreateAsync(eventNew);
             eventNew.Date = eventToCreate.Date;
             eventNew.End = eventToCreate.End;
             eventNew.Name = eventToCreate.Name;
@@ -136,6 +138,8 @@ namespace RepositoryLayer
             Event eventExistent = await GetEventByIdWithAllIncludesAsync(eventToModify.Id);
             if (eventExistent != null)
             {
+                if (eventToModify.Start >= eventToModify.End)
+                    return false;
                 List<EventContact> eventContacts = await eventContactRepo.GetAllAsync();
                 eventContacts.RemoveAll(y => y.EventId != eventExistent.Id);
                 List<EventOrganization> eventOrgas = await eventOrgaRepo.GetAllAsync();

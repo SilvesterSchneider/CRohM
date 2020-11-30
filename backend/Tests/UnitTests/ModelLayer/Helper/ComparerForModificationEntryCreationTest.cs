@@ -29,7 +29,7 @@ namespace UnitTests.ModelLayer.Helper
 
             Assert.Equal(1, listWithNewEntries[1].DataModelId);
             Assert.Equal(MODEL_TYPE.EVENT, listWithNewEntries[1].DataModelType);
-            Assert.Equal(DATA_TYPE.DURATION, listWithNewEntries[1].DataType);
+            Assert.Equal(DATA_TYPE.END, listWithNewEntries[1].DataType);
             Assert.Equal("3", listWithNewEntries[1].ActualValue);
         }
 
