@@ -1,6 +1,6 @@
 <mat-toolbar>
   <mat-toolbar-row class="tabrow">
-    <span>Kalender</span>
+    <span>{{'calendar.title' | translate}}</span>
     <span class="spacer"></span>
     <div class="column">
       <div class="btn-group">
@@ -11,14 +11,14 @@
           [(viewDate)]="viewDate"
           (viewDateChange)="closeOpenMonthViewDay()"
         >
-          Zurück
+        {{'calendar.back' | translate}}
         </div>
         <div
           class="btn btn-outline-secondary"
           mwlCalendarToday
           [(viewDate)]="viewDate"
         >
-          Heute
+        {{'calendar.today' | translate}}
         </div>
         <div
           class="btn btn-primary"
@@ -27,13 +27,14 @@
           [(viewDate)]="viewDate"
           (viewDateChange)="closeOpenMonthViewDay()"
         >
-          Weiter
+        {{'calendar.next' | translate}}
         </div>
       </div>
     </div>
     <span class="spacer"></span>
     <div class="column">
-      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+      <h3 *ngIf="isGerman()">{{ viewDate | calendarDate:(view + 'ViewTitle'):'de' }}</h3>
+      <h3 *ngIf="!isGerman()">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
     </div>
     <span class="spacer"></span>
     <div class="column">
@@ -43,21 +44,21 @@
           (click)="setView(CalendarView.Month)"
           [class.active]="view === CalendarView.Month"
         >
-          Monat
+        {{'calendar.month' | translate}}
         </div>
         <div
           class="btn btn-primary"
           (click)="setView(CalendarView.Week)"
           [class.active]="view === CalendarView.Week"
         >
-          Woche
+        {{'calendar.week' | translate}}
         </div>
         <div
           class="btn btn-primary"
           (click)="setView(CalendarView.Day)"
           [class.active]="view === CalendarView.Day"
         >
-          Tag
+        {{'calendar.day' | translate}}
         </div>
       </div>
     </div>
@@ -78,7 +79,7 @@
     let-tooltipAppendToBody="tooltipAppendToBody" let-tooltipDelay="tooltipDelay">
     <div class="cal-cell-top">
       <span>
-        KW {{getKw(day.date)}}
+        {{'calendar.kw' | translate}} {{getKw(day.date)}}
       </span>
         <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">
           {{ day.badgeTotal }}</span>

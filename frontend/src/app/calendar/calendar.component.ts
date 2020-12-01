@@ -20,6 +20,7 @@ import { EventsDetailComponent } from '../events/events-detail/events-detail.com
 import { EventsAddComponent } from '../events/events-add/events-add.component';
 import { JwtService } from '../shared/jwt.service';
 import { min } from 'rxjs/operators';
+import { TranslationService } from '../shared/translation/translation.service';
 
 const colors: any = {
   cyan: {
@@ -83,7 +84,11 @@ export class CalendarComponent implements OnInit {
 
   events: CalendarEventExtended[] = new Array<CalendarEventExtended>();
 
-  constructor(private eventService: EventService, private dialog: MatDialog, private jwt: JwtService) {}
+  constructor(
+    private eventService: EventService,
+    private dialog: MatDialog,
+    private jwt: JwtService,
+    private translate: TranslationService) {}
 
   activeDayIsOpen = true;
 
@@ -101,6 +106,10 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  isGerman(): boolean {
+    return this.translate.getLanguage() === TranslationService.LANGUAGES[0].short;
+  }
+
   addEvent() {
     const dialogRef = this.dialog.open(EventsAddComponent, { disableClose: true });
     dialogRef.afterClosed().subscribe(x => this.init());
@@ -112,8 +121,8 @@ export class CalendarComponent implements OnInit {
       const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, minWidth: '450px', height: '600px' });
       dialogRef.afterClosed().subscribe(y => {
         if (y.save) {
-          this.eventService.getById(event.id).subscribe(y => {
-            this.updateEvent(y);
+          this.eventService.getById(event.id).subscribe(z => {
+            this.updateEvent(z);
           });
         }
       });
@@ -121,7 +130,7 @@ export class CalendarComponent implements OnInit {
   }
 
   updateEvent(y: EventDto) {
-    let ev = this.events.find(a => a.id === y.id);
+    const ev = this.events.find(a => a.id === y.id);
     if (ev != null) {
       ev.start = this.getStartDate(y.date, y.time);
       ev.end = this.getEndDate(y.date, y.time, y.duration);
