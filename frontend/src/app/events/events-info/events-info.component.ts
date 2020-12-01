@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { EventDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, DATA_TYPE } from '../../shared/api-generated/api-generated';
+import { EventDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, DATA_TYPE, ParticipatedStatus } from '../../shared/api-generated/api-generated';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
@@ -11,8 +11,7 @@ export class ContactOrganizationDtoExtended {
   preName: string;
   name: string;
   modelType: MODEL_TYPE;
-  participated: boolean;
-  wasInvited: boolean;
+  eventStatus: ParticipatedStatus;
 }
 
 @Component({
@@ -63,8 +62,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
           id: x.id,
           preName: x.preName,
           name: x.name,
-          participated: false,
-          wasInvited: false,
+          eventStatus: ParticipatedStatus.NOT_INVITED,
           modelType: MODEL_TYPE.CONTACT
         });
       });
@@ -75,8 +73,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
           id: x.id,
           preName: x.name,
           name: x.description,
-          participated: false,
-          wasInvited: false,
+          eventStatus: ParticipatedStatus.NOT_INVITED,
           modelType: MODEL_TYPE.ORGANIZATION
         });
       });
@@ -90,8 +87,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
           cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.ORGANIZATION && y.id === x.objectId);
         }
         if (cont != null) {
-          cont.participated = x.hasParticipated;
-          cont.wasInvited = x.wasInvited;
+          cont.eventStatus = x.eventStatus;
         }
       });
     }

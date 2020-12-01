@@ -4,7 +4,7 @@ import {
   ModificationEntryService, MODEL_TYPE, MODIFICATION, DATA_TYPE,
   ContactPossibilitiesEntryDto, OrganizationDto, ModificationEntryDto, TagDto,
   HistoryElementDto,
-  HistoryElementType, OrganizationService, EventDto
+  HistoryElementType, OrganizationService, EventDto, ParticipatedStatus
 } from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -101,12 +101,12 @@ export class OrganizationsInfoComponent implements OnInit {
 
   eventParticipated(element: EventDto): boolean {
     return !!element.participated && element.participated?.some(part => part.modelType === MODEL_TYPE.ORGANIZATION &&
-       part.objectId === this.organization.id && part.hasParticipated);
+       part.objectId === this.organization.id && part.eventStatus === ParticipatedStatus.PARTICIPATED);
   }
 
   eventNotParticipated(element: EventDto): boolean {
     return !!element.participated && !element.participated?.some(part => part.modelType === MODEL_TYPE.ORGANIZATION &&
-       part.objectId === this.organization.id && part.hasParticipated);
+       part.objectId === this.organization.id && part.eventStatus === ParticipatedStatus.PARTICIPATED);
   }
 
   private loadModifications(pageStart: number, pageSize: number) {

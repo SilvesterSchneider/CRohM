@@ -11,7 +11,7 @@ import {
   MatAutocompleteTrigger, MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { ContactDto, EventDto, MailService, MODEL_TYPE, OrganizationDto, OrganizationService, ParticipatedDto, TagDto } from '../../shared/api-generated/api-generated';
+import { ContactDto, EventDto, MailService, MODEL_TYPE, OrganizationDto, OrganizationService, ParticipatedDto, ParticipatedStatus, TagDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
@@ -24,8 +24,7 @@ export class EventContactConnection {
   selected: boolean;
   name: string;
   preName: string;
-  participated: boolean;
-  wasInvited: boolean;
+  eventStatus: ParticipatedStatus;
   modelType: MODEL_TYPE;
 }
 
@@ -157,12 +156,10 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.contactService.getAll().subscribe(y => {
       this.contacts = y;
       y.forEach(x => {
-        let participatedReal = false;
-        let wasInvitedReal = false;
+        let eventStatusReal = ParticipatedStatus.NOT_INVITED;
         this.event.participated.forEach(z => {
           if (z.objectId === x.id && z.modelType === MODEL_TYPE.CONTACT) {
-            participatedReal = z.hasParticipated;
-            wasInvitedReal = z.wasInvited;
+            eventStatusReal = z.eventStatus;
           }
         });
         this.filteredItems.push(
@@ -171,8 +168,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             name: x.name,
             preName: x.preName,
             selected: false,
-            participated: participatedReal,
-            wasInvited: wasInvitedReal,
+            eventStatus: eventStatusReal,
             modelType: MODEL_TYPE.CONTACT
           }
         );
@@ -185,12 +181,10 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.orgaService.get().subscribe(x => {
       this.orgas = x;
       x.forEach(y => {
-        let participatedReal = false;
-        let wasInvitedReal = false;
+        let eventStatusReal = ParticipatedStatus.NOT_INVITED;
         this.event.participated.forEach(z => {
           if (z.objectId === y.id && z.modelType === MODEL_TYPE.ORGANIZATION) {
-            participatedReal = z.hasParticipated;
-            wasInvitedReal = z.wasInvited;
+            eventStatusReal = z.eventStatus;
           }
         });
         this.filteredItems.push(
@@ -199,8 +193,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             name: y.name,
             preName: '',
             selected: false,
-            participated: participatedReal,
-            wasInvited: wasInvitedReal,
+            eventStatus: eventStatusReal,
             modelType: MODEL_TYPE.ORGANIZATION
           }
         );
@@ -308,7 +301,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
           } else if (y.modelType === MODEL_TYPE.ORGANIZATION) {
             listOfOrgaIds.push(y.objectId);
           }
-          y.wasInvited = true;
+          y.eventStatus = ParticipatedStatus.INVITED;
         });
         this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text).subscribe();
       }
@@ -345,7 +338,6 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     } else {
       const i = this.selectedItems.findIndex(value => value.objectId === item.objectId && value.modelType === item.modelType);
       if (i > -1) {
-        this.selectedItems[i].participated = false;
         this.selectedItems.splice(i, 1);
       }
     }
@@ -363,7 +355,6 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     } else {
       const i = this.selectedItems.findIndex(value => value.objectId === item.objectId && value.modelType === item.modelType);
       if (i > -1) {
-        this.selectedItems[i].participated = false;
         this.selectedItems.splice(i, 1);
       }
     }
@@ -375,7 +366,11 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   toggleParticipated(item: EventContactConnection) {
     this.selectedItems.forEach(x => {
       if (x.objectId === item.objectId && x.modelType === item.modelType) {
-        x.participated = !x.participated;
+        if (x.eventStatus != ParticipatedStatus.PARTICIPATED) {
+          x.eventStatus = ParticipatedStatus.PARTICIPATED;
+        } else {
+          x.eventStatus = ParticipatedStatus.INVITED;
+        }
       }
     });
   }
@@ -404,15 +399,13 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             participants.push(
               {
                 objectId: x.objectId,
-                hasParticipated: x.participated,
-                wasInvited: x.wasInvited,
+                eventStatus: x.eventStatus,
                 id: 0,
                 modelType: MODEL_TYPE.CONTACT
               }
             );
           } else {
-            partExistend.hasParticipated = x.participated;
-            partExistend.wasInvited = x.wasInvited;
+            partExistend.eventStatus = x.eventStatus;
             participants.push(partExistend);
           }
         }
@@ -426,15 +419,13 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             participants.push(
               {
                 objectId: x.objectId,
-                hasParticipated: x.participated,
-                wasInvited: x.wasInvited,
+                eventStatus: x.eventStatus,
                 id: 0,
                 modelType: MODEL_TYPE.ORGANIZATION
               }
             );
           } else {
-            partExistend.hasParticipated = x.participated;
-            partExistend.wasInvited = x.wasInvited;
+            partExistend.eventStatus = x.eventStatus;
             participants.push(partExistend);
           }
         }

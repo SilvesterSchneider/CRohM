@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20201115212714_init")]
-    partial class init
+    [Migration("20201130212909_ram_init_kal13")]
+    partial class ram_init_kal13
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -500,8 +500,8 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("EventId")
                         .HasColumnType("bigint");
 
-                    b.Property<bool>("HasParticipated")
-                        .HasColumnType("bit");
+                    b.Property<int>("EventStatus")
+                        .HasColumnType("int");
 
                     b.Property<int>("ModelType")
                         .HasColumnType("int");
@@ -511,9 +511,6 @@ namespace ModelLayer.Migrations
 
                     b.Property<long>("ObjectId")
                         .HasColumnType("bigint");
-
-                    b.Property<bool>("WasInvited")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -554,7 +551,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "7a36f4b0-0b24-415a-99a9-597705851596",
+                            ConcurrencyStamp = "fd74c619-08fc-4bd8-9cbd-1e0353c3fcdf",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
