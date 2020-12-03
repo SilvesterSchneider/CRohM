@@ -17,6 +17,7 @@ import { SidenavComponent } from './shared/navigation/sidenav/sidenav.component'
 import { OrganizationsModule } from './organizations/organizations.module';
 import { EventsModule } from './events/events.module';
 import { ProgressSpinnerInterceptor } from './shared/progress-spinner/progress-spinner.interceptor';
+import { HttpErrorInterceptor } from './shared/http-error/http-error.interceptor';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ConfirmDialogComponent } from './shared/form/confirmdialog/confirmdialog.component';
 import { ChangePasswordComponent } from './login/change-password-dialog/change-password-dialog.component';
@@ -81,6 +82,12 @@ import { ApproveContactComponent } from './approve-contact/approve-contact.compo
       provide: HTTP_INTERCEPTORS,
       useClass: ProgressSpinnerInterceptor,
       multi: true,
+    },
+    // Show error snackbar
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true
     },
     // Provide locale using translationService
     {
