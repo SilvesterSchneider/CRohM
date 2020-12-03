@@ -14,7 +14,8 @@ namespace ServiceLayer
     /// </summary>
     public interface IMailService
     {
-        bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender);
+        bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender, string code, long eventId, long contactId);
+
         bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType);
 
         bool PasswordReset(string newPassword, string mailAddress);
@@ -26,7 +27,8 @@ namespace ServiceLayer
         bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
 
         bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
-        bool CreateAndSendInvitationMail(string mail, string name, string mailContent);
+
+        bool CreateAndSendInvitationMail(string mail, string name, string mailContent, string code, long eventId, long organizationId);
 
         Task<bool> SendMailToAddress(string subject, string address, string mailContent);
     }
@@ -44,6 +46,7 @@ namespace ServiceLayer
         private static string EVENTNAMEFIELD = "<Veranstaltungsname>";
         private static string EVENTDATEFIELD = "<Datum>";
         private static string EVENTTIMEFIELD = "<Uhrzeit>";
+
         private static string MAILSETUP = "<h5><i> - English version below - </i></h5>" +
             "Sehr geehrter Administrator\r\rDie Einstellungen für den Email-Server wurden erfolgreich " +
             "übernommen\r\rTechnische Hochschule Nürnberg" +
@@ -52,6 +55,7 @@ namespace ServiceLayer
             "\r\rNuremberg Institute of Technology";
 
         private static string TESTMAIL = "Test-Email";
+
         public static string INVITATION_DEF_CONTENT = "- English version below -\r" +
             STARTFIELD + " " + PRENAMEFIELD + " " + NAMEFIELD +
             "\rWir laden Sie herzlich ein zu unserer Veranstaltung \"" + EVENTNAMEFIELD +
@@ -69,7 +73,7 @@ namespace ServiceLayer
         public bool ApproveContactCreation(string benutzer, string email)
         {
             string body = "<h3> Bitte bestätigen Sie die Aufnahme Ihrer Kontaktdaten für die TH-Nürnberg </h3> " +
-                   "<p> "+benutzer+"</p>";
+                   "<p> " + benutzer + "</p>";
 
             return SendMail("Zugangsdaten", body, email, null, "");
         }
@@ -101,7 +105,6 @@ namespace ServiceLayer
                    "<p> With kind regards,</p> " +
                    "<p> Your CRohm Team.</p>";
 
-
             return SendMail("Zugangsdaten / Access Data", body, email, null, "");
         }
 
@@ -128,7 +131,6 @@ namespace ServiceLayer
                           data +
                           " </ul> " +
                           " <p> Nuremberg Institute of Technology</p> ";
-
 
             return SendMail("Mitteilung über Änderung oder Löschung von Daten / Notification of change or deletion of data", body, emailAddressRecipient, null, "");
         }
@@ -223,7 +225,7 @@ namespace ServiceLayer
             return true;
         }
 
-        public bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender)
+        public bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender, string code, long eventId, long contactId)
         {
             string start = "Sehr geehrter Herr";
             string genderEn = "Dear Mr ";
@@ -239,6 +241,15 @@ namespace ServiceLayer
             }
             string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
             finishedcontent = finishedcontent.Replace(NAMEFIELDEN, name).Replace(STARTFIELDEN, genderEn).Replace(PRENAMEFIELDEN, preName);
+
+            string linkAnnehmen = $"https://ops085010.cs.ohmhs.de/api/event/{eventId}/invitationresponse?contactId={contactId}&passCode={code}&participate=true";
+            string linkAblehnen = $"https://ops085010.cs.ohmhs.de/api/event/{eventId}/invitationresponse?contactId={contactId}&passCode={code}&participate=false";
+
+            string annehmenhtml = $"<button><a href='{linkAnnehmen}'>Annehmen</a></button>";
+            string ablehnenhtml = $"<button><a href='{linkAblehnen}'>Ablehnen</a></button>";
+
+            finishedcontent = finishedcontent + $"<br><p>{annehmenhtml}</p><p>{ablehnenhtml}</p>";
+
             return SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, address, null, null);
         }
 
@@ -264,7 +275,7 @@ namespace ServiceLayer
             return SendMail(subject, text, emailAddressRecipient, attachment, attachmentType);
         }
 
-        public bool CreateAndSendInvitationMail(string mail, string name, string mailContent)
+        public bool CreateAndSendInvitationMail(string mail, string name, string mailContent, string code, long eventId, long organizationId)
         {
             string finishedcontent = mailContent.Replace(STARTFIELD, ORGASTART);
             finishedcontent = finishedcontent.Replace(STARTFIELDEN, ORGASTARTEN);
@@ -278,6 +289,14 @@ namespace ServiceLayer
                 finishedcontent = finishedcontent.Replace(NAMEFIELD, string.Empty).Replace(PRENAMEFIELD, name);
                 finishedcontent = finishedcontent.Replace(NAMEFIELDEN, string.Empty).Replace(PRENAMEFIELDEN, name);
             }
+
+            string linkAnnehmen = $"https://ops085010.cs.ohmhs.de/api/event/{eventId}/invitationresponse?organizationId={organizationId}&passCode={code}&participate=true";
+            string linkAblehnen = $"https://ops085010.cs.ohmhs.de/api/event/{eventId}/invitationresponse?organizationId={organizationId}&passCode={code}&participate=false";
+
+            string annehmenhtml = $"<button><a href='{linkAnnehmen}'>Annehmen</a></button>";
+            string ablehnenhtml = $"<button><a href='{linkAblehnen}'>Ablehnen</a></button>";
+
+            finishedcontent = finishedcontent + $"<br><p>{annehmenhtml}</p><p>{ablehnenhtml}</p>";
             return SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, mail, null, null);
         }
     }

@@ -120,9 +120,7 @@ namespace WebApi
                     };
                 });
 
-
             services.AddHealthChecks();
-
         }
 
         public void Configure(

@@ -24,17 +24,17 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   modifications: ModificationEntryDto[] = new Array<ModificationEntryDto>();
   modificationsPaginationLength: number;
 
-  displayedColumns = ['icon', 'datum', 'name', 'kommentar'];
+  displayedColumns = ['icon', 'datum', 'name', 'kommentar', 'state', 'arrived'];
   displayedColumnsOrganizations = ['name'];
   displayedColumnsContactPossibilities = ['name', 'kontakt'];
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
   constructor(public dialogRef: MatDialogRef<ContactsInfoComponent>,
-              public dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public contact: ContactDto,
-              private fb: FormBuilder,
-              private modService: ModificationEntryService,
-              private contactService: ContactService) {
+    public dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public contact: ContactDto,
+    private fb: FormBuilder,
+    private modService: ModificationEntryService,
+    private contactService: ContactService) {
     super(dialogRef, dialog);
   }
 
@@ -104,12 +104,12 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
 
   eventParticipated(element: EventDto): boolean {
     return !!element.participated && element.participated?.some(part => part.modelType ===
-       MODEL_TYPE.CONTACT && part.objectId === this.contact.id && part.hasParticipated);
+      MODEL_TYPE.CONTACT && part.objectId === this.contact.id && part.hasParticipated);
   }
 
   eventNotParticipated(element: EventDto): boolean {
     return !!element.participated && !element.participated?.some(part => part.modelType ===
-       MODEL_TYPE.CONTACT && part.objectId === this.contact.id && part.hasParticipated);
+      MODEL_TYPE.CONTACT && part.objectId === this.contact.id && part.hasParticipated);
   }
 
   isLocalPhone(element: HistoryElementDto): boolean {
@@ -128,6 +128,31 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
     return element.type === HistoryElementType.VISIT;
   }
 
+  public getStateName(element: number): string {
+    switch (element) {
+      case 0:
+        return '';
+      case 1:
+        return 'Invite';
+      case 2:
+        return 'Accept';
+      case 3:
+        return 'Cancel';
+      default:
+        return '';
+    }
+  }
+  public getArrivedText(arrived?: boolean): string {
+    console.log(arrived);
+    if (arrived) {
+      return 'yes';
+    } else if (arrived === false) {
+      return 'no';
+    }
+    return '';
+  }
+
+
   private loadHistory(pageStart: number, pageSize: number) {
     this.contactService.getHistory(this.contact.id, pageStart, pageSize)
       .subscribe(result => {
@@ -145,4 +170,3 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
 
   }
 }
-

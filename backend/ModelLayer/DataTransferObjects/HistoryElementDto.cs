@@ -1,4 +1,4 @@
-﻿using ModelLayer.Models;
+using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,6 +13,9 @@ namespace ModelLayer.DataTransferObjects
         public DateTime Date { get; set; }
         public HistoryElementType Type { get; set; }
         public string Comment { get; set; }
+        public long? EventId { get; set; }
+        public bool? Arrived { get; set; }
+        public HistoryState? State { get; set; }
     }
 
     public class HistoryElementCreateDto

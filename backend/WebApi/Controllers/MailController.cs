@@ -30,13 +30,14 @@ namespace WebApi.Controllers
         /// Eine Einladungsmail an kontakte senden
         /// </summary>
         /// <param name="mailContent">der mail inhalt</param>
+        /// <param name="id">Id des Events</param>
         /// <param name="contactIds">die kontakt ids an die eine mail versendet werden soll</param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut("events/{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully send mails")]
-        public async Task<IActionResult> SendInvitationMails([FromBody]List<long> contactIds, [FromHeader]List<long> orgaIds, [FromQuery]string mailContent)
+        public async Task<IActionResult> SendInvitationMails([FromRoute]long id, [FromBody]List<long> contactIds, [FromHeader]List<long> orgaIds, [FromQuery]string mailContent)
         {
-            return Ok(await eventService.SendInvitationMailsAsync(contactIds, orgaIds, mailContent));
+            return Ok(await eventService.SendInvitationMailsAsync(id, contactIds, orgaIds, mailContent));
         }
 
         /// <summary>

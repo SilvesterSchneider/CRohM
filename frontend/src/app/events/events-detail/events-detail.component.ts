@@ -71,7 +71,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredTagsObservable: Observable<string[]>;
   allTags: string[] = ['Lehrbeauftragter', 'Kunde', 'Politiker', 'Unternehmen', 'Behörde', 'Bildungseinrichtung',
-   'Institute', 'Ministerium', 'Emeriti', 'Alumni'];
+    'Institute', 'Ministerium', 'Emeriti', 'Alumni'];
   removable = true;
   selectableTag = true;
 
@@ -90,9 +90,9 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     private mailService: MailService) {
     super(dialogRef, dialog);
     this.dialogRef.backdropClick().subscribe(() => {
-			// Close the dialog
-			dialogRef.close();
-		});
+      // Close the dialog
+      dialogRef.close();
+    });
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
@@ -310,7 +310,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
           }
           y.wasInvited = true;
         });
-        this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text).subscribe();
+        this.mailService.sendInvitationMails(this.event.id, listOfContactIds, listOfOrgaIds, x.text).subscribe();
       }
     });
   }
@@ -399,7 +399,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
         if (contact != null) {
           contacts.push(contact);
           const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-             MODEL_TYPE.CONTACT);
+            MODEL_TYPE.CONTACT);
           if (partExistend == null) {
             participants.push(
               {
@@ -421,7 +421,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
         if (orga != null) {
           organizations.push(orga);
           const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-             MODEL_TYPE.ORGANIZATION);
+            MODEL_TYPE.ORGANIZATION);
           if (partExistend == null) {
             participants.push(
               {
@@ -453,5 +453,3 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     super.confirmDialog();
   }
 }
-
-

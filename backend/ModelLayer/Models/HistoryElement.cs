@@ -28,7 +28,8 @@ namespace ModelLayer.Models
         public string Comment { get; set; } = "";
         public Contact contact { get; set; }
         public Organization organization { get; set; }
-        public bool Arrived { get; set; } = false;
-        public HistoryState State { get; set; } = HistoryState.DEFAULT;
+        public long? EventId { get; set; }
+        public bool? Arrived { get; set; }
+        public HistoryState? State { get; set; }
     }
 }

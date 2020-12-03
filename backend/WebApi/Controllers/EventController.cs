@@ -8,9 +8,11 @@ using RepositoryLayer;
 using ServiceLayer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Logging;
 
 namespace WebApi.Controllers
 {
@@ -24,18 +26,20 @@ namespace WebApi.Controllers
         private IEventService eventService;
         private IContactService contactService;
         private IOrganizationService orgaService;
+        private readonly IHistoryService _historyService;
 
         public EventController(IMapper mapper,
             IEventService eventService,
             IModificationEntryService modService,
             IUserService userService,
             IContactService contactService,
-            IOrganizationService orgaService)
+            IOrganizationService orgaService, IHistoryService historyService)
         {
             this._mapper = mapper;
             this.userService = userService;
             this.modService = modService;
             this.orgaService = orgaService;
+            _historyService = historyService;
             this.eventService = eventService;
             this.contactService = contactService;
         }
@@ -110,6 +114,8 @@ namespace WebApi.Controllers
                     {
                         contactsParticipated.Add(cont);
                     }
+
+                    await _historyService.CreateOrUpdateForContactAsync(id, cont, part.HasParticipated);
                 }
                 else if (part.ModelType == MODEL_TYPE.ORGANIZATION)
                 {
@@ -177,6 +183,51 @@ namespace WebApi.Controllers
             await eventService.DeleteAsync(eventToDelete);
             await modService.UpdateEventByDeletionAsync(id);
             return Ok();
+        }
+
+        /// <summary>
+        /// Event zusagen oder ablehnen
+        /// </summary>
+        /// <param name="id">id of event</param>
+        /// <param name="contactId">id of contact</param>
+        /// <param name="organizationId">id of organization</param>
+        /// <param name="passCode">previous send passcode</param>
+        /// <param name="participate">participate true | false</param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet("{id}/invitationresponse")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(string), Description = "successful")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(string), Description = "not found")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
+        public async Task<IActionResult> PostInvitationResponse([FromRoute] long id, [FromQuery] long? contactId, long? organizationId, string passCode, bool participate = false)
+        {
+            if (string.IsNullOrEmpty(passCode) || (contactId == null && organizationId == null))
+            {
+                return BadRequest("Invalid query");
+            }
+
+            try
+            {
+                if (contactId != null)
+                {
+                    await eventService.HandleInvitationResponseForContactAsync(id, (long)contactId, participate, passCode);
+                    return Ok("Antwort erfolgreich verarbeitet");
+                }
+                else
+                {
+                    await eventService.HandleInvitationResponseForOrganizationAsync(id, (long)organizationId, participate,
+                        passCode);
+                    return Ok("Antwort erfolgreich verarbeitet");
+                }
+            }
+            catch (KeyNotFoundException nfe)
+            {
+                return NotFound(nfe.Message);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                return BadRequest(ioe.Message);
+            }
         }
     }
 }
