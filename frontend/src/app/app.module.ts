@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home/home.component';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -33,6 +34,11 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 registerLocaleData(localeDe);
 import { ApproveContactComponent } from './approve-contact/approve-contact.component';
+import { CalendarComponent } from './calendar/calendar.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
   declarations: [
@@ -43,6 +49,7 @@ import { ApproveContactComponent } from './approve-contact/approve-contact.compo
     SidenavComponent,
     ConfirmDialogComponent,
     ChangePasswordComponent,
+	CalendarComponent,
     LanguageSelectComponent,
     ApproveContactComponent
   ],
@@ -60,6 +67,14 @@ import { ApproveContactComponent } from './approve-contact/approve-contact.compo
     StatisticsModule,
     EventsModule,
     OrganizationsModule,
+    BrowserAnimationsModule,
+    CommonModule,
+    NgbModalModule,
+    FlatpickrModule.forRoot(),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
     // Configure where JWT is stored / read from
     JwtModule.forRoot({
       config: {

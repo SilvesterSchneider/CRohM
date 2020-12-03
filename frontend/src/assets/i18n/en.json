@@ -200,10 +200,19 @@
       "editEvent": "Viewing and editing an event",
       "deleteEvent": "Delete an event"
     },
-    "role": {
-      "role": "Role",
-      "admin": "Admin",
-      "datasecurity": "Data protection officer"
+    "validation": {
+      "nameRequired": "Name of the contact entry required!",
+      "mailPhoneRequired": "Phone number or e-mail address required!"
+    },
+    "calendar": {
+      "title": "Calendar",
+      "month": "Month",
+      "week": "Week",
+      "day": "Day",
+      "back": "Back",
+      "today": "Today",
+      "next": "Next",
+      "kw": "CW"
     }
   },
   "dpDisclaimer": {
