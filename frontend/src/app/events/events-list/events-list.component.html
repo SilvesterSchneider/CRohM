@@ -47,8 +47,8 @@
                     color="primary" class="editButton" (click)="callEdit(element.id)">
                     <mat-icon class="icon" title="Veranstaltung bearbeiten">edit</mat-icon>
                 </button>
-                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)"
-                    color="primary" class="showButton">
+                <button id="detailsButton" type="button" mat-icon-button [disabled]="!permissionModify"
+                    (click)="openInfo(element.id)" color="primary">
                     <mat-icon class="icon" title="Veranstaltungsinformationen anzeigen">info</mat-icon>
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteEvent(element.id)"
