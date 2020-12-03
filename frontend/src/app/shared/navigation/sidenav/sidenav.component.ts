@@ -20,7 +20,7 @@ export class SidenavComponent implements OnInit {
           link: './organizations',
           index: 1
       },  {
-          label: 'Kalender',
+          label: 'calendar.title',
           link: './calendar',
           index: 2
       }, {
