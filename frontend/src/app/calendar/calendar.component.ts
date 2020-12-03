@@ -145,9 +145,9 @@ export class CalendarComponent implements OnInit {
 
   getLocale(): string {
     if (this.isGerman()) {
-      return 'de';
+      return TranslationService.LANGUAGES[0].short;
     } else {
-      return 'en';
+      return TranslationService.LANGUAGES[1].short;
     }
   }
 
