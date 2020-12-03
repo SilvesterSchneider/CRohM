@@ -44,7 +44,6 @@ namespace ServiceLayer
                 {
                     contact = contact,
                     Date = DateTime.UtcNow,
-                    Name = "visit",
                     Type = HistoryElementType.VISIT,
                     EventId = eventId,
                     Arrived = arrived
@@ -70,7 +69,6 @@ namespace ServiceLayer
                 {
                     organization = organization,
                     Date = DateTime.UtcNow,
-                    Name = "visit",
                     Type = HistoryElementType.VISIT,
                     EventId = eventId
                 });

@@ -68,7 +68,6 @@ namespace ServiceLayer
                     {
                         contact = contact,
                         Date = DateTime.UtcNow,
-                        Name = "invitation response",
                         Type = HistoryElementType.VISIT,
                         State = HistoryState.INVITE,
                         EventId = eventId
@@ -94,7 +93,6 @@ namespace ServiceLayer
                     {
                         organization = orga,
                         Date = DateTime.UtcNow,
-                        Name = "invitation response",
                         Type = HistoryElementType.VISIT,
                         State = HistoryState.INVITE,
                         EventId = eventId
@@ -135,7 +133,6 @@ namespace ServiceLayer
                     await _historyService.CreateAsync(new HistoryElement()
                     {
                         organization = organization,
-                        Name = "invitation response",
                         Date = DateTime.UtcNow,
                         Type = HistoryElementType.VISIT,
                         State = historyState,
@@ -181,7 +178,6 @@ namespace ServiceLayer
                     {
                         contact = eventContact,
                         Date = DateTime.UtcNow,
-                        Name = "invitation response",
                         Type = HistoryElementType.VISIT,
                         State = historyState,
                         EventId = eve.Id

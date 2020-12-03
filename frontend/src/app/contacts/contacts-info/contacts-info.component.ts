@@ -133,11 +133,11 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
       case 0:
         return '';
       case 1:
-        return 'Invite';
+        return 'common.invited';
       case 2:
-        return 'Accept';
+        return 'common.accepted';
       case 3:
-        return 'Cancel';
+        return 'common.canceled';
       default:
         return '';
     }
@@ -145,9 +145,9 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   public getArrivedText(arrived?: boolean): string {
     console.log(arrived);
     if (arrived) {
-      return 'yes';
+      return 'common.yes';
     } else if (arrived === false) {
-      return 'no';
+      return 'common.no';
     }
     return '';
   }
