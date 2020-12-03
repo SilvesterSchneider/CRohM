@@ -214,5 +214,15 @@
     "validation": {
         "nameRequired": "Name des Kontakteintrags erforderlich!",
         "mailPhoneRequired": "Telefonnummer oder E-Mail Adresse erforderlich!"
+    },
+    "calendar": {
+        "title": "Kalender",
+        "month": "Monat",
+        "week": "Woche",
+        "day": "Tag",
+        "back": "Zurück",
+        "today": "Heute",
+        "next": "Weiter",
+        "kw": "KW"
     }
 }
