@@ -238,7 +238,7 @@ export class EventsListComponent implements OnInit {
   addDummyEvent() {
     this.service.post({
       name: 'Veranstaltung' + this.length,
-      end: '20:' + this.length % 59,
+      end: '20:' + (this.length + 1) % 59,
       contacts: [],
       date: '2020-' + (new Date(Date.now()).getMonth() + 2) + '-' + (this.length + 1) % 30,
       start: '20:' + this.length % 59
