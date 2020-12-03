@@ -22,7 +22,7 @@ describe('Contacts Tests', () => {
         cy.wait(10000);
         cy.get('#addDummyEventButton').click();
         cy.wait(4000);
-        cy.get('#detailsButton').click();
+        cy.get('.editButton').click();
         cy.wait(8000);
         cy.get('#eventName').should('have.value', 'Veranstaltung0');
     });
