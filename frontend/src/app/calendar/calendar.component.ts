@@ -112,7 +112,7 @@ export class CalendarComponent implements OnInit {
 
   addEvent() {
     const dialogRef = this.dialog.open(EventsAddComponent, { disableClose: true });
-    dialogRef.afterClosed().subscribe(x => this.init());
+    dialogRef.afterClosed().subscribe(x => this.refresh.next());
   }
 
   handleEvent(action: string, event: CalendarEventExtended): void {
@@ -141,6 +141,14 @@ export class CalendarComponent implements OnInit {
 
   setView(view: CalendarView) {
     this.view = view;
+  }
+
+  getLocale(): string {
+    if (this.isGerman()) {
+      return 'de';
+    } else {
+      return 'en';
+    }
   }
 
   closeOpenMonthViewDay() {

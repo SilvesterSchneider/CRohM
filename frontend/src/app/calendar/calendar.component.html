@@ -117,6 +117,7 @@
       *ngSwitchCase="CalendarView.Month"
       [viewDate]="viewDate"
       [events]="events"
+      [locale]="getLocale()"
       [refresh]="refresh"
       [cellTemplate]="customCellTemplate"
       [activeDayIsOpen]="activeDayIsOpen"
@@ -128,6 +129,7 @@
       *ngSwitchCase="CalendarView.Week"
       [viewDate]="viewDate"
       [events]="events"
+      [locale]="getLocale()"
       [refresh]="refresh"
       (eventClicked)="handleEvent('Clicked', $event.event)"
     >
@@ -136,6 +138,7 @@
       *ngSwitchCase="CalendarView.Day"
       [viewDate]="viewDate"
       [events]="events"
+      [locale]="getLocale()"
       [refresh]="refresh"
       (eventClicked)="handleEvent('Clicked', $event.event)"
     >
