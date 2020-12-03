@@ -43,12 +43,12 @@
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef> Aktion </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
-                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="callEdit(element.id)" color="primary"
-                    class="editButton" (click)="callEdit(element.id)">
+                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="callEdit(element.id)"
+                    color="primary" class="editButton" (click)="callEdit(element.id)">
                     <mat-icon class="icon" title="Veranstaltung bearbeiten">edit</mat-icon>
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)"
-                    color="primary">
+                    color="primary" class="showButton">
                     <mat-icon class="icon" title="Veranstaltungsinformationen anzeigen">info</mat-icon>
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteEvent(element.id)"
