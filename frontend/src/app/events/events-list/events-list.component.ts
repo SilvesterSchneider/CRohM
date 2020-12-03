@@ -240,7 +240,7 @@ export class EventsListComponent implements OnInit {
       name: 'Veranstaltung' + this.length,
       end: '20:' + (this.length + 1) % 59,
       contacts: [],
-      date: '2020-' + (new Date(Date.now()).getMonth() + 2) + '-' + (this.length + 1) % 30,
+      date: '2020-' + (new Date(Date.now()).getMonth() + 2) % 12 + '-' + (this.length + 1) % 30,
       start: '20:' + this.length % 59
     }).subscribe(x => this.init());
   }
