@@ -436,7 +436,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.event.participated = participants;
     this.event.tags = this.selectedTags;
     this.eventService.put(this.event, this.event.id).subscribe(() => {
-      this.dialogRef.close();
+      this.dialogRef.close({save: true});
     });
   }
 
