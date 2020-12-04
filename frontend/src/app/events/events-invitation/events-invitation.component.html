@@ -1,22 +1,15 @@
 <mat-dialog-content>
-    <h4>
-        Einladung an Teilnehmer versenden
-    </h4>
-    <div>
-        Die Textbausteine &#060;Nachname&#062; und &#060;Vorname&#062; fügen
-    </div>
-    <div>
-        den Nach- bzw. Vornamen des Empfängers ein.
-    </div>
+    <h4>{{'event.sendInvitation' | translate}}</h4>
+    <div>{{'event.inviteDescription' | translate}}</div>
     <div [formGroup]="textForm">
         <textarea class="area" formControlName="text"></textarea>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions mat-dialog-actions align="end">
-    <button mat-raised-button title="Verwerfen" (click)="sendMail(false)">
-        Verwerfen
+    <button mat-raised-button title="{{'common.cancel' | translate}}" (click)="sendMail(false)">
+        {{'common.cancel' | translate}}
     </button>
-    <button id="buttonSend" mat-raised-button color="primary" title="Senden" [disabled]="!textForm.valid" (click)="sendMail(true)">
-        Senden
+    <button id="buttonSend" mat-raised-button color="primary" title="{{'common.send' | translate}}" [disabled]="!textForm.valid" (click)="sendMail(true)">
+        {{'common.send' | translate}}
     </button>
 </mat-dialog-actions>

@@ -14,6 +14,7 @@ import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+<<<<<<< HEAD
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
 
 // Validator fuer Start frueher als Ende?
@@ -24,6 +25,10 @@ const MyAwesomeRangeValidator: ValidatorFn = (fg: FormGroup) => {
     ? null
     : { range: true };
 };
+=======
+import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
+import { OsmAddressComponent } from '../../shared/osm/osm-address/osm-address.component';
+>>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -114,36 +119,42 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
 
 
   ngOnInit() {
-    this.eventsForm = this.createOrganizationForm();
-    this.contactService.getAll().subscribe(y => {
-      y.forEach(x => {
-        this.filteredItems.push(
-          {
-            objectId: x.id,
-            name: x.name,
-            preName: x.preName,
+    this.eventsForm = this.fb.group({
+      name: ['', Validators.required],
+      date: ['', Validators.required],
+      time: ['', Validators.required],
+      duration: ['', Validators.required],
+      description: ['', Validators.maxLength(300)],
+      location: ['']
+    });
+
+    this.contactService.getAll().subscribe(contacts => {
+      this.filteredItems = contacts.map(contact => {
+        return {
+          objectId: contact.id,
+          name: contact.name,
+          preName: contact.preName,
+          selected: false,
+          modelType: MODEL_TYPE.CONTACT,
+          participated: false,
+          wasInvited: false
+        };
+      });
+
+      this.orgaService.get().subscribe(organisations => {
+        this.filteredItems.concat(organisations.map(orga => {
+          return {
+            objectId: orga.id,
+            name: orga.name,
+            preName: orga.description,
             selected: false,
-            modelType: MODEL_TYPE.CONTACT,
+            modelType: MODEL_TYPE.ORGANIZATION,
             participated: false,
             wasInvited: false
-          }
-        );
-      });
-      this.orgaService.get().subscribe(a => {
-        a.forEach(b => {
-          this.filteredItems.push(
-            {
-              objectId: b.id,
-              name: b.name,
-              preName: b.description,
-              selected: false,
-              modelType: MODEL_TYPE.ORGANIZATION,
-              participated: false,
-              wasInvited: false
-            }
-          );
-        });
-        if (this.preselectedContacts != null && this.preselectedContacts.length > 0) {
+          };
+        }));
+
+        if (this.preselectedContacts?.length > 0) {
           this.preselectedContacts.forEach(s => {
             const cont: EventContactConnection = this.filteredItems.find(z => z.objectId === s && z.modelType === MODEL_TYPE.CONTACT);
             if (cont != null) {
@@ -155,6 +166,7 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     });
   }
 
+<<<<<<< HEAD
 
 
   private createOrganizationForm(): FormGroup {
@@ -166,6 +178,8 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     }, { validator: MyAwesomeRangeValidator });  // Einbau des Validators der Start/Ende validiert
   }
 
+=======
+>>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
   setDescribedByIds(ids: string[]) {
     this.describedBy = ids.join(' ');
   }

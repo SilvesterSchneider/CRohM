@@ -162,7 +162,15 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   }
 
   ngOnInit() {
-    this.eventsForm = this.createEventsForm();
+    this.eventsForm = this.fb.group({
+      name: ['', Validators.required],
+      date: [new FormControl(new Date(this.event.date)), Validators.required],
+      time: ['', Validators.required],
+      duration: ['', Validators.required],
+      description: ['', Validators.maxLength(300)],
+      location: ['']
+    });;
+
     this.contactService.getAll().subscribe(y => {
       this.contacts = y;
       y.forEach(x => {
@@ -258,6 +266,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     return [hours, minutes].join(':');
   }
 
+<<<<<<< HEAD
   private createEventsForm(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
@@ -267,6 +276,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     }, { validator: MyAwesomeRangeValidator });  // Einbau des Validators der Start/Ende validiert
   }
 
+=======
+>>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
   setDescribedByIds(ids: string[]) {
     this.describedBy = ids.join(' ');
   }
@@ -454,7 +465,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.event.participated = participants;
     this.event.tags = this.selectedTags;
     this.eventService.put(this.event, this.event.id).subscribe(() => {
-      this.dialogRef.close();
+      this.dialogRef.close({save: true});
     });
   }
 

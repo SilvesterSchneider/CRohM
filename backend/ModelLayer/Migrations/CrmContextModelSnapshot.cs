@@ -292,6 +292,9 @@ namespace ModelLayer.Migrations
                     b.Property<DateTime>("End")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -552,7 +555,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "fce4be3e-5988-476a-9fbf-57b2fd534e50",
+                            ConcurrencyStamp = "e592f758-dc59-4f9e-9479-2c4197f9237b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

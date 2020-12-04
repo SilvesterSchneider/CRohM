@@ -76,7 +76,7 @@ namespace RepositoryLayer
         }
 
         public async Task<Event> CreateNewEventAsync(EventCreateDto eventToCreate)
-        { 
+        {
             Event eventNew = new Event();
             if (eventToCreate.Start >= eventToCreate.End)
                 return await CreateAsync(eventNew);
@@ -84,6 +84,9 @@ namespace RepositoryLayer
             eventNew.End = eventToCreate.End;
             eventNew.Name = eventToCreate.Name;
             eventNew.Start = eventToCreate.Start;
+            eventNew.Time = eventToCreate.Time;
+            eventNew.Description = eventToCreate.Description;
+            eventNew.Location = eventToCreate.Location;
             eventToCreate.Contacts.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, WasInvited = false, ModelType = MODEL_TYPE.CONTACT }));
             eventToCreate.Organizations.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, WasInvited = false, ModelType = MODEL_TYPE.ORGANIZATION }));
             return await CreateAsync(eventNew);
@@ -148,9 +151,13 @@ namespace RepositoryLayer
                 eventExistent.Date = eventToModify.Date;
                 eventExistent.Start = eventToModify.Start;
                 eventExistent.End = eventToModify.End;
+                eventExistent.Time = eventToModify.Time;
+                eventExistent.Duration = eventToModify.Duration;
+                eventExistent.Description = eventToModify.Description;
+                eventExistent.Location = eventToModify.Location;
                 List<EventContact> eventContactsToDelete = new List<EventContact>();
                 eventContacts.ForEach(x =>
-                { 
+                {
                     if (eventToModify.Contacts.FirstOrDefault(y => y.Id == x.ContactId) == null)
                     {
                         eventContactsToDelete.Add(x);
@@ -193,13 +200,14 @@ namespace RepositoryLayer
                     {
                         participated.HasParticipated = partNew.HasParticipated;
                         participated.WasInvited = partNew.WasInvited;
-                    } else
+                    }
+                    else
                     {
                         eventExistent.Participated.Add(new Participated() { ObjectId = partNew.ObjectId, HasParticipated = partNew.HasParticipated, WasInvited = partNew.WasInvited, ModelType = partNew.ModelType });
                     }
                 }
-                
-                foreach (ContactDto contact in eventToModify.Contacts) 
+
+                foreach (ContactDto contact in eventToModify.Contacts)
                 {
                     if (eventContacts.FirstOrDefault(y => y.ContactId == contact.Id) == null)
                     {
@@ -221,7 +229,7 @@ namespace RepositoryLayer
                 {
                     if (eventExistent.Tags.Find(a => a.Name.Equals(tag.Name)) == null)
                     {
-                        tagsToAdd.Add(new Tag() { Id=0, Name=tag.Name });
+                        tagsToAdd.Add(new Tag() { Id = 0, Name = tag.Name });
                     }
                 }
                 foreach (Tag tag in eventExistent.Tags)
