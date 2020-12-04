@@ -84,7 +84,6 @@ namespace RepositoryLayer
             eventNew.End = eventToCreate.End;
             eventNew.Name = eventToCreate.Name;
             eventNew.Start = eventToCreate.Start;
-            eventNew.Time = eventToCreate.Time;
             eventNew.Description = eventToCreate.Description;
             eventNew.Location = eventToCreate.Location;
             eventToCreate.Contacts.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, WasInvited = false, ModelType = MODEL_TYPE.CONTACT }));
@@ -151,7 +150,6 @@ namespace RepositoryLayer
                 eventExistent.Date = eventToModify.Date;
                 eventExistent.Start = eventToModify.Start;
                 eventExistent.End = eventToModify.End;
-                eventExistent.Time = eventToModify.Time;
                 eventExistent.Duration = eventToModify.Duration;
                 eventExistent.Description = eventToModify.Description;
                 eventExistent.Location = eventToModify.Location;
