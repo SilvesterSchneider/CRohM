@@ -37,13 +37,13 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             var server = Configuration["DBServer"] ?? "localhost";
-            var port = Configuration["DBPort"] ?? "1433";
+            var port = Configuration["DBPort"] ?? "";
             var user = Configuration["DBUser"] ?? "SA";
             var password = Configuration["DBPassword"] ?? "CRohM2020";
             var database = Configuration["DBName"] ?? "CRMDB";
 
-            var connectionString = $"Server={server},{port};Database={database};User Id={user};Password={password}";
-            //connectionString = "Server=.\\SQLEXPRESS;Database=CRMDB;Trusted_Connection=True;";
+            var connectionString = $"Server={server}\\SQLEXPRESS" + (string.IsNullOrEmpty(port) ? "" : "," + port) + $";Database={database};User Id={user};Password={password}";
+
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -122,7 +122,6 @@ namespace WebApi
 
 
             services.AddHealthChecks();
-
         }
 
         public void Configure(

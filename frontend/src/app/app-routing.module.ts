@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './shared/routing/auth.guard';
 import { OrganizationsListComponent } from './organizations/organizations-list/organizations-list.component';
 import { ApproveContactComponent } from './approve-contact/approve-contact.component';
+import { CalendarComponent } from './calendar/calendar.component';
 
 
 const routes: Routes = [
@@ -28,6 +29,11 @@ const routes: Routes = [
     path: 'settings',
     canActivate: [AuthGuard],
     loadChildren: () => import('./settings/settings.module').then(mod => mod.SettingsModule)
+  },
+  {
+    path: 'calendar',
+    canActivate: [AuthGuard],
+    component: CalendarComponent
   },
   {
     path: 'events',
