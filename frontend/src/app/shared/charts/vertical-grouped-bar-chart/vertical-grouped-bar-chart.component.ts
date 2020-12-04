@@ -63,14 +63,14 @@ export class VerticalGroupedBarChartComponent implements OnInit {
   }
 
   isDateSmallerThan(dateOne: Date, dateTwo: Date): boolean {
-    const one: number = dateOne.getFullYear() + dateOne.getMonth() + dateOne.getDate();
-    const two: number = dateTwo.getFullYear() + dateTwo.getMonth() + dateTwo.getDate();
+    const one: number = dateOne.getFullYear() * 1000 + dateOne.getMonth() * 100 + dateOne.getDate();
+    const two: number = dateTwo.getFullYear() * 1000 + dateTwo.getMonth() * 100 + dateTwo.getDate();
     return one <= two;
   }
 
   isDateGreaterThan(dateOne: Date, dateTwo: Date): boolean {
-    const one: number = dateOne.getFullYear() + dateOne.getMonth() + dateOne.getDate();
-    const two: number = dateTwo.getFullYear() + dateTwo.getMonth() + dateTwo.getDate();
+    const one: number = dateOne.getFullYear() * 1000 + dateOne.getMonth() * 100 + dateOne.getDate();
+    const two: number = dateTwo.getFullYear() * 1000 + dateTwo.getMonth() * 100 + dateTwo.getDate();
     return one >= two;
   }
 

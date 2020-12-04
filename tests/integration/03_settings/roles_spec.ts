@@ -28,7 +28,7 @@ describe('Login Tests', () => {
         cy.url().then(x => {
             cy.wait(500);
             //type in the role name
-            cy.get('#roleNameInputField').type('testRole');
+            cy.get('#roleNameInputField').type('Alles');
             //click on the selection field of permissions
             cy.get('#permissionSelection')
                 .click()
@@ -38,13 +38,61 @@ describe('Login Tests', () => {
                 .click()  
                 .get('mat-option')
                 //get the second permission
+                .contains('Einsehen und Bearbeiten aller Kontakte')
+                .click()  
+                .get('mat-option')
+                .contains('Löschen eines Kontakts')
+                .click()  
+                .get('mat-option')
                 .contains('Anlegen einer Organisation')
+                .click()  
+                .get('mat-option')
+                .contains('Einsehen und Bearbeiten aller Organisationen')
+                .click()  
+                .get('mat-option')
+                .contains('Zuordnen eines Kontakts zu einer Organisation')
+                .click()  
+                .get('mat-option')
+                .contains('Löschen einer Organisation')
+                .click()  
+                .get('mat-option')
+                .contains('Hinzufügen eines Historieneintrags bei Kontakt oder Organisation')
+                .click()  
+                .get('mat-option')
+                .contains('Anlegen einer Veranstaltung')
+                .click()  
+                .get('mat-option')
+                .contains('Einsehen und Bearbeiten einer Veranstaltung')
+                .click()  
+                .get('mat-option')
+                .contains('Löschen einer Veranstaltung')
+                .click()  
+                .get('mat-option')
+                .contains('Auskunft gegenüber eines Kontakts zu dessen Daten')
+                .click()  
+                .get('mat-option')
+                .contains('Mitteilung an einen Kontakt nach Löschung oder Änderung')
+                .click()  
+                .get('mat-option')
+                .contains('Anlegen eines Benutzers')
+                .click()  
+                .get('mat-option')
+                .contains('Zuweisung einer neuen Rolle zu einem Benutzer')
+                .click()  
+                .get('mat-option')
+                .contains('Rücksetzen eines Passworts eines Benutzers')
+                .click()  
+                .get('mat-option')
+                .contains('Löschen / Deaktivieren eines Benutzers')
+                .click()  
+                .get('mat-option')
+                .contains('Einsehen und Überarbeiten des Rollenkonzepts')
                 .click()  
         });
         //save the role by clicking on the save button
         cy.get('#saveRoleButton').click({ force: true });
         //check whether the new role exists in the table
-        cy.get('#rolesTable').should("contain.text", 'testRole')
+        cy.get('#rolesTable').should("contain.text", 'Alles')
         //click on the users tab
         cy.get('#mat-tab-label-0-0').click();
         cy.wait(5000);
@@ -58,7 +106,7 @@ describe('Login Tests', () => {
                 .click()
                 .get('mat-option')
                 //select the testRole 
-                .contains('testRole')
+                .contains('Alles')
                 .click()  // this is jquery click() not cypress click()
             cy.wait(500);
             //save the user by clicking the button
@@ -69,7 +117,7 @@ describe('Login Tests', () => {
         cy.get('.editUserButton').click();
         cy.wait(3000);
         //check whether the field contains all roles
-        cy.get('#permissionSelectionForUser').should("contain.text", 'testRole');
+        cy.get('#permissionSelectionForUser').should("contain.text", 'Alles');
     });
 });
 

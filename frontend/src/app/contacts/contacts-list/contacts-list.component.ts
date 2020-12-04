@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { ContactService, UsersService, DataProtectionService, GenderTypes } from '../../shared/api-generated/api-generated';
+import { ContactService, DataProtectionService, GenderTypes } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
@@ -8,13 +8,17 @@ import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialo
 import { ContactsEditDialogComponent } from '../contacts-edit-dialog/contacts-edit-dialog.component';
 import { ContactsAddDialogComponent } from '../contacts-add-dialog/contacts-add-dialog.component';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
-import { JwtService } from 'src/app/shared/jwt.service';
-import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataProtectionHelperService, DpUpdatePopupComponent } from 'src/app/shared/data-protection';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
-import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
+import { EventsAddComponent } from '../../events/events-add/events-add.component';
+import { AddHistoryComponent } from '../../shared/add-history/add-history.component';
+import { JwtService } from '../../shared/jwt.service';
+import { TagsFilterComponent } from '../../shared/tags-filter/tags-filter.component';
+import { DataProtectionHelperService } from '../../shared/data-protection/data-protection-service.service';
+import { DpUpdatePopupComponent } from '../../shared/data-protection/dp-update-popup/dp-update-popup.component';
+import { ContactsSendMailDialogComponent } from '../contacts-send-mail-dialog/contacts-send-mail-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contacts-list',
@@ -24,15 +28,24 @@ import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.comp
 
 export class ContactsListComponent implements OnInit, OnDestroy {
   @ViewChild(TagsFilterComponent, { static: true })
-	tagsFilter: TagsFilterComponent;
+  tagsFilter: TagsFilterComponent;
   contacts: Observable<ContactDto[]>;
   displayedColumns = [];
   isAdminUserLoggedIn = false;
+  permissionAdd = false;
+  permissionModify = false;
+  permissionDelete = false;
+  permissionAddHistory = false;
+  permissionInformContact = false;
+
   length = 0;
   currentScreenWidth = '';
   flexMediaWatcher: Subscription;
   allContacts: ContactDto[];
   dataSource = new MatTableDataSource<ContactDto>();
+  selectedRow = 0;
+  selectedCheckBoxList: Array<number> = new Array<number>();
+  isAllSelected = false;
 
   constructor(
     private service: ContactService,
@@ -42,6 +55,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     private readonly dataProtectionService: DataProtectionService,
     private readonly dsgvoService: DataProtectionHelperService,
     private readonly snackBar: MatSnackBar,
+    private readonly route: Router,
     private jwt: JwtService) {
     this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
       if (change[0].mqAlias !== this.currentScreenWidth) {
@@ -80,8 +94,13 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
+    this.getDataWithUnapproved();
     this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
-    this.getData();
+    this.permissionAdd = this.jwt.hasPermission('Anlegen eines Kontakts');
+    this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten aller Kontakte');
+    this.permissionDelete = this.jwt.hasPermission('Löschen eines Kontakts');
+    this.permissionAddHistory = this.jwt.hasPermission('Hinzufügen eines Historieneintrags bei Kontakt oder Organisation');
+    this.permissionInformContact = this.jwt.hasPermission('Auskunft gegenüber eines Kontakts zu dessen Daten');
   }
 
   ngOnDestroy(): void {
@@ -93,12 +112,28 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       // only display prename and name on larger screens
       this.displayedColumns = ['vorname', 'nachname', 'action'];
     } else {
-      this.displayedColumns = ['vorname', 'nachname', 'stasse', 'hausnummer', 'plz', 'ort', 'land', 'telefon', 'fax', 'mail', 'action'];
+      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon', 'ort', 'organisation', 'action'];
     }
   }
 
+  /* Rausgeflogen, weil
   private getData() {
     this.contacts = this.service.getAll();
+    this.contacts.subscribe(x => {
+      this.length = x.length;
+      this.dataSource.data = x;
+      this.allContacts = x;
+      this.tagsFilter.updateTagsInAutofill(this.allContacts);
+      this.applyTagFilter();
+      this.selectedCheckBoxList = new Array<number>();
+      this.selectedRow = 0;
+      this.isAllSelected = false;
+    });
+    this.changeDetectorRefs.detectChanges();
+  }
+*/
+  private getDataWithUnapproved() {
+    this.contacts = this.service.getWithUnapproved();
     this.contacts.subscribe(x => {
       this.length = x.length;
       this.dataSource.data = x;
@@ -111,11 +146,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   openDisclosureDialog(id: number) {
     this.service.getById(id).subscribe((x) => {
-    const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      this.contacts = this.service.getAll();
-    });
+      const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true, height: '200px' });
+      dialogRef.afterClosed().subscribe(result => this.contacts = this.service.getWithUnapproved());
   });
 }
 
@@ -124,7 +156,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe((result) => {
-      this.getData();
+      this.getDataWithUnapproved();
     });
   }
 
@@ -136,49 +168,54 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         this.deleteContact(contact);
       } else {
         if (editDialogResult.newContact && editDialogResult.oldContact && this.jwt.isDatenschutzbeauftragter()) {
-        const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
+          const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, { disableClose: true });
 
-        dialogDSGVORef.afterClosed().subscribe(sendMessage => {
-          if (sendMessage) {
-            const diff = this.dsgvoService.getDiffOfObjects( editDialogResult.newContact, editDialogResult.oldContact, ['unchanged']);
-            this.dataProtectionService.sendUpdateMessage({delete: false, contactChanges: diff, contact}).subscribe({error: err => {
-              this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
-                duration: 2000,
+          dialogDSGVORef.afterClosed().subscribe(sendMessage => {
+            if (sendMessage) {
+              const diff = this.dsgvoService.getDiffOfObjects(editDialogResult.newContact, editDialogResult.oldContact, ['unchanged']);
+              this.dataProtectionService.sendUpdateMessage({ delete: false, contactChanges: diff, contact }).subscribe({
+                error: err => {
+                  this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
+                    duration: 2000,
+                  });
+                }
               });
-            }});
-          }
-        });
-      }
-        this.getData();
+            }
+          });
+        }
+        this.getDataWithUnapproved();
       }
     });
   }
 
   deleteContact(contact: ContactDto) {
     const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-      data: 'Kontakt',
+      data: 'contact.contact',
       disableClose: true
     });
 
     deleteDialogRef.afterClosed().subscribe((deleteResult) => {
-      if (deleteResult?.delete ) {
+      if (deleteResult?.delete) {
         this.service.delete(contact.id).subscribe(x => {
-          this.service.getAll().subscribe(fu => {
+          this.service.getWithUnapproved().subscribe(fu => {
             this.dataSource.data = fu;
-           });
+          });
         });
         if (this.jwt.isDatenschutzbeauftragter()) {
-        const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, {disableClose: true});
+          const dialogDSGVORef = this.dialog.open(DpUpdatePopupComponent, { disableClose: true });
 
-        dialogDSGVORef.afterClosed().subscribe(sendMessage => {
-          if (sendMessage) {
-            this.dataProtectionService.sendUpdateMessage({delete: true, contactChanges: null, contact}).subscribe({error: err => {
-              this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
-                duration: 3000,
+          dialogDSGVORef.afterClosed().subscribe(sendMessage => {
+            if (sendMessage) {
+              this.dataProtectionService.sendUpdateMessage({ delete: true, contactChanges: null, contact }).subscribe({
+                error: err => {
+                  this.snackBar.open('oops, something went wrong', '🤷‍♂️', {
+                    duration: 3000,
+                  });
+                }
               });
-            }});
-          }
-        }); }
+            }
+          });
+        }
       }
     });
   }
@@ -187,9 +224,26 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(AddHistoryComponent);
     dialogRef.afterClosed().subscribe((y) => {
       if (y) {
-        this.service.postHistoryElement(y, id).subscribe(x => this.getData());
+        this.service.postHistoryElement(y, id).subscribe(x => this.getDataWithUnapproved());
       }
     });
+  }
+
+  addNoteToMany() {
+    const dialogRef = this.dialog.open(AddHistoryComponent);
+    dialogRef.afterClosed().subscribe(y => {
+      if (y) {
+        this.addNoteLoop(0, y);
+      }
+    });
+  }
+
+  addNoteLoop(index: number, y: any) {
+    if (index < this.selectedCheckBoxList.length) {
+      this.service.postHistoryElement(y, this.selectedCheckBoxList[index]).subscribe(x => this.addNoteLoop(++index, y));
+    } else {
+      this.getDataWithUnapproved();
+    }
   }
 
   openInfo(id: number) {
@@ -210,10 +264,99 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       },
       contactPossibilities: {
         fax: '01234-123' + this.length,
-        mail: 'a.b@fu.com' ,
+        mail: 'a.b@fu.com',
         phoneNumber: '0172-9344333' + this.length,
         contactEntries: []
       }
-    }).subscribe(x => this.getData());
+    }).subscribe(x => this.getDataWithUnapproved());
+  }
+
+  callPhonenumber(phonenumber: string, id: number) {
+    document.location.href = 'tel:' + phonenumber;
+    const dialogRef = this.dialog.open(AddHistoryComponent, { data: phonenumber });
+    dialogRef.afterClosed().subscribe((y) => {
+      if (y) {
+        this.service.postHistoryElement(y, id).subscribe(x => this.getDataWithUnapproved());
+      }
+    });
+  }
+
+  mouseOver(id: number) {
+    this.selectedRow = id;
+  }
+
+  isSelectedRow(id: number): boolean {
+    const selectedIndex = this.selectedCheckBoxList.find(a => a === id);
+    return this.selectedRow === id || selectedIndex != null;
+  }
+
+  onCheckBoxChecked(id: number) {
+    const position = this.selectedCheckBoxList.indexOf(id);
+    if (position > -1) {
+      this.selectedCheckBoxList.splice(position, 1);
+    } else {
+      this.selectedCheckBoxList.push(id);
+    }
+  }
+
+  changeSelectionAll() {
+    this.isAllSelected = !this.isAllSelected;
+    this.selectedCheckBoxList = new Array<number>();
+    if (this.isAllSelected) {
+      this.allContacts.forEach(x => this.selectedCheckBoxList.push(x.id));
+    }
+  }
+
+  isSelectionChecked(id: number) {
+    return this.selectedCheckBoxList.find(x => x === id) != null;
+  }
+
+  sendMail(contact: ContactDto) {
+    if (contact.contactPossibilities.mail != null && contact.contactPossibilities.mail.length > 0) {
+      const dataForDialog = [contact.preName + ' ' + contact.name, contact.contactPossibilities.mail ];
+      const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+      dialogRef.afterClosed().subscribe(x => {
+        if (x.send) {
+          this.addNote(contact.id);
+        }
+      });
+    }
+  }
+
+  sendMailToMany() {
+    const dataForDialog: string[] = new Array<string>();
+    dataForDialog.push('Kontakte');
+    this.selectedCheckBoxList.forEach(a => {
+      const cont = this.allContacts.find(b => b.id === a);
+      const mail = cont.contactPossibilities.mail;
+      if (cont != null && mail != null && mail.length > 0) {
+        dataForDialog.push(mail);
+      }
+    });
+    const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+    dialogRef.afterClosed().subscribe(x => {
+      if (x.send) {
+        this.addNoteToMany();
+      }
+    });
+  }
+
+  createEvent() {
+    this.dialog.open(EventsAddComponent, { disableClose: true, data: this.selectedCheckBoxList });
+  }
+
+  getOrganization(id: number): string {
+    const contact = this.allContacts.find(a => a.id === id);
+    if (contact != null && contact.organizations != null && contact.organizations.length > 0) {
+      let orgas = '';
+      contact.organizations.forEach(b => orgas += b.name + ', ');
+      return orgas.substring(0, orgas.length - 2);
+    } else {
+      return '';
+    }
+  }
+
+  changeToOrganizationPage() {
+    this.route.navigate(['/organizations']);
   }
 }

@@ -33,9 +33,9 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
   // TODO: sollten die möglichen Länder aus dem Backend laden
   // Liste der im Dropdown angezeigten Laender
   public countries: Country[] = [
-    { value: 'Deutschland', viewValue: 'Deutschland' },
-    { value: 'Schweiz', viewValue: 'Schweiz' },
-    { value: 'Österreich', viewValue: 'Österreich' }
+    { value: 'Deutschland', viewValue: 'common.germany' },
+    { value: 'Schweiz', viewValue: 'common.switzerland' },
+    { value: 'Österreich', viewValue: 'common.austria' }
   ];
 
 
@@ -43,7 +43,7 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
     id: [''],
     name: [''],
     description: [''],
-    country: ['', Validators.required],
+    country: [this.countries[0].viewValue, Validators.required],
     street: ['', Validators.pattern('^[a-zA-ZäüöÄÜÖß.-]*')],
     streetNumber: ['', Validators.pattern('^[a-zA-Z0-9äüöÄÜÖß.-]*')],
     zipcode: ['', Validators.pattern('^[0-9]{4,5}$')],

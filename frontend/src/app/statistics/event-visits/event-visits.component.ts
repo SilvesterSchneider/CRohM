@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { StatisticsService, STATISTICS_VALUES, VerticalGroupedBarDto } from 'src/app/shared/api-generated/api-generated';
 import { VerticalGroupedBarChartComponent } from 'src/app/shared/charts/vertical-grouped-bar-chart/vertical-grouped-bar-chart.component';
 
@@ -9,28 +10,37 @@ import { VerticalGroupedBarChartComponent } from 'src/app/shared/charts/vertical
 })
 export class EventVisitsComponent implements OnInit {
   @ViewChild(VerticalGroupedBarChartComponent, { static: true })
-	chart: VerticalGroupedBarChartComponent;
+  chart: VerticalGroupedBarChartComponent;
   totalInvitations = 0;
   totalParticipations = 0;
   relation = 0;
   startDate: Date;
   endDate: Date;
 
-  constructor(
-    private statistics: StatisticsService) { }
+  constructor(private statistics: StatisticsService, private translate: TranslateService) { }
 
   ngOnInit(): void {
-    this.statistics.getVerticalGroupedBarDataByType(STATISTICS_VALUES.INVITED_AND_PARTICIPATED_EVENT_PERSONS).subscribe(x => {
+    this.statistics.getVerticalGroupedBarDataByType(STATISTICS_VALUES.INVITED_AND_PARTICIPATED_EVENT_PERSONS).subscribe(stats => {
+      stats.forEach(res => res.series.map(series => {
+        switch (series.name) {
+          case 'Eingeladen': series.name = this.translate.instant('event.invited'); break;
+          case 'Teilgenommen': series.name = this.translate.instant('event.participated'); break;
+        }
+        return series;
+      }));
+
       this.chart.setSizes(80, 400, 400);
       this.chart.setChangeCallback((visibleData: VerticalGroupedBarDto[]) => this.calculateTheAmounts(visibleData));
-      this.chart.setLabels('Veranstaltungen', 'Anzahl Teilnehmer', 'Teilnehmer');
-      this.chart.setData(x);
-      if (x.length === 0) {
+      this.chart.setLabels(this.translate.instant('event.events'),
+        this.translate.instant('statistic.numberParticipants'),
+        this.translate.instant('event.participant'));
+      this.chart.setData(stats);
+      if (stats.length === 0) {
         this.totalInvitations = 0;
         this.totalParticipations = 0;
         this.relation = 0;
       } else {
-        this.calculateTheAmounts(x);
+        this.calculateTheAmounts(stats);
       }
     });
   }
@@ -39,8 +49,8 @@ export class EventVisitsComponent implements OnInit {
     this.totalInvitations = 0;
     this.totalParticipations = 0;
     visibleData.forEach(x => {
-      this.totalInvitations += x.series.find(a => a.name === 'Eingeladen').value;
-      this.totalParticipations += x.series.find(a => a.name === 'Teilgenommen').value;
+      this.totalInvitations += x.series.find(a => a.name === this.translate.instant('event.invited')).value;
+      this.totalParticipations += x.series.find(a => a.name === this.translate.instant('event.participated')).value;
     });
     this.relation = this.totalParticipations / this.totalInvitations * 100;
   }

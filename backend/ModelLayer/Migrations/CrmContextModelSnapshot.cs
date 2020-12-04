@@ -15,7 +15,7 @@ namespace ModelLayer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.9")
+                .HasAnnotation("ProductVersion", "3.1.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -169,6 +169,12 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("ContactPossibilitiesId")
                         .HasColumnType("bigint");
 
+                    b.Property<long>("CreatedByUser")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -180,6 +186,9 @@ namespace ModelLayer.Migrations
 
                     b.Property<string>("PreName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isApproved")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -282,6 +291,9 @@ namespace ModelLayer.Migrations
 
                     b.Property<float>("Duration")
                         .HasColumnType("real");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -543,7 +555,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "db6bff84-2230-4195-ab2d-8c897222b166",
+                            ConcurrencyStamp = "e592f758-dc59-4f9e-9479-2c4197f9237b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

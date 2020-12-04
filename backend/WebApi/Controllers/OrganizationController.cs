@@ -50,6 +50,8 @@ namespace WebApi.Controllers
             this.historyService = historyService;
         }
 
+        // Einsehen aller Organisationen
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Organisationen")]
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<OrganizationDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
@@ -60,6 +62,8 @@ namespace WebApi.Controllers
             return Ok(organizationsDto);
         }
 
+        // Einsehen aller Organisationen
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Organisationen")]
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
@@ -75,7 +79,8 @@ namespace WebApi.Controllers
             var organizationDto = _mapper.Map<OrganizationDto>(organization);
             return Ok(organizationDto);
         }
-
+   
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Organisationen")]
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
@@ -105,6 +110,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="id">The id of the organization</param>
         /// <param name="contactId">The id of the contact which will be added</param>
+        [Authorize(Roles = "Zuordnen eines Kontakts zu einer Organisation")]
         [HttpPut("{id}/addContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(OrganizationDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
@@ -133,11 +139,19 @@ namespace WebApi.Controllers
             return Ok(organizationDto);
         }
 
+        //TODO: Removing contact ->
+        //Zuornden oder eher Kontakt löschen(Aber wird ja dann komplett gelöscht oder einsehen/bearbeiten Organisation
+        //-> Aber kann dann kontakt gelöscht werden?)
+
         /// <summary>
         /// Remove a contact from a organization
         /// </summary>
         /// <param name="id">The id of the organization</param>
         /// <param name="contactId">The id of the contact which will be removed</param>
+
+        //[Authorize(Roles = "Zuordnen eines Kontakts zu einer Organisation")]
+        [Authorize(Roles = "Löschen eines Kontakts")]
+        //[Authorize(Roles = "Einsehen und Bearbeiten aller Organisationen")]
         [HttpPut("{id}/removeContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
@@ -163,6 +177,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Anlegen einer Organisation")]
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(OrganizationDto), Description = "successfully created")]
         public async Task<IActionResult> Post([FromBody]OrganizationCreateDto organizationToCreate)
@@ -176,6 +191,7 @@ namespace WebApi.Controllers
             return Created(uri, organizationDto);
         }
 
+        [Authorize(Roles = "Löschen einer Organisation")]
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
@@ -186,12 +202,19 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
+            List<HistoryElement> historyList = organization.History;
+            for (int index = 0; index < historyList.Count; index++)
+            {
+                await historyService.DeleteAsync(historyList[index]);
+            }
+
             await _organizationService.DeleteAsync(organization);
             await modService.UpdateOrganizationByDeletionAsync(id);
             return Ok();
         }
 
         // creates new contact in db via frontend
+        [Authorize(Roles = "Hinzufügen eines Historieneintrags bei Kontakt oder Organisation")]
         [HttpPost("{id}/historyElement")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
         public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id)
@@ -202,6 +225,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Einsehen und Bearbeiten einer Veranstaltung")]
         [HttpGet("{id}/history")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(PagedResponse<List<object>>), Description = "successfully found")]
         public async Task<IActionResult> GetHistory(long id, [FromQuery] PaginationFilter filter)

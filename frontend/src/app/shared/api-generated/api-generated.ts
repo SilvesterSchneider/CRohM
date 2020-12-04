@@ -692,6 +692,56 @@ export class ContactService {
     /**
      * @return successfully found
      */
+    getWithUnapproved(): Observable<ContactDto[]> {
+        let url_ = this.baseUrl + "/api/contact/WithUnapproved";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetWithUnapproved(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetWithUnapproved(<any>response_);
+                } catch (e) {
+                    return <Observable<ContactDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ContactDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetWithUnapproved(response: HttpResponseBase): Observable<ContactDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <ContactDto[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ContactDto[]>(<any>null);
+    }
+
+    /**
+     * @return successfully found
+     */
     getById(id: number): Observable<ContactDto> {
         let url_ = this.baseUrl + "/api/contact/{id}";
         if (id === undefined || id === null)
@@ -1079,6 +1129,59 @@ export class ContactService {
             }));
         }
         return _observableOf<PagedResponseOfListOfObject>(<any>null);
+    }
+
+    /**
+     * @return successfully performed action
+     */
+    approveContact(id: number): Observable<ApproveDto> {
+        let url_ = this.baseUrl + "/api/contact/ApproveContact/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processApproveContact(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processApproveContact(<any>response_);
+                } catch (e) {
+                    return <Observable<ApproveDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApproveDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processApproveContact(response: HttpResponseBase): Observable<ApproveDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <ApproveDto>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApproveDto>(<any>null);
     }
 }
 
@@ -3629,6 +3732,17 @@ export interface PagedResponseOfListOfObject extends ResponseOfListOfObject {
     totalRecords: number;
 }
 
+export interface ApproveDto {
+    approvedState: ApprovedStatus;
+}
+
+export enum ApprovedStatus {
+    Approved = 0,
+    AlreadyApprovedOrDeleted = 1,
+    InvalidId = 2,
+    ErrorInSaving = 3,
+}
+
 export interface SendInfoDTO {
     delete: boolean;
     contactChanges?: any | undefined;
@@ -3698,6 +3812,8 @@ export enum DATA_TYPE {
     PARTICIPATED = 19,
     TAG = 20,
     INVITATION = 21,
+    CONTACT_PARTNER = 22,
+    GENDER = 23,
 }
 
 export enum MODIFICATION {

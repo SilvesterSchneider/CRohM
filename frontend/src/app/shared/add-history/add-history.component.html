@@ -1,43 +1,47 @@
-<div class="eventsAdd" [formGroup]="oppoSuitsForm">
-    <div class="column">
-        <div class="col-md-12">
-            <h3>
-            	 Historieneintrag hinzufügen
-            </h3>
-        </div>
-        <div class="col-md-12">
-        <mat-form-field>
-            <mat-label>Historieneintragstyp wählen</mat-label>
-            <mat-select formControlName="type" class="dateClass">
-                <mat-option [value]="suit" *ngFor="let suit of types">{{suit}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        </div>
-        <div class="col-md-12">
+<mat-dialog-content>
+    <div class="eventsAdd" [formGroup]="oppoSuitsForm">
+        <div class="column">
+            <div class="col-md-12">
+                <h3>
+                    {{'common.addHistory' | translate}}
+                </h3>
+            </div>
+            <div class="col-md-12">
             <mat-form-field>
-                <input matInput class="dateClass" matInput type="date" placeholder="Datum" formControlName="date">
+                <mat-label>{{'common.chooseHistoryType' | translate}}</mat-label>
+                <mat-select formControlName="type" class="dateClass">
+                    <mat-option [value]="suit.type" *ngFor="let suit of types">{{suit.translate | translate}}</mat-option>
+                </mat-select>
             </mat-form-field>
-        </div>
-        <div class="col-md-12">
-            <mat-form-field>
-                <input class="dateClass" matInput matInput placeholder="Thema" formControlName="information">
-            </mat-form-field>
-        </div>
-        <div class="col-md-12">
-            <mat-form-field>
-                <textarea class="dateClass" matInput
-                cdkTextareaAutosize
-                cdkAutosizeMinRows="1"
-                cdkAutosizeMaxRows="5"
-                formControlName="comment"
-                placeholder="Kommentar"></textarea>
-            </mat-form-field>
+            </div>
+            <div class="col-md-12">
+                <mat-form-field>
+                    <input matInput [matDatepicker]="picker3" placeholder="{{'common.date' | translate}}" formControlName="date">
+                    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-md-12">
+                <mat-form-field>
+                    <input class="dateClass" matInput matInput placeholder="{{'common.topic' | translate}}" formControlName="information">
+                </mat-form-field>
+            </div>
+            <div class="col-md-12">
+                <mat-form-field>
+                    <textarea class="dateClass" matInput
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="5"
+                    formControlName="comment"
+                    placeholder="{{'common.comment' | translate}}"></textarea>
+                </mat-form-field>
+            </div>
         </div>
     </div>
-</div>
-<div mat-dialog-actions>
-    <span class="fill-remaining-space"></span>
-    <button mat-raised-button (click)="onCancel()">Abbrechen</button>
-    <button mat-raised-button [mat-dialog-close]="getObject()" [disabled]="!oppoSuitsForm.valid"
-      color="primary">Speichern</button>
-  </div>
+</mat-dialog-content>
+<mat-dialog-actions mat-dialog-actions align="end">
+        <span class="fill-remaining-space"></span>
+        <button mat-raised-button color="primary" (click)="onCancel()">{{'common.cancel' | translate}}</button>
+        <button mat-raised-button color="primary" [mat-dialog-close]="getObject()" [disabled]="!oppoSuitsForm.valid"
+        color="primary">{{'common.save' | translate}}</button>
+</mat-dialog-actions>

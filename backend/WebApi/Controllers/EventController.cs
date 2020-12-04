@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
 using NSwag.Annotations;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+
 
 namespace WebApi.Controllers
 {
@@ -42,6 +44,7 @@ namespace WebApi.Controllers
         /// Getter für alle events als liste
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Einsehen und Bearbeiten einer Veranstaltung")]
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<EventDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
@@ -57,6 +60,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="id">event id</param>
         /// <returns></returns>
+        [Authorize(Roles = "Einsehen und Bearbeiten einer Veranstaltung")]
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(EventDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
@@ -79,6 +83,7 @@ namespace WebApi.Controllers
         /// <param name="eventToModify">das zu bearbeitende event</param>
         /// <param name="id">die event id</param>
         /// <returns></returns>
+        [Authorize(Roles = "Einsehen und Bearbeiten einer Veranstaltung")]
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(EventDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
@@ -128,6 +133,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="eventToCreate">das zu erzeugende event</param>
         /// <returns></returns>
+        [Authorize(Roles = "Anlegen einer Veranstaltung")]
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(void), Description = "successfully created")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
@@ -157,6 +163,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="id">id</param>
         /// <returns></returns>
+        [Authorize(Roles = "Löschen einer Veranstaltung")]
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]

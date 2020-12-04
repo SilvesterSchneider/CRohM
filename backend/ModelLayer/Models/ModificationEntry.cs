@@ -32,7 +32,8 @@ namespace ModelLayer.Models
         TAG,
         INVITATION,
         CONTACT_PARTNER,
-        GENDER
+        GENDER,
+        LOCATION
     }
 
     /// <summary>
@@ -98,7 +99,8 @@ namespace ModelLayer.Models
         /// <summary>
         /// der name des feldes für die anzeige im web.
         /// </summary>
-        public string PropertyName {
+        public string PropertyName
+        {
             get
             {
                 if (DataType == DATA_TYPE.CITY)
@@ -185,6 +187,10 @@ namespace ModelLayer.Models
                 {
                     return "Ansprechpartner";
                 }
+                else if (DataType == DATA_TYPE.LOCATION)
+                {
+                    return "Ort";
+                }
                 else
                 {
                     return "Angelegt";
@@ -210,7 +216,7 @@ namespace ModelLayer.Models
             {
                 return "Mail wurde gelöscht!";
             }
-            else 
+            else
             {
                 return "Telefonnr. wurde gelöscht!";
             }

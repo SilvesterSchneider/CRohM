@@ -29,9 +29,11 @@ namespace WebApi.Controllers
         private IUserService userService;
         private readonly IModificationEntryService modService;
         private IContactService contactService;
+        private IMailService mailService;
         private IHistoryService historyService;
 
-        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IHistoryService  historyService)          
+   
+        public ContactController(IMapper mapper, IContactService contactService, IUserService userService, IEventService eventService, IModificationEntryService modService, IMailService mailService, IHistoryService historyService)
         {
             _mapper = mapper;
             this.eventService = eventService;
@@ -39,13 +41,27 @@ namespace WebApi.Controllers
             this.modService = modService;
             this.contactService = contactService;
             this.historyService = historyService;
+            this.mailService = mailService;
+
         }
 
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")]
         [HttpGet]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get()
         {
             var contacts = await contactService.GetAllContactsWithAllIncludesAsync();
+            var contactsDto = _mapper.Map<List<ContactDto>>(contacts);
+
+            return Ok(contactsDto);
+        }
+
+        [HttpGet("WithUnapproved")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
+        public async Task<IActionResult> GetWithUnapproved()
+        {
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            var contacts = await contactService.GetAllUnapprovedContactsWithAllIncludesByUserIdAsync(userOfChange.Id);
             var contactsDto = _mapper.Map<List<ContactDto>>(contacts);
 
             return Ok(contactsDto);
@@ -67,6 +83,7 @@ namespace WebApi.Controllers
             return Ok(contactDto);
         }
 
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")]
         [HttpGet("PartName")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(List<ContactDto>), Description = "successfully found")]
         public async Task<IActionResult> Get([FromQuery]string name)
@@ -78,6 +95,8 @@ namespace WebApi.Controllers
         }
 
         // put updates contact with id {id} via frontend
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")]
+        [Authorize(Roles = "Mitteilung an einen Kontakt nach Löschung oder Änderung")]
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.Conflict, typeof(void), Description = "conflict in update process")]
@@ -102,7 +121,7 @@ namespace WebApi.Controllers
             }
         }
 
-        // creates new contact in db via frontend
+        [Authorize(Roles = "Anlegen eines Kontakts")]
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(ContactDto), Description = "successfully created")]
         public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate)
@@ -111,12 +130,30 @@ namespace WebApi.Controllers
 
             var contactDto = _mapper.Map<ContactDto>(contact);
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+
+            contact.CreatedByUser = userOfChange.Id;
             await modService.CreateNewContactEntryAsync(userOfChange, contact.Id);
             var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
-            return Created(uri, contactDto);
+
+            //Send Mail to Approve
+            mailService.ApproveContactCreation($"https://localhost:4200/ApproveContacte/" + contactDto.Id, contactDto.ContactPossibilities.Mail);
+
+            var ret = Created(uri, contactDto);
+            //Anweisung von Markus zu Testzwecken -> Von Admin angelegt ist automatisch Approved
+            if (userOfChange.Id == 1)
+            {
+                
+                Contact created = contactService.GetById(contactDto.Id);
+                created.isApproved = true;
+                await contactService.UpdateAsync(created, created.Id);
+            }
+            return ret;
+             
         }
 
         // creates new contact in db via frontend
+        [Authorize(Roles ="Anlegen eines Kontakts")]
+        [Authorize(Roles = "Hinzufügen eines Historieneintrags bei Kontakt oder Organisation")]
         [HttpPost("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
         public async Task<IActionResult> PostHistoryElement([FromBody]HistoryElementCreateDto historyToCreate, [FromRoute]long id)
@@ -128,6 +165,8 @@ namespace WebApi.Controllers
         }
 
         // sends disclosure per mail
+        [Authorize(Roles = "Auskunft gegenüber eines Kontakts zu dessen Daten")]
+        [Authorize(Roles = "Mitteilung an einen Kontakt nach Löschung oder Änderung")]
         [HttpPost("{id}/disclosure")] // template ^= zusammen mit basis ganz oben -> pfad für http request
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully created")]
         public async Task<IActionResult> SendDisclosureById([FromRoute] long id)
@@ -137,6 +176,8 @@ namespace WebApi.Controllers
         }
 
         // deletes with id {id} contact via frontend
+        [Authorize(Roles = "Löschen eines Kontakts")]
+        [Authorize(Roles = "Mitteilung an einen Kontakt nach Löschung oder Änderung")]
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
@@ -147,18 +188,25 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
+            List<HistoryElement> historyList = contact.History;
+            for (int index = 0; index < historyList.Count; index++)
+            {
+                await historyService.DeleteAsync(historyList[index]);
+            }
+
             await contactService.DeleteAsync(contact);
             await modService.UpdateContactByDeletionAsync(id);
             return Ok();
         }
 
+        [Authorize(Roles = "Einsehen und Bearbeiten einer Veranstaltung")]
         [HttpGet("{id}/history")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(PagedResponse<List<object>>), Description = "successfully found")]
         public async Task<IActionResult> GetHistory(long id, [FromQuery] PaginationFilter filter)
         {
             PaginationFilter validFilter = new PaginationFilter(filter.PageStart, filter.PageSize);
 
-            List<Event> events = await eventService.GetEventsForContact(id);        
+            List<Event> events = await eventService.GetEventsForContact(id);
             List<HistoryElement> history = await historyService.GetHistoryByContactAsync(id);
 
             List<object> mergedResult = events.Cast<object>().Concat(history.Cast<object>()).ToList();
@@ -182,6 +230,14 @@ namespace WebApi.Controllers
             }
 
             return DateTime.Now;
+        }
+
+        //Approve Contact
+        [HttpGet("ApproveContact/{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(ApproveDto), Description = "successfully performed action")]
+        public async Task<IActionResult> ApproveContact(long id)
+        {
+            return Ok(new ApproveDto() { ApprovedState = await contactService.ApproveContact(id) });
         }
     }
 }

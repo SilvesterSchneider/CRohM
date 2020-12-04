@@ -1,8 +1,8 @@
-<mat-dialog-content class="organizationDetails" [formGroup]="organizationForm">
+<mat-dialog-content [formGroup]="organizationForm">
     <div class="row">
         <div class="col-md-12">
             <h3>
-                Neue Organisation
+                {{'organization.new' | translate}}
             </h3>
         </div>
         <div class="col-md-3">
@@ -12,7 +12,7 @@
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input matInput placeholder="Beschreibung" formControlName="description">
+                <input matInput placeholder="{{'common.description' | translate}}" formControlName="description">
             </mat-form-field>
         </div>
     </div>
@@ -22,29 +22,28 @@
     <div class="row" formGroupName="contact">
         <div class="col-md">
             <mat-form-field>
-                <input matInput placeholder="Telefonnummer" formControlName="phoneNumber">
+                <input matInput placeholder="{{'contact.phoneNumber' | translate}}" formControlName="phoneNumber">
             </mat-form-field>
         </div>
         <div class="col-md">
             <mat-form-field>
-                <input matInput placeholder="Faxnummer" formControlName="fax">
+                <input matInput placeholder="{{'contact.fax' | translate}}" formControlName="fax">
             </mat-form-field>
         </div>
         <div class="col-md">
             <mat-form-field>
-                <input matInput placeholder="E-Mail" formControlName="mail">
+                <input matInput placeholder="{{'contact.mail' | translate}}" formControlName="mail">
             </mat-form-field>
         </div>
         <app-contact-possibilities></app-contact-possibilities>
     </div>
-    <div>
-        <span class="fill-remaining-space"></span>
-        <button mat-raised-button color="primary" title="Abbrechen" (click)="onCancel()">
-            Abbrechen
-        </button>
-        <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!organizationForm.valid"
-            (click)="onApprove()">
-            Speichern
-        </button>
-    </div>
 </mat-dialog-content>
+<mat-dialog-actions mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="onCancel()">
+        {{'common.cancel' | translate}}
+    </button>
+    <button mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!organizationForm.valid"
+        (click)="onApprove()">
+        {{'common.save' | translate}}
+    </button>
+</mat-dialog-actions>

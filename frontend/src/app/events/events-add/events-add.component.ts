@@ -1,19 +1,21 @@
 import {
   ElementRef, HostBinding, Component, OnInit, ViewChild, Input, Optional, Self,
-  ChangeDetectorRef, OnDestroy
+  ChangeDetectorRef, OnDestroy, Inject
 } from '@angular/core';
 import { NgControl, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
-  MatAutocompleteTrigger} from '@angular/material/autocomplete';
+  MatAutocompleteTrigger
+} from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { EventCreateDto, MODEL_TYPE, OrganizationService } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
+import { OsmAddressComponent } from '../../shared/osm/osm-address/osm-address.component';
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -66,11 +68,13 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
   errorState: boolean;
   controlType?: string;
   autofilled?: boolean;
+  preselectedContacts: Array<number> = new Array<number>();
 
   constructor(
     public dialogRef: MatDialogRef<EventsAddComponent>,
     @Optional() @Self() public ngControl: NgControl,
     private fm: FocusMonitor,
+    @Inject(MAT_DIALOG_DATA) public data: Array<number>,
     private elRef: ElementRef<HTMLElement>,
     private cd: ChangeDetectorRef,
     private contactService: ContactService,
@@ -80,6 +84,10 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     private orgaService: OrganizationService
   ) {
     super(dialogRef, dialog);
+    this.dialogRef.backdropClick().subscribe(() => {
+      // Close the dialog
+      dialogRef.close();
+    });
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
@@ -87,6 +95,9 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
       this.focused = !!origin;
       this.stateChanges.next();
     });
+    if (data != null && data.length > 0) {
+      this.preselectedContacts = data;
+    }
   }
 
   hasChanged() {
@@ -95,46 +106,50 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
 
 
   ngOnInit() {
-    this.eventsForm = this.createOrganizationForm();
-    this.contactService.getAll().subscribe(y => {
-      y.forEach(x => {
-        this.filteredItems.push(
-          {
-            objectId: x.id,
-            name: x.name,
-            preName: x.preName,
-            selected: false,
-            modelType: MODEL_TYPE.CONTACT,
-            participated: false,
-            wasInvited: false
-          }
-        );
-      });
-      this.orgaService.get().subscribe(a => {
-        a.forEach(b => {
-          this.filteredItems.push(
-            {
-              objectId: b.id,
-              name: b.name,
-              preName: b.description,
-              selected: false,
-              modelType: MODEL_TYPE.ORGANIZATION,
-              participated: false,
-              wasInvited: false
-            }
-          );
-        });
-      })
-    }
-    );
-  }
-
-  private createOrganizationForm(): FormGroup {
-    return this.fb.group({
+    this.eventsForm = this.fb.group({
       name: ['', Validators.required],
       date: ['', Validators.required],
       time: ['', Validators.required],
-      duration: ['', Validators.required]
+      duration: ['', Validators.required],
+      description: ['', Validators.maxLength(300)],
+      location: ['']
+    });
+
+    this.contactService.getAll().subscribe(contacts => {
+      this.filteredItems = contacts.map(contact => {
+        return {
+          objectId: contact.id,
+          name: contact.name,
+          preName: contact.preName,
+          selected: false,
+          modelType: MODEL_TYPE.CONTACT,
+          participated: false,
+          wasInvited: false
+        };
+      });
+
+      this.orgaService.get().subscribe(organisations => {
+        this.filteredItems.concat(organisations.map(orga => {
+          return {
+            objectId: orga.id,
+            name: orga.name,
+            preName: orga.description,
+            selected: false,
+            modelType: MODEL_TYPE.ORGANIZATION,
+            participated: false,
+            wasInvited: false
+          };
+        }));
+
+        if (this.preselectedContacts?.length > 0) {
+          this.preselectedContacts.forEach(s => {
+            const cont: EventContactConnection = this.filteredItems.find(z => z.objectId === s && z.modelType === MODEL_TYPE.CONTACT);
+            if (cont != null) {
+              this.toggleSelection(cont);
+            }
+          });
+        }
+      });
     });
   }
 
@@ -244,10 +259,10 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     eventToSave.organizations = new Array<number>();
     this.selectedItems.forEach(x => {
       if (x.modelType === MODEL_TYPE.CONTACT) {
-        eventToSave.contacts.push(x.objectId)
+        eventToSave.contacts.push(x.objectId);
       } else {
         eventToSave.organizations.push(x.objectId);
-      }      
+      }
     });
     this.eventService.post(eventToSave).subscribe(() => this.dialogRef.close());
   }

@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h3>
-                    Organisation bearbeiten
+                    {{'organization.edit' | translate}}
                 </h3>
             </div>
             <div class="col-md-3">
@@ -13,7 +13,7 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput placeholder="Beschreibung" formControlName="description">
+                    <input matInput placeholder="{{'common.description' | translate}}" formControlName="description">
                 </mat-form-field>
             </div>
         </div>
@@ -23,17 +23,17 @@
         <div class="row" formGroupName="contact">
             <div class="col-md">
                 <mat-form-field>
-                    <input matInput placeholder="Telefonnummer" formControlName="phoneNumber">
+                    <input matInput placeholder="{{'contact.phoneNumber' | translate}}" formControlName="phoneNumber">
                 </mat-form-field>
             </div>
             <div class="col-md">
                 <mat-form-field>
-                    <input matInput placeholder="Faxnummer" formControlName="fax">
+                    <input matInput placeholder="{{'contact.fax' | translate}}" formControlName="fax">
                 </mat-form-field>
             </div>
             <div class="col-md">
                 <mat-form-field>
-                    <input matInput placeholder="E-Mail" formControlName="mail">
+                    <input matInput placeholder="{{'contact.mail' | translate}}" formControlName="mail">
                 </mat-form-field>
             </div>
             <app-contact-possibilities></app-contact-possibilities>
@@ -43,14 +43,14 @@
         <mat-chip *ngFor="let item of selectedItems" [selectable]="selectable">
             {{ item.preName + ' ' + item.name }}
         </mat-chip>
-        <input type="text" #inputTrigger placeholder="Mitarbeiter auswählen" matInput [matAutocomplete]="autoComplete"
+        <input type="text" #inputTrigger placeholder="{{'organization.chooseEmployees' | translate}}" matInput [matAutocomplete]="autoComplete"
             [formControl]="itemControl" [matChipInputFor]="chipList">
     </mat-chip-list>
 
     <mat-autocomplete #autoComplete="matAutocomplete">
         <mat-option>
             <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
-                Alle selektieren
+                {{'common.selectAll' | translate}}
             </mat-checkbox>
         </mat-option>
         <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
@@ -73,7 +73,7 @@
                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
             </mat-chip>
             <input id="tagInputEdit"
-                placeholder="Neuer tag..." 
+                placeholder="{{'common.newTag' | translate}}..." 
                 #tagInput
                 [matAutocomplete]="auto"
                 #inputTrigger 
@@ -87,15 +87,15 @@
               {{item}}
             </mat-option>
           </mat-autocomplete>
-    <div>
-        <button mat-raised-button (click)="onDelete()" color="warn">Löschen</button>
-        <span class="fill-remaining-space"></span>
-        <button mat-raised-button color="primary" title="Abbrechen" (click)="onCancel()">
-            Abbrechen
-        </button>
-        <button id="saveButton" mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!organizationForm.valid"
-            (click)="onApprove()">
-            Speichern
-        </button>
-    </div>
 </mat-dialog-content>
+<mat-dialog-actions mat-dialog-actions align="end">
+    <button mat-raised-button (click)="onDelete()" color="warn">{{'common.delete' | translate}}</button>
+    <span class="fill-remaining-space"></span>
+    <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="onCancel()">
+        {{'common.cancel' | translate}}
+    </button>
+    <button id="saveButton" mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!organizationForm.valid"
+        (click)="onApprove()">
+        {{'common.save' | translate}}
+    </button>
+</mat-dialog-actions>

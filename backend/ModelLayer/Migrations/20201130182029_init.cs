@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class ramInit_add_mod : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -83,7 +83,8 @@ namespace ModelLayer.Migrations
                     Description = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
                     Time = table.Column<DateTime>(nullable: false),
-                    Duration = table.Column<float>(nullable: false)
+                    Duration = table.Column<float>(nullable: false),
+                    Location = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -208,7 +209,10 @@ namespace ModelLayer.Migrations
                     ContactPartner = table.Column<string>(nullable: true),
                     PreName = table.Column<string>(nullable: true),
                     AddressId = table.Column<long>(nullable: true),
-                    ContactPossibilitiesId = table.Column<long>(nullable: true)
+                    ContactPossibilitiesId = table.Column<long>(nullable: true),
+                    isApproved = table.Column<bool>(nullable: false),
+                    CreatedByUser = table.Column<long>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -544,7 +548,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "db6bff84-2230-4195-ab2d-8c897222b166", "Admin", "ADMIN" });
+                values: new object[] { 1L, "e592f758-dc59-4f9e-9479-2c4197f9237b", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",

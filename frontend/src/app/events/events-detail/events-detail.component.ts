@@ -89,6 +89,10 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     private fb: FormBuilder,
     private mailService: MailService) {
     super(dialogRef, dialog);
+    this.dialogRef.backdropClick().subscribe(() => {
+			// Close the dialog
+			dialogRef.close();
+		});
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
@@ -149,7 +153,15 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   }
 
   ngOnInit() {
-    this.eventsForm = this.createEventsForm();
+    this.eventsForm = this.fb.group({
+      name: ['', Validators.required],
+      date: [new FormControl(new Date(this.event.date)), Validators.required],
+      time: ['', Validators.required],
+      duration: ['', Validators.required],
+      description: ['', Validators.maxLength(300)],
+      location: ['']
+    });;
+
     this.contactService.getAll().subscribe(y => {
       this.contacts = y;
       y.forEach(x => {
@@ -243,15 +255,6 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       minutes = '0' + minutes;
     }
     return [hours, minutes].join(':');
-  }
-
-  private createEventsForm(): FormGroup {
-    return this.fb.group({
-      name: ['', Validators.required],
-      date: [new FormControl(new Date(this.event.date)), Validators.required],
-      time: ['', Validators.required],
-      duration: ['', Validators.required]
-    });
   }
 
   setDescribedByIds(ids: string[]) {
@@ -441,7 +444,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.event.participated = participants;
     this.event.tags = this.selectedTags;
     this.eventService.put(this.event, this.event.id).subscribe(() => {
-      this.dialogRef.close();
+      this.dialogRef.close({save: true});
     });
   }
 

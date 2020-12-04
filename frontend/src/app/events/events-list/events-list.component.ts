@@ -11,6 +11,7 @@ import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialo
 import { JwtService } from 'src/app/shared/jwt.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
+import { BlockScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 
 export class EventDtoGroup implements EventDto {
   id: number;
@@ -33,7 +34,7 @@ export class EventDtoGroup implements EventDto {
 
 export class EventsListComponent implements OnInit {
   @ViewChild(TagsFilterComponent, { static: true })
-	tagsFilter: TagsFilterComponent;
+  tagsFilter: TagsFilterComponent;
   @ViewChild(MatSort) sort: MatSort;
   events: Observable<EventDto[]>;
   allEvents: EventDtoGroup[] = new Array<EventDtoGroup>();
@@ -44,6 +45,9 @@ export class EventsListComponent implements OnInit {
   isAdminUserLoggedIn = false;
   length = 0;
   dataSourceFiltered = new MatTableDataSource<EventDtoGroup>();
+  permissionAdd = false;
+  permissionModify = false;
+  permissionDelete = false;
 
   constructor(
     private service: EventService,
@@ -68,6 +72,9 @@ export class EventsListComponent implements OnInit {
     this.tagsFilter.setRefreshTableFunction(() => this.applyTagFilter());
     this.init();
     this.isAdminUserLoggedIn = this.jwt.getUserId() === 1;
+    this.permissionAdd = this.jwt.hasPermission('Anlegen einer Veranstaltung');
+    this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten einer Veranstaltung');
+    this.permissionDelete = this.jwt.hasPermission('Löschen einer Veranstaltung');
   }
 
   applyTagFilter() {
@@ -108,14 +115,15 @@ export class EventsListComponent implements OnInit {
 
   callEdit(id: number) {
     this.service.getById(id).subscribe(x => {
-      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, minWidth: '450px' });
+      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, minWidth: '450px', height: '600px' });
       dialogRef.afterClosed().subscribe(y => this.init());
     });
   }
 
   isToday(element: EventDtoGroup): boolean {
     const date: Date = new Date(element.date);
-    if (date.getDate() === new Date(Date.now()).getDate()) {
+    const now: Date = new Date(Date.now());
+    if (date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
       return true;
     } else {
       return false;
@@ -124,7 +132,7 @@ export class EventsListComponent implements OnInit {
 
   deleteEvent(id: number) {
     const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-      data: 'Event',
+      data: 'event.event',
       disableClose: true
     });
 
@@ -228,12 +236,15 @@ export class EventsListComponent implements OnInit {
   }
 
   addDummyEvent() {
+    const date = new Date(Date.now());
+    date.setDate(date.getDate() + 1);
     this.service.post({
       name: 'Veranstaltung' + this.length,
-      duration: this.length,
-      contacts: [],
-      date: '2020-' + (new Date(Date.now()).getMonth() + 2) + '-' + (this.length + 1) % 30,
-      time: '20:' + this.length % 59
+      duration: (10 + this.length) / 10,
+      date: date.getFullYear().toString() + '-' + (date.getMonth() + 1) + '-' + date.getDate().toString(),
+      time: '20:' + this.length % 59,
+      contacts: new Array<number>(),
+      organizations: new Array<number>()
     }).subscribe(x => this.init());
   }
 

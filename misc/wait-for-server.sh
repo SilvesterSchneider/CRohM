@@ -8,6 +8,8 @@ while [ "$(curl --insecure --silent --output /dev/null --write-out "%{http_code}
     SERVER_TIMEOUT=$((SERVER_TIMEOUT - 1))
 
     if [ "$SERVER_TIMEOUT" -lt 0 ]; then
+        # Print logs before exiting with error
+        docker-compose logs crms
         exit 1
     fi
 

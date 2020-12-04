@@ -12,21 +12,25 @@ export class SidenavComponent implements OnInit {
   constructor(private jwtService: JwtService, private router: Router) {
     this.navLinks = [
       {
-          label: 'Kontakte',
+          label: 'contact.contacts',
           link: './contacts',
           index: 0
       }, {
-          label: 'Organisationen',
+          label: 'organization.organizations',
           link: './organizations',
           index: 1
-      }, {
-          label: 'Veranstaltungen',
-          link: './events',
+      },  {
+          label: 'calendar.title',
+          link: './calendar',
           index: 2
       }, {
-        label: 'Statistiken',
+          label: 'event.events',
+          link: './events',
+          index: 3
+      }, {
+        label: 'statistic.statistics',
         link: './statistics',
-        index: 3
+        index: 4
     }
     ];
    }

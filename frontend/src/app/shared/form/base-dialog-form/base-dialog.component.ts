@@ -41,8 +41,7 @@ export abstract class BaseDialogInput<T = any> implements OnInit {
             return;
         }
         // Angezeigte Ueberschrift bzw. Nachricht im Confirm-Dialog
-        const message = `Wollen Sie den Vorgang wirklich abbrechen?`;
-        const dialogData = new ConfirmDialogModel('Warnung', message);
+        const dialogData = new ConfirmDialogModel('common.warning', 'common.confirmCancel');
 
         // Oeffnet den Confirm-Dialog mit definierter Ueberschrift bzw. Nachricht
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {

@@ -1,17 +1,17 @@
   <div mat-dialog-title>
-    <span id="title">Rolle erstellen</span>
+    <span id="title">{{'settings.editRole' | translate}}</span>
   </div>
   <div mat-dialog-content>
       <form [formGroup]="roleForm">
   
       <mat-form-field class="full-width">
-          <mat-label>Name</mat-label>
-              <input matInput placeholder="Name" formControlName="name" >
+          <mat-label>{{'common.name' | translate}}</mat-label>
+              <input matInput placeholder="{{'common.name' | translate}}" formControlName="name" >
       </mat-form-field> 
   
   
     <mat-form-field class="full-width">
-      <mat-label>Berechtigungen</mat-label>
+      <mat-label>{{'settings.permissions' | translate}}</mat-label>
       <mat-select id="permissionSelectionUpdate" formControlName="permissions" multiple>
           <mat-option *ngFor="let permission of data.permissions" [value]="permission" >{{permission}}</mat-option>
         </mat-select>
@@ -20,8 +20,8 @@
     </form>    
     </div>
   <div mat-dialog-actions>   
-    <button mat-raised-button (click)="onDelete()" color="warn">Löschen</button> 
+    <button mat-raised-button (click)="onDelete()" color="warn">{{'common.delete' | translate}}</button> 
   <span class="fill-remaining-space"></span>
-    <button mat-raised-button (click)="onCancle()">Abbrechen</button>
-    <button id="saveUpdateRole" mat-raised-button [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid" color="primary">Speichern</button>
+    <button mat-raised-button (click)="onCancle()">{{'common.cancel' | translate}}</button>
+    <button id="saveUpdateRole" mat-raised-button [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid" color="primary">{{'common.save' | translate}}</button>
   </div>
