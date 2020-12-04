@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
     public partial class init : Migration
-    { 
+    {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -547,7 +547,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "fce4be3e-5988-476a-9fbf-57b2fd534e50", "Admin", "ADMIN" });
+                values: new object[] { 1L, "4dac1cf9-cfac-465a-8d3d-3a387c043dad", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
