@@ -265,7 +265,7 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
         eventToSave.organizations.push(x.objectId);
       }
     });
-    this.eventService.post(eventToSave).subscribe(() => this.dialogRef.close());
+    this.eventService.post(eventToSave).subscribe(() => this.dialogRef.close({save: true}));
   }
 
   exit() {

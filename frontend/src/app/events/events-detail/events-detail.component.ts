@@ -11,7 +11,8 @@ import {
   MatAutocompleteTrigger, MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { ContactDto, EventDto, MailService, MODEL_TYPE, OrganizationDto, OrganizationService, ParticipatedDto, ParticipatedStatus, TagDto } from '../../shared/api-generated/api-generated';
+import { ContactDto, EventDto, MailService, MODEL_TYPE, OrganizationDto, OrganizationService,
+   ParticipatedDto, ParticipatedStatus, TagDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
@@ -160,7 +161,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       this.contacts = y;
       y.forEach(x => {
         let participatedReal = false;
-        let eventState = ParticipatedStatus.NOT_INVITED;;
+        let eventState = ParticipatedStatus.NOT_INVITED;
         this.event.participated.forEach(z => {
           if (z.objectId === x.id && z.modelType === MODEL_TYPE.CONTACT) {
             participatedReal = z.hasParticipated;
@@ -548,7 +549,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       min = '0' + min;
     }
     const oldTime = timeOldObj.getHours().toString() + ':' + min;
-    return oldTime === timeNew
+    return oldTime === timeNew;
   }
 
   disableInvitation(): boolean {

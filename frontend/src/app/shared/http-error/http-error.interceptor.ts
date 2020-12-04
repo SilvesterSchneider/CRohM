@@ -12,13 +12,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-  constructor(private _snackBar: MatSnackBar) { }
+  constructor(private snackBar: MatSnackBar) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request)
       .pipe(catchError((error: HttpErrorResponse) => {
         console.error(error);
-        this._snackBar.open(`Es ist ein Fehler aufgetreten: ${error.status} - ${error.statusText}`, undefined, {
+        this.snackBar.open(`Es ist ein Fehler aufgetreten: ${error.status} - ${error.statusText}`, undefined, {
           duration: 4000,
           panelClass: ['mat-toolbar', 'mat-warn'],
         });
