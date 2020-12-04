@@ -501,6 +501,9 @@ namespace ModelLayer.Migrations
                     b.Property<int>("EventStatus")
                         .HasColumnType("int");
 
+                    b.Property<bool>("HasParticipated")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ModelType")
                         .HasColumnType("int");
 
@@ -549,7 +552,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "fd74c619-08fc-4bd8-9cbd-1e0353c3fcdf",
+                            ConcurrencyStamp = "de10d701-5640-4cbe-98ff-a6f7666b5c1a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

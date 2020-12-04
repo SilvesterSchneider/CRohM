@@ -227,7 +227,7 @@ namespace ModelLayer.Helper
             foreach (Participated partOld in oldOnes)
             {
                 ParticipatedDto newPart = newOnes.Find(a => a.Id == partOld.Id);
-                if (newPart != null && newPart.EventStatus != partOld.EventStatus)
+                if (newPart != null && newPart.HasParticipated != partOld.HasParticipated)
                 {
                     string name = string.Empty;
                     if (newPart.ModelType == MODEL_TYPE.CONTACT)
@@ -247,7 +247,7 @@ namespace ModelLayer.Helper
                         }
                     }
                     
-                    listEntries.Add(GetNewModificationEntry(name + ":" + newPart.EventStatus.ToString(), name + ":" + partOld.EventStatus.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
+                    listEntries.Add(GetNewModificationEntry(name + ":" + newPart.HasParticipated.ToString(), name + ":" + partOld.HasParticipated.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
                 }
             }
         }

@@ -10,8 +10,7 @@ namespace ModelLayer.Models
         NOT_INVITED,
         INVITED,
         AGREED,
-        CANCELLED,
-        PARTICIPATED
+        CANCELLED
     }
 
     public class Participated : BaseEntity
@@ -19,6 +18,7 @@ namespace ModelLayer.Models
         public MODEL_TYPE ModelType { get; set; }
         public long ObjectId { get; set; }
         public ParticipatedStatus EventStatus { get; set; } = ParticipatedStatus.NOT_INVITED;
+        public bool HasParticipated { get; set; }
     }
 }
 

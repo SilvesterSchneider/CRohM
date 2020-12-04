@@ -3661,6 +3661,7 @@ export interface ParticipatedDto {
     modelType: MODEL_TYPE;
     objectId: number;
     eventStatus: ParticipatedStatus;
+    hasParticipated: boolean;
 }
 
 export enum MODEL_TYPE {
@@ -3674,7 +3675,6 @@ export enum ParticipatedStatus {
     INVITED = 1,
     AGREED = 2,
     CANCELLED = 3,
-    PARTICIPATED = 4,
 }
 
 export interface TagDto {

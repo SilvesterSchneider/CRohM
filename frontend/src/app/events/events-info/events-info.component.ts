@@ -5,12 +5,14 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 import { map } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
+import { TranslateService } from '@ngx-translate/core';
 
 export class ContactOrganizationDtoExtended {
   id: number;
   preName: string;
   name: string;
   modelType: MODEL_TYPE;
+  participated: boolean;
   eventStatus: ParticipatedStatus;
 }
 
@@ -32,7 +34,8 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
               public dialog: MatDialog,
               @Inject(MAT_DIALOG_DATA) public event: EventDto,
               private fb: FormBuilder,
-              private modService: ModificationEntryService
+              private modService: ModificationEntryService,
+              private translate: TranslateService
   ) {
     super(dialogRef, dialog);
     this.dialogRef.backdropClick().subscribe(() => {
@@ -62,6 +65,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
           id: x.id,
           preName: x.preName,
           name: x.name,
+          participated: false,
           eventStatus: ParticipatedStatus.NOT_INVITED,
           modelType: MODEL_TYPE.CONTACT
         });
@@ -73,6 +77,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
           id: x.id,
           preName: x.name,
           name: x.description,
+          participated: false,
           eventStatus: ParticipatedStatus.NOT_INVITED,
           modelType: MODEL_TYPE.ORGANIZATION
         });
@@ -87,6 +92,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
           cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.ORGANIZATION && y.id === x.objectId);
         }
         if (cont != null) {
+          cont.participated = x.hasParticipated;
           cont.eventStatus = x.eventStatus;
         }
       });
@@ -145,5 +151,17 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
         this.modificationsPaginationLength = result.totalRecords;
       });
 
+  }
+
+  getEventState(state: ParticipatedStatus): string {
+    if (state === ParticipatedStatus.NOT_INVITED) {
+      return this.translate.instant('event.notInvited');
+    } else if (state === ParticipatedStatus.INVITED) {
+      return this.translate.instant('event.invited');
+    } else if (state === ParticipatedStatus.AGREED) {
+      return this.translate.instant('event.agreed');
+    } else {
+      return this.translate.instant('event.cancelled');
+    }
   }
 }

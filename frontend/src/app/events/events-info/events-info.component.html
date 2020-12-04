@@ -36,11 +36,9 @@
     <div class="col-md-12">
         <mat-table *ngIf="contactsOrganizations.length > 0" #table [dataSource]="contactsOrganizations">
             <ng-container matColumnDef="wasInvited">
-                <mat-header-cell *matHeaderCellDef> {{'event.invited' |translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> 
-                    <mat-icon *ngIf="!element.wasInvited">check_box_outline_blank</mat-icon>
-                    <mat-icon *ngIf="element.wasInvited">check_box</mat-icon>
-                </mat-cell>
+                <mat-header-cell *matHeaderCellDef> {{'event.state' | translate}} </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{getEventState(element.eventStatus)}}
+                    </mat-cell>
             </ng-container>
             <ng-container matColumnDef="participated">
                 <mat-header-cell *matHeaderCellDef> {{'event.participated' |translate}} </mat-header-cell>

@@ -188,9 +188,10 @@ namespace RepositoryLayer
                     if (participated != null)
                     {
                         participated.EventStatus = partNew.EventStatus;
+                        participated.HasParticipated = partNew.HasParticipated;
                     } else
                     {
-                        eventExistent.Participated.Add(new Participated() { ObjectId = partNew.ObjectId, EventStatus = partNew.EventStatus, ModelType = partNew.ModelType });
+                        eventExistent.Participated.Add(new Participated() { HasParticipated = partNew.HasParticipated, ObjectId = partNew.ObjectId, EventStatus = partNew.EventStatus, ModelType = partNew.ModelType });
                     }
                 }
                 

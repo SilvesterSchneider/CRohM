@@ -28,6 +28,8 @@ export class EventContactConnection {
   selected: boolean;
   name: string;
   preName: string;
+  participated: boolean;
+  wasInvited: boolean;
   modelType: MODEL_TYPE;
 }
 
@@ -111,7 +113,9 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
             name: x.name,
             preName: x.preName,
             selected: false,
-            modelType: MODEL_TYPE.CONTACT
+            modelType: MODEL_TYPE.CONTACT,
+            participated: false,
+            wasInvited: false
           }
         );
       });
@@ -123,7 +127,9 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
               name: b.name,
               preName: b.description,
               selected: false,
-              modelType: MODEL_TYPE.ORGANIZATION
+              modelType: MODEL_TYPE.ORGANIZATION,
+              participated: false,
+              wasInvited: false
             }
           );
         });
@@ -216,6 +222,7 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     } else {
       const i = this.selectedItems.findIndex(value => value.objectId === item.objectId && value.modelType === item.modelType);
       if (i > -1) {
+        this.selectedItems[i].participated = false;
         this.selectedItems.splice(i, 1);
       }
     }
@@ -233,6 +240,7 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     } else {
       const i = this.selectedItems.findIndex(value => value.objectId === item.objectId && value.modelType === item.modelType);
       if (i > -1) {
+        this.selectedItems[i].participated = false;
         this.selectedItems.splice(i, 1);
       }
     }
