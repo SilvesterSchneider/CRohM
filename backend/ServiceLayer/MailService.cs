@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using static ModelLayer.Models.Contact;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
+using System.Runtime.CompilerServices;
 
 namespace ServiceLayer
 {
@@ -36,6 +37,8 @@ namespace ServiceLayer
 
     public class MailService : IMailService
     {
+        private const bool USE_TESTMODE = false;
+        private const string BASE_PATH_FOR_TESTMAIL_CREATION = "C:\\Mails";
         private static string STARTFIELD = "<Anrede>";
         private static string STARTFIELDEN = "<title>";
         private static string PRENAMEFIELD = "<Vorname>";
@@ -193,41 +196,70 @@ namespace ServiceLayer
 
         private bool SendMail(string subject, string body, string emailAddressRecipient, Stream attachment, string attachmentType)
         {
-            try
+            if (!USE_TESTMODE)
             {
-                MailMessage msg = new MailMessage();
-                string[] str = new string[] { emailAddressRecipient };
-                msg.IsBodyHtml = true;
-                //Empfänger hinzufügen
-                foreach (string empf in str)
+                try
                 {
-                    msg.To.Add(new MailAddress(empf));
+                    MailMessage msg = new MailMessage();
+                    string[] str = new string[] { emailAddressRecipient };
+                    msg.IsBodyHtml = true;
+                    //Empfänger hinzufügen
+                    foreach (string empf in str)
+                    {
+                        msg.To.Add(new MailAddress(empf));
+                    }
+                    msg.From = new MailAddress("crohm_nuernberg@hotmail.com", "CRMS-Team");
+                    msg.Subject = subject;
+                    msg.Body = body;
+
+                    if (attachment != null)
+                        msg.Attachments.Add(new Attachment(attachment, attachmentType));
+
+                    SmtpClient client = new SmtpClient();
+                    client.UseDefaultCredentials = false;
+
+                    client.Credentials = new System.Net.NetworkCredential("crohm_nuernberg@hotmail.com", "crohm202020");
+
+                    client.Port = 587;
+
+                    client.Host = "smtp.office365.com";
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.EnableSsl = true;
+                    client.Send(msg);
                 }
-                msg.From = new MailAddress("crohm_nuernberg@hotmail.com", "CRMS-Team");
-                msg.Subject = subject;
-                msg.Body = body;
-
-                if (attachment != null)
-                    msg.Attachments.Add(new Attachment(attachment, attachmentType));
-
-                SmtpClient client = new SmtpClient();
-                client.UseDefaultCredentials = false;
-
-                client.Credentials = new System.Net.NetworkCredential("crohm_nuernberg@hotmail.com", "crohm202020");
-
-                client.Port = 587;
-
-                client.Host = "smtp.office365.com";
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.EnableSsl = true;
-                client.Send(msg);
+                catch (Exception ex)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine(ex.Message);
+                    return false;
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine(ex.Message);
-                return false;
+                if (string.IsNullOrEmpty(emailAddressRecipient) || string.IsNullOrEmpty(body))
+                {
+                    return false;
+                }
+
+                string mailPath = BASE_PATH_FOR_TESTMAIL_CREATION + "\\" + emailAddressRecipient + ".txt";
+                if (!Directory.Exists(BASE_PATH_FOR_TESTMAIL_CREATION))
+                {
+                    Directory.CreateDirectory(BASE_PATH_FOR_TESTMAIL_CREATION);
+                }
+
+                if (!File.Exists(mailPath))
+                {
+                    File.Create(mailPath).Close();
+                }
+
+                if (attachment != null && attachmentType != null)
+                {
+                    body += "\r\n\r\n With Attachments!";
+                }
+
+                File.WriteAllText(mailPath, body);
             }
+            
             return true;
         }
 

@@ -125,6 +125,8 @@
         "show": "Show Event Information",
         "info": "Event Information",
         "delete": "Delete Event",
+        "sendDeletionInfo": "Send event cancellation information via mail",
+        "confirmDeletionInfo": "Would you like to inform all participants about the cancellation of this event via mail?",
         "invitation": "Invitation",
         "invited": "Invited",
         "participated": "Participated",

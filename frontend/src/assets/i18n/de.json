@@ -125,6 +125,8 @@
         "show": "Veranstaltungsinformationen anzeigen",
         "info": "Veranstaltungsinformationen",
         "delete": "Veranstaltung löschen",
+        "sendDeletionInfo": "Information zu Veranstaltungsabbruch per Mail senden",
+        "confirmDeletionInfo": "Möchten Sie alle Teilnehmer über den Abbruch dieser Veranstaltung via Mail informieren?",
         "invitation": "Einladung",
         "invited": "Eingeladen",
         "participated": "Hat teilgenommen",

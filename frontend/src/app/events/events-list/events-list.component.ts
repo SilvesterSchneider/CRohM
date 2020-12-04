@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ModuleWithComponentFactories } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EventService, ParticipatedDto, ContactDto, TagDto } from '../../shared/api-generated/api-generated';
+import { EventService, ParticipatedDto, ContactDto, TagDto, OrganizationDto } from '../../shared/api-generated/api-generated';
 import { EventDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { EventsAddComponent } from '../events-add/events-add.component';
@@ -12,6 +12,7 @@ import { JwtService } from 'src/app/shared/jwt.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
 import { BlockScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { DeletionConfirmationDialogComponent } from '../deletion-confirmation-dialog/deletion-confirmation-dialog.component';
 
 export class EventDtoGroup implements EventDto {
   id: number;
@@ -24,6 +25,7 @@ export class EventDtoGroup implements EventDto {
   participated?: ParticipatedDto[];
   weekNumber: number;
   isGroupBy: boolean;
+  organizations: OrganizationDto[];
 }
 
 @Component({
@@ -138,7 +140,15 @@ export class EventsListComponent implements OnInit {
 
     deleteDialogRef.afterClosed().subscribe((deleteResult) => {
       if (deleteResult.delete) {
-        this.service.delete(id).subscribe(x => this.init());
+        const eventToDelete = this.allEvents.find(a => a.id === id);
+        if (eventToDelete != null && (eventToDelete.contacts.length > 0 || eventToDelete.organizations.length > 0)) {
+          const sendMailResult = this.dialog.open(DeletionConfirmationDialogComponent);
+          sendMailResult.afterClosed().subscribe(confirm => {
+            this.service.delete(id, confirm.delete).subscribe(x => this.init());
+          });
+        } else {
+          this.service.delete(id, false).subscribe(x => this.init());
+        }
       }
     });
   }
@@ -172,7 +182,8 @@ export class EventsListComponent implements OnInit {
           name: x.name,
           participated: x.participated,
           weekNumber: week,
-          isGroupBy: true
+          isGroupBy: true,
+          organizations: x.organizations
         });
         this.allEvents.push({
           date: x.date,
@@ -184,7 +195,8 @@ export class EventsListComponent implements OnInit {
           name: x.name,
           participated: x.participated,
           weekNumber: week,
-          isGroupBy: true
+          isGroupBy: true,
+          organizations: x.organizations
         });
       }
       this.allEvents.push({
@@ -197,7 +209,8 @@ export class EventsListComponent implements OnInit {
         name: x.name,
         participated: x.participated,
         weekNumber: 0,
-        isGroupBy: false
+        isGroupBy: false,
+        organizations: x.organizations
       });
       this.dataSource.push({
         date: x.date,
@@ -209,7 +222,8 @@ export class EventsListComponent implements OnInit {
         name: x.name,
         participated: x.participated,
         weekNumber: 0,
-        isGroupBy: false
+        isGroupBy: false,
+        organizations: x.organizations
       });
     });
     this.tagsFilter.updateTagsInAutofill(this.allEvents);
@@ -236,12 +250,15 @@ export class EventsListComponent implements OnInit {
   }
 
   addDummyEvent() {
+    const date = new Date(Date.now());
+    date.setDate(date.getDate() + 1);
     this.service.post({
       name: 'Veranstaltung' + this.length,
-      duration: this.length,
-      contacts: [],
-      date: '2020-' + (new Date(Date.now()).getMonth() + 2) + '-' + (this.length + 1) % 30,
-      time: '20:' + this.length % 59
+      duration: (10 + this.length) / 10,
+      date: date.getFullYear().toString() + '-' + (date.getMonth() + 1) + '-' + date.getDate().toString(),
+      time: '20:' + this.length % 59,
+      contacts: new Array<number>(),
+      organizations: new Array<number>()
     }).subscribe(x => this.init());
   }
 
