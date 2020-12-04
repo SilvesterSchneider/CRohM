@@ -10,7 +10,7 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20201115212714_init")]
+    [Migration("20201130182029_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -294,6 +294,9 @@ namespace ModelLayer.Migrations
                     b.Property<float>("Duration")
                         .HasColumnType("real");
 
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -554,7 +557,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "7a36f4b0-0b24-415a-99a9-597705851596",
+                            ConcurrencyStamp = "e592f758-dc59-4f9e-9479-2c4197f9237b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

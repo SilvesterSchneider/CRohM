@@ -55,7 +55,8 @@
         "sendMailToMany": "Send mail to multiple contacts",
         "orderBy": "Order by",
         "selectLanguage": "Select Language",
-        "usermenu": "User Menu"
+        "usermenu": "User Menu",
+        "location": "Location"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",

@@ -43,8 +43,8 @@
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
-                <button type="button" mat-icon-button [disabled]="!permissionModify"
-                    color="primary" class="editButton" (click)="callEdit(element.id)">
+                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="callEdit(element.id)"
+                    color="primary" class="editButton">
                     <mat-icon class="icon" title="{{'event.edit' | translate}}">edit</mat-icon>
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)"

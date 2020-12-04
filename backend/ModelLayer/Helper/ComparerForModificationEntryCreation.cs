@@ -27,6 +27,8 @@ namespace ModelLayer.Helper
             ComparePlainFields(listEntries, oldEvent.Date.ToString(), newEvent.Date.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DATE, userOfModification, MODIFICATION.MODIFIED);
             ComparePlainFields(listEntries, oldEvent.Time.ToString(), newEvent.Time.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.TIME, userOfModification, MODIFICATION.MODIFIED);
             ComparePlainFields(listEntries, oldEvent.Duration.ToString(), newEvent.Duration.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DURATION, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(listEntries, oldEvent.Location, newEvent.Location, newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.LOCATION, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(listEntries, oldEvent.Description, newEvent.Description, newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DESCRIPTION, userOfModification, MODIFICATION.MODIFIED);
             CompareTagFields(listEntries, oldEvent.Tags, newEvent.Tags, newEvent.Id, MODEL_TYPE.EVENT, userOfModification);
             GetContactsChangeOfEvents(oldEvent.Contacts, newEvent.Contacts, newEvent.Id, userOfModification, listEntries);
             GetOrganizationsChangeOfEvents(oldEvent.Organizations, newEvent.Organizations, newEvent.Id, userOfModification, listEntries);
@@ -91,7 +93,7 @@ namespace ModelLayer.Helper
                         listEntries.Add(GetNewModificationEntry(name,
                             string.Empty, modelId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, userOfModification, MODIFICATION.MODIFIED));
                     }
-                }                               
+                }
             }
         }
 
@@ -246,7 +248,7 @@ namespace ModelLayer.Helper
                             name = orga.Name;
                         }
                     }
-                    
+
                     listEntries.Add(GetNewModificationEntry(name + ":" + newPart.HasParticipated.ToString(), name + ":" + partOld.HasParticipated.ToString(), id, MODEL_TYPE.EVENT, DATA_TYPE.PARTICIPATED, userOfModification, MODIFICATION.MODIFIED));
                 }
             }
@@ -410,11 +412,11 @@ namespace ModelLayer.Helper
                 }
                 ContactPossibilitiesEntry newEntryToFind = newOne.Find(a => a.Id == entryOld.Id);
                 if (newEntryToFind == null && deleteEntries)
-                {                    
-                    listWithDeletion.Add(GetNewModificationEntry("" , entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.DELETED, (int) entryOld.Id));
-                    listWithCreation.Add(GetNewModificationEntry("", "", idOfModel, modelType, dataType, userOfModification, MODIFICATION.DELETED, (int) entryOld.Id, true));
+                {
+                    listWithDeletion.Add(GetNewModificationEntry("", entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.DELETED, (int)entryOld.Id));
+                    listWithCreation.Add(GetNewModificationEntry("", "", idOfModel, modelType, dataType, userOfModification, MODIFICATION.DELETED, (int)entryOld.Id, true));
                 }
-                else 
+                else
                 {
                     if (newEntryToFind == null || !newEntryToFind.ContactEntryName.Equals(entryOld.ContactEntryName) || !newEntryToFind.ContactEntryValue.Equals(entryOld.ContactEntryValue))
                     {
@@ -425,12 +427,12 @@ namespace ModelLayer.Helper
                             newName = newEntryToFind.ContactEntryName;
                             newValue = newEntryToFind.ContactEntryValue;
                         }
-                        listWithCreation.Add(GetNewModificationEntry(newName + ":" + newValue, entryOld.ContactEntryName + ":" + entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.MODIFIED, (int) entryOld.Id));
-                    }                    
+                        listWithCreation.Add(GetNewModificationEntry(newName + ":" + newValue, entryOld.ContactEntryName + ":" + entryOld.ContactEntryValue, idOfModel, modelType, dataType, userOfModification, MODIFICATION.MODIFIED, (int)entryOld.Id));
+                    }
                 }
             }
             foreach (ContactPossibilitiesEntry entryNew in newOne)
-            { 
+            {
                 if (oldOne.Find(a => a.Id == entryNew.Id) == null)
                 {
                     DATA_TYPE dataType = DATA_TYPE.PHONE_EXTENDED;
@@ -439,7 +441,7 @@ namespace ModelLayer.Helper
                         dataType = DATA_TYPE.MAIL_EXTENDED;
                     }
                     listWithCreation.Add(GetNewModificationEntry(entryNew.ContactEntryName + ":" + entryNew.ContactEntryValue, "", idOfModel, modelType, dataType, userOfModification, MODIFICATION.ADDED, nextNewId++));
-                }                
+                }
             }
         }
 

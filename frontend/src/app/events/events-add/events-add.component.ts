@@ -6,7 +6,8 @@ import { NgControl, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
-  MatAutocompleteTrigger} from '@angular/material/autocomplete';
+  MatAutocompleteTrigger
+} from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { EventCreateDto, MODEL_TYPE, OrganizationService } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
@@ -14,6 +15,7 @@ import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
+import { OsmAddressComponent } from '../../shared/osm/osm-address/osm-address.component';
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -83,9 +85,9 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
   ) {
     super(dialogRef, dialog);
     this.dialogRef.backdropClick().subscribe(() => {
-			// Close the dialog
-			dialogRef.close();
-		});
+      // Close the dialog
+      dialogRef.close();
+    });
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
@@ -104,36 +106,42 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
 
 
   ngOnInit() {
-    this.eventsForm = this.createOrganizationForm();
-    this.contactService.getAll().subscribe(y => {
-      y.forEach(x => {
-        this.filteredItems.push(
-          {
-            objectId: x.id,
-            name: x.name,
-            preName: x.preName,
+    this.eventsForm = this.fb.group({
+      name: ['', Validators.required],
+      date: ['', Validators.required],
+      time: ['', Validators.required],
+      duration: ['', Validators.required],
+      description: ['', Validators.maxLength(300)],
+      location: ['']
+    });
+
+    this.contactService.getAll().subscribe(contacts => {
+      this.filteredItems = contacts.map(contact => {
+        return {
+          objectId: contact.id,
+          name: contact.name,
+          preName: contact.preName,
+          selected: false,
+          modelType: MODEL_TYPE.CONTACT,
+          participated: false,
+          wasInvited: false
+        };
+      });
+
+      this.orgaService.get().subscribe(organisations => {
+        this.filteredItems.concat(organisations.map(orga => {
+          return {
+            objectId: orga.id,
+            name: orga.name,
+            preName: orga.description,
             selected: false,
-            modelType: MODEL_TYPE.CONTACT,
+            modelType: MODEL_TYPE.ORGANIZATION,
             participated: false,
             wasInvited: false
-          }
-        );
-      });
-      this.orgaService.get().subscribe(a => {
-        a.forEach(b => {
-          this.filteredItems.push(
-            {
-              objectId: b.id,
-              name: b.name,
-              preName: b.description,
-              selected: false,
-              modelType: MODEL_TYPE.ORGANIZATION,
-              participated: false,
-              wasInvited: false
-            }
-          );
-        });
-        if (this.preselectedContacts != null && this.preselectedContacts.length > 0) {
+          };
+        }));
+
+        if (this.preselectedContacts?.length > 0) {
           this.preselectedContacts.forEach(s => {
             const cont: EventContactConnection = this.filteredItems.find(z => z.objectId === s && z.modelType === MODEL_TYPE.CONTACT);
             if (cont != null) {
@@ -142,15 +150,6 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
           });
         }
       });
-    });
-  }
-
-  private createOrganizationForm(): FormGroup {
-    return this.fb.group({
-      name: ['', Validators.required],
-      date: ['', Validators.required],
-      time: ['', Validators.required],
-      duration: ['', Validators.required]
     });
   }
 
