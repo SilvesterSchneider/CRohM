@@ -16,7 +16,7 @@
         "newTag": "New Tag",
         "label": "Label",
         "time": "Time",
-        "durationHours": "Duration in Hours",
+        "end": "End",
         "selectAll": "Select all",
         "calendarWeek": "Calendar Week",
         "description": "Description",

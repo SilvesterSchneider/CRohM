@@ -1,6 +1,8 @@
-import { Component, OnInit,
+import {
+  Component, OnInit,
   ViewChild,
-  TemplateRef} from '@angular/core';
+  TemplateRef
+} from '@angular/core';
 
 import {
   isSameDay,
@@ -88,7 +90,7 @@ export class CalendarComponent implements OnInit {
     private eventService: EventService,
     private dialog: MatDialog,
     private jwt: JwtService,
-    private translate: TranslationService) {}
+    private translate: TranslationService) { }
 
   activeDayIsOpen = true;
 
@@ -132,9 +134,9 @@ export class CalendarComponent implements OnInit {
   updateEvent(y: EventDto) {
     const ev = this.events.find(a => a.id === y.id);
     if (ev != null) {
-      ev.start = this.getStartDate(y.date, y.time);
-      ev.end = this.getEndDate(y.date, y.time, y.duration);
-      ev.title = this.getTime(y.time) + ' ' + y.name;
+      ev.start = this.getStartDate(y.date, y.start);
+      ev.end = this.getEndDate(y.date, y.end);
+      ev.title = this.getTime(y.start) + ' ' + y.name;
     }
     this.refresh.next();
   }
@@ -157,11 +159,11 @@ export class CalendarComponent implements OnInit {
 
   funtionGetSortedData(a: EventDto, b: EventDto): number {
     const dateA = new Date(a.date);
-    const timeA = new Date(a.time);
+    const timeA = new Date(a.start);
     dateA.setHours(timeA.getHours());
     dateA.setMinutes(timeA.getMinutes());
     const dateB = new Date(b.date);
-    const timeB = new Date(b.time);
+    const timeB = new Date(b.start);
     dateB.setHours(timeB.getHours());
     dateB.setMinutes(timeB.getMinutes());
     return (dateA.getTime() - dateB.getTime());
@@ -175,9 +177,9 @@ export class CalendarComponent implements OnInit {
       xSort.forEach(a => {
         this.events.push(
           {
-            start: this.getStartDate(a.date, a.time),
-            end: this.getEndDate(a.date, a.time, a.duration),
-            title: this.getTime(a.time) + ' ' + a.name,
+            start: this.getStartDate(a.date, a.start),
+            end: this.getEndDate(a.date, a.end),
+            title: this.getTime(a.start) + ' ' + a.name,
             color: idx % 3 === 0 ? colors.cyan : (idx % 2 === 0 ? colors.blue : colors.yellow),
             actions: this.actions,
             allDay: false,
@@ -199,18 +201,17 @@ export class CalendarComponent implements OnInit {
     return date.getHours() + ':' + minutes;
   }
 
-  getEndDate(date: string, time: string, duration: number): Date {
-    const dateNew = this.getStartDate(date, time);
-    let timeNew = dateNew.getHours() * 60 + dateNew.getMinutes();
-    timeNew += duration * 60;
-    dateNew.setHours(timeNew / 60);
-    dateNew.setMinutes(timeNew % 60);
+  getEndDate(date: string, end: string): Date {
+    const dateNew = new Date(date)
+    const timeNew = new Date(end);
+    dateNew.setHours(timeNew.getHours());
+    dateNew.setMinutes(timeNew.getMinutes());
     return dateNew;
   }
 
-  getStartDate(date: string, time: string): Date {
+  getStartDate(date: string, start: string): Date {
     const dateNew = new Date(date);
-    const timeNew = new Date(time);
+    const timeNew = new Date(start);
     dateNew.setHours(timeNew.getHours());
     dateNew.setMinutes(timeNew.getMinutes());
     return dateNew;

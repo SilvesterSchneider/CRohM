@@ -59,8 +59,8 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     this.eventsForm = this.fb.group({
       name: [''],
       date: [''],
-      time: [''],
-      duration: [''],
+      start: [''],
+      end: [''],
       description: [''],
       location: ['']
     });

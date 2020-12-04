@@ -117,11 +117,11 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     this.eventsForm = this.fb.group({
       name: ['', Validators.required],
       date: ['', Validators.required],
-      time: ['', Validators.required],
-      duration: ['', Validators.required],
+      start: ['', Validators.required],
+      end: ['', Validators.required],
       description: ['', Validators.maxLength(300)],
       location: ['']
-    });
+    }, { validator: MyAwesomeRangeValidator });  // Einbau des Validators der Start/Ende validiert);
 
     this.contactService.getAll().subscribe(contacts => {
       this.filteredItems = contacts.map(contact => {

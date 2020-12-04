@@ -12,13 +12,8 @@
             {{'event.hidePast' | translate}}
         </mat-checkbox>
         <button id="addDummyEventButton" class="button" *ngIf="isAdminUserLoggedIn" [disabled]="!permissionAdd"
-<<<<<<< HEAD
-            mat-raised-button color="primary" title="Dummy Veranstaltung hinzufügen" (click)="addDummyEvent()">
-            <mat-icon>add</mat-icon> Dummy Veranstaltung hinzufügen
-=======
             mat-raised-button color="primary" title="{{'event.addDummy' | translate}}" (click)="addDummyEvent()">
             <mat-icon>add</mat-icon> {{'event.addDummy' | translate}}
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
         </button>
         <button id="addEventButton" class="button" button="submit" [disabled]="!permissionAdd" mat-mini-fab
             color="primary" (click)="addEvent()">
@@ -49,21 +44,12 @@
             <mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px">
                 <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="callEdit(element.id)"
-<<<<<<< HEAD
-                    color="primary" class="editButton" (click)="callEdit(element.id)">
-                    <mat-icon class="icon" title="Veranstaltung bearbeiten">edit</mat-icon>
-                </button>
-                <button id="detailsButton" type="button" mat-icon-button [disabled]="!permissionModify"
-                    (click)="openInfo(element.id)" color="primary">
-                    <mat-icon class="icon" title="Veranstaltungsinformationen anzeigen">info</mat-icon>
-=======
                     color="primary" class="editButton">
                     <mat-icon class="icon" title="{{'event.edit' | translate}}">edit</mat-icon>
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)"
                     color="primary">
                     <mat-icon class="icon" title="{{'event.show' | translate}}">info</mat-icon>
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteEvent(element.id)"
                     color="primary">

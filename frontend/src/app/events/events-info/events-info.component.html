@@ -13,35 +13,31 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <textarea readonly="true" matInput placeholder="{{'common.description' | translate}}" formControlName="description"></textarea>
+                    <textarea readonly="true" matInput placeholder="{{'common.description' | translate}}"
+                        formControlName="description"></textarea>
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-<<<<<<< HEAD
-                    <input [readonly]="true" type="time" matInput placeholder="Beginn" formControlName="start">
-=======
-                    <input type="date" readonly="true" matInput placeholder="{{'common.date' | translate}}" formControlName="date">
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
+                    <input type="date" readonly="true" matInput placeholder="{{'common.date' | translate}}"
+                        formControlName="date">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-<<<<<<< HEAD
-                    <input [readonly]="true" type="time" matInput placeholder="Ende" formControlName="end">
-=======
-                    <input readonly="true" type="time" matInput placeholder="{{'common.time' | translate}}" formControlName="time">
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
+                    <input readonly="true" type="time" matInput placeholder="{{'common.time' | translate}}"
+                        formControlName="start">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input readonly="true" matInput placeholder="{{'common.durationHours' | translate }}" formControlName="duration">
+                    <input readonly="true" matInput placeholder="{{'common.end' | translate }}" formControlName="end">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input readonly="true" matInput placeholder="{{'common.location' | translate }}" formControlName="location">
+                    <input readonly="true" matInput placeholder="{{'common.location' | translate }}"
+                        formControlName="location">
                 </mat-form-field>
             </div>
 
@@ -55,25 +51,15 @@
     <div class="col-md-12">
         <mat-table *ngIf="contactsOrganizations.length > 0" #table [dataSource]="contactsOrganizations">
             <ng-container matColumnDef="wasInvited">
-<<<<<<< HEAD
-                <mat-header-cell *matHeaderCellDef> Eingeladen </mat-header-cell>
-                <mat-cell *matCellDef="let element">
-=======
                 <mat-header-cell *matHeaderCellDef> {{'event.invited' |translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> 
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
+                <mat-cell *matCellDef="let element">
                     <mat-icon *ngIf="!element.wasInvited">check_box_outline_blank</mat-icon>
                     <mat-icon *ngIf="element.wasInvited">check_box</mat-icon>
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="participated">
-<<<<<<< HEAD
-                <mat-header-cell *matHeaderCellDef> Teilgenommen </mat-header-cell>
-                <mat-cell *matCellDef="let element">
-=======
                 <mat-header-cell *matHeaderCellDef> {{'event.participated' |translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> 
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
+                <mat-cell *matCellDef="let element">
                     <mat-icon *ngIf="!element.participated">check_box_outline_blank</mat-icon>
                     <mat-icon *ngIf="element.participated">check_box</mat-icon>
                 </mat-cell>
@@ -95,15 +81,9 @@
 
     <mat-expansion-panel *ngIf="dataHistory.length > 0" togglePosition="after" class="extensionPanel">
         <mat-expansion-panel-header>
-<<<<<<< HEAD
             <mat-panel-title>
-                <h5>Datenveränderungen</h5>
+                <h5>{{'common.dataChanges' | translate}}</h5>
             </mat-panel-title>
-=======
-          <mat-panel-title>
-            <h5>{{'common.dataChanges' | translate}}</h5>
-          </mat-panel-title>
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
         </mat-expansion-panel-header>
         <mat-table *ngIf="dataHistory.length > 0" #table [dataSource]="dataHistory">
             <ng-container matColumnDef="datum">
@@ -112,14 +92,9 @@
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="bearbeiter">
-<<<<<<< HEAD
-                <mat-header-cell fxFlex="20%" *matHeaderCellDef> Bearbeiter </mat-header-cell>
+                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.editor' | translate}} </mat-header-cell>
                 <mat-cell fxFlex="20%" *matCellDef="let element">
                     {{element.user?.firstName + " " + element.user?.lastName}}
-=======
-                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.editor' | translate}} </mat-header-cell>
-                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.user?.firstName + " " + element.user?.lastName}}
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="feldname">
@@ -148,27 +123,18 @@
         <mat-paginator (page)="onPaginationChangedModification($event)" [pageSizeOptions]="[5, 10, 20]"
             [length]="modificationsPaginationLength"></mat-paginator>
     </mat-expansion-panel>
-<<<<<<< HEAD
     <div *ngIf="event.tags.length > 0" class="col-md-12">
-        <h5>Tags</h5>
+        <h5>{{'common.tags' | translate}}</h5>
         <mat-chip-list #chipList>
             <mat-chip *ngFor="let item of event.tags">
                 {{ item.name }}
             </mat-chip>
         </mat-chip-list>
-=======
-	<div *ngIf="event.tags.length > 0" class="col-md-12">
-		<h5>{{'common.tags' | translate}}</h5>
-		<mat-chip-list #chipList>
-			<mat-chip *ngFor="let item of event.tags">
-				{{ item.name }}
-			</mat-chip>
-		</mat-chip-list>
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
     </div>
 </mat-dialog-content>
 <mat-dialog-actions mat-dialog-actions align="end">
-    <button class="margin" mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="dialogRef.close()">
+    <button class="margin" mat-raised-button color="primary" title="{{'common.cancel' | translate}}"
+        (click)="dialogRef.close()">
         {{'common.cancel' | translate}}
     </button>
 </mat-dialog-actions>

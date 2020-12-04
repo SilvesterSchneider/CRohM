@@ -165,8 +165,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.eventsForm = this.fb.group({
       name: ['', Validators.required],
       date: [new FormControl(new Date(this.event.date)), Validators.required],
-      time: ['', Validators.required],
-      duration: ['', Validators.required],
+      start: ['', Validators.required],
+      end: ['', Validators.required],
       description: ['', Validators.maxLength(300)],
       location: ['']
     });;
