@@ -240,18 +240,12 @@ export class EventsListComponent implements OnInit {
     date.setDate(date.getDate() + 1);
     this.service.post({
       name: 'Veranstaltung' + this.length,
-<<<<<<< HEAD
       end: '20:' + (this.length + 1) % 59,
-      contacts: [],
-      date: '2020-' + (new Date(Date.now()).getMonth() + 2) % 12 + '-' + (this.length + 1) % 30,
-      start: '20:' + this.length % 59
-=======
-      duration: (10 + this.length) / 10,
+      //date: '2020-' + (new Date(Date.now()).getMonth() + 2) % 12 + '-' + (this.length + 1) % 30,
+      start: '20:' + this.length % 59,
       date: date.getFullYear().toString() + '-' + (date.getMonth() + 1) + '-' + date.getDate().toString(),
-      time: '20:' + this.length % 59,
       contacts: new Array<number>(),
       organizations: new Array<number>()
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
     }).subscribe(x => this.init());
   }
 

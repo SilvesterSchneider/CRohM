@@ -14,7 +14,6 @@ import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-<<<<<<< HEAD
 import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialog.component';
 
 // Validator fuer Start frueher als Ende?
@@ -25,10 +24,6 @@ const MyAwesomeRangeValidator: ValidatorFn = (fg: FormGroup) => {
     ? null
     : { range: true };
 };
-=======
-import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
-import { OsmAddressComponent } from '../../shared/osm/osm-address/osm-address.component';
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -166,7 +161,6 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     });
   }
 
-<<<<<<< HEAD
 
 
   private createOrganizationForm(): FormGroup {
@@ -178,8 +172,6 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     }, { validator: MyAwesomeRangeValidator });  // Einbau des Validators der Start/Ende validiert
   }
 
-=======
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
   setDescribedByIds(ids: string[]) {
     this.describedBy = ids.join(' ');
   }

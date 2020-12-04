@@ -29,17 +29,9 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   columnsContacts = ['wasInvited', 'participated', 'prename', 'name'];
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
-<<<<<<< HEAD
-  constructor(
-    public dialogRef: MatDialogRef<EventsInfoComponent>,
-    public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA)
-    public event: EventDto,
-=======
   constructor(public dialogRef: MatDialogRef<EventsInfoComponent>,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public event: EventDto,
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
     private fb: FormBuilder,
     private modService: ModificationEntryService
   ) {
@@ -142,7 +134,6 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     return [hours, minutes].join(':');
   }
 
-<<<<<<< HEAD
   private createEventsForm(): FormGroup {
     return this.fb.group({
       name: [''],
@@ -152,8 +143,6 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     });
   }
 
-=======
->>>>>>> 32c677e06323ab14a4f0320f7c4b653c607c4f71
   onPaginationChangedModification(event: PageEvent) {
     this.loadModifications((event.pageIndex * event.pageSize), event.pageSize);
   }
