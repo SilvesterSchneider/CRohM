@@ -44,7 +44,6 @@ namespace WebApi
 
             var connectionString = $"Server={server}\\SQLEXPRESS" + (string.IsNullOrEmpty(port) ? "" : "," + port) + $";Database={database};User Id={user};Password={password}";
 
-
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
