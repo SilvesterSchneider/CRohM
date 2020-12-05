@@ -20,6 +20,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dial
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 import { EventsInvitationComponent } from '../events-invitation/events-invitation.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent, ConfirmDialogModel } from 'src/app/shared/form/confirmdialog/confirmdialog.component';
 
 export class EventContactConnection {
   objectId: number;
@@ -299,7 +300,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.inputTrigger.openPanel();
   }
 
-  callInvitation() {
+  callInvitation(save: boolean, useFinishSave: boolean): boolean {
     const dialogRef = this.dialog.open(EventsInvitationComponent, { data: this.event, disableClose: true, minWidth: '450px', minHeight: '400px' });
     dialogRef.afterClosed().subscribe(x => {
       if (x.send && x.text != null) {
@@ -315,9 +316,17 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             y.eventStatus = ParticipatedStatus.INVITED;
           }
         });
-        this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text).subscribe();
+        this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text).subscribe(x => {
+          if (useFinishSave) {
+            this.finishSave(save);
+          }
+        });
+        return true;
+      } else {
+        return false;
       }
     });
+    return false;
   }
 
   filter(filter: string): EventContactConnection[] {
@@ -422,117 +431,88 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 
   saveValues() {
     const eventToSave: EventDto = this.eventsForm.value;
-    eventToSave.date = new Date(new Date(eventToSave.date).getTime()).toDateString();
+    eventToSave.date = new Date(new Date(eventToSave.date)).toDateString();
     eventToSave.time = this.eventsForm.get('time').value;
-    const contacts: ContactDto[] = new Array<ContactDto>();
-    const organizations: OrganizationDto[] = new Array<OrganizationDto>();
-    const participants: ParticipatedDto[] = new Array<ParticipatedDto>();
-    if (this.isSameDate(this.event.date, eventToSave.date) && this.isSameTime(this.event.time, eventToSave.time) &&
-     this.event.duration === eventToSave.duration) {
-      this.selectedItems.forEach(x => {
-        if (x.modelType === MODEL_TYPE.CONTACT) {
-          const contact = this.contacts.find(y => y.id === x.objectId);
-          if (contact != null) {
-            contacts.push(contact);
-            const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-               MODEL_TYPE.CONTACT);
-            if (partExistend == null) {
-              participants.push(
-                {
-                  objectId: x.objectId,
-                  hasParticipated: x.participated,
-                  eventStatus: x.eventStatus,
-                  id: 0,
-                  modelType: MODEL_TYPE.CONTACT
-                }
-              );
-            } else {
-              partExistend.hasParticipated = x.participated;
-              partExistend.eventStatus = x.eventStatus;
-              participants.push(partExistend);
-            }
-          }
-        } else if (x.modelType === MODEL_TYPE.ORGANIZATION) {
-          const orga = this.orgas.find(y => y.id === x.objectId);
-          if (orga != null) {
-            organizations.push(orga);
-            const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-               MODEL_TYPE.ORGANIZATION);
-            if (partExistend == null) {
-              participants.push(
-                {
-                  objectId: x.objectId,
-                  hasParticipated: x.participated,
-                  eventStatus: x.eventStatus,
-                  id: 0,
-                  modelType: MODEL_TYPE.ORGANIZATION
-                }
-              );
-            } else {
-              partExistend.hasParticipated = x.participated;
-              partExistend.eventStatus = x.eventStatus;
-              participants.push(partExistend);
-            }
-          }
-        }
-      });
-    } else {
-      this.selectedItems.forEach(x => {
-        if (x.modelType === MODEL_TYPE.CONTACT) {
-          const contact = this.contacts.find(y => y.id === x.objectId);
-          if (contact != null) {
-            contacts.push(contact);
-            const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-               MODEL_TYPE.CONTACT);
-            if (partExistend == null) {
-              participants.push(
-                {
-                  objectId: x.objectId,
-                  hasParticipated: false,
-                  eventStatus: ParticipatedStatus.NOT_INVITED,
-                  id: 0,
-                  modelType: MODEL_TYPE.CONTACT
-                }
-              );
-            } else {
-              partExistend.hasParticipated = false;
-              partExistend.eventStatus = ParticipatedStatus.NOT_INVITED;
-              participants.push(partExistend);
-            }
-          }
-        } else if (x.modelType === MODEL_TYPE.ORGANIZATION) {
-          const orga = this.orgas.find(y => y.id === x.objectId);
-          if (orga != null) {
-            organizations.push(orga);
-            const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-               MODEL_TYPE.ORGANIZATION);
-            if (partExistend == null) {
-              participants.push(
-                {
-                  objectId: x.objectId,
-                  hasParticipated: false,
-                  eventStatus: ParticipatedStatus.NOT_INVITED,
-                  id: 0,
-                  modelType: MODEL_TYPE.ORGANIZATION
-                }
-              );
-            } else {
-              partExistend.hasParticipated = false;
-              partExistend.eventStatus = ParticipatedStatus.NOT_INVITED;
-              participants.push(partExistend);
-            }
-          }
+    const saveNewValues = this.isSameDate(new Date(this.event.date).toString(), eventToSave.date) && this.isSameTime(this.event.time, eventToSave.time) &&
+      this.event.duration === eventToSave.duration;
+    let callInvitation = false;
+    if (saveNewValues) {
+      this.selectedItems.forEach(a => {
+        if (a.eventStatus === ParticipatedStatus.NOT_INVITED) {
+          callInvitation = true;
         }
       });
     }
-    eventToSave.contacts = contacts;
-    eventToSave.organizations = organizations;
-    eventToSave.participated = participants;
-    eventToSave.tags = this.selectedTags;
-    eventToSave.id = this.event.id;
-    this.eventService.put(eventToSave, eventToSave.id).subscribe(() => {
-      this.dialogRef.close({save: true});
+    this.event.date = eventToSave.date;
+    this.event.time = eventToSave.time;
+    this.event.duration = eventToSave.duration;
+    if (callInvitation) {
+      const data = new ConfirmDialogModel('event.sendInvitation', 'event.sendInvitation');
+      const dialogYesNo = this.dialog.open(ConfirmDialogComponent, {data});
+      dialogYesNo.afterClosed().subscribe(y => {
+        if (y) {
+          if (!this.callInvitation(saveNewValues, true)) {
+            this.finishSave(saveNewValues);
+          }
+        } else {
+          this.finishSave(saveNewValues);
+        }
+      });
+    } else {
+      this.finishSave(saveNewValues);
+    }
+  }
+
+  finishSave(saveNewValues: boolean) {
+    const contacts: ContactDto[] = new Array<ContactDto>();
+    const organizations: OrganizationDto[] = new Array<OrganizationDto>();
+    const participants: ParticipatedDto[] = new Array<ParticipatedDto>();
+    this.selectedItems.forEach(x => {
+      if (x.modelType === MODEL_TYPE.CONTACT) {
+        const contact = this.contacts.find(y => y.id === x.objectId);
+        if (contact != null) {
+          contacts.push(contact);
+          this.addParticipatedStates(MODEL_TYPE.CONTACT, saveNewValues, participants, x);
+        }
+      } else if (x.modelType === MODEL_TYPE.ORGANIZATION) {
+        const orga = this.orgas.find(y => y.id === x.objectId);
+        if (orga != null) {
+          organizations.push(orga);
+          this.addParticipatedStates(MODEL_TYPE.ORGANIZATION, saveNewValues, participants, x);
+        }
+      }
     });
+    this.event.contacts = contacts;
+    this.event.organizations = organizations;
+    this.event.participated = participants;
+    this.event.tags = this.selectedTags;
+    this.eventService.put(this.event, this.event.id).subscribe(x => this.dialogRef.close({save: true}));
+  }
+
+  addParticipatedStates(modelType: MODEL_TYPE, saveNewValues: boolean, participants: ParticipatedDto[], x: EventContactConnection) {
+    const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
+      modelType);
+    let newState = ParticipatedStatus.NOT_INVITED;
+    let participatedState = false;
+    if (saveNewValues) {
+      newState = x.eventStatus;
+      participatedState = x.participated;
+    }
+    if (partExistend == null) {
+      participants.push(
+        {
+          objectId: x.objectId,
+          hasParticipated: participatedState,
+          eventStatus: newState,
+          id: 0,
+          modelType
+        }
+      );
+    } else {
+      partExistend.hasParticipated = participatedState;
+      partExistend.eventStatus = newState;
+      participants.push(partExistend);
+    }
   }
 
   isSameDate(dateOld: string, dateNew: string): boolean {
@@ -548,7 +528,11 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     if (min.length === 1) {
       min = '0' + min;
     }
-    const oldTime = timeOldObj.getHours().toString() + ':' + min;
+    let hours = timeOldObj.getHours().toString();
+    if (hours.length == 1) {
+      hours = '0' + hours;
+    }
+    const oldTime = hours + ':' + min;
     return oldTime === timeNew;
   }
 
