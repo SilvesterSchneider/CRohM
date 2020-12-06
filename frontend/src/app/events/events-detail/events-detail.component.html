@@ -13,6 +13,11 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
+                    <textarea matInput placeholder="{{'common.description' | translate}}" formControlName="description"></textarea>
+                </mat-form-field>
+            </div>    
+            <div class="col-md-3">
+                <mat-form-field>
                     <input matInput [matDatepicker]="picker1" placeholder="{{'common.date' | translate}}" formControlName="date">
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
@@ -28,6 +33,11 @@
                     <input type="number" matInput placeholder="{{'common.durationHours' | translate}}" formControlName="duration">
                 </mat-form-field>
             </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input type="text" matInput placeholder="{{'common.location' | translate }}" formControlName="location">
+                </mat-form-field>
+            </div>    
         </div>
     </div>
     <div class="row">

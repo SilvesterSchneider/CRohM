@@ -104,6 +104,15 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));
   }
 
+  private createEventsForm(): FormGroup {
+    return this.fb.group({
+      name: [''],
+      date: [''],
+      time: [''],
+      duration: ['']
+    });
+  }
+
   formatDate(date: string): any {
     const d = new Date(date);
     let days = '' + (d.getDate());
@@ -129,15 +138,6 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
       minutes = '0' + minutes;
     }
     return [hours, minutes].join(':');
-  }
-
-  private createEventsForm(): FormGroup {
-    return this.fb.group({
-      name: [''],
-      date: [''],
-      time: [''],
-      duration: ['']
-    });
   }
 
   onPaginationChangedModification(event: PageEvent) {

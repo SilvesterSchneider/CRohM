@@ -8,24 +8,35 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input [readonly]="true" matInput placeholder="{{'common.label' | translate}}" formControlName="name">
+                    <input readonly="true" matInput placeholder="{{'common.label' | translate}}" formControlName="name">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input type="date" [readonly]="true" matInput placeholder="{{'common.date' | translate}}" formControlName="date">
+                    <textarea readonly="true" matInput placeholder="{{'common.description' | translate}}" formControlName="description"></textarea>
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input [readonly]="true" type="time" matInput placeholder="{{'common.time' | translate}}" formControlName="time">
+                    <input type="date" readonly="true" matInput placeholder="{{'common.date' | translate}}" formControlName="date">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input [readonly]="true" matInput placeholder="{{'common.durationHours' | translate}}" formControlName="duration">
+                    <input readonly="true" type="time" matInput placeholder="{{'common.time' | translate}}" formControlName="time">
                 </mat-form-field>
             </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input readonly="true" matInput placeholder="{{'common.durationHours' | translate }}" formControlName="duration">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input readonly="true" matInput placeholder="{{'common.location' | translate }}" formControlName="location">
+                </mat-form-field>
+            </div>
+
         </div>
     </div>
     <div class="col-md-12">

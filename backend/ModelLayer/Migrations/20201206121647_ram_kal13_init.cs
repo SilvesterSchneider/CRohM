@@ -83,7 +83,8 @@ namespace ModelLayer.Migrations
                     Description = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
                     Time = table.Column<DateTime>(nullable: false),
-                    Duration = table.Column<float>(nullable: false)
+                    Duration = table.Column<float>(nullable: false),
+                    Location = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -547,7 +548,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "de10d701-5640-4cbe-98ff-a6f7666b5c1a", "Admin", "ADMIN" });
+                values: new object[] { 1L, "efd057fc-d8e8-4e9e-ae27-575673fe01f6", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
