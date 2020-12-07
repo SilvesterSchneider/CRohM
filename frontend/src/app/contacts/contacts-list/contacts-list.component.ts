@@ -116,22 +116,6 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     }
   }
 
-  /* Rausgeflogen, weil
-  private getData() {
-    this.contacts = this.service.getAll();
-    this.contacts.subscribe(x => {
-      this.length = x.length;
-      this.dataSource.data = x;
-      this.allContacts = x;
-      this.tagsFilter.updateTagsInAutofill(this.allContacts);
-      this.applyTagFilter();
-      this.selectedCheckBoxList = new Array<number>();
-      this.selectedRow = 0;
-      this.isAllSelected = false;
-    });
-    this.changeDetectorRefs.detectChanges();
-  }
-*/
   private getDataWithUnapproved() {
     this.contacts = this.service.getWithUnapproved();
     this.contacts.subscribe(x => {
@@ -303,7 +287,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.isAllSelected = !this.isAllSelected;
     this.selectedCheckBoxList = new Array<number>();
     if (this.isAllSelected) {
-      this.allContacts.forEach(x => this.selectedCheckBoxList.push(x.id));
+      this.dataSource.filteredData.forEach(x => this.selectedCheckBoxList.push(x.id));
     }
   }
 
@@ -342,7 +326,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   createEvent() {
-    this.dialog.open(EventsAddComponent, { disableClose: true, data: this.selectedCheckBoxList });
+    this.dialog.open(EventsAddComponent, { disableClose: true, data: { list: this.selectedCheckBoxList, useOrgas: false }});
   }
 
   getOrganization(id: number): string {

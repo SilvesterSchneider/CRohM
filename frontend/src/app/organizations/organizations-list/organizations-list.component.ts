@@ -12,6 +12,7 @@ import { JwtService } from 'src/app/shared/jwt.service';
 import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
+import { EventsAddComponent } from 'src/app/events/events-add/events-add.component';
 
 @Component({
 	selector: 'app-organizations-list',
@@ -228,11 +229,15 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		this.isAllSelected = !this.isAllSelected;
 		this.selectedCheckBoxList = new Array<number>();
 		if (this.isAllSelected) {
-			this.allOrganizations.forEach(x => this.selectedCheckBoxList.push(x.id));
+			this.dataSource.filteredData.forEach(x => this.selectedCheckBoxList.push(x.id));
 		}
 	}
 
 	isSelectionChecked(id: number) {
 		return this.selectedCheckBoxList.find(x => x === id) != null;
+	}
+
+	createEvent() {
+		this.dialog.open(EventsAddComponent, { disableClose: true, data: { list: this.selectedCheckBoxList, useOrgas: true }});
 	}
 }
