@@ -68,10 +68,10 @@ namespace ModelLayer.Helper
         {
             foreach (ParticipatedDto part in participatedNew)
             {
-                if (part.WasInvited)
+                if (part.EventStatus == ParticipatedStatus.INVITED)
                 {
                     Participated partToCheck = participatedOld.FirstOrDefault(a => a.ObjectId == part.ObjectId && a.ModelType == part.ModelType);
-                    if (partToCheck == null || !partToCheck.WasInvited)
+                    if (partToCheck == null || partToCheck.EventStatus != ParticipatedStatus.INVITED)
                     {
                         string name = string.Empty;
                         if (part.ModelType == MODEL_TYPE.CONTACT)
@@ -301,7 +301,7 @@ namespace ModelLayer.Helper
                 {
                     listCreation.Add(GetNewModificationEntry(contacts.FirstOrDefault(b => b.ContactId == id).Contact.Name, string.Empty, eventId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, usernameOfModification, MODIFICATION.CREATED));
                 }
-                else if (!participated.FirstOrDefault(a => a.ObjectId == id).WasInvited)
+                else if (participated.FirstOrDefault(a => a.ObjectId == id).EventStatus != ParticipatedStatus.INVITED)
                 {
                     listCreation.Add(GetNewModificationEntry(contacts.FirstOrDefault(b => b.ContactId == id).Contact.Name, string.Empty, eventId, MODEL_TYPE.EVENT, DATA_TYPE.INVITATION, usernameOfModification, MODIFICATION.MODIFIED));
                 }

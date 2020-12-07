@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   ContactDto, HistoryElementType, ModificationEntryDto, ModificationEntryService,
-  MODEL_TYPE, UserDto, GenderTypes, ContactService, HistoryElementDto, EventDto
+  MODEL_TYPE, UserDto, GenderTypes, ContactService, HistoryElementDto, EventDto, ParticipatedStatus
 } from '../../shared/api-generated/api-generated';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
@@ -108,8 +108,8 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   }
 
   eventNotParticipated(element: EventDto): boolean {
-    return !!element.participated && !element.participated?.some(part => part.modelType ===
-       MODEL_TYPE.CONTACT && part.objectId === this.contact.id && part.hasParticipated);
+    return !!element.participated && element.participated?.some(part => part.modelType ===
+       MODEL_TYPE.CONTACT && part.objectId === this.contact.id && !part.hasParticipated);
   }
 
   isLocalPhone(element: HistoryElementDto): boolean {

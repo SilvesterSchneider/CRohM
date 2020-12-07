@@ -112,7 +112,6 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     return !this.eventsForm.pristine;
   }
 
-
   ngOnInit() {
     this.eventsForm = this.fb.group({
       name: ['', Validators.required],
@@ -123,33 +122,35 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
       location: ['']
     }, { validator: MyAwesomeRangeValidator });  // Einbau des Validators der Start/Ende validiert);
 
-    this.contactService.getAll().subscribe(contacts => {
-      this.filteredItems = contacts.map(contact => {
-        return {
-          objectId: contact.id,
-          name: contact.name,
-          preName: contact.preName,
-          selected: false,
-          modelType: MODEL_TYPE.CONTACT,
-          participated: false,
-          wasInvited: false
-        };
-      });
-
-      this.orgaService.get().subscribe(organisations => {
-        this.filteredItems.concat(organisations.map(orga => {
-          return {
-            objectId: orga.id,
-            name: orga.name,
-            preName: orga.description,
+    this.contactService.getAll().subscribe(y => {
+      y.forEach(x => {
+        this.filteredItems.push(
+          {
+            objectId: x.id,
+            name: x.name,
+            preName: x.preName,
             selected: false,
-            modelType: MODEL_TYPE.ORGANIZATION,
+            modelType: MODEL_TYPE.CONTACT,
             participated: false,
             wasInvited: false
-          };
-        }));
-
-        if (this.preselectedContacts?.length > 0) {
+          }
+        );
+      });
+      this.orgaService.get().subscribe(a => {
+        a.forEach(b => {
+          this.filteredItems.push(
+            {
+              objectId: b.id,
+              name: b.name,
+              preName: b.description,
+              selected: false,
+              modelType: MODEL_TYPE.ORGANIZATION,
+              participated: false,
+              wasInvited: false
+            }
+          );
+        });
+        if (this.preselectedContacts != null && this.preselectedContacts.length > 0) {
           this.preselectedContacts.forEach(s => {
             const cont: EventContactConnection = this.filteredItems.find(z => z.objectId === s && z.modelType === MODEL_TYPE.CONTACT);
             if (cont != null) {
@@ -283,7 +284,7 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
         eventToSave.organizations.push(x.objectId);
       }
     });
-    this.eventService.post(eventToSave).subscribe(() => this.dialogRef.close());
+    this.eventService.post(eventToSave).subscribe(() => this.dialogRef.close({save: true}));
   }
 
   exit() {

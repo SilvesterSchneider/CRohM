@@ -52,22 +52,15 @@
             <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
                 {{'common.selectAll' | translate}}
             </mat-checkbox>
-        </mat-option>
-        <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
-            <div (click)="optionClicked($event, item);">
-                <mat-checkbox [checked]="item.selected" (change)="toggleSelection(item)"
-                    (click)="$event.stopPropagation()">
-                    {{ item.preName + ' ' + item.name }}
-                </mat-checkbox>
-            </div>
-        </mat-option>
-    </mat-autocomplete>
-    <div mat-dialog-actions align="end" class="margin">
-        <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="exit()">
-            {{'common.cancel' | translate}}
-        </button>
-        <button mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit"
-            [disabled]="!eventsForm.valid" (click)="saveValues()">
-            {{'common.save' | translate}}
-        </button>
-    </div>
+</div>
+</mat-option>
+</mat-autocomplete>
+<div mat-dialog-actions align="end" class="margin">
+    <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="exit()">
+        {{'common.cancel' | translate}}
+    </button>
+    <button mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit"
+        [disabled]="!eventsForm.valid" (click)="saveValues()">
+        {{'common.save' | translate}}
+    </button>
+</div>

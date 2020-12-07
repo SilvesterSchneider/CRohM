@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/material.module';
 import { EventsInfoComponent } from './events-info/events-info.component';
 import { EventsInvitationComponent } from './events-invitation/events-invitation.component';
+import { ConfirmationInvitationDialogComponent } from './confirmation-invitation-dialog/confirmation-invitation-dialog.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { EventsInvitationComponent } from './events-invitation/events-invitation
     EventsDetailComponent,
     EventsAddComponent,
     EventsInfoComponent,
-    EventsInvitationComponent
+    EventsInvitationComponent,
+    ConfirmationInvitationDialogComponent
   ],
 })
 export class EventsModule { }
