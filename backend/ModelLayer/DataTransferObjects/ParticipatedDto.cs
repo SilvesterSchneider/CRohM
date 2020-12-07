@@ -10,7 +10,7 @@ namespace ModelLayer.DataTransferObjects
         public long Id { get; set; }
         public MODEL_TYPE ModelType { get; set; }
         public long ObjectId { get; set; }
+        public ParticipatedStatus EventStatus { get; set; } = ParticipatedStatus.NOT_INVITED;
         public bool HasParticipated { get; set; }
-        public bool WasInvited { get; set; }
     }
 }

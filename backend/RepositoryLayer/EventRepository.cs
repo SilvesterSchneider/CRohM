@@ -84,8 +84,8 @@ namespace RepositoryLayer
             eventNew.Time = eventToCreate.Time;
             eventNew.Description = eventToCreate.Description;
             eventNew.Location = eventToCreate.Location;
-            eventToCreate.Contacts.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, WasInvited = false, ModelType = MODEL_TYPE.CONTACT }));
-            eventToCreate.Organizations.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, WasInvited = false, ModelType = MODEL_TYPE.ORGANIZATION }));
+            eventToCreate.Contacts.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, EventStatus = ParticipatedStatus.NOT_INVITED, ModelType = MODEL_TYPE.CONTACT }));
+            eventToCreate.Organizations.ForEach(x => eventNew.Participated.Add(new Participated() { ObjectId = x, HasParticipated = false, EventStatus = ParticipatedStatus.NOT_INVITED, ModelType = MODEL_TYPE.ORGANIZATION }));
             return await CreateAsync(eventNew);
         }
 
@@ -191,12 +191,12 @@ namespace RepositoryLayer
                     Participated participated = eventExistent.Participated.FirstOrDefault(y => y.Id == partNew.Id && partNew.Id > 0 && y.ModelType == partNew.ModelType);
                     if (participated != null)
                     {
+                        participated.EventStatus = partNew.EventStatus;
                         participated.HasParticipated = partNew.HasParticipated;
-                        participated.WasInvited = partNew.WasInvited;
-                    }
-                    else
+                    } 
+					else
                     {
-                        eventExistent.Participated.Add(new Participated() { ObjectId = partNew.ObjectId, HasParticipated = partNew.HasParticipated, WasInvited = partNew.WasInvited, ModelType = partNew.ModelType });
+                        eventExistent.Participated.Add(new Participated() { HasParticipated = partNew.HasParticipated, ObjectId = partNew.ObjectId, EventStatus = partNew.EventStatus, ModelType = partNew.ModelType });
                     }
                 }
 

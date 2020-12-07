@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ModelLayer;
 
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    partial class CrmContextModelSnapshot : ModelSnapshot
+    [Migration("20201206121647_ram_kal13_init")]
+    partial class ram_kal13_init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -501,6 +503,9 @@ namespace ModelLayer.Migrations
                     b.Property<long?>("EventId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("EventStatus")
+                        .HasColumnType("int");
+
                     b.Property<bool>("HasParticipated")
                         .HasColumnType("bit");
 
@@ -512,9 +517,6 @@ namespace ModelLayer.Migrations
 
                     b.Property<long>("ObjectId")
                         .HasColumnType("bigint");
-
-                    b.Property<bool>("WasInvited")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -555,7 +557,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "e592f758-dc59-4f9e-9479-2c4197f9237b",
+                            ConcurrencyStamp = "efd057fc-d8e8-4e9e-ae27-575673fe01f6",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
