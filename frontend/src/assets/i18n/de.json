@@ -214,7 +214,7 @@
     },
     "validation": {
         "nameRequired": "Name des Kontakteintrags erforderlich!",
-        "mailPhoneRequired": "Telefonnummer oder E-Mail Adresse erforderlich!"
+        "mailPhoneRequired": "Wert erforderlich!"
     },
     "calendar": {
         "title": "Kalender",
