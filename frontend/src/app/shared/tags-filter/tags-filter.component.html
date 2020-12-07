@@ -10,7 +10,7 @@
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
         </mat-chip>
         <input id="tagInput"
-            placeholder="Filtern mit Tags"
+            placeholder="{{'common.filterWithTags' | translate}}"
             #tagInput
             [matAutocomplete]="auto"
             #inputTrigger

@@ -1,0 +1,147 @@
+<mat-toolbar>
+  <mat-toolbar-row class="tabrow">
+    <span>{{'calendar.title' | translate}}</span>
+    <span class="spacer"></span>
+    <div class="column">
+      <div class="btn-group">
+        <div
+          class="btn btn-primary"
+          mwlCalendarPreviousView
+          [view]="view"
+          [(viewDate)]="viewDate"
+          (viewDateChange)="closeOpenMonthViewDay()"
+        >
+        {{'calendar.back' | translate}}
+        </div>
+        <div
+          class="btn btn-outline-secondary"
+          mwlCalendarToday
+          [(viewDate)]="viewDate"
+        >
+        {{'calendar.today' | translate}}
+        </div>
+        <div
+          class="btn btn-primary"
+          mwlCalendarNextView
+          [view]="view"
+          [(viewDate)]="viewDate"
+          (viewDateChange)="closeOpenMonthViewDay()"
+        >
+        {{'calendar.next' | translate}}
+        </div>
+      </div>
+    </div>
+    <span class="spacer"></span>
+    <div class="column">
+      <h3 *ngIf="isGerman()">{{ viewDate | calendarDate:(view + 'ViewTitle'):'de' }}</h3>
+      <h3 *ngIf="!isGerman()">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    </div>
+    <span class="spacer"></span>
+    <div class="column">
+      <div class="btn-group">
+        <div
+          class="btn btn-primary"
+          (click)="setView(CalendarView.Month)"
+          [class.active]="view === CalendarView.Month"
+        >
+        {{'calendar.month' | translate}}
+        </div>
+        <div
+          class="btn btn-primary"
+          (click)="setView(CalendarView.Week)"
+          [class.active]="view === CalendarView.Week"
+        >
+        {{'calendar.week' | translate}}
+        </div>
+        <div
+          class="btn btn-primary"
+          (click)="setView(CalendarView.Day)"
+          [class.active]="view === CalendarView.Day"
+        >
+        {{'calendar.day' | translate}}
+        </div>
+      </div>
+    </div>
+    <span class="spacer"></span>
+    <div class="column">
+      <button id="addEventButton" class="button" button="submit" [disabled]="!permissionAdd" mat-mini-fab
+        color="primary" (click)="addEvent()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+<ng-template #customCellTemplate let-day="day" let-locale="translate" 
+    let-tooltipPlacement="tooltipPlacement"
+    let-highlightDay="highlightDay" let-unhighlightDay="unhighlightDay" 
+    let-eventClicked="eventClicked"
+    let-tooltipTemplate="tooltipTemplate" 
+    let-tooltipAppendToBody="tooltipAppendToBody" let-tooltipDelay="tooltipDelay">
+    <div class="cal-cell-top">
+      <span>
+        {{'calendar.kw' | translate}} {{getKw(day.date)}}
+      </span>
+        <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">
+          {{ day.badgeTotal }}</span>
+        <span class="cal-day-number">
+        {{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+    </div>
+    <div *ngIf="day.events.length > 0">
+        <div *ngFor="let event of day.events; index as i">
+          <ng-template *ngIf="i < 4; then showEventsBlock">
+          </ng-template>
+          <ng-template *ngIf="i === 4; then showMoreBlock">
+          </ng-template>
+          <ng-template *ngIf="i > 4 then showNothing">
+          </ng-template>
+            <ng-template #showEventsBlock>
+                <div class="cal-events" [ngStyle]="{ backgroundColor: event.color?.primary }"
+                [ngClass]="event?.cssClass" (mwlClick)="eventClicked.emit({event: event})" [mwlCalendarTooltip]="event.title | calendarEventTitle: 'monthTooltip':event"
+                [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="event" [tooltipTemplate]="tooltipTemplate"
+                [tooltipAppendToBody]="tooltipAppendToBody" [tooltipDelay]="tooltipDelay">
+                    {{event.title}}
+                </div>
+            </ng-template>
+            <ng-template #showMoreBlock>
+              <div>...</div>
+            </ng-template>
+            <ng-template #showNothing>
+            </ng-template>
+        </div>
+    </div>
+</ng-template>
+
+<div class="cal">
+  <div [ngSwitch]="view">
+    <mwl-calendar-month-view
+      *ngSwitchCase="CalendarView.Month"
+      [viewDate]="viewDate"
+      [events]="events"
+      [locale]="getLocale()"
+      [refresh]="refresh"
+      [cellTemplate]="customCellTemplate"
+      [activeDayIsOpen]="activeDayIsOpen"
+      (dayClicked)="dayClicked($event.day)"
+      (eventClicked)="handleEvent('Clicked', $event.event)"
+    >
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view
+      *ngSwitchCase="CalendarView.Week"
+      [viewDate]="viewDate"
+      [events]="events"
+      [locale]="getLocale()"
+      [refresh]="refresh"
+      (eventClicked)="handleEvent('Clicked', $event.event)"
+    >
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view
+      *ngSwitchCase="CalendarView.Day"
+      [viewDate]="viewDate"
+      [events]="events"
+      [locale]="getLocale()"
+      [refresh]="refresh"
+      (eventClicked)="handleEvent('Clicked', $event.event)"
+    >
+    </mwl-calendar-day-view>
+  </div>
+</div>

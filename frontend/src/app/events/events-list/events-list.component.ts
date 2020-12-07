@@ -132,7 +132,7 @@ export class EventsListComponent implements OnInit {
 
   deleteEvent(id: number) {
     const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
-      data: 'Event',
+      data: 'event.event',
       disableClose: true
     });
 
@@ -236,12 +236,16 @@ export class EventsListComponent implements OnInit {
   }
 
   addDummyEvent() {
+    const date = new Date(Date.now());
+    date.setDate(date.getDate() + 1);
     this.service.post({
       name: 'Veranstaltung' + this.length,
       end: '20:' + (this.length + 1) % 59,
-      contacts: [],
-      date: '2020-' + (new Date(Date.now()).getMonth() + 2) % 12 + '-' + (this.length + 1) % 30,
-      start: '20:' + this.length % 59
+      //date: '2020-' + (new Date(Date.now()).getMonth() + 2) % 12 + '-' + (this.length + 1) % 30,
+      start: '20:' + this.length % 59,
+      date: date.getFullYear().toString() + '-' + (date.getMonth() + 1) + '-' + date.getDate().toString(),
+      contacts: new Array<number>(),
+      organizations: new Array<number>()
     }).subscribe(x => this.init());
   }
 

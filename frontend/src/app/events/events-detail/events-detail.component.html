@@ -3,42 +3,56 @@
         <div class="column">
             <div class="col-md-12">
                 <h3>
-                    Veranstaltung bearbeiten
+                    {{'event.edit' | translate}}
                 </h3>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input id="eventName" matInput placeholder="Bezeichnung" formControlName="name">
+                    <input id="eventName" matInput placeholder="{{'common.label' | translate}}" formControlName="name">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput [matDatepicker]="picker1" placeholder="Datum" formControlName="date">
+                    <textarea matInput placeholder="{{'common.description' | translate}}"
+                        formControlName="description"></textarea>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput [matDatepicker]="picker1" placeholder="{{'common.date' | translate}}"
+                        formControlName="date">
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input type="time" matInput placeholder="Beginn" formControlName="start">
+                    <input type="time" matInput placeholder="{{'common.time' | translate}}" formControlName="time">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input type="time" matInput placeholder="Ende" formControlName="end">
+                    <input type="number" matInput placeholder="{{'common.durationHours' | translate}}"
+                        formControlName="duration">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input type="text" matInput placeholder="{{'common.location' | translate }}"
+                        formControlName="location">
                 </mat-form-field>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="text">
-            Eingeladen
+            {{'event.invited' | translate}}
         </div>
         <div class="text">
-            Hat teilgenommen
+            {{'event.participated' | translate}}
         </div>
         <div class="text">
-            Teilnehmer
+            {{'event.participant' | translate}}
         </div>
     </div>
     <div class="row">
@@ -55,14 +69,14 @@
                 {{ item.preName + ' ' + item.name }}
             </mat-chip>
             <input id="textInput" class="autoComplete" type="text" #inputTrigger
-                placeholder="Kontakte/Organisationen einladen" matInput [matAutocomplete]="autoComplete"
+                placeholder="{{'event.invite' | translate}}" matInput [matAutocomplete]="autoComplete"
                 [formControl]="itemControl" [matChipInputFor]="chipList">
         </mat-chip-list>
         <mat-autocomplete #autoComplete="matAutocomplete">
             <mat-option>
                 <mat-checkbox id="contactInput" [checked]="isAllSelected" (change)="toggleSelectAll()"
                     (click)="$event.stopPropagation()">
-                    Alle selektieren
+                    {{'common.selectAll' | translate}}
                 </mat-checkbox>
             </mat-option>
             <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
@@ -81,9 +95,9 @@
             {{ item.name }}
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
         </mat-chip>
-        <input placeholder="Neuer tag..." #tagInput [matAutocomplete]="auto" #inputTrigger [matChipInputFor]="chipList"
-            [formControl]="tagsControl" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (keyup.enter)="addTag($event)">
+        <input placeholder="{{'common.newTag' | translate}}..." #tagInput [matAutocomplete]="auto" #inputTrigger
+            [matChipInputFor]="chipList" [formControl]="tagsControl"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup.enter)="addTag($event)">
     </mat-chip-list>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
         <mat-option *ngFor="let item of filteredTagsObservable | async" [value]="item">
@@ -94,18 +108,18 @@
 <mat-dialog-actions mat-dialog-actions align="end">
     <div class="column">
         <div mat-dialog-actions align="end" class="marginTop">
-            <button id="invitationButton" mat-raised-button color="primary" title="Einladung"
+            <button id="invitationButton" mat-raised-button color="primary" title="{{'event.invitation' | translate}}"
                 (click)="callInvitation()">
-                Einladung
+                {{'event.invitation' | translate}}
             </button>
         </div>
         <div mat-dialog-actions align="end" class="marginTop">
-            <button mat-raised-button color="primary" title="Verwerfen" (click)="close()">
-                Verwerfen
+            <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="close()">
+                {{'common.cancel' | translate}}
             </button>
-            <button mat-raised-button color="primary" title="Speichern" type="submit" [disabled]="!eventsForm.valid"
-                (click)="saveValues()">
-                Speichern
+            <button mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit"
+                [disabled]="!eventsForm.valid" (click)="saveValues()">
+                {{'common.save' | translate}}
             </button>
         </div>
     </div>

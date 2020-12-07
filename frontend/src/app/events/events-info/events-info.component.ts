@@ -29,11 +29,9 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   columnsContacts = ['wasInvited', 'participated', 'prename', 'name'];
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
-  constructor(
-    public dialogRef: MatDialogRef<EventsInfoComponent>,
+  constructor(public dialogRef: MatDialogRef<EventsInfoComponent>,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA)
-    public event: EventDto,
+    @Inject(MAT_DIALOG_DATA) public event: EventDto,
     private fb: FormBuilder,
     private modService: ModificationEntryService
   ) {
@@ -58,45 +56,49 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   }
 
   ngOnInit() {
-    this.eventsForm = this.createEventsForm();
-    if (this.event.contacts != null) {
-      this.event.contacts.forEach(x => {
-        this.contactsOrganizations.push({
-          id: x.id,
-          preName: x.preName,
-          name: x.name,
-          participated: false,
-          wasInvited: false,
-          modelType: MODEL_TYPE.CONTACT
-        });
-      });
-    }
-    if (this.event.organizations != null) {
-      this.event.organizations.forEach(x => {
-        this.contactsOrganizations.push({
-          id: x.id,
-          preName: x.name,
-          name: x.description,
-          participated: false,
-          wasInvited: false,
-          modelType: MODEL_TYPE.ORGANIZATION
-        });
-      });
-    }
-    if (this.event.participated != null) {
-      this.event.participated.forEach(x => {
-        let cont: ContactOrganizationDtoExtended = null;
-        if (x.modelType === MODEL_TYPE.CONTACT) {
-          cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.CONTACT && y.id === x.objectId);
-        } else {
-          cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.ORGANIZATION && y.id === x.objectId);
-        }
-        if (cont != null) {
-          cont.participated = x.hasParticipated;
-          cont.wasInvited = x.wasInvited;
-        }
-      });
-    }
+    this.eventsForm = this.fb.group({
+      name: [''],
+      date: [''],
+      start: [''],
+      end: [''],
+      description: [''],
+      location: ['']
+    });
+
+    this.contactsOrganizations.concat(this.event.contacts?.map(x => {
+      return {
+        id: x.id,
+        preName: x.preName,
+        name: x.name,
+        participated: false,
+        wasInvited: false,
+        modelType: MODEL_TYPE.CONTACT
+      };
+    }));
+
+    this.contactsOrganizations.concat(this.event.organizations?.map(x => {
+      return {
+        id: x.id,
+        preName: x.name,
+        name: x.description,
+        participated: false,
+        wasInvited: false,
+        modelType: MODEL_TYPE.ORGANIZATION
+      };
+    }));
+
+    this.event.participated?.forEach(x => {
+      let cont: ContactOrganizationDtoExtended = null;
+      if (x.modelType === MODEL_TYPE.CONTACT) {
+        cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.CONTACT && y.id === x.objectId);
+      } else {
+        cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.ORGANIZATION && y.id === x.objectId);
+      }
+      if (cont != null) {
+        cont.participated = x.hasParticipated;
+        cont.wasInvited = x.wasInvited;
+      }
+    });
     // Load initial modification entries
     this.loadModifications(0, 5);
     this.eventsForm.patchValue(this.event);
