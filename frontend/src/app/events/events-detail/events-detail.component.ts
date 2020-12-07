@@ -491,46 +491,12 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
         const contact = this.contacts.find(y => y.id === x.objectId);
         if (contact != null) {
           contacts.push(contact);
-          const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-            MODEL_TYPE.CONTACT);
-          if (partExistend == null) {
-            participants.push(
-              {
-                objectId: x.objectId,
-                hasParticipated: x.participated,
-                wasInvited: x.wasInvited,
-                id: 0,
-                modelType: MODEL_TYPE.CONTACT
-              }
-            );
-          } else {
-            partExistend.hasParticipated = x.participated;
-            partExistend.wasInvited = x.wasInvited;
-            participants.push(partExistend);
-          }
           this.addParticipatedStates(MODEL_TYPE.CONTACT, saveNewValues, participants, x);
         }
       } else if (x.modelType === MODEL_TYPE.ORGANIZATION) {
         const orga = this.orgas.find(y => y.id === x.objectId);
         if (orga != null) {
           organizations.push(orga);
-          const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-            MODEL_TYPE.ORGANIZATION);
-          if (partExistend == null) {
-            participants.push(
-              {
-                objectId: x.objectId,
-                hasParticipated: x.participated,
-                wasInvited: x.wasInvited,
-                id: 0,
-                modelType: MODEL_TYPE.ORGANIZATION
-              }
-            );
-          } else {
-            partExistend.hasParticipated = x.participated;
-            partExistend.wasInvited = x.wasInvited;
-            participants.push(partExistend);
-          }
           this.addParticipatedStates(MODEL_TYPE.ORGANIZATION, saveNewValues, participants, x);
         }
       }
@@ -539,10 +505,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.event.organizations = organizations;
     this.event.participated = participants;
     this.event.tags = this.selectedTags;
-    this.eventService.put(this.event, this.event.id).subscribe(() => {
-      this.dialogRef.close({ save: true });
-      this.eventService.put(this.event, this.event.id).subscribe(x => this.dialogRef.close({ save: true }));
-    }
+    this.eventService.put(this.event, this.event.id).subscribe(x => this.dialogRef.close({ save: true }));
   }
 
   addParticipatedStates(modelType: MODEL_TYPE, saveNewValues: boolean, participants: ParticipatedDto[], x: EventContactConnection) {

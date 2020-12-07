@@ -52,9 +52,9 @@
             <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
                 {{'common.selectAll' | translate}}
             </mat-checkbox>
+        </mat-option>
+    </mat-autocomplete>
 </div>
-</mat-option>
-</mat-autocomplete>
 <div mat-dialog-actions align="end" class="margin">
     <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="exit()">
         {{'common.cancel' | translate}}

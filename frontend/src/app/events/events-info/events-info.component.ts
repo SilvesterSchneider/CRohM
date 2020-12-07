@@ -1,3 +1,4 @@
+
 import { Component, OnInit, Inject } from '@angular/core';
 import { EventDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, DATA_TYPE, ParticipatedStatus } from '../../shared/api-generated/api-generated';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -58,49 +59,6 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   }
 
   ngOnInit() {
-    this.eventsForm = this.fb.group({
-      name: [''],
-      date: [''],
-      start: [''],
-      end: [''],
-      description: [''],
-      location: ['']
-    });
-
-    this.contactsOrganizations.concat(this.event.contacts?.map(x => {
-      return {
-        id: x.id,
-        preName: x.preName,
-        name: x.name,
-        participated: false,
-        wasInvited: false,
-        modelType: MODEL_TYPE.CONTACT
-      };
-    }));
-
-    this.contactsOrganizations.concat(this.event.organizations?.map(x => {
-      return {
-        id: x.id,
-        preName: x.name,
-        name: x.description,
-        participated: false,
-        wasInvited: false,
-        modelType: MODEL_TYPE.ORGANIZATION
-      };
-    }));
-
-    this.event.participated?.forEach(x => {
-      let cont: ContactOrganizationDtoExtended = null;
-      if (x.modelType === MODEL_TYPE.CONTACT) {
-        cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.CONTACT && y.id === x.objectId);
-      } else {
-        cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.ORGANIZATION && y.id === x.objectId);
-      }
-      if (cont != null) {
-        cont.participated = x.hasParticipated;
-        cont.wasInvited = x.wasInvited;
-      }
-    });
     this.eventsForm = this.createEventsForm();
     if (this.event.contacts != null) {
       this.event.contacts.forEach(x => {
@@ -148,6 +106,15 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     this.eventsForm.get('end').patchValue(this.formatTime(this.event.end));
   }
 
+  private createEventsForm(): FormGroup {
+    return this.fb.group({
+      name: [''],
+      date: [''],
+      start: [''],
+      end: ['']
+    });
+  }
+
   formatDate(date: string): any {
     const d = new Date(date);
     let days = '' + (d.getDate());
@@ -173,15 +140,6 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
       minutes = '0' + minutes;
     }
     return [hours, minutes].join(':');
-  }
-
-  private createEventsForm(): FormGroup {
-    return this.fb.group({
-      name: [''],
-      date: [''],
-      start: [''],
-      end: ['']
-    });
   }
 
   onPaginationChangedModification(event: PageEvent) {
