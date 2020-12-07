@@ -393,8 +393,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 
   isDateOk(): boolean {
     const dateOfEvent = new Date(this.event.date);
-    dateOfEvent.setHours(new Date(this.event.time).getHours());
-    dateOfEvent.setMinutes(new Date(this.event.time).getMinutes());
+    dateOfEvent.setHours(new Date(this.event.start).getHours());
+    dateOfEvent.setMinutes(new Date(this.event.start).getMinutes());
     const dateNow = new Date(Date.now());
     return (dateNow.getFullYear() > dateOfEvent.getFullYear()) ||
       (dateNow.getFullYear() === dateNow.getFullYear() &&
@@ -543,17 +543,18 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       this.dialogRef.close({ save: true });
       this.eventService.put(this.event, this.event.id).subscribe(x => this.dialogRef.close({ save: true }));
     }
+  }
 
   addParticipatedStates(modelType: MODEL_TYPE, saveNewValues: boolean, participants: ParticipatedDto[], x: EventContactConnection) {
-      const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-        modelType);
-      let newState = ParticipatedStatus.NOT_INVITED;
-      let participatedState = false;
-      if(saveNewValues) {
-        newState = x.eventStatus;
-        participatedState = x.participated;
-      }
-    if(partExistend == null) {
+    const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
+      modelType);
+    let newState = ParticipatedStatus.NOT_INVITED;
+    let participatedState = false;
+    if (saveNewValues) {
+      newState = x.eventStatus;
+      participatedState = x.participated;
+    }
+    if (partExistend == null) {
       participants.push(
         {
           objectId: x.objectId,
