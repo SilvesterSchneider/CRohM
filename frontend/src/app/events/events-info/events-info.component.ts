@@ -64,29 +64,27 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
       description: [''],
       location: ['']
     });
-
-    this.contactsOrganizations.concat(this.event.contacts?.map(x => {
-      return {
+    this.event.contacts?.forEach(x => {
+      this.contactsOrganizations.push({
         id: x.id,
         preName: x.preName,
         name: x.name,
         participated: false,
         wasInvited: false,
         modelType: MODEL_TYPE.CONTACT
-      };
-    }));
-
-    this.contactsOrganizations.concat(this.event.organizations?.map(x => {
-      return {
+      });
+    });
+    this.event.organizations?.forEach(x => {
+      this.contactsOrganizations.push({
         id: x.id,
         preName: x.name,
         name: x.description,
         participated: false,
         wasInvited: false,
         modelType: MODEL_TYPE.ORGANIZATION
-      };
-    }));
-
+      });
+    });
+   
     this.event.participated?.forEach(x => {
       let cont: ContactOrganizationDtoExtended = null;
       if (x.modelType === MODEL_TYPE.CONTACT) {
