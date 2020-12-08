@@ -96,6 +96,10 @@
                         (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" color="primary">
                         <mat-icon title="{{'common.call' | translate}}" class="icon">phone</mat-icon>
                     </button>
+                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
+                        (click)="sendMail(element)" color="primary">
+                        <mat-icon title="{{'contact.mail' | translate}}" class="icon">mail</mat-icon>
+                    </button>
                     <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteContact(element)"
                         color="primary">
                         <mat-icon title="{{'contact.delete' | translate}}" class="icon">delete</mat-icon>
