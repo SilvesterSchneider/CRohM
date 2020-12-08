@@ -6,6 +6,8 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using static ModelLayer.Models.Contact;
 using ModelLayer.DataTransferObjects;
+using ModelLayer.Models;
+using System.Runtime.CompilerServices;
 
 namespace ServiceLayer
 {
@@ -29,10 +31,14 @@ namespace ServiceLayer
         bool CreateAndSendInvitationMail(string mail, string name, string mailContent);
 
         Task<bool> SendMailToAddress(string subject, string address, string mailContent);
+
+        Task<bool> SendEventDeletedMessage(List<EventContact> contactMails, List<EventOrganization> orgas);
     }
 
     public class MailService : IMailService
     {
+        private const bool USE_TESTMODE = false;
+        private const string BASE_PATH_FOR_TESTMAIL_CREATION = "C:\\Mails";
         private static string STARTFIELD = "<Anrede>";
         private static string STARTFIELDEN = "<title>";
         private static string PRENAMEFIELD = "<Vorname>";
@@ -60,6 +66,11 @@ namespace ServiceLayer
             STARTFIELDEN + " " + PRENAMEFIELDEN + " " + NAMEFIELDEN +
             "\rWe cordially invite you to our event \"" + EVENTNAMEFIELD +
             "\" on " + EVENTDATEFIELD + " at " + EVENTTIMEFIELD + ".\rWe look forward to your appearance.\rNuremberg Institute of Technology";
+        private static string EVENT_CANCELATION_CONTENT = "<p>" + STARTFIELD + NAMEFIELD + ", </p>" +
+            "<p> leider musste die Veranstaltung '" + EVENTNAMEFIELD + "', </p>" +
+            "<p> welche am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr stattfinden sollte, </p>" +
+            "<p> abgesagt werden.</p>";
+        private static string EVENT_CANCELATION_SUBJECT = "Absage einer Veranstaltung der technischen Hochschule";
 
         public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
         {
@@ -185,58 +196,77 @@ namespace ServiceLayer
 
         private bool SendMail(string subject, string body, string emailAddressRecipient, Stream attachment, string attachmentType)
         {
-            try
+            if (!USE_TESTMODE)
             {
-                MailMessage msg = new MailMessage();
-                string[] str = new string[] { emailAddressRecipient };
-                msg.IsBodyHtml = true;
-                //Empfänger hinzufügen
-                foreach (string empf in str)
+                try
                 {
-                    msg.To.Add(new MailAddress(empf));
+                    MailMessage msg = new MailMessage();
+                    string[] str = new string[] { emailAddressRecipient };
+                    msg.IsBodyHtml = true;
+                    //Empfänger hinzufügen
+                    foreach (string empf in str)
+                    {
+                        msg.To.Add(new MailAddress(empf));
+                    }
+                    msg.From = new MailAddress("crohm_nuernberg@hotmail.com", "CRMS-Team");
+                    msg.Subject = subject;
+                    msg.Body = body;
+
+                    if (attachment != null)
+                        msg.Attachments.Add(new Attachment(attachment, attachmentType));
+
+                    SmtpClient client = new SmtpClient();
+                    client.UseDefaultCredentials = false;
+
+                    client.Credentials = new System.Net.NetworkCredential("crohm_nuernberg@hotmail.com", "crohm202020");
+
+                    client.Port = 587;
+
+                    client.Host = "smtp.office365.com";
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.EnableSsl = true;
+                    client.Send(msg);
                 }
-                msg.From = new MailAddress("crohm_nuernberg@hotmail.com", "CRMS-Team");
-                msg.Subject = subject;
-                msg.Body = body;
-
-                if (attachment != null)
-                    msg.Attachments.Add(new Attachment(attachment, attachmentType));
-
-                SmtpClient client = new SmtpClient();
-                client.UseDefaultCredentials = false;
-
-                client.Credentials = new System.Net.NetworkCredential("crohm_nuernberg@hotmail.com", "crohm202020");
-
-                client.Port = 587;
-
-                client.Host = "smtp.office365.com";
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.EnableSsl = true;
-                client.Send(msg);
+                catch (Exception ex)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine(ex.Message);
+                    return false;
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine(ex.Message);
-                return false;
+                if (string.IsNullOrEmpty(emailAddressRecipient) || string.IsNullOrEmpty(body))
+                {
+                    return false;
+                }
+
+                string mailPath = BASE_PATH_FOR_TESTMAIL_CREATION + "\\" + emailAddressRecipient + ".txt";
+                if (!Directory.Exists(BASE_PATH_FOR_TESTMAIL_CREATION))
+                {
+                    Directory.CreateDirectory(BASE_PATH_FOR_TESTMAIL_CREATION);
+                }
+
+                if (!File.Exists(mailPath))
+                {
+                    File.Create(mailPath).Close();
+                }
+
+                if (attachment != null && attachmentType != null)
+                {
+                    body += "\r\n\r\n With Attachments!";
+                }
+
+                File.WriteAllText(mailPath, body);
             }
+            
             return true;
         }
 
         public bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender)
         {
-            string start = "Sehr geehrter Herr";
-            string genderEn = "Dear Mr ";
-            if (gender == GenderTypes.FEMALE)
-            {
-                start = "Sehr geehrte Frau";
-                genderEn = "Dear Ms ";
-            }
-            else if (gender == GenderTypes.DIVERS)
-            {
-                start = "Sehr geehrt";
-                genderEn = "Dear Mx ";
-            }
+            string start = GetGenderTitle(gender);
+            string genderEn = GetGenderTitleEnglish(gender);
             string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
             finishedcontent = finishedcontent.Replace(NAMEFIELDEN, name).Replace(STARTFIELDEN, genderEn).Replace(PRENAMEFIELDEN, preName);
             return SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, address, null, null);
@@ -279,6 +309,66 @@ namespace ServiceLayer
                 finishedcontent = finishedcontent.Replace(NAMEFIELDEN, string.Empty).Replace(PRENAMEFIELDEN, name);
             }
             return SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, mail, null, null);
+        }
+
+        public async Task<bool> SendEventDeletedMessage(List<EventContact> contactMails, List<EventOrganization> orgas)
+        {
+            bool ok = true;
+            foreach (EventContact contact in contactMails)
+            {
+                if (!await SendEventCancelInfo(contact.Contact.ContactPossibilities.Mail, GetGenderTitle(contact.Contact.Gender), contact.Contact.Name, contact.Event.Name, contact.Event.Date, contact.Event.Time)) {
+                    ok = false;
+                }
+            }
+
+            foreach (EventOrganization orga in orgas)
+            {
+                if (!await SendEventCancelInfo(orga.Organization.Contact.Mail, GetGenderTitle(GenderTypes.MALE), orga.Organization.Name, orga.Event.Name, orga.Event.Date, orga.Event.Time))
+                {
+                    ok = false;
+                }
+            }
+
+            return ok;
+        }
+
+        private string GetGenderTitle(GenderTypes gender)
+        {
+            string start = "Sehr geehrter Herr ";
+            if (gender == GenderTypes.FEMALE)
+            {
+                start = "Sehr geehrte Frau ";
+            }
+            else if (gender == GenderTypes.DIVERS)
+            {
+                start = "Sehr geehrt ";
+            }
+            return start;
+        }
+
+        private string GetGenderTitleEnglish(GenderTypes gender)
+        {
+            string start = "Dear mister ";
+            if (gender == GenderTypes.FEMALE)
+            {
+                start = "Dear misses ";
+            }
+            else if (gender == GenderTypes.DIVERS)
+            {
+                start = "Dear ";
+            }
+            return start;
+        }
+
+        private async Task<bool> SendEventCancelInfo(string mail, string beginning, string name, string eventName, DateTime date, DateTime time)
+        {
+            string content = EVENT_CANCELATION_CONTENT
+                .Replace(STARTFIELD, beginning)
+                .Replace(NAMEFIELD, name)
+                .Replace(EVENTNAMEFIELD, eventName)
+                .Replace(EVENTDATEFIELD, date.ToString("yyyy-MM-dd"))
+                .Replace(EVENTTIMEFIELD, time.ToString("hh:mm"));
+            return await Task.FromResult(SendMail(EVENT_CANCELATION_SUBJECT, content, mail, null, null));
         }
     }
 }

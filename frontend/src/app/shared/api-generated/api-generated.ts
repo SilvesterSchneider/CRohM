@@ -1615,17 +1615,21 @@ export class EventService {
     /**
      * @return successfully deleted
      */
-    delete(id: number): Observable<void> {
+    delete(id: number, sendMail: boolean): Observable<void> {
         let url_ = this.baseUrl + "/api/Event/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(sendMail);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json",
             })
         };
 

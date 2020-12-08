@@ -107,8 +107,10 @@ namespace RepositoryLayer
                 .Include(t => t.Tags)
                 .Include(y => y.Contacts)
                 .ThenInclude(z => z.Contact)
+                .ThenInclude(a => a.ContactPossibilities)
                 .Include(a => a.Organizations)
                 .ThenInclude(b => b.Organization)
+                .ThenInclude(a => a.Contact)
                 .Include(x => x.Participated)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
