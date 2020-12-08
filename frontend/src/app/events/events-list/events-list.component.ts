@@ -162,7 +162,7 @@ export class EventsListComponent implements OnInit {
 
   callEdit(id: number) {
     this.service.getById(id).subscribe(x => {
-      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, minWidth: '450px', height: '600px' });
+      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, minWidth: '450px', height: '800px' });
       dialogRef.afterClosed().subscribe(y => this.init());
     });
   }

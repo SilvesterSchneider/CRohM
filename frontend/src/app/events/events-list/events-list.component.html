@@ -7,7 +7,7 @@
             <mat-label>{{'common.search' | translate}}</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="{{'event.events' | translate }}...">
         </mat-form-field>
-        <mat-checkbox class="button" [checked]="checkboxSelected" title="{{'event.hidePast' | translate}}"
+        <mat-checkbox color="primary" class="button" [checked]="checkboxSelected" title="{{'event.hidePast' | translate}}"
             (change)="toggleSelection()">
             {{'event.hidePast' | translate}}
         </mat-checkbox>
