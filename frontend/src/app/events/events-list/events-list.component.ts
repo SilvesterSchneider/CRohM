@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ModuleWithComponentFactories } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EventService, ParticipatedDto, ContactDto, TagDto, OrganizationDto } from '../../shared/api-generated/api-generated';
+import { EventService, ParticipatedDto, ContactDto, TagDto, MailService, ParticipatedStatus, OrganizationDto } from '../../shared/api-generated/api-generated';
 import { EventDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { EventsAddComponent } from '../events-add/events-add.component';
@@ -13,6 +13,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
 import { BlockScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { DeletionConfirmationDialogComponent } from '../deletion-confirmation-dialog/deletion-confirmation-dialog.component';
+import { ConfirmDialogComponent, ConfirmDialogModel } from 'src/app/shared/form/confirmdialog/confirmdialog.component';
+import { EventsInvitationComponent } from '../events-invitation/events-invitation.component';
 
 export class EventDtoGroup implements EventDto {
   id: number;
@@ -54,7 +56,8 @@ export class EventsListComponent implements OnInit {
   constructor(
     private service: EventService,
     private dialog: MatDialog,
-    private jwt: JwtService) {
+    private jwt: JwtService,
+    private mailService: MailService) {
   }
 
   applyFilter(event: Event) {
@@ -112,7 +115,51 @@ export class EventsListComponent implements OnInit {
 
   addEvent() {
     const dialogRef = this.dialog.open(EventsAddComponent, { disableClose: true });
-    dialogRef.afterClosed().subscribe(x => this.init());
+    dialogRef.afterClosed().subscribe(x => {
+      this.init();
+      let lastEvent: EventDto = null;
+      if (x.save) {
+        const newEvent = this.events.subscribe(b => {
+          const sortedList = b.sort(this.getSortFunctionForNewestEvent);
+          lastEvent = sortedList[sortedList.length - 1];
+          if (lastEvent.contacts.length > 0 || lastEvent.organizations.length > 0) {
+            const data = new ConfirmDialogModel('event.sendInvitation', 'event.sendInvitation');
+            const diagSendInvitation = this.dialog.open(ConfirmDialogComponent, {data});
+            diagSendInvitation.afterClosed().subscribe(a => {
+              if (a) {
+                this.callInvitation(lastEvent);
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+  callInvitation(event: EventDto) {
+    const dialogRef = this.dialog.open(EventsInvitationComponent, { data: event, disableClose: true,
+       minWidth: '450px', minHeight: '400px' });
+    dialogRef.afterClosed().subscribe(x => {
+      if (x.send && x.text != null) {
+        const listOfContactIds: number[] = new Array<number>();
+        const listOfOrgaIds: number[] = new Array<number>();
+        event.contacts.forEach(a => listOfContactIds.push(a.id));
+        event.organizations.forEach(a => listOfOrgaIds.push(a.id));
+        this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text).subscribe();
+        event.participated.forEach(p => p.eventStatus = ParticipatedStatus.INVITED);
+        this.service.put(event, event.id).subscribe();
+      }
+    });
+  }
+
+  getSortFunctionForNewestEvent(a: EventDto, b: EventDto): number {
+    if (a.id === b.id) {
+      return 0;
+    } else if (a.id > b.id) {
+      return 1;
+    } else {
+      return -1;
+    }
   }
 
   callEdit(id: number) {

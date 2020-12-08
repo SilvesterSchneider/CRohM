@@ -9,6 +9,7 @@ import { MaterialModule } from '../shared/material.module';
 import { EventsInfoComponent } from './events-info/events-info.component';
 import { EventsInvitationComponent } from './events-invitation/events-invitation.component';
 import { DeletionConfirmationDialogComponent } from './deletion-confirmation-dialog/deletion-confirmation-dialog.component';
+import { ConfirmationInvitationDialogComponent } from './confirmation-invitation-dialog/confirmation-invitation-dialog.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { DeletionConfirmationDialogComponent } from './deletion-confirmation-dia
     EventsAddComponent,
     EventsInfoComponent,
     EventsInvitationComponent,
-    DeletionConfirmationDialogComponent
+    DeletionConfirmationDialogComponent,
+    ConfirmationInvitationDialogComponent
   ],
 })
 export class EventsModule { }
