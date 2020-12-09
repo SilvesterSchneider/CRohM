@@ -1,16 +1,9 @@
 #!/bin/sh
 
-# Build docker image from local data and start server
-if ! sh ./misc/docker-compose-local-up.sh;
+# Start server
+if ! sh ./misc/start-server.sh
 then
-    echo "Build docker image from local data and start server failed"
-    exit 1
-fi
-
-# Wait for server to be up
-if ! sh ./misc/wait-for-server.sh;
-then
-    echo "Wait for server to be up failed"
+    echo "Start server failed"
     exit 1
 fi
 

@@ -14,12 +14,12 @@
     "[typescript]": {
         "editor.defaultFormatter": "vscode.typescript-language-features"
     },
-    "editor.formatOnSave": true,
+    "bashIde.highlightParsingErrors": true,
+    "diffEditor.ignoreTrimWhitespace": true,
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": true,
     "telemetry.enableCrashReporter": false,
     "telemetry.enableTelemetry": false,
-    "typescript.updateImportsOnFileMove.enabled": "always",
-    "bashIde.highlightParsingErrors": true
+    "typescript.updateImportsOnFileMove.enabled": "always"
 }

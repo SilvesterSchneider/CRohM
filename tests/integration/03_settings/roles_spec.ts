@@ -1,6 +1,6 @@
 import { doLogin } from '../../shared/login';
 
-describe('Login Tests', () => {
+describe('Role Tests', () => {
     beforeEach(() => {
         // Delete all cookies
         cy.clearCookies();
@@ -90,9 +90,8 @@ describe('Login Tests', () => {
         cy.get('#rolesTable').should("contain.text", 'Alles')
         //click on the users tab
         cy.get('#mat-tab-label-0-0').click();
-        cy.wait(5000);
         //click on the edit user button of admin user
-        cy.get('.editUserButton').click();
+        cy.get('.editUserButton').first().click();
         cy.url().then(x => {
             //click on the selection field for all roles
             cy.get('#permissionSelectionForUser')
@@ -104,9 +103,28 @@ describe('Login Tests', () => {
             //save the user by clicking the button
             cy.get('#saveUserChangesButton').click({ force: true });
         });
+        cy.wait(200);
         //click on the edit user button of admin user
-        cy.get('.editUserButton').click();
+        cy.get('.editUserButton').first().click();
         //check whether the field contains all roles
         cy.get('#permissionSelectionForUser').should("contain.text", 'Alles');
+    });
+
+    it('should delete the role "Alles"', () => {
+        // Login with credentials admin/@dm1n1stR4tOr
+        doLogin('admin', '@dm1n1stR4tOr');
+        // go to setting page
+        cy.visit('/settings');
+        //change to roles tab
+        cy.get('#mat-tab-label-0-1').click();
+        //click on "Alles" Role
+        cy.get('.mat-header-row > .cdk-column-Alles').click();
+        // Click on Löschen inside Rolle bearbeiten
+        cy.get('.mat-warn > .mat-button-wrapper').contains('Löschen').click();
+        // Click on Löschen inside Rolle Löschen
+        cy.get('#delete-button').click();
+        cy.wait(200);
+        // Click on Löschen inside Alles Löschen
+        cy.get('#delete-button').click();
     });
 });
