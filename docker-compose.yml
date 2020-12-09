@@ -35,11 +35,11 @@ services:
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      ACCEPT_EULA: Y
+      ACCEPT_EULA: "Y"
       # LOGIN: sa
-      SA_PASSWORD: CRohM2020
-      MSSQL_PID: Express
-      TZ: Europe/Berlin
+      SA_PASSWORD: "CRohM2020"
+      MSSQL_PID: "Express"
+      TZ: "Europe/Berlin"
     ports:
       - ${DB_PORT}:1433
     restart: unless-stopped

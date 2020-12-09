@@ -37,7 +37,7 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             var server = Configuration["DBServer"] ?? "localhost";
-            var port = Configuration["DBPort"] ?? "";
+            var port = Configuration["DBPort"] ?? "1433";
             var user = Configuration["DBUser"] ?? "SA";
             var password = Configuration["DBPassword"] ?? "CRohM2020";
             var database = Configuration["DBName"] ?? "CRMDB";

@@ -19,7 +19,7 @@ RUN npm ci
 COPY frontend ./
 
 # Build frontend
-RUN npm run build -- --output-path=dist
+RUN npm run build -- --output-path=dist --prod --source-map
 
 ### STAGE 2: Build Backend ###
 # Get sdk

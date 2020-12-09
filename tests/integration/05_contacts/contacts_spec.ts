@@ -15,13 +15,10 @@ describe('Contacts Tests', () => {
     it('should correctly create a new user', () => {
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
-        cy.wait(1000);
         // go to contacts page
         cy.visit('/contacts');
-        cy.wait(1000);
         //click on add button
         cy.get('#addButton').click();
-        cy.wait(2000);
         //type in all values
         cy.get('#name').type('testName');
         cy.get('#preName').type('testVorname');
@@ -52,13 +49,10 @@ describe('Contacts Tests', () => {
     it('should correctly edit the fields gender and contactPerson of an existing user', () => {
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
-        cy.wait(1000);
         // go to contacts page
         cy.visit('/contacts');
-        cy.wait(1000);
         //click on edit button
         cy.get('.editButton').click();
-        cy.wait(4000);
         cy.get('#gender')
             .click()
             .get('mat-option')
@@ -67,9 +61,7 @@ describe('Contacts Tests', () => {
             .click()
         cy.get('#contactPartner').type('matis');
         cy.get('#saveEdit').click();
-        cy.wait(3000);
         cy.get('.editButton').click();
-        cy.wait(4000);
         cy.get('#contactPartner').should("have.value", 'razvanmatis');
     });
 });
