@@ -1,13 +1,14 @@
 #!/bin/sh
 
-# Change into tests folder
-cd tests || exit
+# Start server
+if ! sh ./misc/start-server.sh
+then
+    echo "Start server failed"
+    exit 1
+fi
 
-# Install npm dependencies
-npm install
+# Start tests
+sh ./misc/start-tests.sh;
 
-# Execute tests
-npm test
-
-# Return into main folder
-cd .. || exit
+# Shutdown server
+sh ./misc/docker-compose-down.sh;
