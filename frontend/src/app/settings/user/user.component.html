@@ -1,56 +1,51 @@
 <mat-toolbar>
-    <mat-toolbar-row>
-        <span>{{'settings.user' | translate}}</span>
-        <span class="spacer"></span>
-        <mat-form-field>
-            <input matInput placeholder="{{'common.search' | translate}}">
-        </mat-form-field>
-        <button button="submit" [disabled]="!permissionAddUser" mat-mini-fab color="primary" (click)="openAddDialog()">
-            <mat-icon>add</mat-icon>
-        </button>
-    </mat-toolbar-row>
+  <mat-toolbar-row>
+    <span>{{'settings.user' | translate}}</span>
+    <span class="spacer"></span>
+    <mat-form-field>
+      <input matInput placeholder="{{'common.search' | translate}}">
+    </mat-form-field>
+    <button button="submit" [disabled]="!permissionAddUser" mat-mini-fab color="primary" (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-    <ng-container matColumnDef="username">
-        <mat-header-cell *matHeaderCellDef> {{'settings.username' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.userName}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="mail">
-        <mat-header-cell *matHeaderCellDef> {{'contact.mail' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="firstname">
-        <mat-header-cell *matHeaderCellDef> {{'contact.firstName' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.firstName}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="lastname">
-        <mat-header-cell *matHeaderCellDef> {{'contact.lastName' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.lastName}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="options">
-        <mat-header-cell *matHeaderCellDef> {{'settings.options' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <button class="editUserButton" [disabled]="!permissionEditUser" mat-icon-button
-                (click)="openEditDialog(element.id)" title="{{'common.edit' | translate}}">
-                <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button [disabled]="!permissionResetPasswort" (click)="OnPasswordReset(element.id)"
-                title="{{'settings.resetPassword' | translate}}">
-                <mat-icon>lock</mat-icon>
-            </button>
-            <button mat-icon-button [disabled]="!permissionLockUser" (click)="SetLockoutState(element.id)">
-                <mat-icon *ngIf=!element.userLockEnabled title="{{'settings.lockUser' | translate}}">done
-                </mat-icon>
-                <mat-icon *ngIf=element.userLockEnabled title="{{'settings.unlockUser' | translate}}">clear</mat-icon>
-            </button>
-        </mat-cell>
-    </ng-container>
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  <ng-container matColumnDef="username">
+    <mat-header-cell *matHeaderCellDef> {{'settings.username' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.userName}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="mail">
+    <mat-header-cell *matHeaderCellDef> {{'contact.mail' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="firstname">
+    <mat-header-cell *matHeaderCellDef> {{'contact.firstName' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.firstName}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="lastname">
+    <mat-header-cell *matHeaderCellDef> {{'contact.lastName' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.lastName}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="options">
+    <mat-header-cell *matHeaderCellDef> {{'settings.options' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button class="editUserButton" [disabled]="!permissionEditUser" mat-icon-button
+        (click)="openEditDialog(element.id)" title="{{'common.edit' | translate}}">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button [disabled]="!permissionResetPasswort" (click)="OnPasswordReset(element.id)"
+        title="{{'settings.resetPassword' | translate}}">
+        <mat-icon>lock</mat-icon>
+      </button>
+      <button mat-icon-button [disabled]="!permissionLockUser" (click)="SetLockoutState(element.id)">
+        <mat-icon *ngIf=!element.userLockEnabled title="{{'settings.lockUser' | translate}}">done
+        </mat-icon>
+        <mat-icon *ngIf=element.userLockEnabled title="{{'settings.unlockUser' | translate}}">clear</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>

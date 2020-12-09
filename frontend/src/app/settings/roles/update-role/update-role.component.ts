@@ -13,7 +13,7 @@ import { RolesTranslationService } from '../roles-translation.service';
 })
 export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogComponent> implements OnInit {
   permissionGroup: RoleDto;
-  permissions: {value: string, label: string}[] = [];
+  permissions: { value: string, label: string }[] = [];
   public roleForm = this.fb.group({
     id: [''],
     name: ['', Validators.required],
@@ -39,7 +39,7 @@ export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogC
     return !this.roleForm.pristine;
   }
 
-  public onCancle(): void {
+  public onCancel(): void {
     super.confirmDialog();
   }
 
@@ -68,4 +68,3 @@ export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogC
     });
   }
 }
-

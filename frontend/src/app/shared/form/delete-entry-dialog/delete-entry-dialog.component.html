@@ -1,11 +1,9 @@
-
-
-  <h1 mat-dialog-title>{{data | translate}} {{'common.delete' | translate}}</h1>
-  <div style="padding-bottom: 1em;" mat-dialog-content>
-    {{'common.confirmDelete' | translate}}
-    </div>
-  <div mat-dialog-actions>   
+<h1 mat-dialog-title>{{data | translate}} {{'common.delete' | translate}}</h1>
+<mat-dialog-content style="padding-bottom: 1em;">
+  {{'common.confirmDelete' | translate}}
+</mat-dialog-content>
+<mat-dialog-actions>
   <span class="fill-remaining-space"></span>
-    <button mat-raised-button (click)="onCancle()">{{'common.cancel' | translate}}</button>
-    <button mat-raised-button (click)="onDelete()" color="warn">{{'common.delete' | translate}}</button> 
-  </div>
+  <button mat-raised-button (click)="onCancel()" id="cancel-button">{{'common.cancel' | translate}}</button>
+  <button mat-raised-button (click)="onDelete()" id="delete-button" color="warn">{{'common.delete' | translate}}</button>
+</mat-dialog-actions>

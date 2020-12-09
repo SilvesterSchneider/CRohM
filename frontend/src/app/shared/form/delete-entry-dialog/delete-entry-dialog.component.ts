@@ -11,28 +11,25 @@ export class DeleteEntryDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<DeleteEntryDialogComponent, IDeleteDialogReturnValue>,
     @Inject(MAT_DIALOG_DATA) public data: string) {
-        this.dialogRef.backdropClick().subscribe(() => {
-        // Close the dialog
-        dialogRef.close();
-      });
-    }
+    this.dialogRef.backdropClick().subscribe(() => {
+      // Close the dialog
+      dialogRef.close();
+    });
+  }
 
   public ngOnInit(): void {
   }
 
-  public onCancle(): void {
-    this.dialogRef.close({delete: false});
+  public onCancel(): void {
+    this.dialogRef.close({ delete: false });
   }
 
   public onDelete(): void {
-    this.dialogRef.close({delete: true});
+    this.dialogRef.close({ delete: true });
   }
 
 }
 
 export interface IDeleteDialogReturnValue {
-   delete: boolean;
- }
-
-
-
+  delete: boolean;
+}
