@@ -24,6 +24,7 @@ describe('Role Tests', () => {
         cy.url().then(x => {
             //type in the role name
             cy.get('#roleNameInputField').type('Alles');
+            cy.wait(200);
             //click on the selection field of permissions
             cy.get('#permissionSelection')
                 .click()
