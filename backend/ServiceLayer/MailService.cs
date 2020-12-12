@@ -16,19 +16,19 @@ namespace ServiceLayer
     /// </summary>
     public interface IMailService
     {
-        bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender);
-        bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType);
+        Task<bool> CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender);
+        Task<bool> CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType);
 
-        bool PasswordReset(string newPassword, string mailAddress);
+        Task<bool> PasswordReset(string newPassword, string mailAddress);
 
-        public bool ApproveContactCreation(string benutzer, string email);
+        Task<bool> ApproveContactCreation(string benutzer, string email);
 
-        public bool Registration(string benutzer, string passwort, string email);
+        Task<bool> Registration(string benutzer, string passwort, string email);
 
-        bool SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
+        Task<bool> SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
 
-        bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
-        bool CreateAndSendInvitationMail(string mail, string name, string mailContent);
+        Task<bool> SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
+        Task<bool> CreateAndSendInvitationMail(string mail, string name, string mailContent);
 
         Task<bool> SendMailToAddress(string subject, string address, string mailContent);
 
@@ -72,17 +72,17 @@ namespace ServiceLayer
             "<p> abgesagt werden.</p>";
         private static string EVENT_CANCELATION_SUBJECT = "Absage einer Veranstaltung der technischen Hochschule";
 
-        public bool CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
+        public async Task<bool> CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType)
         {
-            return SendMail(subject, body, address, new MemoryStream(attachment), attachmentType);
+            return await SendMailAsync(subject, body, address, new MemoryStream(attachment), attachmentType);
         }
 
-        public bool ApproveContactCreation(string benutzer, string email)
+        public async Task<bool> ApproveContactCreation(string benutzer, string email)
         {
             string body = "<h3> Bitte bestätigen Sie die Aufnahme Ihrer Kontaktdaten für die TH-Nürnberg </h3> " +
                    "<p> "+benutzer+"</p>";
 
-            return SendMail("Zugangsdaten", body, email, null, "");
+            return await SendMailAsync("Zugangsdaten", body, email, null, "");
         }
 
         public static string GetMailForInvitationAsTemplate(string eventName, string date, string time)
@@ -90,7 +90,7 @@ namespace ServiceLayer
             return INVITATION_DEF_CONTENT.Replace(EVENTNAMEFIELD, eventName).Replace(EVENTDATEFIELD, date).Replace(EVENTTIMEFIELD, time);
         }
 
-        public bool Registration(string benutzer, string passwort, string email)
+        public async Task<bool> Registration(string benutzer, string passwort, string email)
         {
             string body = "<h5><i> - English version below - </i></h5>" +
                    "<h3> Herzlich Willkommen bei CRohm </h3> " +
@@ -113,10 +113,10 @@ namespace ServiceLayer
                    "<p> Your CRohm Team.</p>";
 
 
-            return SendMail("Zugangsdaten / Access Data", body, email, null, "");
+            return await SendMailAsync("Zugangsdaten / Access Data", body, email, null, "");
         }
 
-        public bool SendDataProtectionUpdateMessage(string title, string lastName, string emailAddressRecipient, string data)
+        public async Task<bool> SendDataProtectionUpdateMessage(string title, string lastName, string emailAddressRecipient, string data)
         {
             string body = $"<h5><i> - English version below - </i></h5>" +
                           "<p>Sehr geehrte/r {title} {lastName}</p> " +
@@ -141,10 +141,10 @@ namespace ServiceLayer
                           " <p> Nuremberg Institute of Technology</p> ";
 
 
-            return SendMail("Mitteilung über Änderung oder Löschung von Daten / Notification of change or deletion of data", body, emailAddressRecipient, null, "");
+            return await SendMailAsync("Mitteilung über Änderung oder Löschung von Daten / Notification of change or deletion of data", body, emailAddressRecipient, null, "");
         }
 
-        public bool SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data)
+        public async Task<bool> SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data)
         {
             string body = $"<h5><i> - English version below - </i></h5>" +
                           "<p>Sehr geehrte/r {title} {lastName}</p> " +
@@ -168,10 +168,10 @@ namespace ServiceLayer
                           " </ul> " +
                           " <p> Nuremberg Institute of Technology</p> ";
 
-            return SendMail("Mitteilung über Änderung oder Löschung von Daten / Notification of change or deletion of data", body, emailAddressRecipient, null, "");
+            return await SendMailAsync("Mitteilung über Änderung oder Löschung von Daten / Notification of change or deletion of data", body, emailAddressRecipient, null, "");
         }
 
-        public bool PasswordReset(string passwort, string email)
+        public async Task<bool> PasswordReset(string passwort, string email)
         {
             string body = "<h5><i> - English version below - </i></h5>" +
                           "<h3> Passwort zurückgesetzt bei CRohm </h3> " +
@@ -191,7 +191,7 @@ namespace ServiceLayer
                           "<p> With kind regards,</p> " +
                           "<p> Your CRohm Team.</p> ";
 
-            return SendMail("Ihr Passwort wurde zurückgesetzt / Your password has been reset", body, email, null, "");
+            return await SendMailAsync("Ihr Passwort wurde zurückgesetzt / Your password has been reset", body, email, null, "");
         }
 
         private bool SendMail(string subject, string body, string emailAddressRecipient, Stream attachment, string attachmentType)
@@ -226,6 +226,7 @@ namespace ServiceLayer
                     client.DeliveryMethod = SmtpDeliveryMethod.Network;
                     client.EnableSsl = true;
                     client.Send(msg);
+                    return true;
                 }
                 catch (Exception ex)
                 {
@@ -236,11 +237,66 @@ namespace ServiceLayer
             }
             else
             {
-                if (string.IsNullOrEmpty(emailAddressRecipient) || string.IsNullOrEmpty(body))
+                return CreateMailFiles(body, emailAddressRecipient, attachment, attachmentType);
+            }
+        }
+
+        private async Task<bool> SendMailAsync(string subject, string body, string emailAddressRecipient, Stream attachment, string attachmentType)
+        {
+            if (!USE_TESTMODE)
+            {
+                try
                 {
+                    MailMessage msg = new MailMessage();
+                    string[] str = new string[] { emailAddressRecipient };
+                    msg.IsBodyHtml = true;
+                    //Empfänger hinzufügen
+                    foreach (string empf in str)
+                    {
+                        msg.To.Add(new MailAddress(empf));
+                    }
+                    msg.From = new MailAddress("crohm_nuernberg@hotmail.com", "CRMS-Team");
+                    msg.Subject = subject;
+                    msg.Body = body;
+
+                    if (attachment != null)
+                        msg.Attachments.Add(new Attachment(attachment, attachmentType));
+
+                    SmtpClient client = new SmtpClient();
+                    client.UseDefaultCredentials = false;
+
+                    client.Credentials = new System.Net.NetworkCredential("crohm_nuernberg@hotmail.com", "crohm202020");
+
+                    client.Port = 587;
+
+                    client.Host = "smtp.office365.com";
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.EnableSsl = true;
+                    await client.SendMailAsync(msg);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine(ex.Message);
                     return false;
                 }
+            }
+            else
+            {
+                return CreateMailFiles(body, emailAddressRecipient, attachment, attachmentType);
+            }
+        }
 
+        private bool CreateMailFiles(string body, string emailAddressRecipient, Stream attachment, string attachmentType)
+        {
+            if (string.IsNullOrEmpty(emailAddressRecipient) || string.IsNullOrEmpty(body))
+            {
+                return false;
+            }
+
+            try
+            {
                 string mailPath = BASE_PATH_FOR_TESTMAIL_CREATION + "\\" + emailAddressRecipient + ".txt";
                 if (!Directory.Exists(BASE_PATH_FOR_TESTMAIL_CREATION))
                 {
@@ -258,18 +314,21 @@ namespace ServiceLayer
                 }
 
                 File.WriteAllText(mailPath, body);
+                return true;
             }
-            
-            return true;
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
-        public bool CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender)
+        public async Task<bool> CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender)
         {
             string start = GetGenderTitle(gender);
             string genderEn = GetGenderTitleEnglish(gender);
             string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
             finishedcontent = finishedcontent.Replace(NAMEFIELDEN, name).Replace(STARTFIELDEN, genderEn).Replace(PRENAMEFIELDEN, preName);
-            return SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, address, null, null);
+            return await SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, address, null, null);
         }
 
         public async Task<bool> SendMailToAddress(string subject, string address, string mailContent)
@@ -278,10 +337,10 @@ namespace ServiceLayer
             {
                 mailContent = MAILSETUP;
             }
-            return await Task.FromResult(SendFormattedMail(subject, mailContent, address, null, null));
+            return await SendFormattedMail(subject, mailContent, address, null, null);
         }
 
-        private bool SendFormattedMail(string subject, string body, string emailAddressRecipient, Stream attachment, string attachmentType)
+        private async Task<bool> SendFormattedMail(string subject, string body, string emailAddressRecipient, Stream attachment, string attachmentType)
         {
             string[] fields = body.Split("\r");
             string text = string.Empty;
@@ -291,10 +350,10 @@ namespace ServiceLayer
                 text += line;
                 text += "</p>";
             }
-            return SendMail(subject, text, emailAddressRecipient, attachment, attachmentType);
+            return await SendMailAsync(subject, text, emailAddressRecipient, attachment, attachmentType);
         }
 
-        public bool CreateAndSendInvitationMail(string mail, string name, string mailContent)
+        public async Task<bool> CreateAndSendInvitationMail(string mail, string name, string mailContent)
         {
             string finishedcontent = mailContent.Replace(STARTFIELD, ORGASTART);
             finishedcontent = finishedcontent.Replace(STARTFIELDEN, ORGASTARTEN);
@@ -308,7 +367,7 @@ namespace ServiceLayer
                 finishedcontent = finishedcontent.Replace(NAMEFIELD, string.Empty).Replace(PRENAMEFIELD, name);
                 finishedcontent = finishedcontent.Replace(NAMEFIELDEN, string.Empty).Replace(PRENAMEFIELDEN, name);
             }
-            return SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, mail, null, null);
+            return await SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, mail, null, null);
         }
 
         public async Task<bool> SendEventDeletedMessage(List<EventContact> contactMails, List<EventOrganization> orgas)
@@ -368,7 +427,7 @@ namespace ServiceLayer
                 .Replace(EVENTNAMEFIELD, eventName)
                 .Replace(EVENTDATEFIELD, date.ToString("yyyy-MM-dd"))
                 .Replace(EVENTTIMEFIELD, time.ToString("hh:mm"));
-            return await Task.FromResult(SendMail(EVENT_CANCELATION_SUBJECT, content, mail, null, null));
+            return await SendMailAsync(EVENT_CANCELATION_SUBJECT, content, mail, null, null);
         }
     }
 }
