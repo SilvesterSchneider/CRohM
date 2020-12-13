@@ -8,6 +8,7 @@ using static ModelLayer.Models.Contact;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Models;
 using System.Runtime.CompilerServices;
+using ModelLayer.Helper;
 
 namespace ServiceLayer
 {
@@ -245,6 +246,7 @@ namespace ServiceLayer
         {
             if (!USE_TESTMODE)
             {
+                var mailCredentials = MailCredentialsHelper.GetMailCredentials();
                 try
                 {
                     MailMessage msg = new MailMessage();
@@ -255,7 +257,7 @@ namespace ServiceLayer
                     {
                         msg.To.Add(new MailAddress(empf));
                     }
-                    msg.From = new MailAddress("crohm_nuernberg@hotmail.com", "CRMS-Team");
+                    msg.From = mailCredentials.MailAddress;
                     msg.Subject = subject;
                     msg.Body = body;
 
@@ -265,11 +267,11 @@ namespace ServiceLayer
                     SmtpClient client = new SmtpClient();
                     client.UseDefaultCredentials = false;
 
-                    client.Credentials = new System.Net.NetworkCredential("crohm_nuernberg@hotmail.com", "crohm202020");
+                    client.Credentials = mailCredentials.NetworkCredential;
 
-                    client.Port = 587;
+                    client.Port = mailCredentials.Port;
 
-                    client.Host = "smtp.office365.com";
+                    client.Host = mailCredentials.Host;
                     client.DeliveryMethod = SmtpDeliveryMethod.Network;
                     client.EnableSsl = true;
                     await client.SendMailAsync(msg);
