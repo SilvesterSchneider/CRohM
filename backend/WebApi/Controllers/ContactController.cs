@@ -17,6 +17,7 @@ using ModelLayer.Helper;
 using WebApi.Helper;
 using WebApi.Wrapper;
 using System;
+using System.Diagnostics;
 
 namespace WebApi.Controllers
 {
@@ -126,7 +127,11 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.Created, typeof(ContactDto), Description = "successfully created")]
         public async Task<IActionResult> Post([FromBody]ContactCreateDto contactToCreate)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             Contact contact = await contactService.CreateAsync(_mapper.Map<Contact>(contactToCreate));
+            sw.Stop();
+            var result = sw.ElapsedMilliseconds;
 
             var contactDto = _mapper.Map<ContactDto>(contact);
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);

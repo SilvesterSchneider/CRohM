@@ -1,10 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { EventDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, DATA_TYPE } from '../../shared/api-generated/api-generated';
+import { EventDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, DATA_TYPE, ParticipatedStatus } from '../../shared/api-generated/api-generated';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 import { map } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
+import { TranslateService } from '@ngx-translate/core';
 
 export class ContactOrganizationDtoExtended {
   id: number;
@@ -12,7 +13,7 @@ export class ContactOrganizationDtoExtended {
   name: string;
   modelType: MODEL_TYPE;
   participated: boolean;
-  wasInvited: boolean;
+  eventStatus: ParticipatedStatus;
 }
 
 @Component({
@@ -30,10 +31,11 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
   constructor(public dialogRef: MatDialogRef<EventsInfoComponent>,
-    public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public event: EventDto,
-    private fb: FormBuilder,
-    private modService: ModificationEntryService
+              public dialog: MatDialog,
+              @Inject(MAT_DIALOG_DATA) public event: EventDto,
+              private fb: FormBuilder,
+              private modService: ModificationEntryService,
+              private translate: TranslateService
   ) {
     super(dialogRef, dialog);
     this.dialogRef.backdropClick().subscribe(() => {
@@ -51,54 +53,59 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   }
 
   ngOnInit() {
-    this.eventsForm = this.fb.group({
-      name: [''],
-      date: [''],
-      time: [''],
-      duration: [''],
-      description: [''],
-      location: ['']
-    });
-
-    this.contactsOrganizations.concat(this.event.contacts?.map(x => {
-      return {
-        id: x.id,
-        preName: x.preName,
-        name: x.name,
-        participated: false,
-        wasInvited: false,
-        modelType: MODEL_TYPE.CONTACT
-      };
-    }));
-
-    this.contactsOrganizations.concat(this.event.organizations?.map(x => {
-      return {
-        id: x.id,
-        preName: x.name,
-        name: x.description,
-        participated: false,
-        wasInvited: false,
-        modelType: MODEL_TYPE.ORGANIZATION
-      };
-    }));
-
-    this.event.participated?.forEach(x => {
-      let cont: ContactOrganizationDtoExtended = null;
-      if (x.modelType === MODEL_TYPE.CONTACT) {
-        cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.CONTACT && y.id === x.objectId);
-      } else {
-        cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.ORGANIZATION && y.id === x.objectId);
-      }
-      if (cont != null) {
-        cont.participated = x.hasParticipated;
-        cont.wasInvited = x.wasInvited;
-      }
-    });
+    this.eventsForm = this.createEventsForm();
+    if (this.event.contacts != null) {
+      this.event.contacts.forEach(x => {
+        this.contactsOrganizations.push({
+          id: x.id,
+          preName: x.preName,
+          name: x.name,
+          participated: false,
+          eventStatus: ParticipatedStatus.NOT_INVITED,
+          modelType: MODEL_TYPE.CONTACT
+        });
+      });
+    }
+    if (this.event.organizations != null) {
+      this.event.organizations.forEach(x => {
+        this.contactsOrganizations.push({
+          id: x.id,
+          preName: x.name,
+          name: x.description,
+          participated: false,
+          eventStatus: ParticipatedStatus.NOT_INVITED,
+          modelType: MODEL_TYPE.ORGANIZATION
+        });
+      });
+    }
+    if (this.event.participated != null) {
+      this.event.participated.forEach(x => {
+        let cont: ContactOrganizationDtoExtended = null;
+        if (x.modelType === MODEL_TYPE.CONTACT) {
+          cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.CONTACT && y.id === x.objectId);
+        } else {
+          cont = this.contactsOrganizations.find(y => y.modelType === MODEL_TYPE.ORGANIZATION && y.id === x.objectId);
+        }
+        if (cont != null) {
+          cont.participated = x.hasParticipated;
+          cont.eventStatus = x.eventStatus;
+        }
+      });
+    }
     // Load initial modification entries
     this.loadModifications(0, 5);
     this.eventsForm.patchValue(this.event);
     this.eventsForm.get('date').patchValue(this.formatDate(this.event.date));
     this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));
+  }
+
+  private createEventsForm(): FormGroup {
+    return this.fb.group({
+      name: [''],
+      date: [''],
+      time: [''],
+      duration: ['']
+    });
   }
 
   formatDate(date: string): any {
@@ -139,5 +146,17 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
         this.modificationsPaginationLength = result.totalRecords;
       });
 
+  }
+
+  getEventState(state: ParticipatedStatus): string {
+    if (state === ParticipatedStatus.NOT_INVITED) {
+      return this.translate.instant('event.notInvited');
+    } else if (state === ParticipatedStatus.INVITED) {
+      return this.translate.instant('event.invited');
+    } else if (state === ParticipatedStatus.AGREED) {
+      return this.translate.instant('event.agreed');
+    } else {
+      return this.translate.instant('event.cancelled');
+    }
   }
 }

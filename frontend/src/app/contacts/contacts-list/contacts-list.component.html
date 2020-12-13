@@ -1,6 +1,5 @@
 <mat-toolbar>
     <mat-toolbar-row class="tabrow">
-        <span>{{'contact.contacts' | translate}}</span>
         <span class="spacer"></span>
         <a *ngIf="selectedCheckBoxList.length > 0" class="iconMargin" (click)="sendMailToMany()" type="button">
             <mat-icon color="primary" title="{{'common.sendMailToMany' | translate}}" class="icon">mail</mat-icon>
@@ -95,6 +94,10 @@
                     <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
                         (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" color="primary">
                         <mat-icon title="{{'common.call' | translate}}" class="icon">phone</mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
+                        (click)="sendMail(element)" color="primary">
+                        <mat-icon title="{{'contact.mail' | translate}}" class="icon">mail</mat-icon>
                     </button>
                     <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteContact(element)"
                         color="primary">
