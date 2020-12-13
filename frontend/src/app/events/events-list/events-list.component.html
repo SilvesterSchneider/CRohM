@@ -26,19 +26,19 @@
     <mat-table mat-table [dataSource]="dataSourceFiltered">
         <ng-container matColumnDef="bezeichnung">
             <mat-header-cell *matHeaderCellDef> {{'common.label' | translate}} </mat-header-cell>
-            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element">
+            <mat-cell [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
                 {{element.name}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="datum">
             <mat-header-cell *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
-            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element">
-                {{element.date | date:'dd-MM-yyyy'}} </mat-cell>
+            <mat-cell [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
+                {{element.date | date}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="uhrzeit">
             <mat-header-cell *matHeaderCellDef> {{'common.time' | translate}} </mat-header-cell>
-            <mat-cell [ngStyle]="{'background-color': isToday(element) ? 'blue' : ''}" *matCellDef="let element">
-                {{element.time | date:'HH:mm:ss'}} </mat-cell>
+            <mat-cell [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
+                {{element.time | date:'shortTime'}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>

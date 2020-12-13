@@ -84,7 +84,7 @@
         <mat-table *ngIf="dataHistory.length > 0" #table [dataSource]="dataHistory">
             <ng-container matColumnDef="datum">
                 <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
-                <mat-cell fxFlex="20%" *matCellDef="let element"> {{getDate(element.dateTime)}}
+                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.dateTime |date}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="bearbeiter">

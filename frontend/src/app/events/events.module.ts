@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/material.module';
 import { EventsInfoComponent } from './events-info/events-info.component';
 import { EventsInvitationComponent } from './events-invitation/events-invitation.component';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { EventsInvitationComponent } from './events-invitation/events-invitation
     EventsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
+    NgxMaterialTimepickerModule
   ],
   declarations: [
     EventsListComponent,

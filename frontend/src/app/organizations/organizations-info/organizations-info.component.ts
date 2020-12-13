@@ -49,11 +49,6 @@ export class OrganizationsInfoComponent implements OnInit {
     this.organizationsForm.patchValue(this.organization);
   }
 
-  getDate(date: string): string {
-    const dateUsed = new Date(date);
-    return dateUsed.getFullYear().toString() + '-' + (+dateUsed.getMonth() + 1).toString() + '-' + dateUsed.getDate().toString();
-  }
-
   initForm() {
     this.organizationsForm = this.fb.group({
       id: [''],
