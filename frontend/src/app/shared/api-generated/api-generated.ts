@@ -3654,6 +3654,8 @@ export interface EventDto {
     time: string;
     name?: string | undefined;
     duration: number;
+    description?: string | undefined;
+    location?: string | undefined;
     contacts?: ContactDto[] | undefined;
     organizations?: OrganizationDto[] | undefined;
     participated?: ParticipatedDto[] | undefined;
@@ -3720,7 +3722,7 @@ export interface ContactPossibilitiesCreateDto {
 
 export interface ContactPossibilitiesEntryCreateDto {
     contactEntryName: string;
-    contactEntryValue?: string | undefined;
+    contactEntryValue: string;
 }
 
 export interface HistoryElementCreateDto {
@@ -3772,6 +3774,8 @@ export interface EventCreateDto {
     time: string;
     name?: string | undefined;
     duration: number;
+    description?: string | undefined;
+    location?: string | undefined;
     contacts?: number[] | undefined;
     organizations?: number[] | undefined;
 }
@@ -3825,6 +3829,7 @@ export enum DATA_TYPE {
     INVITATION = 21,
     CONTACT_PARTNER = 22,
     GENDER = 23,
+    LOCATION = 24,
 }
 
 export enum MODIFICATION {
