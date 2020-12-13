@@ -107,6 +107,8 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   private createEventsForm(): FormGroup {
     return this.fb.group({
       name: [''],
+      description: [''],
+      location: [''],
       date: [''],
       time: [''],
       duration: ['']

@@ -445,6 +445,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.event.date = eventToSave.date;
     this.event.time = eventToSave.time;
     this.event.duration = eventToSave.duration;
+    this.event.description = eventToSave.description;
+    this.event.location = eventToSave.location;
     if (callInvitation) {
       const data = new ConfirmDialogModel('event.sendInvitation', 'event.sendInvitation');
       const dialogYesNo = this.dialog.open(ConfirmDialogComponent, {data});
