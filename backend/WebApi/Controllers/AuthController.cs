@@ -70,7 +70,7 @@ namespace WebApi.Controllers
                 var userDto = _mapper.Map<UserDto>(user);
                 var roles = await _userService.GetRolesAsync(user);
                 List<Claim> claims;
-                if (user.Id != 1)
+                if (!user.IsSuperAdmin)
                 {
                     claims = await GetAllClaimsOfUser(roles);
                 }

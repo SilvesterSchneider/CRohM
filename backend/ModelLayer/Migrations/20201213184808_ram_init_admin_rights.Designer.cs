@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20201206121647_ram_kal13_init")]
-    partial class ram_kal13_init
+    [Migration("20201213184808_ram_init_admin_rights")]
+    partial class ram_init_admin_rights
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -557,7 +557,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "efd057fc-d8e8-4e9e-ae27-575673fe01f6",
+                            ConcurrencyStamp = "ece5b136-d7e1-4a75-92bd-dbedeac54a1c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -621,6 +621,9 @@ namespace ModelLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSuperAdmin")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastLoginDate")

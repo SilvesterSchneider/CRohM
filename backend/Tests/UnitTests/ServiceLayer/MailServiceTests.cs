@@ -1,4 +1,4 @@
-﻿using ServiceLayer;
+using ServiceLayer;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +18,7 @@ namespace UnitTests.ServiceLayer
             MailService ms = new MailService();
 
             //Act
-            bool erg = ms.Registration(user, password, correctemailaddress);
+            bool erg = ms.Registration(user, password, correctemailaddress).Result;
 
             //Assert
             Assert.True(erg);
@@ -34,7 +34,7 @@ namespace UnitTests.ServiceLayer
             MailService ms = new MailService();
 
             //Act
-            bool erg = ms.Registration(user, password, falsemailaddress);
+            bool erg = ms.Registration(user, password, falsemailaddress).Result;
 
             //Assert
             Assert.False(erg);
@@ -49,7 +49,7 @@ namespace UnitTests.ServiceLayer
             MailService ms = new MailService();
 
             //Act
-            bool erg = ms.PasswordReset(password, falsemailaddress);
+            bool erg = ms.PasswordReset(password, falsemailaddress).Result;
 
             //Assert
             Assert.True(erg);
@@ -64,7 +64,7 @@ namespace UnitTests.ServiceLayer
             MailService ms = new MailService();
 
             //Act
-            bool erg = ms.PasswordReset(password, falsemailaddress);
+            bool erg = ms.PasswordReset(password, falsemailaddress).Result;
 
             //Assert
             Assert.False(erg);
