@@ -1,11 +1,16 @@
 <!-- list of addresses -->
-<form [formGroup]="myForm" novalidate>
+<form [formGroup]="myForm" novalidate class="border border-primary">
     <div formArrayName="contactPossibilitiesEntries" *ngFor="let contactEntry of getControls(); let i=index">
+        <div align="end">
+            <button class="smallicon" button="submit" mat-mini-fab color="primary"
+                (click)="removeEntry(i)">
+                <mat-icon class="smallicon">clear</mat-icon>
+            </button>
+        </div>
         <!-- address header, show remove button when more than one address available -->
         <div>
             <span class="margin10">{{'contact.contactPossibility' | translate}} {{i + 1}}</span>
         </div>
-
         <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
             <!--contactEntryName-->
         <div [formGroup]="contactEntry">
@@ -26,11 +31,13 @@
                     {{'validation.mailPhoneRequired' | translate}}
                 </small>
             </div>
-            <button mat-raised-button color="primary" class="minWidth300AndMargin10" title="{{'contact.deleteContactPossibility' | translate}}" (click)="removeEntry(i)">{{'contact.deleteContactPossibility' | translate}}</button>
-        </div>
+         </div>
     </div>
     <div>
-        <button mat-raised-button color="primary" class="minWidth300AndMargin10" title="{{'contact.addContactPossibility' | translate}}" (click)="addEntry()">{{'contact.addContactPossibility' | translate}}</button>
+        <button class="button" button="submit" mat-mini-fab color="primary"
+            (click)="addEntry()">
+            <mat-icon>add</mat-icon>
+        </button>
     </div>
 </form>
 

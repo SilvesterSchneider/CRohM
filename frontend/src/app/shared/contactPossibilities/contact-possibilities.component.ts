@@ -29,7 +29,7 @@ export class ContactPossibilitiesComponent implements OnInit {
             return this.fb.group({
                 id: ['0'],
                 contactEntryName: ['', Validators.required],
-                contactEntryValue: ['', [mailAndPhoneValidator]]
+                contactEntryValue: ['', Validators.required]
             });
         }
 
@@ -74,24 +74,6 @@ export class ContactPossibilitiesComponent implements OnInit {
         this.removeEntry(index);
       }
     }
-}
-
-function mailAndPhoneValidator(control: AbstractControl): { [key: string]: boolean } | null {
-
-  if (control.value !== undefined && ((control.value) as string).length > 0 && (isNumber(control.value) || isMailAddress(control.value))) {
-    return null;
-  }
-  return {'': true };
-}
-
-function isNumber(x: string): boolean {
-  const re = new RegExp(/^0[0-9\- ]*$/);
-  return re.test(x);
-}
-
-function isMailAddress(x: string): boolean {
-  const re = new RegExp(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/);
-  return re.test(x);
 }
 
 export const FORMGROUPNAME = 'contactPossibilitiesEntries';

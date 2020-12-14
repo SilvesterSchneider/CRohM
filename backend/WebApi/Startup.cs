@@ -42,7 +42,7 @@ namespace WebApi
             var password = Configuration["DBPassword"] ?? "CRohM2020";
             var database = Configuration["DBName"] ?? "CRMDB";
 
-            var connectionString = $"Server={server}\\SQLEXPRESS" + (string.IsNullOrEmpty(port) ? "" : "," + port) + $";Database={database};User Id={user};Password={password}";
+            var connectionString = $"Server={server}\\SQLEXPRESS01" + (string.IsNullOrEmpty(port) ? "" : "," + port) + $";Database={database};User Id={user};Password={password}";
 
             services.AddControllers()
                 .AddNewtonsoftJson(options =>

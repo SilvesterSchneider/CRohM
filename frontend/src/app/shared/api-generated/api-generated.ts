@@ -1615,17 +1615,21 @@ export class EventService {
     /**
      * @return successfully deleted
      */
-    delete(id: number): Observable<void> {
+    delete(id: number, sendMail: boolean): Observable<void> {
         let url_ = this.baseUrl + "/api/Event/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(sendMail);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json",
             })
         };
 
@@ -3650,6 +3654,8 @@ export interface EventDto {
     time: string;
     name?: string | undefined;
     duration: number;
+    description?: string | undefined;
+    location?: string | undefined;
     contacts?: ContactDto[] | undefined;
     organizations?: OrganizationDto[] | undefined;
     participated?: ParticipatedDto[] | undefined;
@@ -3660,14 +3666,21 @@ export interface ParticipatedDto {
     id: number;
     modelType: MODEL_TYPE;
     objectId: number;
+    eventStatus: ParticipatedStatus;
     hasParticipated: boolean;
-    wasInvited: boolean;
 }
 
 export enum MODEL_TYPE {
     CONTACT = 0,
     ORGANIZATION = 1,
     EVENT = 2,
+}
+
+export enum ParticipatedStatus {
+    NOT_INVITED = 0,
+    INVITED = 1,
+    AGREED = 2,
+    CANCELLED = 3,
 }
 
 export interface TagDto {
@@ -3709,7 +3722,7 @@ export interface ContactPossibilitiesCreateDto {
 
 export interface ContactPossibilitiesEntryCreateDto {
     contactEntryName: string;
-    contactEntryValue?: string | undefined;
+    contactEntryValue: string;
 }
 
 export interface HistoryElementCreateDto {
@@ -3761,6 +3774,8 @@ export interface EventCreateDto {
     time: string;
     name?: string | undefined;
     duration: number;
+    description?: string | undefined;
+    location?: string | undefined;
     contacts?: number[] | undefined;
     organizations?: number[] | undefined;
 }
@@ -3814,6 +3829,7 @@ export enum DATA_TYPE {
     INVITATION = 21,
     CONTACT_PARTNER = 22,
     GENDER = 23,
+    LOCATION = 24,
 }
 
 export enum MODIFICATION {

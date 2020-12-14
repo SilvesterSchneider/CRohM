@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-
+using System.Linq;
 
 namespace WebApi.Controllers
 {
@@ -24,15 +24,18 @@ namespace WebApi.Controllers
         private IEventService eventService;
         private IContactService contactService;
         private IOrganizationService orgaService;
+        private IMailService mailService;
 
         public EventController(IMapper mapper,
             IEventService eventService,
             IModificationEntryService modService,
             IUserService userService,
             IContactService contactService,
-            IOrganizationService orgaService)
+            IOrganizationService orgaService,
+            IMailService mailService)
         {
             this._mapper = mapper;
+            this.mailService = mailService;
             this.userService = userService;
             this.modService = modService;
             this.orgaService = orgaService;
@@ -167,16 +170,76 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> Delete(long id, [FromBody]bool sendMail)
         {
             Event eventToDelete = await eventService.GetEventByIdWithAllIncludesAsync(id);
             if (eventToDelete == null)
             {
                 return NotFound();
             }
+            if (sendMail)
+            {
+                await mailService.SendEventDeletedMessage(eventToDelete.Contacts, eventToDelete.Organizations);
+            }
             await eventService.DeleteAsync(eventToDelete);
             await modService.UpdateEventByDeletionAsync(id);
             return Ok();
+        }
+
+        /// <summary>
+        /// Event zusagen oder ablehnen
+        /// </summary>
+        /// <param name="id">id of event</param>
+        /// <param name="contactId">id of contact</param>
+        /// <param name="organizationId">id of organization</param>
+        /// <param name="passCode">previous send passcode</param>
+        /// <param name="participate">participate true | false</param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet("{id}/invitationresponse")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(string), Description = "successful")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(string), Description = "not found")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
+        public async Task<IActionResult> PostInvitationResponse([FromRoute] long id, [FromQuery] long? contactId, long? organizationId, ParticipatedStatus state)
+        {
+            if (contactId == null && organizationId == null)
+            {
+                return BadRequest("Ungültiger query");
+            }
+
+            try
+            {
+                if (contactId != null)
+                {
+                    if (await eventService.HandleInvitationResponseForContactAsync(id, (long)contactId, state))
+                    {
+                        return Ok("Antwort erfolgreich verarbeitet");
+                    }
+                    else
+                    {
+                        return NotFound("Kontakt nicht gefunden!");
+                    }
+                }
+                else
+                {
+                    if (await eventService.HandleInvitationResponseForOrganizationAsync(id, (long)organizationId, state))
+                    {
+                        return Ok("Antwort erfolgreich verarbeitet");
+                    }
+                    else
+                    {
+                        return NotFound("Organisation nicht gefunden!");
+                    }
+                }
+            }
+            catch (KeyNotFoundException nfe)
+            {
+                return NotFound(nfe.Message);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                return BadRequest(ioe.Message);
+            }
         }
     }
 }

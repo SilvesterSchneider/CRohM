@@ -126,8 +126,14 @@
         "show": "Show Event Information",
         "info": "Event Information",
         "delete": "Delete Event",
+        "sendDeletionInfo": "Send event cancellation information via mail",
+        "confirmDeletionInfo": "Would you like to inform all participants about the cancellation of this event via mail?",
         "invitation": "Invitation",
+        "notInvited": "Not invited",
         "invited": "Invited",
+        "agreed": "Agreed",
+        "cancelled": "Cancelled",
+        "state": "State",
         "participated": "Participated",
         "participant": "Participant",
         "sendInvitation": "Send invitation to Participants",
@@ -214,7 +220,7 @@
     },
     "validation": {
         "nameRequired": "Name of the contact entry required!",
-        "mailPhoneRequired": "Phone number or e-mail address required!"
+        "mailPhoneRequired": "Value required!"
     },
     "calendar": {
         "title": "Calendar",

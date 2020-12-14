@@ -11,13 +11,16 @@ import {
   MatAutocompleteTrigger, MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { ContactDto, EventDto, MailService, MODEL_TYPE, OrganizationDto, OrganizationService, ParticipatedDto, TagDto } from '../../shared/api-generated/api-generated';
+import { ContactDto, EventDto, MailService, MODEL_TYPE, OrganizationDto, OrganizationService,
+   ParticipatedDto, ParticipatedStatus, TagDto } from '../../shared/api-generated/api-generated';
 import { EventService } from '../../shared/api-generated/api-generated';
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 import { EventsInvitationComponent } from '../events-invitation/events-invitation.component';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent, ConfirmDialogModel } from 'src/app/shared/form/confirmdialog/confirmdialog.component';
 
 export class EventContactConnection {
   objectId: number;
@@ -25,7 +28,7 @@ export class EventContactConnection {
   name: string;
   preName: string;
   participated: boolean;
-  wasInvited: boolean;
+  eventStatus: ParticipatedStatus;
   modelType: MODEL_TYPE;
 }
 
@@ -87,7 +90,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     private orgaService: OrganizationService,
     private eventService: EventService,
     private fb: FormBuilder,
-    private mailService: MailService) {
+    private mailService: MailService,
+    private translate: TranslateService) {
     super(dialogRef, dialog);
     this.dialogRef.backdropClick().subscribe(() => {
 			// Close the dialog
@@ -166,11 +170,11 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       this.contacts = y;
       y.forEach(x => {
         let participatedReal = false;
-        let wasInvitedReal = false;
+        let eventState = ParticipatedStatus.NOT_INVITED;
         this.event.participated.forEach(z => {
           if (z.objectId === x.id && z.modelType === MODEL_TYPE.CONTACT) {
             participatedReal = z.hasParticipated;
-            wasInvitedReal = z.wasInvited;
+            eventState = z.eventStatus;
           }
         });
         this.filteredItems.push(
@@ -180,7 +184,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             preName: x.preName,
             selected: false,
             participated: participatedReal,
-            wasInvited: wasInvitedReal,
+            eventStatus: eventState,
             modelType: MODEL_TYPE.CONTACT
           }
         );
@@ -194,11 +198,11 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       this.orgas = x;
       x.forEach(y => {
         let participatedReal = false;
-        let wasInvitedReal = false;
+        let eventState = ParticipatedStatus.NOT_INVITED;
         this.event.participated.forEach(z => {
           if (z.objectId === y.id && z.modelType === MODEL_TYPE.ORGANIZATION) {
             participatedReal = z.hasParticipated;
-            wasInvitedReal = z.wasInvited;
+            eventState = z.eventStatus;
           }
         });
         this.filteredItems.push(
@@ -208,7 +212,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             preName: '',
             selected: false,
             participated: participatedReal,
-            wasInvited: wasInvitedReal,
+            eventStatus: eventState,
             modelType: MODEL_TYPE.ORGANIZATION
           }
         );
@@ -295,23 +299,33 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.inputTrigger.openPanel();
   }
 
-  callInvitation() {
+  callInvitation(save: boolean, useFinishSave: boolean): boolean {
     const dialogRef = this.dialog.open(EventsInvitationComponent, { data: this.event, disableClose: true, minWidth: '450px', minHeight: '400px' });
     dialogRef.afterClosed().subscribe(x => {
       if (x.send && x.text != null) {
         const listOfContactIds: number[] = new Array<number>();
         const listOfOrgaIds: number[] = new Array<number>();
         this.selectedItems.forEach(y => {
-          if (y.modelType === MODEL_TYPE.CONTACT) {
+          if (y.modelType === MODEL_TYPE.CONTACT && y.eventStatus === ParticipatedStatus.NOT_INVITED) {
             listOfContactIds.push(y.objectId);
-          } else if (y.modelType === MODEL_TYPE.ORGANIZATION) {
+          } else if (y.modelType === MODEL_TYPE.ORGANIZATION && y.eventStatus === ParticipatedStatus.NOT_INVITED) {
             listOfOrgaIds.push(y.objectId);
           }
-          y.wasInvited = true;
+          if (y.eventStatus === ParticipatedStatus.NOT_INVITED) {
+            y.eventStatus = ParticipatedStatus.INVITED;
+          }
         });
-        this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text).subscribe();
+        this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text).subscribe(x => {
+          if (useFinishSave) {
+            this.finishSave(save);
+          }
+        });
+        return true;
+      } else {
+        return false;
       }
     });
+    return false;
   }
 
   filter(filter: string): EventContactConnection[] {
@@ -353,6 +367,36 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     }
   }
 
+  disableParticipatedChk(item: EventContactConnection): boolean {
+    return !this.isDateOk() || !this.isItemConditionOk(item.eventStatus);
+  }
+
+  isDateOk(): boolean {
+    const dateOfEvent = new Date(this.event.date);
+    dateOfEvent.setHours(new Date(this.event.time).getHours());
+    dateOfEvent.setMinutes(new Date(this.event.time).getMinutes());
+    const dateNow = new Date(Date.now());
+    return (dateNow.getFullYear() > dateOfEvent.getFullYear()) ||
+      (dateNow.getFullYear() === dateNow.getFullYear() &&
+      dateNow.getMonth() > dateOfEvent.getMonth()) ||
+      (dateNow.getFullYear() === dateNow.getFullYear() &&
+      dateNow.getMonth() === dateOfEvent.getMonth() &&
+      dateNow.getDate() > dateOfEvent.getDate()) ||
+      (dateNow.getFullYear() === dateNow.getFullYear() &&
+      dateNow.getMonth() === dateOfEvent.getMonth() &&
+      dateNow.getDate() === dateOfEvent.getDate() &&
+      dateNow.getHours() > dateOfEvent.getHours()) ||
+      (dateNow.getFullYear() === dateNow.getFullYear() &&
+      dateNow.getMonth() === dateOfEvent.getMonth() &&
+      dateNow.getDate() === dateOfEvent.getDate() &&
+      dateNow.getHours() === dateOfEvent.getHours() &&
+      dateNow.getMinutes() >= dateOfEvent.getMinutes());
+  }
+
+  isItemConditionOk(status: ParticipatedStatus): boolean {
+    return status !== ParticipatedStatus.CANCELLED;
+  }
+
   toggleSelection(item: EventContactConnection) {
     item.selected = !item.selected;
     if (item.selected) {
@@ -386,9 +430,39 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 
   saveValues() {
     const eventToSave: EventDto = this.eventsForm.value;
-    this.event.date = new Date(new Date(eventToSave.date).getTime()).toDateString();
-    this.event.duration = eventToSave.duration;
+    eventToSave.date = new Date(new Date(eventToSave.date)).toDateString();
+    eventToSave.time = this.eventsForm.get('time').value;
+    const saveNewValues = this.isSameDate(new Date(this.event.date).toString(), eventToSave.date) && this.isSameTime(this.event.time, eventToSave.time) &&
+      this.event.duration === eventToSave.duration;
+    let callInvitation = false;
+    if (saveNewValues) {
+      this.selectedItems.forEach(a => {
+        if (a.eventStatus === ParticipatedStatus.NOT_INVITED) {
+          callInvitation = true;
+        }
+      });
+    }
+    this.event.date = eventToSave.date;
     this.event.time = eventToSave.time;
+    this.event.duration = eventToSave.duration;
+    if (callInvitation) {
+      const data = new ConfirmDialogModel('event.sendInvitation', 'event.sendInvitation');
+      const dialogYesNo = this.dialog.open(ConfirmDialogComponent, {data});
+      dialogYesNo.afterClosed().subscribe(y => {
+        if (y) {
+          if (!this.callInvitation(saveNewValues, true)) {
+            this.finishSave(saveNewValues);
+          }
+        } else {
+          this.finishSave(saveNewValues);
+        }
+      });
+    } else {
+      this.finishSave(saveNewValues);
+    }
+  }
+
+  finishSave(saveNewValues: boolean) {
     const contacts: ContactDto[] = new Array<ContactDto>();
     const organizations: OrganizationDto[] = new Array<OrganizationDto>();
     const participants: ParticipatedDto[] = new Array<ParticipatedDto>();
@@ -397,45 +471,13 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
         const contact = this.contacts.find(y => y.id === x.objectId);
         if (contact != null) {
           contacts.push(contact);
-          const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-             MODEL_TYPE.CONTACT);
-          if (partExistend == null) {
-            participants.push(
-              {
-                objectId: x.objectId,
-                hasParticipated: x.participated,
-                wasInvited: x.wasInvited,
-                id: 0,
-                modelType: MODEL_TYPE.CONTACT
-              }
-            );
-          } else {
-            partExistend.hasParticipated = x.participated;
-            partExistend.wasInvited = x.wasInvited;
-            participants.push(partExistend);
-          }
+          this.addParticipatedStates(MODEL_TYPE.CONTACT, saveNewValues, participants, x);
         }
       } else if (x.modelType === MODEL_TYPE.ORGANIZATION) {
         const orga = this.orgas.find(y => y.id === x.objectId);
         if (orga != null) {
           organizations.push(orga);
-          const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
-             MODEL_TYPE.ORGANIZATION);
-          if (partExistend == null) {
-            participants.push(
-              {
-                objectId: x.objectId,
-                hasParticipated: x.participated,
-                wasInvited: x.wasInvited,
-                id: 0,
-                modelType: MODEL_TYPE.ORGANIZATION
-              }
-            );
-          } else {
-            partExistend.hasParticipated = x.participated;
-            partExistend.wasInvited = x.wasInvited;
-            participants.push(partExistend);
-          }
+          this.addParticipatedStates(MODEL_TYPE.ORGANIZATION, saveNewValues, participants, x);
         }
       }
     });
@@ -443,14 +485,79 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.event.organizations = organizations;
     this.event.participated = participants;
     this.event.tags = this.selectedTags;
-    this.eventService.put(this.event, this.event.id).subscribe(() => {
-      this.dialogRef.close({save: true});
+    this.eventService.put(this.event, this.event.id).subscribe(x => this.dialogRef.close({save: true}));
+  }
+
+  addParticipatedStates(modelType: MODEL_TYPE, saveNewValues: boolean, participants: ParticipatedDto[], x: EventContactConnection) {
+    const partExistend: ParticipatedDto = this.event.participated.find(z => z.objectId === x.objectId && z.modelType ===
+      modelType);
+    let newState = ParticipatedStatus.NOT_INVITED;
+    let participatedState = false;
+    if (saveNewValues) {
+      newState = x.eventStatus;
+      participatedState = x.participated;
+    }
+    if (partExistend == null) {
+      participants.push(
+        {
+          objectId: x.objectId,
+          hasParticipated: participatedState,
+          eventStatus: newState,
+          id: 0,
+          modelType
+        }
+      );
+    } else {
+      partExistend.hasParticipated = participatedState;
+      partExistend.eventStatus = newState;
+      participants.push(partExistend);
+    }
+  }
+
+  isSameDate(dateOld: string, dateNew: string): boolean {
+    const dateOldObj = new Date(dateOld);
+    const dateNewObj = new Date(dateNew);
+    return dateOldObj.getFullYear() === dateNewObj.getFullYear() && dateOldObj.getMonth() === dateNewObj.getMonth() &&
+      dateOldObj.getDate() === dateNewObj.getDate();
+  }
+
+  isSameTime(timeOld: string, timeNew: string): boolean {
+    const timeOldObj = new Date(timeOld);
+    let min = timeOldObj.getMinutes().toString();
+    if (min.length === 1) {
+      min = '0' + min;
+    }
+    let hours = timeOldObj.getHours().toString();
+    if (hours.length == 1) {
+      hours = '0' + hours;
+    }
+    const oldTime = hours + ':' + min;
+    return oldTime === timeNew;
+  }
+
+  disableInvitation(): boolean {
+    let state = true;
+    this.selectedItems.forEach(x => {
+      if (x.eventStatus === ParticipatedStatus.NOT_INVITED) {
+        state = false;
+      }
     });
+    return state;
+  }
+
+  getEventState(state: ParticipatedStatus): string {
+    if (state === ParticipatedStatus.NOT_INVITED) {
+      return this.translate.instant('event.notInvited');
+    } else if (state === ParticipatedStatus.INVITED) {
+      return this.translate.instant('event.invited');
+    } else if (state === ParticipatedStatus.AGREED) {
+      return this.translate.instant('event.agreed');
+    } else {
+      return this.translate.instant('event.cancelled');
+    }
   }
 
   close() {
     super.confirmDialog();
   }
 }
-
-

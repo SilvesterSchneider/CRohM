@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>{{'event.sendDeletionInfo' | translate}}</h1>
+<div style="padding-bottom: 1em;" mat-dialog-content>
+  {{'event.confirmDeletionInfo' | translate}}
+  </div>
+<div mat-dialog-actions>   
+<span class="fill-remaining-space"></span>
+  <button mat-raised-button (click)="onCancel()">{{'common.no' | translate}}</button>
+  <button mat-raised-button (click)="onDelete()" color="warn">{{'common.yes' | translate}}</button> 
+</div>
