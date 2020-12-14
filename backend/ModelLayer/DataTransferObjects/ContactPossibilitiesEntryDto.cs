@@ -1,4 +1,4 @@
-﻿using ModelLayer.Helper;
+using ModelLayer.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,8 +10,6 @@ namespace ModelLayer.DataTransferObjects
     {
         public long Id { get; set; }
         public string ContactEntryName { get; set; }
-
-        [MailAndPhoneValidator]
         public string ContactEntryValue { get; set; }
     }
 
@@ -20,7 +18,7 @@ namespace ModelLayer.DataTransferObjects
         [Required(AllowEmptyStrings = false)]
         public string ContactEntryName { get; set; }
 
-        [MailAndPhoneValidator]
+        [Required(AllowEmptyStrings = false)]
         public string ContactEntryValue { get; set; }
     }
 }

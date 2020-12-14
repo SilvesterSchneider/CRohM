@@ -3800,7 +3800,7 @@ export interface ContactPossibilitiesCreateDto {
 
 export interface ContactPossibilitiesEntryCreateDto {
     contactEntryName: string;
-    contactEntryValue?: string | undefined;
+    contactEntryValue: string;
 }
 
 export interface HistoryElementCreateDto {
