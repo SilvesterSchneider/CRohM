@@ -23,7 +23,8 @@ namespace WebApi.Helper
                     UserName = "admin",
                     Email = "admin@admin.com",
                     FirstName = "system",
-                    LastName = "admin"
+                    LastName = "admin",
+                    IsSuperAdmin = true
                 };
                 userService.CreateAsync(user, "@dm1n1stR4tOr").Wait();
             }
