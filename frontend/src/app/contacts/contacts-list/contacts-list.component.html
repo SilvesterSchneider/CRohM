@@ -58,6 +58,10 @@
                 <a (mouseover)="mouseOver(element.id)">{{element.contactPossibilities.phoneNumber}}</a>
             </mat-cell>
         </ng-container>
+        <ng-container matColumnDef="PLZ">
+            <mat-header-cell *matHeaderCellDef> {{'contact.zipcode' | translate}}  </mat-header-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.zipcode}} </mat-cell>
+        </ng-container>
         <ng-container matColumnDef="ort">
             <mat-header-cell *matHeaderCellDef> {{'contact.city' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.city}}
