@@ -43,7 +43,7 @@ namespace WebApi
             var database = Configuration["DBName"] ?? "CRMDB";
 
             var connectionString = $"Server={server}\\SQLEXPRESS01" + (string.IsNullOrEmpty(port) ? "" : "," + port) + $";Database={database};User Id={user};Password={password}";
-
+            //connectionString = "Server=.\\SQLEXPRESS01;Database=CRMDB;Trusted_Connection=True;";
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);

@@ -100,6 +100,8 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     }
   }
 
+  userAriaDescribedBy?: string;
+
   hasChanged() {
     return !this.eventsForm.pristine;
   }
@@ -141,20 +143,19 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
             }
           );
         });
-		 if (this.preselectedContactsOrgas?.length > 0) {
-		  this.preselectedContactsOrgas.forEach(s => {
-			let cont: EventContactConnection;
-			if (this.data.useOrgas != null && this.data.useOrgas) {
-			  cont = this.filteredItems.find(z => z.objectId === s && z.modelType === MODEL_TYPE.ORGANIZATION);
-			} else {
-			  cont = this.filteredItems.find(z => z.objectId === s && z.modelType === MODEL_TYPE.CONTACT);
-			}
-			if (cont != null) {
+        if (this.preselectedContactsOrgas?.length > 0) {
+          this.preselectedContactsOrgas.forEach(s => {
+            let cont: EventContactConnection;
+            if (this.data.useOrgas != null && this.data.useOrgas) {
+              cont = this.filteredItems.find(z => z.objectId === s && z.modelType === MODEL_TYPE.ORGANIZATION);
+            } else {
+              cont = this.filteredItems.find(z => z.objectId === s && z.modelType === MODEL_TYPE.CONTACT);
+            }
+            if (cont != null) {
               this.toggleSelection(cont);
             }
-		  }
-        );
-      });
+          });
+        }
       });
     });
   }
