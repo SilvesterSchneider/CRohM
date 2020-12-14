@@ -32,7 +32,7 @@ export class MailComponent implements OnInit {
 
   createForm(): FormGroup {
     return this.fb.group({
-			mailAddress: ['', Validators.required],
+			mailAddress: ['', Validators.email],
 			displayName: ['', Validators.required],
 			userName: ['', Validators.required],
 			password: ['', Validators.required],
