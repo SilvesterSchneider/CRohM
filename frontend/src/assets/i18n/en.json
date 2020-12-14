@@ -220,7 +220,7 @@
     },
     "validation": {
         "nameRequired": "Name of the contact entry required!",
-        "mailPhoneRequired": "Phone number or e-mail address required!"
+        "mailPhoneRequired": "Value required!"
     },
     "calendar": {
         "title": "Calendar",

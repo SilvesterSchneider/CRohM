@@ -1257,8 +1257,6 @@ export class DataProtectionService {
 
     /**
      * @return at least one data protection officer
-    or
-    no data protection officer found
      */
     isThereAnyDataProtectionOfficerInTheSystem(): Observable<void> {
         let url_ = this.baseUrl + "/api/DataProtection/officer";
@@ -1295,6 +1293,10 @@ export class DataProtectionService {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("no data protection officer found", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -1668,6 +1670,82 @@ export class EventService {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param contactId (optional) 
+     * @param organizationId (optional) 
+     * @param state (optional) 
+     * @return successful
+     */
+    postInvitationResponse(id: number, contactId?: number | null | undefined, organizationId?: number | null | undefined, state?: ParticipatedStatus | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/Event/{id}/invitationresponse?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (contactId !== undefined && contactId !== null)
+            url_ += "contactId=" + encodeURIComponent("" + contactId) + "&";
+        if (organizationId !== undefined && organizationId !== null)
+            url_ += "organizationId=" + encodeURIComponent("" + organizationId) + "&";
+        if (state === null)
+            throw new Error("The parameter 'state' cannot be null.");
+        else if (state !== undefined)
+            url_ += "state=" + encodeURIComponent("" + state) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPostInvitationResponse(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPostInvitationResponse(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPostInvitationResponse(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("not found", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            result400 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("bad request", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
     }
 }
 
@@ -3654,6 +3732,8 @@ export interface EventDto {
     time: string;
     name?: string | undefined;
     duration: number;
+    description?: string | undefined;
+    location?: string | undefined;
     contacts?: ContactDto[] | undefined;
     organizations?: OrganizationDto[] | undefined;
     participated?: ParticipatedDto[] | undefined;
@@ -3720,7 +3800,7 @@ export interface ContactPossibilitiesCreateDto {
 
 export interface ContactPossibilitiesEntryCreateDto {
     contactEntryName: string;
-    contactEntryValue?: string | undefined;
+    contactEntryValue: string;
 }
 
 export interface HistoryElementCreateDto {
@@ -3772,6 +3852,8 @@ export interface EventCreateDto {
     time: string;
     name?: string | undefined;
     duration: number;
+    description?: string | undefined;
+    location?: string | undefined;
     contacts?: number[] | undefined;
     organizations?: number[] | undefined;
 }
@@ -3825,6 +3907,7 @@ export enum DATA_TYPE {
     INVITATION = 21,
     CONTACT_PARTNER = 22,
     GENDER = 23,
+    LOCATION = 24,
 }
 
 export enum MODIFICATION {

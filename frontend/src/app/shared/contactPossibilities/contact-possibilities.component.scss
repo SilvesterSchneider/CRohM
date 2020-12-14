@@ -6,3 +6,14 @@
 .margin10 {
     margin: 10px;
 }
+.button{
+    margin: 10px;
+}
+.spacer {
+    /* This fills the remaining space, by using flexbox. 
+       Every toolbar row uses a flexbox row layout. */
+    flex: 1 1 auto;
+  }
+.smallicon {
+    transform: scale(0.5);
+}
