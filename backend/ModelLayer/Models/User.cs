@@ -27,6 +27,8 @@ namespace ModelLayer.Models
             } 
         }
 
+        public bool IsSuperAdmin { get; set; } = false;
+
         public bool IsDeleted { get; set; } = false;
     }
 

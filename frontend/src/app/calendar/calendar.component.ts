@@ -90,7 +90,7 @@ export class CalendarComponent implements OnInit {
     private jwt: JwtService,
     private translate: TranslationService) {}
 
-  activeDayIsOpen = true;
+  activeDayIsOpen = false;
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -187,6 +187,7 @@ export class CalendarComponent implements OnInit {
         );
         idx++;
       });
+      this.refresh.next();
     });
   }
 

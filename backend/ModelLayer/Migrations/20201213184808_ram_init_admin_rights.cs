@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class ram_kal13_init : Migration
+    public partial class ram_init_admin_rights : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -146,6 +146,7 @@ namespace ModelLayer.Migrations
                     LastName = table.Column<string>(nullable: true),
                     LastLoginDate = table.Column<DateTime>(nullable: false),
                     hasPasswordChanged = table.Column<bool>(nullable: false),
+                    IsSuperAdmin = table.Column<bool>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -548,7 +549,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "efd057fc-d8e8-4e9e-ae27-575673fe01f6", "Admin", "ADMIN" });
+                values: new object[] { 1L, "ece5b136-d7e1-4a75-92bd-dbedeac54a1c", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",

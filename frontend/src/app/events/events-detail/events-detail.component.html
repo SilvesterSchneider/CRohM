@@ -68,13 +68,13 @@
         </mat-chip-list>
         <mat-autocomplete #autoComplete="matAutocomplete">
             <mat-option>
-                <mat-checkbox id="contactInput" [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
+                <mat-checkbox color="primary" id="contactInput" [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
                         {{'common.selectAll' | translate}}
                 </mat-checkbox>
             </mat-option>
             <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
                 <div (click)="optionClicked($event, item);">
-                    <mat-checkbox [checked]="item.selected" (change)="toggleSelection(item)" (click)="$event.stopPropagation()">
+                    <mat-checkbox color="primary" [checked]="item.selected" (change)="toggleSelection(item)" (click)="$event.stopPropagation()">
                         {{ item.preName + ' ' + item.name }}
                     </mat-checkbox>
                 </div>

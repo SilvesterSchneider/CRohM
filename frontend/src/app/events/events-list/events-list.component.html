@@ -6,7 +6,7 @@
             <mat-label>{{'common.search' | translate}}</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="{{'event.events' | translate }}...">
         </mat-form-field>
-        <mat-checkbox class="button" [checked]="checkboxSelected" title="{{'event.hidePast' | translate}}"
+        <mat-checkbox color="primary" class="button" [checked]="checkboxSelected" title="{{'event.hidePast' | translate}}"
             (change)="toggleSelection()">
             {{'event.hidePast' | translate}}
         </mat-checkbox>
@@ -25,18 +25,18 @@
     <mat-table mat-table [dataSource]="dataSourceFiltered">
         <ng-container matColumnDef="bezeichnung">
             <mat-header-cell *matHeaderCellDef> {{'common.label' | translate}} </mat-header-cell>
-            <mat-cell [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
+            <mat-cell (click)="openInfo(element.id)" [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
                 {{element.name}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="datum">
             <mat-header-cell *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
-            <mat-cell [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
+            <mat-cell (click)="openInfo(element.id)" [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
                 {{element.date | date}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="uhrzeit">
             <mat-header-cell *matHeaderCellDef> {{'common.time' | translate}} </mat-header-cell>
-            <mat-cell [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
+            <mat-cell (click)="openInfo(element.id)" [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
                 {{element.time | date:'shortTime'}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">

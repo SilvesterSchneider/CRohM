@@ -112,7 +112,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       // only display prename and name on larger screens
       this.displayedColumns = ['vorname', 'nachname', 'action'];
     } else {
-      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon', 'ort', 'organisation', 'action'];
+      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon','PLZ', 'ort', 'organisation', 'action'];
     }
   }
 
