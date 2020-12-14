@@ -61,7 +61,7 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 		this.contact = data;
 		this.dialogRef.backdropClick().subscribe(() => {
 			// Close the dialog
-			dialogRef.close();
+			dialogRef.close({delete: false});
 		});
 		this.contact.tags.forEach(x => this.selectedTags.push(x));
 		this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(startWith(''),
