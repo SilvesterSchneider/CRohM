@@ -53,13 +53,13 @@
 
     <mat-autocomplete #autoComplete="matAutocomplete">
         <mat-option>
-            <mat-checkbox [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
+            <mat-checkbox color="primary" [checked]="isAllSelected" (change)="toggleSelectAll()" (click)="$event.stopPropagation()">
                 {{'common.selectAll' | translate}}
             </mat-checkbox>
         </mat-option>
         <mat-option *ngFor="let item of filteredItems" [value]="selectedItems">
             <div (click)="optionClicked($event, item);">
-                <mat-checkbox [checked]="item.selected" (change)="toggleSelection(item)"
+                <mat-checkbox color="primary" [checked]="item.selected" (change)="toggleSelection(item)"
                     (click)="$event.stopPropagation()">
                     {{ item.preName + ' ' + item.name }}
                 </mat-checkbox>

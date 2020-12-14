@@ -20,13 +20,13 @@
     <mat-table id="tableOrganization" #table [dataSource]="dataSource">
         <ng-container matColumnDef="Icon">
             <mat-header-cell *matHeaderCellDef>
-                <mat-checkbox [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>
+                <mat-checkbox color="primary" [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>
             </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)">
                 <div *ngIf="!isSelectedRow(element.id)" class="selection">
                     {{element.name.substring(0,2)}}
                 </div>
-                <mat-checkbox class="checkBox" *ngIf="isSelectedRow(element.id)"
+                <mat-checkbox color="primary" class="checkBox" *ngIf="isSelectedRow(element.id)"
                     [checked]="isSelectionChecked(element.id)" (change)="onCheckBoxChecked(element.id)">
                 </mat-checkbox>
             </mat-cell>
