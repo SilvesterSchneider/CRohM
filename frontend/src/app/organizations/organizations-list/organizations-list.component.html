@@ -1,6 +1,9 @@
 <mat-toolbar>
     <mat-toolbar-row class="tabrow">
         <span class="spacer"></span>
+        <a *ngIf="selectedCheckBoxList.length > 0" (click)="createEvent()" type="button">
+            <mat-icon color="primary" title="{{'event.create' | translate}}" class="iconMargin">event</mat-icon>
+        </a>
         <app-tags-filter></app-tags-filter>
         <mat-form-field>
             <mat-label>{{'common.search' | translate}}</mat-label>
