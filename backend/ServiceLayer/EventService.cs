@@ -9,7 +9,7 @@ namespace ServiceLayer
 {
     public interface IEventService : IEventRepository
     {
-        Task<bool> SendInvitationMailsAsync(List<long> contacts, List<long> orgaIds, string mailContent);
+        Task<bool> SendInvitationMailsAsync(List<long> contacts, List<long> orgaIds, string mailContent, long eventId, string uri);
         Task<bool> HandleInvitationResponseForContactAsync(long id, long contactId, ParticipatedStatus state);
 
         Task<bool> HandleInvitationResponseForOrganizationAsync(long id, long organizationId, ParticipatedStatus state);
@@ -43,7 +43,7 @@ namespace ServiceLayer
             return await HandleInvitationResponseForObjectAsync(id, organizationId, state, MODEL_TYPE.ORGANIZATION);
         }
 
-        public async Task<bool> SendInvitationMailsAsync(List<long> contacts, List<long> orgaIds, string mailContent)
+        public async Task<bool> SendInvitationMailsAsync(List<long> contacts, List<long> orgaIds, string mailContent, long eventId, string uri)
         {
             bool ok = true;
             foreach (long contactId in contacts)
@@ -51,7 +51,7 @@ namespace ServiceLayer
                 Contact contact = await contactRepo.GetByIdAsync(contactId);
                 if (contact != null)
                 {
-                    mailService.CreateAndSendInvitationMail(contact.ContactPossibilities.Mail, contact.PreName, contact.Name, mailContent, contact.Gender);
+                    mailService.CreateAndSendInvitationMail(contact.ContactPossibilities.Mail, contact.PreName, contact.Name, mailContent, contact.Gender, eventId, contact.Id, 0, uri);
                 }
                 else
                 {
@@ -63,7 +63,7 @@ namespace ServiceLayer
                 Organization orga = await orgaRepo.GetByIdAsync(orgaId);
                 if (orga != null)
                 {
-                    mailService.CreateAndSendInvitationMail(orga.Contact.Mail, orga.Name, mailContent);
+                    mailService.CreateAndSendInvitationMail(orga.Contact.Mail, orga.Name, mailContent, eventId, 0, orgaId, uri);
                 }
                 else
                 {

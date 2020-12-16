@@ -17,7 +17,7 @@ namespace ServiceLayer
     /// </summary>
     public interface IMailService
     {
-        Task<bool> CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender);
+        Task<bool> CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender, long eventid, long contactid, long organisationid, string uri);
         Task<bool> CreateAndSendMail(string address, string subject, string body, byte[] attachment, string attachmentType);
 
         Task<bool> PasswordReset(string newPassword, string mailAddress);
@@ -29,7 +29,7 @@ namespace ServiceLayer
         Task<bool> SendDataProtectionUpdateMessage(string title, string lastname, string emailAddressRecipient, string data);
 
         Task<bool> SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
-        Task<bool> CreateAndSendInvitationMail(string mail, string name, string mailContent);
+        Task<bool> CreateAndSendInvitationMail(string mail, string name, string mailContent, long eventid, long contactid, long organisationid, string uri);
 
         Task<bool> SendMailToAddress(string subject, string address, string mailContent);
 
@@ -51,6 +51,7 @@ namespace ServiceLayer
         private static string EVENTNAMEFIELD = "<Veranstaltungsname>";
         private static string EVENTDATEFIELD = "<Datum>";
         private static string EVENTTIMEFIELD = "<Uhrzeit>";
+        private static string EVENTBUTTONFIELD = "<BUTTONS>";
         private static string MAILSETUP = "<h5><i> - English version below - </i></h5>" +
             "Sehr geehrter Administrator\r\rDie Einstellungen für den Email-Server wurden erfolgreich " +
             "übernommen\r\rTechnische Hochschule Nürnberg" +
@@ -62,11 +63,15 @@ namespace ServiceLayer
         public static string INVITATION_DEF_CONTENT = "- English version below -\r" +
             STARTFIELD + " " + PRENAMEFIELD + " " + NAMEFIELD +
             "\rWir laden Sie herzlich ein zu unserer Veranstaltung \"" + EVENTNAMEFIELD +
-            "\" am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr.\rWir freuen uns auf Ihr Erscheinen.\rTechnische Hochschule Nürnberg" +
+            "\" am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr.\r" +
+            EVENTBUTTONFIELD + "\r" +
+            "Wir freuen uns auf Ihr Erscheinen.\rTechnische Hochschule Nürnberg" +
             "\r\r- English Version -\r" +
             STARTFIELDEN + " " + PRENAMEFIELDEN + " " + NAMEFIELDEN +
             "\rWe cordially invite you to our event \"" + EVENTNAMEFIELD +
-            "\" on " + EVENTDATEFIELD + " at " + EVENTTIMEFIELD + ".\rWe look forward to your appearance.\rNuremberg Institute of Technology";
+            "\" on " + EVENTDATEFIELD + " at " + EVENTTIMEFIELD + ".\r +" +
+            EVENTBUTTONFIELD + " \r" +
+            "We look forward to your appearance.\rNuremberg Institute of Technology";
         private static string EVENT_CANCELATION_CONTENT = "<p>" + STARTFIELD + NAMEFIELD + ", </p>" +
             "<p> leider musste die Veranstaltung '" + EVENTNAMEFIELD + "', </p>" +
             "<p> welche am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr stattfinden sollte, </p>" +
@@ -324,11 +329,16 @@ namespace ServiceLayer
             }
         }
 
-        public async Task<bool> CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender)
+        public async Task<bool> CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender, long eventid, long contactid, long organisationid, string uri)
         {
             string start = GetGenderTitle(gender);
             string genderEn = GetGenderTitleEnglish(gender);
             string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
+
+            string buttons = "<p><a href = \""+uri+"/api/Event/"+eventid+"/invitationresponse?contactId="+contactid+"&organizationId="+organisationid+ "&state=2\"><button> Zusagen </button></a></p>" +
+                "<p><a href = \"" + uri + "/api/Event/" + eventid+"/invitationresponse?contactId="+contactid+"&organizationId="+organisationid+"&state=3\"><button> Absagen </button></a></p>";
+            finishedcontent = finishedcontent.Replace(EVENTBUTTONFIELD, buttons);
+
             finishedcontent = finishedcontent.Replace(NAMEFIELDEN, name).Replace(STARTFIELDEN, genderEn).Replace(PRENAMEFIELDEN, preName);
             return await SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, address, null, null);
         }
@@ -355,10 +365,15 @@ namespace ServiceLayer
             return await SendMailAsync(subject, text, emailAddressRecipient, attachment, attachmentType);
         }
 
-        public async Task<bool> CreateAndSendInvitationMail(string mail, string name, string mailContent)
+        public async Task<bool> CreateAndSendInvitationMail(string mail, string name, string mailContent, long eventid, long contactid, long organisationid, string uri)
         {
             string finishedcontent = mailContent.Replace(STARTFIELD, ORGASTART);
             finishedcontent = finishedcontent.Replace(STARTFIELDEN, ORGASTARTEN);
+
+            string buttons = "<p><a href = \"" + uri + "/api/Event/" + eventid + "/invitationresponse?contactId=" + contactid + "&organizationId=" + organisationid + "&state=2\"><button> Zusagen </button></a></p>" +
+              "<p><a href = \"" + uri + "/" + eventid + "/invitationresponse?contactId=" + contactid + "&organizationId=" + organisationid + "&state=3\"><button> Absagen </button></a></p>";
+            finishedcontent = finishedcontent.Replace(EVENTBUTTONFIELD, buttons);
+
             if (mailContent.IndexOf(NAMEFIELD) > 0)
             {
                 finishedcontent = finishedcontent.Replace(NAMEFIELD, name).Replace(PRENAMEFIELD, string.Empty);

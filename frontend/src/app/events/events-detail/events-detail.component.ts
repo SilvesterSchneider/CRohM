@@ -315,7 +315,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             y.eventStatus = ParticipatedStatus.INVITED;
           }
         });
-        this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text).subscribe(x => {
+        this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text, this.event.id).subscribe(x => {
           if (useFinishSave) {
             this.finishSave(save);
           }
