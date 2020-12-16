@@ -36,7 +36,6 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 registerLocaleData(localeDe);
 
@@ -70,7 +69,6 @@ registerLocaleData(localeDe);
     BrowserAnimationsModule,
     CommonModule,
     NgbModalModule,
-    NgxMaterialTimepickerModule,
     FlatpickrModule,
     CalendarModule.forRoot({
       provide: DateAdapter,

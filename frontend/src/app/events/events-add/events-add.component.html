@@ -24,9 +24,8 @@
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input matInput [ngxTimepicker]="timepicker" [disableClick]="true" [format]="24" placeholder="{{ 'common.time' | translate }}" formControlName="time"/>
+                <input matInput type="time" placeholder="{{ 'common.time' | translate }}" formControlName="time"/>
               </mat-form-field>
-              <ngx-material-timepicker #timepicker ></ngx-material-timepicker>           
         </div>
         <div class="col-md-3">
             <mat-form-field>

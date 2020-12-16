@@ -8,7 +8,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/material.module';
 import { EventsInfoComponent } from './events-info/events-info.component';
 import { EventsInvitationComponent } from './events-invitation/events-invitation.component';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { DeletionConfirmationDialogComponent } from './deletion-confirmation-dialog/deletion-confirmation-dialog.component';
 import { ConfirmationInvitationDialogComponent } from './confirmation-invitation-dialog/confirmation-invitation-dialog.component';
 
@@ -19,7 +18,6 @@ import { ConfirmationInvitationDialogComponent } from './confirmation-invitation
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    NgxMaterialTimepickerModule
   ],
   declarations: [
     EventsListComponent,
