@@ -47,7 +47,7 @@
     "@angular/compiler-cli": "^11.0.0",
     "@angular/language-service": "^11.0.5",
     "@compodoc/compodoc": "^1.1.11",
-    "@types/node": "^14.14.11",
+    "@types/node": "^14.14.14",
     "codelyzer": "^6.0.0",
     "ts-node": "~9.1.1",
     "tslint": "~6.1.0",
