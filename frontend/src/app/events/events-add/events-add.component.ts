@@ -109,7 +109,7 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
   ngOnInit() {
     this.eventsForm = this.fb.group({
       name: ['', Validators.required],
-      date: ['', Validators.required],
+      date: [new FormControl('')],
       time: ['', Validators.required],
       duration: ['', Validators.required],
       description: ['', Validators.maxLength(300)],
@@ -262,6 +262,7 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
 
   saveValues() {
     const eventToSave: EventCreateDto = this.eventsForm.value;
+    eventToSave.date = new Date(new Date(eventToSave.date).getTime()).toDateString();
     eventToSave.contacts = new Array<number>();
     eventToSave.organizations = new Array<number>();
     this.selectedItems.forEach(x => {

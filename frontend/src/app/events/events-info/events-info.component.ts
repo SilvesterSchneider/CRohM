@@ -44,11 +44,6 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     });
   }
 
-  getDate(date: string): string {
-    const dateUsed = new Date(date);
-    return dateUsed.getFullYear().toString() + '-' + (+dateUsed.getMonth() + 1).toString() + '-' + dateUsed.getDate().toString();
-  }
-
   getSortHistoryFunction(a: ModificationEntryDto, b: ModificationEntryDto) {
     return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
   }

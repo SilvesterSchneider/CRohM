@@ -30,15 +30,14 @@ import { MissingTranslationLogger } from './shared/translation/missing-translati
 import { TranslationService } from './shared/translation/translation.service';
 import localeDe from '@angular/common/locales/de';
 import { registerLocaleData } from '@angular/common';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
-
-registerLocaleData(localeDe);
 import { ApproveContactComponent } from './approve-contact/approve-contact.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+
+registerLocaleData(localeDe);
 
 @NgModule({
   declarations: [
@@ -49,7 +48,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     SidenavComponent,
     ConfirmDialogComponent,
     ChangePasswordComponent,
-	CalendarComponent,
+    CalendarComponent,
     LanguageSelectComponent,
     ApproveContactComponent
   ],
@@ -70,7 +69,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     BrowserAnimationsModule,
     CommonModule,
     NgbModalModule,
-    FlatpickrModule.forRoot(),
+    FlatpickrModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
@@ -107,11 +106,6 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     // Provide locale using translationService
     {
       provide: LOCALE_ID,
-      deps: [TranslationService],
-      useFactory: (translationService) => translationService.getLocale()
-    },
-    {
-      provide: MAT_DATE_LOCALE,
       deps: [TranslationService],
       useFactory: (translationService) => translationService.getLocale()
     }

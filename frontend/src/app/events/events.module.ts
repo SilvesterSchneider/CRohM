@@ -17,7 +17,7 @@ import { ConfirmationInvitationDialogComponent } from './confirmation-invitation
     EventsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
   ],
   declarations: [
     EventsListComponent,
