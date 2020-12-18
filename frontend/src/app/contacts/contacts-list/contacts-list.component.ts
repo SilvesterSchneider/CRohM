@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { ContactService, DataProtectionService, GenderTypes } from '../../shared/api-generated/api-generated';
+import { ContactService, DataProtectionService, GenderTypes, OrganizationService } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
@@ -19,6 +19,7 @@ import { DataProtectionHelperService } from '../../shared/data-protection/data-p
 import { DpUpdatePopupComponent } from '../../shared/data-protection/dp-update-popup/dp-update-popup.component';
 import { ContactsSendMailDialogComponent } from '../contacts-send-mail-dialog/contacts-send-mail-dialog.component';
 import { Router } from '@angular/router';
+import { OrganizationsInfoComponent } from 'src/app/organizations/organizations-info/organizations-info.component';
 
 @Component({
   selector: 'app-contacts-list',
@@ -51,6 +52,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     private service: ContactService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dialog: MatDialog,
+    private orgaService: OrganizationService,
     private mediaObserver: MediaObserver,
     private readonly dataProtectionService: DataProtectionService,
     private readonly dsgvoService: DataProtectionHelperService,
@@ -112,7 +114,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       // only display prename and name on larger screens
       this.displayedColumns = ['vorname', 'nachname', 'action'];
     } else {
-      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon','PLZ', 'ort', 'organisation', 'action'];
+      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon', 'PLZ', 'ort', 'organisation',
+       'action'];
     }
   }
 
@@ -329,18 +332,23 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.dialog.open(EventsAddComponent, { disableClose: true, data: { list: this.selectedCheckBoxList, useOrgas: false }});
   }
 
-  getOrganization(id: number): string {
+  getOrganization(id: number): string[] {
     const contact = this.allContacts.find(a => a.id === id);
+    const orgas = new Array<string>();
     if (contact != null && contact.organizations != null && contact.organizations.length > 0) {
-      let orgas = '';
-      contact.organizations.forEach(b => orgas += b.name + ', ');
-      return orgas.substring(0, orgas.length - 2);
-    } else {
-      return '';
+      contact.organizations.forEach(b => orgas.push(b.name));
     }
+    return orgas;
   }
 
-  changeToOrganizationPage() {
-    this.route.navigate(['/organizations']);
+  openOrganisationInfo(contact: ContactDto, orga: string) {
+    if (contact.organizations != null && contact.organizations.length > 0) {
+      const id = contact.organizations.findIndex(a => a.name === orga);
+      if (id >= 0) {
+        this.orgaService.getById(contact.organizations[id].id).subscribe(x => {
+          this.dialog.open(OrganizationsInfoComponent, {data: x});
+        });
+      }
+    }
   }
 }

@@ -52,7 +52,8 @@ export class VerticalGroupedBarChartComponent implements OnInit {
 
   checkForUpdate() {
     if (this.startDate != null && this.endDate != null) {
-      this.visibleData = this.allData.filter(date => moment(date.name, 'DD.MM.YYYY').isBetween(moment(this.startDate, 'DD.MM.YYYY'), moment(this.endDate, 'DD.MM.YYYY'), null, '[]'));
+      this.visibleData = this.allData.filter(date => moment(date.name, 'DD.MM.YYYY')
+        .isBetween(moment(this.startDate, 'DD.MM.YYYY'), moment(this.endDate, 'DD.MM.YYYY'), null, '[]'));
       this.setTheView();
       this.changeFunction(this.visibleData);
     }

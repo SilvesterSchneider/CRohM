@@ -69,8 +69,14 @@
         </ng-container>
         <ng-container matColumnDef="organisation">
             <mat-header-cell *matHeaderCellDef> {{'organization.organizations' | translate}} </mat-header-cell>
-            <mat-cell (click)="changeToOrganizationPage()" *matCellDef="let element"
-                (mouseover)="mouseOver(element.id)"> {{getOrganization(element.id)}} </mat-cell>
+            <mat-cell class="orgaBlue" *matCellDef="let element"
+                (mouseover)="mouseOver(element.id)"> 
+                <div layout="column">
+                    <div flex="" *ngFor="let orga of getOrganization(element.id)" (click)="openOrganisationInfo(element, orga)">
+                        {{orga}}
+                    </div>
+                </div>
+            </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>

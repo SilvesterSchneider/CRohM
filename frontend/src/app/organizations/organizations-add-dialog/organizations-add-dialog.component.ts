@@ -44,8 +44,8 @@ export class OrganizationsAddDialogComponent extends BaseDialogInput implements 
 		this.organization = this.organizationForm.value;
 		this.service.post(this.organization).subscribe((organization) => {
 			console.log(organization);
+			this.dialogRef.close();
 		});
-		this.dialogRef.close();
 	}
 
 	private createOrganizationForm(): FormGroup {
