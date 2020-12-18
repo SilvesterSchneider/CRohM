@@ -112,7 +112,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       // only display prename and name on larger screens
       this.displayedColumns = ['vorname', 'nachname', 'action'];
     } else {
-      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon','PLZ', 'ort', 'organisation', 'action'];
+      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon', 'PLZ', 'ort', 'organisation', 'action'];
     }
   }
 
@@ -267,6 +267,10 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   mouseOver(id: number) {
     this.selectedRow = id;
+  }
+
+  mouseLeave() {
+    this.selectedRow = -1;
   }
 
   isSelectedRow(id: number): boolean {
