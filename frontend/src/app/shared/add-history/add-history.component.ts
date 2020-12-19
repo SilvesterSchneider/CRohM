@@ -32,7 +32,7 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
     constructor(
         public dialogRef: MatDialogRef<AddHistoryComponent>,
         public dialog: MatDialog,
-        @Inject(MAT_DIALOG_DATA) public phoneNumber: string,
+        @Inject(MAT_DIALOG_DATA) public data: HistoryDialogModel,
         private fb: FormBuilder) {
         super(dialogRef, dialog);
         this.dialogRef.backdropClick().subscribe(() => {
@@ -50,9 +50,9 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
             comment: ['', Validators.required]
         });
 
-        if (this.phoneNumber != null && this.phoneNumber.length > 0) {
-            this.oppoSuitsForm.get('type').setValue(this.types[1]);
-            this.oppoSuitsForm.get('comment').setValue(this.phoneNumber);
+        if (this.data != null && this.data.type != null) {
+            this.oppoSuitsForm.get('type').setValue(this.data.type);
+            this.oppoSuitsForm.get('comment').setValue(this.data.value);
         }
 
         this.oppoSuitsForm.get('date').setValue(dateToInsert);
@@ -92,3 +92,13 @@ export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> im
         super.confirmDialog();
     }
 }
+
+/**
+ * Class to represent confirm dialog model.
+ *
+ * It has been kept here to keep it as part of shared component.
+ */
+export class HistoryDialogModel {
+    constructor(public value: string, public type: HistoryElementType) {
+    }
+  }

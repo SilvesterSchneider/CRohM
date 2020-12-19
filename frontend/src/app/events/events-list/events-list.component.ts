@@ -19,10 +19,10 @@ import { EventsInvitationComponent } from '../events-invitation/events-invitatio
 export class EventDtoGroup implements EventDto {
   id: number;
   date: string;
-  time: string;
+  starttime: string;
   name?: string;
   tags: TagDto[];
-  duration: number;
+  endtime: string;
   contacts?: ContactDto[];
   participated?: ParticipatedDto[];
   weekNumber: number;
@@ -65,7 +65,7 @@ export class EventsListComponent implements OnInit {
     this.dataSourceFiltered.filter = filterValue.trim().toLowerCase();
     this.dataSourceFiltered.filterPredicate = ((data, filter) => {
       if (data.name.trim().toLowerCase().includes(filter) || data.date.trim().toLowerCase().includes(filter) ||
-        data.time.trim().toLowerCase().includes(filter)) {
+        data.starttime.trim().toLowerCase().includes(filter)) {
         return true;
       } else {
         return false;
@@ -103,11 +103,11 @@ export class EventsListComponent implements OnInit {
 
   funtionGetSortedData(a: EventDto, b: EventDto): number {
     const dateA = new Date(a.date);
-    const timeA = new Date(a.time);
+    const timeA = new Date(a.starttime);
     dateA.setHours(timeA.getHours());
     dateA.setMinutes(timeA.getMinutes());
     const dateB = new Date(b.date);
-    const timeB = new Date(b.time);
+    const timeB = new Date(b.starttime);
     dateB.setHours(timeB.getHours());
     dateB.setMinutes(timeB.getMinutes());
     return (dateA.getTime() - dateB.getTime());
@@ -164,7 +164,7 @@ export class EventsListComponent implements OnInit {
 
   callEdit(id: number) {
     this.service.getById(id).subscribe(x => {
-      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, minWidth: '450px', height: '800px' });
+      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, width: '680px', height: '800px' });
       dialogRef.afterClosed().subscribe(y => this.init());
     });
   }
@@ -211,7 +211,7 @@ export class EventsListComponent implements OnInit {
     this.weekNumber = 0;
     let eventsFiltered: EventDto[] = new Array<EventDto>();
     if (this.checkboxSelected) {
-      eventsFiltered = events.filter(x => this.getDate(x.date, x.time) >= new Date(Date.now()).getTime());
+      eventsFiltered = events.filter(x => this.getDate(x.date, x.starttime) >= new Date(Date.now()).getTime());
     } else {
       eventsFiltered = events;
     }
@@ -221,10 +221,10 @@ export class EventsListComponent implements OnInit {
         this.weekNumber = week;
         this.dataSource.push({
           date: x.date,
-          duration: x.duration,
+          endtime: x.endtime,
           id: x.id,
           tags: x.tags,
-          time: x.time,
+          starttime: x.starttime,
           contacts: x.contacts,
           name: x.name,
           participated: x.participated,
@@ -234,10 +234,10 @@ export class EventsListComponent implements OnInit {
         });
         this.allEvents.push({
           date: x.date,
-          duration: x.duration,
+          endtime: x.endtime,
           id: x.id,
           tags: x.tags,
-          time: x.time,
+          starttime: x.starttime,
           contacts: x.contacts,
           name: x.name,
           participated: x.participated,
@@ -249,9 +249,9 @@ export class EventsListComponent implements OnInit {
       this.allEvents.push({
         date: x.date,
         tags: x.tags,
-        duration: x.duration,
+        endtime: x.endtime,
         id: x.id,
-        time: x.time,
+        starttime: x.starttime,
         contacts: x.contacts,
         name: x.name,
         participated: x.participated,
@@ -262,9 +262,9 @@ export class EventsListComponent implements OnInit {
       this.dataSource.push({
         date: x.date,
         tags: x.tags,
-        duration: x.duration,
+        endtime: x.endtime,
         id: x.id,
-        time: x.time,
+        starttime: x.starttime,
         contacts: x.contacts,
         name: x.name,
         participated: x.participated,
@@ -301,9 +301,9 @@ export class EventsListComponent implements OnInit {
     date.setDate(date.getDate() + 1);
     this.service.post({
       name: 'Veranstaltung' + this.length,
-      duration: (10 + this.length) / 10,
+      endtime: '21:' + this.length % 59,
       date: date.getFullYear().toString() + '-' + (date.getMonth() + 1) + '-' + date.getDate().toString(),
-      time: '20:' + this.length % 59,
+      starttime: '20:' + this.length % 59,
       contacts: new Array<number>(),
       organizations: new Array<number>()
     }).subscribe(x => this.init());

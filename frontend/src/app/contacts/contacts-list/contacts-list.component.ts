@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { ContactService, DataProtectionService, GenderTypes } from '../../shared/api-generated/api-generated';
+import { ContactService, DataProtectionService, GenderTypes, HistoryElementType } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
@@ -12,7 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
 import { EventsAddComponent } from '../../events/events-add/events-add.component';
-import { AddHistoryComponent } from '../../shared/add-history/add-history.component';
+import { AddHistoryComponent, HistoryDialogModel } from '../../shared/add-history/add-history.component';
 import { JwtService } from '../../shared/jwt.service';
 import { TagsFilterComponent } from '../../shared/tags-filter/tags-filter.component';
 import { DataProtectionHelperService } from '../../shared/data-protection/data-protection-service.service';
@@ -112,7 +112,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       // only display prename and name on larger screens
       this.displayedColumns = ['vorname', 'nachname', 'action'];
     } else {
-      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon','PLZ', 'ort', 'organisation', 'action'];
+      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon', 'PLZ', 'ort', 'organisation', 'action'];
     }
   }
 
@@ -205,7 +205,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   addNote(id: number) {
-    const dialogRef = this.dialog.open(AddHistoryComponent);
+    const dataToUse = new HistoryDialogModel('', HistoryElementType.MAIL);
+    const dialogRef = this.dialog.open(AddHistoryComponent, {data: dataToUse});
     dialogRef.afterClosed().subscribe((y) => {
       if (y) {
         this.service.postHistoryElement(y, id).subscribe(x => this.getDataWithUnapproved());
@@ -214,7 +215,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   addNoteToMany() {
-    const dialogRef = this.dialog.open(AddHistoryComponent);
+    const dataToUse = new HistoryDialogModel('', HistoryElementType.MAIL);
+    const dialogRef = this.dialog.open(AddHistoryComponent, {data: dataToUse});
     dialogRef.afterClosed().subscribe(y => {
       if (y) {
         this.addNoteLoop(0, y);
@@ -257,7 +259,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   callPhonenumber(phonenumber: string, id: number) {
     document.location.href = 'tel:' + phonenumber;
-    const dialogRef = this.dialog.open(AddHistoryComponent, { data: phonenumber });
+    const dataToUse = new HistoryDialogModel(phonenumber, HistoryElementType.PHONE_CALL);
+    const dialogRef = this.dialog.open(AddHistoryComponent, { data: dataToUse });
     dialogRef.afterClosed().subscribe((y) => {
       if (y) {
         this.service.postHistoryElement(y, id).subscribe(x => this.getDataWithUnapproved());

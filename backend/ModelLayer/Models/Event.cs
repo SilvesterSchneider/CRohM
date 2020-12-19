@@ -9,12 +9,11 @@ namespace ModelLayer.Models
     {
         //der tag des events
         public DateTime Date { get; set; } = DateTime.Now;
-        //die genaue uhrzeit des events
-        public DateTime Time { get; set; } = DateTime.Now;
-        /// <summary>
-        /// die dauer des events in x.y stunden
-        /// </summary>
-        public float Duration { get; set; } = 0f;
+        //die genaue uhrzeit des eventstarts
+        public DateTime Starttime { get; set; } = DateTime.Now;
+
+        //die genaue uhrzeit des eventendes
+        public DateTime Endtime { get; set; } = DateTime.Now.AddHours(1);
 
         public String Location { get; set; }
         //die kontakte die diesem event zugeordnet sind

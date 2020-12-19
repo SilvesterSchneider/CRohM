@@ -118,7 +118,7 @@ export class CalendarComponent implements OnInit {
   handleEvent(action: string, event: CalendarEventExtended): void {
     this.modalData = { event, action };
     this.eventService.getById(event.id).subscribe(x => {
-      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, minWidth: '450px', height: '600px' });
+      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, width: '680px', height: '600px' });
       dialogRef.afterClosed().subscribe(y => {
         if (y.save) {
           this.eventService.getById(event.id).subscribe(z => {
@@ -132,9 +132,9 @@ export class CalendarComponent implements OnInit {
   updateEvent(y: EventDto) {
     const ev = this.events.find(a => a.id === y.id);
     if (ev != null) {
-      ev.start = this.getStartDate(y.date, y.time);
-      ev.end = this.getEndDate(y.date, y.time, y.duration);
-      ev.title = this.getTime(y.time) + ' ' + y.name;
+      ev.start = this.getStartDate(y.date, y.starttime);
+      ev.end = this.getStartDate(y.date, y.endtime);
+      ev.title = this.getTime(y.starttime) + ' ' + y.name;
     }
     this.refresh.next();
   }
@@ -157,11 +157,11 @@ export class CalendarComponent implements OnInit {
 
   funtionGetSortedData(a: EventDto, b: EventDto): number {
     const dateA = new Date(a.date);
-    const timeA = new Date(a.time);
+    const timeA = new Date(a.starttime);
     dateA.setHours(timeA.getHours());
     dateA.setMinutes(timeA.getMinutes());
     const dateB = new Date(b.date);
-    const timeB = new Date(b.time);
+    const timeB = new Date(b.starttime);
     dateB.setHours(timeB.getHours());
     dateB.setMinutes(timeB.getMinutes());
     return (dateA.getTime() - dateB.getTime());
@@ -175,9 +175,9 @@ export class CalendarComponent implements OnInit {
       xSort.forEach(a => {
         this.events.push(
           {
-            start: this.getStartDate(a.date, a.time),
-            end: this.getEndDate(a.date, a.time, a.duration),
-            title: this.getTime(a.time) + ' ' + a.name,
+            start: this.getStartDate(a.date, a.starttime),
+            end: this.getStartDate(a.date, a.endtime),
+            title: this.getTime(a.starttime) + ' ' + a.name,
             color: idx % 3 === 0 ? colors.cyan : (idx % 2 === 0 ? colors.blue : colors.yellow),
             actions: this.actions,
             allDay: false,

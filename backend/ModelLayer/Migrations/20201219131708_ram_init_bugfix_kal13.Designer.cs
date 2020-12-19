@@ -10,8 +10,8 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20201213184808_ram_init_admin_rights")]
-    partial class ram_init_admin_rights
+    [Migration("20201219131708_ram_init_bugfix_kal13")]
+    partial class ram_init_bugfix_kal13
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -291,8 +291,8 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Duration")
-                        .HasColumnType("real");
+                    b.Property<DateTime>("Endtime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
@@ -300,7 +300,7 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Time")
+                    b.Property<DateTime>("Starttime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -557,7 +557,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "ece5b136-d7e1-4a75-92bd-dbedeac54a1c",
+                            ConcurrencyStamp = "e147b3f5-1884-4bef-8995-a19314b83933",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
