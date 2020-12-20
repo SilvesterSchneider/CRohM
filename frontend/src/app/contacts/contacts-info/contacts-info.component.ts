@@ -30,11 +30,11 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
   constructor(public dialogRef: MatDialogRef<ContactsInfoComponent>,
-              public dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public contact: ContactDto,
-              private fb: FormBuilder,
-              private modService: ModificationEntryService,
-              private contactService: ContactService) {
+    public dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public contact: ContactDto,
+    private fb: FormBuilder,
+    private modService: ModificationEntryService,
+    private contactService: ContactService) {
     super(dialogRef, dialog);
   }
 
@@ -104,12 +104,28 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
 
   eventParticipated(element: EventDto): boolean {
     return !!element.participated && element.participated?.some(part => part.modelType ===
-       MODEL_TYPE.CONTACT && part.objectId === this.contact.id && part.hasParticipated);
+      MODEL_TYPE.CONTACT && part.objectId === this.contact.id && part.hasParticipated);
   }
 
   eventNotParticipated(element: EventDto): boolean {
     return !!element.participated && element.participated?.some(part => part.modelType ===
-       MODEL_TYPE.CONTACT && part.objectId === this.contact.id && !part.hasParticipated);
+      MODEL_TYPE.CONTACT && part.objectId === this.contact.id && !part.hasParticipated);
+  }
+
+  eventNotInvited(element: EventDto): boolean {
+    return element.participated.some(part => part.objectId === this.contact.id && part.eventStatus === ParticipatedStatus.NOT_INVITED);
+  }
+
+  eventInvited(element: EventDto): boolean {
+    return element.participated.some(part => part.objectId === this.contact.id && part.eventStatus === ParticipatedStatus.INVITED);
+  }
+
+  eventAgreed(element: EventDto): boolean {
+    return element.participated.some(part => part.objectId === this.contact.id && part.eventStatus === ParticipatedStatus.AGREED);
+  }
+
+  eventCancelled(element: EventDto): boolean {
+    return element.participated.some(part => part.objectId === this.contact.id && part.eventStatus === ParticipatedStatus.CANCELLED);
   }
 
   isLocalPhone(element: HistoryElementDto): boolean {
@@ -145,4 +161,3 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
 
   }
 }
-
