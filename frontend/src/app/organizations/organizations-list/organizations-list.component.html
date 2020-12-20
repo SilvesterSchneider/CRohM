@@ -20,10 +20,10 @@
     </mat-toolbar-row>
 </mat-toolbar>
 <div fxLayout="column" fxLayoutGap="100px">
-    <mat-table id="tableOrganization" #table [dataSource]="dataSource">
+    <mat-table id="tableOrganization" #table [dataSource]="dataSource" (mouseleave)="mouseLeave()">
         <ng-container matColumnDef="Icon">
             <mat-header-cell *matHeaderCellDef>
-                <mat-checkbox color="primary" [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>
+                <mat-checkbox class="check"  color="primary" [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>
             </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)">
                 <div *ngIf="!isSelectedRow(element.id)" class="selection">
