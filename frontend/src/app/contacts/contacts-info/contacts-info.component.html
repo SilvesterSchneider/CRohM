@@ -130,8 +130,7 @@
             <ng-container matColumnDef="icon">
                 <mat-header-cell *matHeaderCellDef> {{'common.type' | translate}} </mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                    <mat-icon *ngIf="eventNotParticipated(element)">check_box_outline_blank</mat-icon>
-
+                    <!--<mat-icon *ngIf="eventNotParticipated(element)">check_box_outline_blank</mat-icon>-->
                     <img src="assets/KAL19_3_Veranstaltung_eingeladen.png" width="20" heigth="20"
                         *ngIf="eventInvited(element)">
                     <img src="assets/KAL19_4_Veranstaltung_zugesagt.png" width="20" height="20"
