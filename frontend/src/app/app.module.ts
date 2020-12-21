@@ -39,6 +39,7 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { LandingpageEventInvitationComponent } from './landingpage-event-invitation/landingpage-event-invitation.component';
 
 @NgModule({
   declarations: [
@@ -49,9 +50,10 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     SidenavComponent,
     ConfirmDialogComponent,
     ChangePasswordComponent,
-	CalendarComponent,
+  	CalendarComponent,
     LanguageSelectComponent,
-    ApproveContactComponent
+    ApproveContactComponent,
+    LandingpageEventInvitationComponent
   ],
   imports: [
     BrowserModule,

@@ -1671,16 +1671,18 @@ export class EventService {
     }
 
     /**
+     * @param id (optional) 
      * @param contactId (optional) 
      * @param organizationId (optional) 
      * @param state (optional) 
      * @return successful
      */
-    postInvitationResponse(id: number, contactId?: number | null | undefined, organizationId?: number | null | undefined, state?: ParticipatedStatus | undefined): Observable<string> {
-        let url_ = this.baseUrl + "/api/Event/{id}/invitationresponse?";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    postInvitationResponse(id?: number | undefined, contactId?: number | null | undefined, organizationId?: number | null | undefined, state?: ParticipatedStatus | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/invitationresponse?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
         if (contactId !== undefined && contactId !== null)
             url_ += "contactId=" + encodeURIComponent("" + contactId) + "&";
         if (organizationId !== undefined && organizationId !== null)

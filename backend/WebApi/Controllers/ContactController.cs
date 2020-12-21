@@ -138,16 +138,17 @@ namespace WebApi.Controllers
 
             contact.CreatedByUser = userOfChange.Id;
             await modService.CreateNewContactEntryAsync(userOfChange, contact.Id);
-            var uri = $"https://{Request.Host}{Request.Path}/{contactDto.Id}";
+
+            var uri = $"https://{Request.HttpContext.Connection.RemoteIpAddress}:4200{Request.Path}/{contactDto.Id}";
+            
 
             //Send Mail to Approve
-            mailService.ApproveContactCreation($"https://localhost:4200/ApproveContacte/" + contactDto.Id, contactDto.ContactPossibilities.Mail);
-
+            await mailService.ApproveContactCreation($"https://localhost:4200/ApproveContacte/" + contactDto.Id, contactDto.ContactPossibilities.Mail);
+            
             var ret = Created(uri, contactDto);
             //Anweisung von Markus zu Testzwecken -> Von Admin angelegt ist automatisch Approved
             if (userOfChange.Id == 1)
             {
-                
                 Contact created = contactService.GetById(contactDto.Id);
                 created.isApproved = true;
                 await contactService.UpdateAsync(created, created.Id);
