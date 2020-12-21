@@ -64,9 +64,17 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       }
     });
   }
+  public resetFilter(searchInput) {
+    searchInput.value = '';
+    this.applyFilter(null)
+  }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+    let filterValue = '';
+    if (event) {
+      filterValue = (event.target as HTMLInputElement).value;
+    }
+
     this.dataSource.filter = filterValue.trim().toLowerCase();
     this.dataSource.filterPredicate = ((data, filter) => {
       if (data.preName.trim().toLowerCase().includes(filter) || data.name.trim().toLowerCase().includes(filter) ||
@@ -132,8 +140,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.service.getById(id).subscribe((x) => {
       const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true, height: '200px' });
       dialogRef.afterClosed().subscribe(result => this.contacts = this.service.getWithUnapproved());
-  });
-}
+    });
+  }
 
   openAddDialog() {
     const dialogRef = this.dialog.open(ContactsAddDialogComponent, {
@@ -301,7 +309,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   sendMail(contact: ContactDto) {
     if (contact.contactPossibilities.mail != null && contact.contactPossibilities.mail.length > 0) {
-      const dataForDialog = [contact.preName + ' ' + contact.name, contact.contactPossibilities.mail ];
+      const dataForDialog = [contact.preName + ' ' + contact.name, contact.contactPossibilities.mail];
       const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
       dialogRef.afterClosed().subscribe(x => {
         if (x.send) {
@@ -330,7 +338,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   createEvent() {
-    this.dialog.open(EventsAddComponent, { disableClose: true, data: { list: this.selectedCheckBoxList, useOrgas: false }});
+    this.dialog.open(EventsAddComponent, { disableClose: true, data: { list: this.selectedCheckBoxList, useOrgas: false } });
   }
 
   getOrganization(id: number): string {
