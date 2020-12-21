@@ -196,16 +196,13 @@ namespace WebApi.Controllers
         /// <param name="participate">participate true | false</param>
         /// <returns></returns>
         [AllowAnonymous]
-        [HttpGet("/invitationresponse")]
+        [HttpGet("invitationresponse")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(string), Description = "successful")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(string), Description = "not found")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "bad request")]
-        public async Task<IActionResult> PostInvitationResponse()//([FromQuery] long id, [FromQuery] long? contactId, [FromQuery] long? organizationId, [FromQuery] ParticipatedStatus state)
+        public async Task<IActionResult> PostInvitationResponse([FromQuery] long id, [FromQuery] long? contactId, [FromQuery] long? organizationId, [FromQuery] ParticipatedStatus state)
         {
-                long id = 0;
-                long contactId = 0;
-                long organizationId = 0;
-                ParticipatedStatus state = ParticipatedStatus.AGREED;
+
             if (contactId == null && organizationId == null)
             {
                 return BadRequest("Ungültiger query");

@@ -1678,7 +1678,7 @@ export class EventService {
      * @return successful
      */
     postInvitationResponse(id?: number | undefined, contactId?: number | null | undefined, organizationId?: number | null | undefined, state?: ParticipatedStatus | undefined): Observable<string> {
-        let url_ = this.baseUrl + "/invitationresponse?";
+        let url_ = this.baseUrl + "/api/Event/invitationresponse?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)

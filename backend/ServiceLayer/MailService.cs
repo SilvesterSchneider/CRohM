@@ -334,7 +334,6 @@ namespace ServiceLayer
             string start = GetGenderTitle(gender);
             string genderEn = GetGenderTitleEnglish(gender);
             string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
-
             string buttons = "<p><a href = \"https://localhost:4200/EventAnswer/"+ eventid+"/"+contactid+"/"+organisationid+ "/2\"><button> Zusagen </button></a></p>" +
                 "<p><a href = \"https://localhost:4200/EventAnswer/"+eventid+"/" + contactid+"/"+organisationid+"/3\"><button> Absagen </button></a></p>";
             finishedcontent = finishedcontent.Replace(EVENTBUTTONFIELD, buttons);
