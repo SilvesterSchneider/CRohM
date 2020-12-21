@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { VerticalGroupedBarDto } from '../../api-generated/api-generated';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-vertical-grouped-bar-chart',
@@ -51,27 +52,11 @@ export class VerticalGroupedBarChartComponent implements OnInit {
 
   checkForUpdate() {
     if (this.startDate != null && this.endDate != null) {
-      this.visibleData = new Array<VerticalGroupedBarDto>();
-      this.allData.forEach(x => {
-        if (this.isDateGreaterThan(new Date(x.name), this.startDate) && this.isDateSmallerThan(new Date(x.name), this.endDate)) {
-          this.visibleData.push(x);
-        }
-      });
+      this.visibleData = this.allData.filter(date => moment(date.name, 'DD.MM.YYYY').
+        isBetween(moment(this.startDate, 'DD.MM.YYYY'), moment(this.endDate, 'DD.MM.YYYY'), null, '[]'));
       this.setTheView();
       this.changeFunction(this.visibleData);
     }
-  }
-
-  isDateSmallerThan(dateOne: Date, dateTwo: Date): boolean {
-    const one: number = dateOne.getFullYear() * 1000 + dateOne.getMonth() * 100 + dateOne.getDate();
-    const two: number = dateTwo.getFullYear() * 1000 + dateTwo.getMonth() * 100 + dateTwo.getDate();
-    return one <= two;
-  }
-
-  isDateGreaterThan(dateOne: Date, dateTwo: Date): boolean {
-    const one: number = dateOne.getFullYear() * 1000 + dateOne.getMonth() * 100 + dateOne.getDate();
-    const two: number = dateTwo.getFullYear() * 1000 + dateTwo.getMonth() * 100 + dateTwo.getDate();
-    return one >= two;
   }
 
   addEventStart(type: string, event: MatDatepickerInputEvent<Date>) {

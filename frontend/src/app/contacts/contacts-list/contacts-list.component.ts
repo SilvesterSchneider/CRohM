@@ -64,9 +64,17 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       }
     });
   }
+  public resetFilter(searchInput) {
+    searchInput.value = '';
+    this.applyFilter(null)
+  }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+    let filterValue = '';
+    if (event) {
+      filterValue = (event.target as HTMLInputElement).value;
+    }
+
     this.dataSource.filter = filterValue.trim().toLowerCase();
     this.dataSource.filterPredicate = ((data, filter) => {
       if (data.preName.trim().toLowerCase().includes(filter) || data.name.trim().toLowerCase().includes(filter) ||
@@ -112,26 +120,10 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       // only display prename and name on larger screens
       this.displayedColumns = ['vorname', 'nachname', 'action'];
     } else {
-      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon', 'ort', 'organisation', 'action'];
+      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon', 'PLZ', 'ort', 'organisation', 'action'];
     }
   }
 
-  /* Rausgeflogen, weil
-  private getData() {
-    this.contacts = this.service.getAll();
-    this.contacts.subscribe(x => {
-      this.length = x.length;
-      this.dataSource.data = x;
-      this.allContacts = x;
-      this.tagsFilter.updateTagsInAutofill(this.allContacts);
-      this.applyTagFilter();
-      this.selectedCheckBoxList = new Array<number>();
-      this.selectedRow = 0;
-      this.isAllSelected = false;
-    });
-    this.changeDetectorRefs.detectChanges();
-  }
-*/
   private getDataWithUnapproved() {
     this.contacts = this.service.getWithUnapproved();
     this.contacts.subscribe(x => {
@@ -148,8 +140,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.service.getById(id).subscribe((x) => {
       const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true, height: '200px' });
       dialogRef.afterClosed().subscribe(result => this.contacts = this.service.getWithUnapproved());
-  });
-}
+    });
+  }
 
   openAddDialog() {
     const dialogRef = this.dialog.open(ContactsAddDialogComponent, {
@@ -285,6 +277,10 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.selectedRow = id;
   }
 
+  mouseLeave() {
+    this.selectedRow = -1;
+  }
+
   isSelectedRow(id: number): boolean {
     const selectedIndex = this.selectedCheckBoxList.find(a => a === id);
     return this.selectedRow === id || selectedIndex != null;
@@ -303,7 +299,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.isAllSelected = !this.isAllSelected;
     this.selectedCheckBoxList = new Array<number>();
     if (this.isAllSelected) {
-      this.allContacts.forEach(x => this.selectedCheckBoxList.push(x.id));
+      this.dataSource.filteredData.forEach(x => this.selectedCheckBoxList.push(x.id));
     }
   }
 
@@ -313,7 +309,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   sendMail(contact: ContactDto) {
     if (contact.contactPossibilities.mail != null && contact.contactPossibilities.mail.length > 0) {
-      const dataForDialog = [contact.preName + ' ' + contact.name, contact.contactPossibilities.mail ];
+      const dataForDialog = [contact.preName + ' ' + contact.name, contact.contactPossibilities.mail];
       const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
       dialogRef.afterClosed().subscribe(x => {
         if (x.send) {
@@ -342,7 +338,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   createEvent() {
-    this.dialog.open(EventsAddComponent, { disableClose: true, data: this.selectedCheckBoxList });
+    this.dialog.open(EventsAddComponent, { disableClose: true, data: { list: this.selectedCheckBoxList, useOrgas: false } });
   }
 
   getOrganization(id: number): string {

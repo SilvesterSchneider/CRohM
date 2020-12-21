@@ -21,7 +21,6 @@ export class TagsComponent implements OnInit {
 
   ngOnInit(): void {
     this.statistics.getVerticalGroupedBarDataByType(STATISTICS_VALUES.ALL_TAGS).subscribe(stats => {
-      console.log(stats);
       stats.forEach(res => res.series.map(series => {
         switch (series.name) {
           case 'Kontakt': series.name = this.translate.instant('contact.contact'); break;

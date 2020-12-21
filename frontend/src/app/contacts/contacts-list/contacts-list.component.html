@@ -3,17 +3,22 @@
         <span class="spacer"></span>
         <a *ngIf="selectedCheckBoxList.length > 0" class="iconMargin" (click)="sendMailToMany()" type="button">
             <mat-icon color="primary" title="{{'common.sendMailToMany' | translate}}" class="icon">mail</mat-icon>
-		</a>
+        </a>
         <a *ngIf="selectedCheckBoxList.length > 0" (click)="createEvent()" type="button">
             <mat-icon color="primary" title="{{'event.create' | translate}}" class="iconMargin">event</mat-icon>
         </a>
         <app-tags-filter></app-tags-filter>
         <mat-form-field>
             <mat-label>{{'common.search' | translate}}</mat-label>
-            <input class="input" matInput (keyup)="applyFilter($event)" placeholder="{{'contact.contacts' | translate}}...">
+            <input class="input" matInput (keyup)="applyFilter($event)"
+                placeholder="{{'contact.contacts' | translate}}..." #searchInput>
+            <button mat-button *ngIf="searchInput.value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="resetFilter(searchInput)">
+                <mat-icon>close</mat-icon>
+            </button>
         </mat-form-field>
-        <button id="addDummyButton" class="button" *ngIf=isAdminUserLoggedIn [disabled]="!permissionAdd" mat-raised-button color="primary"
-            title="{{'contact.addDummy' | translate}}" (click)="addDummyContact()">
+        <button id="addDummyButton" class="button" *ngIf=isAdminUserLoggedIn [disabled]="!permissionAdd"
+            mat-raised-button color="primary" title="{{'contact.addDummy' | translate}}" (click)="addDummyContact()">
             <mat-icon>add</mat-icon> {{'contact.addDummy' | translate}}
         </button>
         <button id="addButton" class="button" [disabled]="!permissionAdd" button="submit" mat-mini-fab color="primary"
@@ -24,16 +29,16 @@
 </mat-toolbar>
 
 <div fxLayout="column" fxLayoutGap="100px">
-    <mat-table id="contactsTable" #table [dataSource]="dataSource">
+    <mat-table id="contactsTable" #table [dataSource]="dataSource" (mouseleave)="mouseLeave()">
         <ng-container matColumnDef="icon">
             <mat-header-cell *matHeaderCellDef>
-                <mat-checkbox [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>
+                <mat-checkbox class="check" color="primary" [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>
             </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)">
                 <div *ngIf="!isSelectedRow(element.id)" class="selection">
                     {{element.preName.substring(0,1) + element.name.substring(0,1)}}
                 </div>
-                <mat-checkbox class="checkBox" *ngIf="isSelectedRow(element.id)"
+                <mat-checkbox color="primary" class="checkBox" *ngIf="isSelectedRow(element.id)"
                     [checked]="isSelectionChecked(element.id)" (change)="onCheckBoxChecked(element.id)">
                 </mat-checkbox>
             </mat-cell>
@@ -58,6 +63,11 @@
                 <a (mouseover)="mouseOver(element.id)">{{element.contactPossibilities.phoneNumber}}</a>
             </mat-cell>
         </ng-container>
+        <ng-container matColumnDef="PLZ">
+            <mat-header-cell *matHeaderCellDef> {{'contact.zipcode' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.zipcode}}
+            </mat-cell>
+        </ng-container>
         <ng-container matColumnDef="ort">
             <mat-header-cell *matHeaderCellDef> {{'contact.city' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.city}}
@@ -71,9 +81,10 @@
         <ng-container matColumnDef="action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
-                <button type="button" mat-icon-button [disabled]="!permissionInformContact" (click)="openDisclosureDialog(element.id)"
-                    color="primary">
-                    <mat-icon title="{{'contact.disclosure.disclosure' | translate}}" class="icon">description</mat-icon>
+                <button type="button" mat-icon-button [disabled]="!permissionInformContact"
+                    (click)="openDisclosureDialog(element.id)" color="primary">
+                    <mat-icon title="{{'contact.disclosure.disclosure' | translate}}" class="icon">description
+                    </mat-icon>
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openEditDialog(element)"
                     color="primary" class="editButton">
@@ -87,20 +98,20 @@
                         (click)="openInfo(element.id)" color="primary">
                         <mat-icon title="{{'contact.showContactInfo' | translate}}" class="icon">info</mat-icon>
                     </button>
-                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
-                        color="primary">
+                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
+                        (click)="addNote(element.id)" color="primary">
                         <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
                     </button>
                     <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
                         (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" color="primary">
                         <mat-icon title="{{'common.call' | translate}}" class="icon">phone</mat-icon>
                     </button>
-                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
-                        (click)="sendMail(element)" color="primary">
+                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="sendMail(element)"
+                        color="primary">
                         <mat-icon title="{{'contact.mail' | translate}}" class="icon">mail</mat-icon>
                     </button>
-                    <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteContact(element)"
-                        color="primary">
+                    <button type="button" mat-icon-button [disabled]="!permissionDelete"
+                        (click)="deleteContact(element)" color="primary">
                         <mat-icon title="{{'contact.delete' | translate}}" class="icon">delete</mat-icon>
                     </button>
                 </mat-menu>

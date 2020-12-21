@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ModelLayer;
 
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    partial class CrmContextModelSnapshot : ModelSnapshot
+    [Migration("20201213184808_ram_init_admin_rights")]
+    partial class ram_init_admin_rights
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -555,7 +557,6 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-
                             ConcurrencyStamp = "ece5b136-d7e1-4a75-92bd-dbedeac54a1c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
@@ -621,9 +622,10 @@ namespace ModelLayer.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-                        
+
                     b.Property<bool>("IsSuperAdmin")
                         .HasColumnType("bit");
+
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("datetime2");
 

@@ -107,7 +107,7 @@ export class OrganizationsEditDialogComponent extends BaseDialogInput implements
 		this.organization = data;
 		this.dialogRef.backdropClick().subscribe(() => {
 			// Close the dialog
-			dialogRef.close();
+			dialogRef.close({delete: false});
 		});
 		if (this.organization.tags != null && this.organization.tags.length > 0) {
 			this.organization.tags.forEach(x => this.selectedTags.push(x));

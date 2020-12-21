@@ -69,7 +69,15 @@ namespace WebApi.Controllers
             {
                 var userDto = _mapper.Map<UserDto>(user);
                 var roles = await _userService.GetRolesAsync(user);
-                List<Claim> claims = await GetAllClaimsOfUser(roles);
+                List<Claim> claims;
+                if (!user.IsSuperAdmin)
+                {
+                    claims = await GetAllClaimsOfUser(roles);
+                }
+                else
+                {
+                    claims = RoleClaims.GetAllClaims();
+                }
                 userDto.AccessToken = _signInService.CreateToken(user, roles, claims);
                 return Ok(userDto);
             }

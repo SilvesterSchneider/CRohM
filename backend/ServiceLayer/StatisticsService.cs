@@ -49,7 +49,7 @@ namespace ServiceLayer
         {
             foreach (ModificationEntry entry in listEntries)
             {
-                String dateToFind = entry.DateTime.ToString("yyyy-MM-dd");
+                String dateToFind = entry.DateTime.ToString("dd.MM.yyyy");
                 VerticalGroupedBarDto dto = list.FirstOrDefault(x => x.Name.Equals(dateToFind));
                 if (dto == null)
                 {
@@ -84,7 +84,7 @@ namespace ServiceLayer
                 if (count > 0)
                 { 
                     VerticalGroupedBarDto dto = new VerticalGroupedBarDto();
-                    dto.Name = ev.Date.ToString("yyyy-MM-dd");
+                    dto.Name = ev.Date.ToString("dd.MM.yyyy");
                     dto.Series = new List<VerticalGroupedBarDataSet>();
                     dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_INVITED_CONTACTS, Value = count });
                     dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_PARTICIPATED_CONTACS, Value = ev.Participated.FindAll(a => a.HasParticipated).Count });

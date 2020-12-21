@@ -150,7 +150,7 @@
             </ng-container>
             <ng-container matColumnDef="datum">
                 <mat-header-cell *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{getDate(element.date)}}
+                <mat-cell *matCellDef="let element"> {{element.date | date}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="name">
@@ -177,7 +177,7 @@
         <mat-table #table [dataSource]="modifications">
             <ng-container matColumnDef="datum">
                 <mat-header-cell *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{getDate(element.dateTime)}}
+                <mat-cell *matCellDef="let element"> {{element.dateTime | date}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="bearbeiter">

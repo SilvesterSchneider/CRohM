@@ -56,7 +56,7 @@
         "orderBy": "Order by",
         "selectLanguage": "Select Language",
         "usermenu": "User Menu",
-        "location": "Location"
+        "location": "City"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",
@@ -124,7 +124,7 @@
         "hidePast": "Hide events from the past",
         "edit": "Edit Event",
         "show": "Show Event Information",
-        "info": "Event Information",
+        "info": "Overview",
         "delete": "Delete Event",
         "sendDeletionInfo": "Send event cancellation information via mail",
         "confirmDeletionInfo": "Would you like to inform all participants about the cancellation of this event via mail?",

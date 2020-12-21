@@ -164,7 +164,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       duration: ['', Validators.required],
       description: ['', Validators.maxLength(300)],
       location: ['']
-    });;
+    });
 
     this.contactService.getAll().subscribe(y => {
       this.contacts = y;
@@ -315,6 +315,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
             y.eventStatus = ParticipatedStatus.INVITED;
           }
         });
+
         this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text, this.event.id).subscribe(x => {
           if (useFinishSave) {
             this.finishSave(save);
@@ -432,8 +433,9 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     const eventToSave: EventDto = this.eventsForm.value;
     eventToSave.date = new Date(new Date(eventToSave.date)).toDateString();
     eventToSave.time = this.eventsForm.get('time').value;
-    const saveNewValues = this.isSameDate(new Date(this.event.date).toString(), eventToSave.date) && this.isSameTime(this.event.time, eventToSave.time) &&
-      this.event.duration === eventToSave.duration;
+    const saveNewValues = this.isSameDate(new Date(this.event.date).toString(), eventToSave.date)
+     && this.isSameTime(this.event.time, eventToSave.time)
+     && this.event.duration === eventToSave.duration;
     let callInvitation = false;
     if (saveNewValues) {
       this.selectedItems.forEach(a => {
@@ -445,6 +447,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.event.date = eventToSave.date;
     this.event.time = eventToSave.time;
     this.event.duration = eventToSave.duration;
+    this.event.description = eventToSave.description;
+    this.event.location = eventToSave.location;
     if (callInvitation) {
       const data = new ConfirmDialogModel('event.sendInvitation', 'event.sendInvitation');
       const dialogYesNo = this.dialog.open(ConfirmDialogComponent, {data});
@@ -528,7 +532,7 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       min = '0' + min;
     }
     let hours = timeOldObj.getHours().toString();
-    if (hours.length == 1) {
+    if (hours.length === 1) {
       hours = '0' + hours;
     }
     const oldTime = hours + ':' + min;

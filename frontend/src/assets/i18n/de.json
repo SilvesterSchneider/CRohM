@@ -56,7 +56,7 @@
         "orderBy": "Sortierung nach",
         "selectLanguage": "Sprachauswahl",
         "usermenu": "Benutzermenü",
-        "location": "Ort"
+        "location": "Stadt"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",
@@ -124,7 +124,7 @@
         "hidePast": "Veranstaltungen aus der Vergangenheit ausblenden",
         "edit": "Veranstaltung bearbeiten",
         "show": "Veranstaltungsinformationen anzeigen",
-        "info": "Veranstaltungsinformationen",
+        "info": "Übersicht",
         "delete": "Veranstaltung löschen",
         "sendDeletionInfo": "Information zu Veranstaltungsabbruch per Mail senden",
         "confirmDeletionInfo": "Möchten Sie alle Teilnehmer über den Abbruch dieser Veranstaltung via Mail informieren?",
