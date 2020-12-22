@@ -213,6 +213,10 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		this.selectedRow = id;
 	}
 
+	mouseLeave() {
+		this.selectedRow = -1;
+	}
+
 	isSelectedRow(id: number): boolean {
 		const selectedIndex = this.selectedCheckBoxList.find(a => a === id);
 		return this.selectedRow === id || selectedIndex != null;
