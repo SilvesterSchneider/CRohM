@@ -403,10 +403,6 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     }
   }
 
-  disableParticipatedChk(item: EventContactConnection): boolean {
-    return !this.isDateOk() || !this.isItemConditionOk(item.eventStatus);
-  }
-
   isDateOk(): boolean {
     const dateOfEvent = new Date(this.event.date);
     dateOfEvent.setHours(new Date(this.event.starttime).getHours());
@@ -599,5 +595,9 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 
   close() {
     super.confirmDialog();
+  }
+
+  showParticipated(): boolean {
+    return this.isDateOk();
   }
 }

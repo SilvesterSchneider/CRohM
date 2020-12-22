@@ -47,7 +47,7 @@
         <div class="text">
             {{'event.state' | translate}} 
         </div>
-        <div class="text">
+        <div *ngIf="showParticipated()" class="text">
             {{'event.participated' | translate}} 
         </div>
     </div>
@@ -63,9 +63,9 @@
                 {{getEventState(item.eventStatus)}}
             </mat-chip>
         </mat-chip-list>
-        <mat-chip-list class="thirdList" aria-orientation="vertical" #chipList>
+        <mat-chip-list *ngIf="showParticipated()" class="thirdList" aria-orientation="vertical" #chipList>
             <mat-chip class="checkboxobjects" *ngFor="let item of selectedItems" [selectable]="selectable">
-                <mat-checkbox color="primary" [disabled]="disableParticipatedChk(item)" class="checkBoxb" [checked]="item.participated" (change)="toggleParticipated(item)">
+                <mat-checkbox [disabled]="!isItemConditionOk(item.eventStatus)" color="primary" class="checkBoxb" [checked]="item.participated" (change)="toggleParticipated(item)">
                 </mat-checkbox>
             </mat-chip>
         </mat-chip-list>

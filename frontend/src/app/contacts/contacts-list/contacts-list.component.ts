@@ -66,7 +66,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
   public resetFilter(searchInput) {
     searchInput.value = '';
-    this.applyFilter(null)
+    this.applyFilter(null);
   }
 
   applyFilter(event: Event) {
