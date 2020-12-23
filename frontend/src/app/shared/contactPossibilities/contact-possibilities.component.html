@@ -15,7 +15,7 @@
             <!--contactEntryName-->
         <div [formGroup]="contactEntry">
             <div>
-                <label class="minWidth300AndMargin10">{{'common.name' | translate}} </label>
+                <label class="minWidth300AndMargin10">{{'common.contactType' | translate}} </label>
                 <input type="text" formControlName="contactEntryName">
                 <!--display error message if contactEntryName is not valid-->
                 <small [hidden]="getForm(i).get('contactEntryName').valid">
@@ -24,7 +24,7 @@
             </div>
             <!--contactEntryValue-->
             <div>
-                <label class="minWidth300AndMargin10">{{'contact.phoneOrEmail' | translate}}</label>
+                <label class="minWidth300AndMargin10">{{'common.contactValue' | translate}}</label>
                 <input type="text" formControlName="contactEntryValue">
                 <!--display error message if contactEntryValue is not valid-->
                 <small [hidden]="getForm(i).get('contactEntryValue').valid">
