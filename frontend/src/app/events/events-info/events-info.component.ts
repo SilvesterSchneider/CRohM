@@ -96,7 +96,8 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     this.loadModifications(0, 5);
     this.eventsForm.patchValue(this.event);
     this.eventsForm.get('date').patchValue(this.formatDate(this.event.date));
-    this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));
+    this.eventsForm.get('startTime').patchValue(this.formatTime(this.event.starttime));
+    this.eventsForm.get('endTime').patchValue(this.formatTime(this.event.endtime));
   }
 
   private createEventsForm(): FormGroup {
@@ -105,8 +106,8 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
       description: [''],
       location: [''],
       date: [''],
-      time: [''],
-      duration: ['']
+      startTime: [''],
+      endTime: ['']
     });
   }
 

@@ -289,8 +289,8 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Duration")
-                        .HasColumnType("real");
+                    b.Property<DateTime>("Endtime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
@@ -298,7 +298,7 @@ namespace ModelLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Time")
+                    b.Property<DateTime>("Starttime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -555,7 +555,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "cc72be08-0d70-4f62-9fc2-0bfbdf95cc7b",
+                            ConcurrencyStamp = "8daa4193-9888-4ac6-bf85-afb1fb838ea0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

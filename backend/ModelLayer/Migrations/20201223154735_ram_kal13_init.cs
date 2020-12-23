@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModelLayer.Migrations
 {
-    public partial class init : Migration
+    public partial class ram_kal13_init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -82,8 +82,8 @@ namespace ModelLayer.Migrations
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
-                    Time = table.Column<DateTime>(nullable: false),
-                    Duration = table.Column<float>(nullable: false),
+                    Starttime = table.Column<DateTime>(nullable: false),
+                    Endtime = table.Column<DateTime>(nullable: false),
                     Location = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -549,7 +549,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "cc72be08-0d70-4f62-9fc2-0bfbdf95cc7b", "Admin", "ADMIN" });
+                values: new object[] { 1L, "8daa4193-9888-4ac6-bf85-afb1fb838ea0", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",

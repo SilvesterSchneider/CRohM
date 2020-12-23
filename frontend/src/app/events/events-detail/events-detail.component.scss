@@ -8,7 +8,7 @@
   }
 .text {
   margin: 1px;
-  min-width: 100px;
+  min-width: 200px;
   background-color:rgba(60, 45, 190, 0.3);
   border-radius:5px;
 }
@@ -18,8 +18,8 @@
 .list {
   left: 0px;
   margin: 1px;
-  max-width: 100px;
-  min-width: 100px;
+  max-width: 200px;
+  min-width: 200px;
 }
 .secondList {
   position: relative;
@@ -36,11 +36,26 @@
 .marginTop {
   margin-top: 20px;
 }
+.thirdList {
+  position: relative;
+  left: -20px;
+  margin: 1px;
+  max-width: 100px;
+  min-width: 100px;
+}
+.checkboxobjects {
+  background-color: white;
+  margin-left: 80px;
+}
+.firstObjects {
+  background-color: #3F51B5;
+}
 .my-chip {
-  background-color: rgb(52, 0, 196) !important;
+  background-color:#3F51B5 !important;
   color: #fff;
 }
 .removeIcon {
   background-color: rgb(255, 255, 255) !important;
   color: rgb(0, 0, 0);
 }
+

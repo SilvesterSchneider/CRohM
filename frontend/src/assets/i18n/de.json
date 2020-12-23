@@ -18,6 +18,8 @@
         "newTag": "Neuer Tag",
         "label": "Bezeichnung",
         "time": "Uhrzeit",
+        "startTime": "Startzeit",
+        "endTime": "Endzeit",
         "durationHours": "Dauer in Stunden",
         "selectAll": "Alle selektieren",
         "calendarWeek": "Kalenderwoche",

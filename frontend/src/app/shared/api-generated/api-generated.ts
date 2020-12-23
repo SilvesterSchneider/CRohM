@@ -3736,9 +3736,9 @@ export interface OrganizationDto {
 export interface EventDto {
     id: number;
     date: string;
-    time: string;
+    starttime: string;
+    endtime: string;
     name?: string | undefined;
-    duration: number;
     description?: string | undefined;
     location?: string | undefined;
     contacts?: ContactDto[] | undefined;
@@ -3856,9 +3856,9 @@ export interface EducationalOpportunityDto {
 
 export interface EventCreateDto {
     date: string;
-    time: string;
     name?: string | undefined;
-    duration: number;
+    starttime: string;
+    endtime: string;
     description?: string | undefined;
     location?: string | undefined;
     contacts?: number[] | undefined;

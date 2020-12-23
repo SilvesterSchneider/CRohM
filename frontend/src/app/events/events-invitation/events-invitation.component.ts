@@ -25,7 +25,7 @@ export class EventsInvitationComponent implements OnInit {
 
   ngOnInit(): void {
     this.textForm = this.createTextForm();
-    this.mailService.getSendInvitationText(this.data.name, this.getDate(this.data.date), this.getTime(this.data.time)).subscribe(x => {
+    this.mailService.getSendInvitationText(this.data.name, this.getDate(this.data.date), this.getTime(this.data.starttime)).subscribe(x => {
       this.textForm.get('text').setValue(x);
     });
   }

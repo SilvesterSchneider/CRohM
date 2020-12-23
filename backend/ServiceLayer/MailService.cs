@@ -408,14 +408,14 @@ namespace ServiceLayer
             bool ok = true;
             foreach (EventContact contact in contactMails)
             {
-                if (!await SendEventCancelInfo(contact.Contact.ContactPossibilities.Mail, GetGenderTitle(contact.Contact.Gender), contact.Contact.Name, contact.Event.Name, contact.Event.Date, contact.Event.Time)) {
+                if (!await SendEventCancelInfo(contact.Contact.ContactPossibilities.Mail, GetGenderTitle(contact.Contact.Gender), contact.Contact.Name, contact.Event.Name, contact.Event.Date, contact.Event.Starttime)) {
                     ok = false;
                 }
             }
 
             foreach (EventOrganization orga in orgas)
             {
-                if (!await SendEventCancelInfo(orga.Organization.Contact.Mail, GetGenderTitle(GenderTypes.MALE), orga.Organization.Name, orga.Event.Name, orga.Event.Date, orga.Event.Time))
+                if (!await SendEventCancelInfo(orga.Organization.Contact.Mail, GetGenderTitle(GenderTypes.MALE), orga.Organization.Name, orga.Event.Name, orga.Event.Date, orga.Event.Starttime))
                 {
                     ok = false;
                 }

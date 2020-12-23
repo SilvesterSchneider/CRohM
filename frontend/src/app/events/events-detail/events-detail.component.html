@@ -25,12 +25,12 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input type="time" matInput placeholder="{{'common.time' | translate}}" formControlName="time">
+                    <input type="time" matInput placeholder="{{'common.startTime' | translate}}" formControlName="startTime">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input type="number" matInput placeholder="{{'common.durationHours' | translate}}" formControlName="duration">
+                    <input type="time" matInput placeholder="{{'common.endTime' | translate}}" formControlName="endTime">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -42,27 +42,36 @@
     </div>
     <div class="row">
         <div class="text">
+            {{'event.participant' | translate}} 
+        </div>
+        <div class="text">
             {{'event.state' | translate}} 
         </div>
-        <div class="text">
+        <div *ngIf="showParticipated()" class="text">
             {{'event.participated' | translate}} 
-        </div>
-        <div class="text">
-            {{'event.participant' | translate}} 
         </div>
     </div>
     <div class="row">
+        <mat-chip-list id="invitationList" class="list" aria-orientation="vertical" #chipList>
+            <mat-chip class="firstObjects" *ngFor="let item of selectedItems">
+                {{ item.preName + ' ' + item.name }}
+                <mat-icon (click)="toggleSelection(item)" matChipRemove>cancel</mat-icon>
+            </mat-chip>
+        </mat-chip-list>
         <mat-chip-list id="invitationList" class="list" aria-orientation="vertical" #chipList>
             <mat-chip *ngFor="let item of selectedItems">
                 {{getEventState(item.eventStatus)}}
             </mat-chip>
         </mat-chip-list>
-        <mat-chip-list class="secondList" aria-orientation="vertical" #chipList>
-            <mat-chip *ngFor="let item of selectedItems" [selectable]="selectable">
-                <mat-checkbox [disabled]="disableParticipatedChk(item)" class="checkBoxb" [checked]="item.participated" (change)="toggleParticipated(item)">
+        <mat-chip-list *ngIf="showParticipated()" class="thirdList" aria-orientation="vertical" #chipList>
+            <mat-chip class="checkboxobjects" *ngFor="let item of selectedItems" [selectable]="selectable">
+                <mat-checkbox [disabled]="!isItemConditionOk(item.eventStatus)" color="primary" class="checkBoxb" [checked]="item.participated" (change)="toggleParticipated(item)">
                 </mat-checkbox>
-                {{ item.preName + ' ' + item.name }}
             </mat-chip>
+        </mat-chip-list>
+    </div>
+    <div class="margin">
+        <mat-chip-list class="secondList" aria-orientation="vertical" #chipList>
             <input id="textInput" class="autoComplete" type="text" #inputTrigger placeholder="{{'event.invite' | translate}}" matInput [matAutocomplete]="autoComplete" [formControl]="itemControl"
             [matChipInputFor]="chipList">
         </mat-chip-list>
@@ -123,7 +132,7 @@
             <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="close()">
                 {{'common.cancel' | translate}}
             </button>
-                    <button mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
+                    <button mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!formIsValid()" (click)="saveValues()">
                 {{'common.save' | translate}}
             </button>
         </div>

@@ -160,8 +160,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     this.eventsForm = this.fb.group({
       name: ['', Validators.required],
       date: [new FormControl(new Date(this.event.date)), Validators.required],
-      time: ['', Validators.required],
-      duration: ['', Validators.required],
+      startTime: ['', Validators.required],
+      endTime: ['', Validators.required],
       description: ['', Validators.maxLength(300)],
       location: ['']
     });
@@ -245,7 +245,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       });
     }
     this.eventsForm.patchValue(this.event);
-    this.eventsForm.get('time').patchValue(this.formatTime(this.event.time));
+    this.eventsForm.get('startTime').patchValue(this.formatTime(this.event.starttime));
+    this.eventsForm.get('endTime').patchValue(this.formatTime(this.event.endtime));
   }
 
   private formatTime(date) {
@@ -259,6 +260,41 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       minutes = '0' + minutes;
     }
     return [hours, minutes].join(':');
+  }
+
+  formIsValid(): boolean {
+    const startTime = this.getTheStartTime();
+    const endTime = this.getEndTime();
+    return this.eventsForm.valid && startTime.length > 0 && endTime.length > 0 && this.isEndTimeGreaterThanStarttime(startTime, endTime);
+  }
+
+  getTheStartTime(): string {
+    if (this.eventsForm != null && this.eventsForm.get('startTime') != null
+      && this.eventsForm.get('startTime').value != null) {
+      return this.eventsForm.get('startTime').value;
+    }
+    return '';
+  }
+
+  getEndTime(): string {
+    if (this.eventsForm != null && this.eventsForm.get('endTime') != null
+      && this.eventsForm.get('endTime').value != null) {
+      return this.eventsForm.get('endTime').value;
+    }
+    return '';
+  }
+
+  isEndTimeGreaterThanStarttime(startTime: string, endTime: string): boolean {
+    if (endTime.indexOf(':') > 0 && startTime.indexOf(':') > 0) {
+      const hoursEnd = +endTime.substr(0, endTime.indexOf(':'));
+      const minutesEnd = +endTime.substr(endTime.indexOf(':') + 1);
+      const hoursStart = +startTime.substr(0, endTime.indexOf(':'));
+      const minutesStart = +startTime.substr(endTime.indexOf(':') + 1);
+      if (hoursEnd > hoursStart || hoursEnd === hoursStart && minutesEnd > minutesStart) {
+        return true;
+      }
+    }
+    return false;
   }
 
   setDescribedByIds(ids: string[]) {
@@ -368,14 +404,10 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
     }
   }
 
-  disableParticipatedChk(item: EventContactConnection): boolean {
-    return !this.isDateOk() || !this.isItemConditionOk(item.eventStatus);
-  }
-
   isDateOk(): boolean {
     const dateOfEvent = new Date(this.event.date);
-    dateOfEvent.setHours(new Date(this.event.time).getHours());
-    dateOfEvent.setMinutes(new Date(this.event.time).getMinutes());
+    dateOfEvent.setHours(new Date(this.event.starttime).getHours());
+    dateOfEvent.setMinutes(new Date(this.event.starttime).getMinutes());
     const dateNow = new Date(Date.now());
     return (dateNow.getFullYear() > dateOfEvent.getFullYear()) ||
       (dateNow.getFullYear() === dateNow.getFullYear() &&
@@ -432,10 +464,11 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
   saveValues() {
     const eventToSave: EventDto = this.eventsForm.value;
     eventToSave.date = new Date(new Date(eventToSave.date)).toDateString();
-    eventToSave.time = this.eventsForm.get('time').value;
+    eventToSave.starttime = this.eventsForm.get('startTime').value;
+    eventToSave.endtime = this.eventsForm.get('endTime').value;
     const saveNewValues = this.isSameDate(new Date(this.event.date).toString(), eventToSave.date)
-     && this.isSameTime(this.event.time, eventToSave.time)
-     && this.event.duration === eventToSave.duration;
+     && this.isSameTime(this.event.starttime, eventToSave.starttime)
+     && this.isSameTime(this.event.endtime, eventToSave.endtime);
     let callInvitation = false;
     if (saveNewValues) {
       this.selectedItems.forEach(a => {
@@ -445,8 +478,8 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
       });
     }
     this.event.date = eventToSave.date;
-    this.event.time = eventToSave.time;
-    this.event.duration = eventToSave.duration;
+    this.event.starttime = eventToSave.starttime;
+    this.event.endtime = eventToSave.endtime;
     this.event.description = eventToSave.description;
     this.event.location = eventToSave.location;
     if (callInvitation) {
@@ -563,5 +596,9 @@ export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent
 
   close() {
     super.confirmDialog();
+  }
+
+  showParticipated(): boolean {
+    return this.isDateOk();
   }
 }

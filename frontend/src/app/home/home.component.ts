@@ -46,9 +46,9 @@ export class EventExtended implements EventDto {
   contacts?: ContactDto[];
   participated?: ParticipatedDto[];
   date: string;
-  time: string;
+  starttime: string;
   name?: string;
-  duration: number;
+  endtime: string;
   userName: string;
   created: boolean;
 }
@@ -159,8 +159,8 @@ export class HomeComponent implements OnInit {
     this.eventsService.getById(entry.dataModelId).subscribe(event => {
           this.events.push({
             date: event.date,
-            time: event.time,
-            duration: event.duration,
+            starttime: event.starttime,
+            endtime: event.endtime,
             name: event.name,
             id: event.id,
             contacts: event.contacts,
