@@ -10,7 +10,7 @@ using ModelLayer;
 namespace ModelLayer.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    [Migration("20201214172111_init")]
+    [Migration("20201223135336_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -557,7 +557,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "31600bbe-48e3-4325-8a83-dc3d10e34370",
+                            ConcurrencyStamp = "cc72be08-0d70-4f62-9fc2-0bfbdf95cc7b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -621,6 +621,9 @@ namespace ModelLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSuperAdmin")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastLoginDate")

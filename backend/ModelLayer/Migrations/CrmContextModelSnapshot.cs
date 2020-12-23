@@ -555,8 +555,7 @@ namespace ModelLayer.Migrations
                         new
                         {
                             Id = 1L,
-
-                            ConcurrencyStamp = "ece5b136-d7e1-4a75-92bd-dbedeac54a1c",
+                            ConcurrencyStamp = "cc72be08-0d70-4f62-9fc2-0bfbdf95cc7b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -621,9 +620,10 @@ namespace ModelLayer.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-                        
+
                     b.Property<bool>("IsSuperAdmin")
                         .HasColumnType("bit");
+
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("datetime2");
 

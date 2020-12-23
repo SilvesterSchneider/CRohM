@@ -334,8 +334,16 @@ namespace ServiceLayer
             string start = GetGenderTitle(gender);
             string genderEn = GetGenderTitleEnglish(gender);
             string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
-            string buttons = "<p><a href = \"https://localhost:4200/EventAnswer/"+ eventid+"/"+contactid+"/"+organisationid+ "/2\"><button> Zusagen </button></a></p>" +
-                "<p><a href = \"https://localhost:4200/EventAnswer/"+eventid+"/" + contactid+"/"+organisationid+"/3\"><button> Absagen </button></a></p>";
+
+            //Send Mail to Approve
+#if DEBUG
+            string buttons = "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Zusagen </button></a></p>" +
+             "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/3\"><button> Absagen </button></a></p>";
+#else
+            string buttons = "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/"+ eventid+"/"+contactid+"/"+organisationid+ "/2\"><button> Zusagen </button></a></p>" +
+                "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/"+eventid+"/" + contactid+"/"+organisationid+"/3\"><button> Absagen </button></a></p>";
+#endif
+
             finishedcontent = finishedcontent.Replace(EVENTBUTTONFIELD, buttons);
 
             finishedcontent = finishedcontent.Replace(NAMEFIELDEN, name).Replace(STARTFIELDEN, genderEn).Replace(PRENAMEFIELDEN, preName);
@@ -369,8 +377,17 @@ namespace ServiceLayer
             string finishedcontent = mailContent.Replace(STARTFIELD, ORGASTART);
             finishedcontent = finishedcontent.Replace(STARTFIELDEN, ORGASTARTEN);
 
+
+#if DEBUG
             string buttons = "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Zusagen </button></a></p>" +
               "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/3\"><button> Absagen </button></a></p>";
+#else
+            string buttons = "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Zusagen </button></a></p>" +
+              "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/3\"><button> Absagen </button></a></p>";
+#endif
+
+
+
             finishedcontent = finishedcontent.Replace(EVENTBUTTONFIELD, buttons);
 
             if (mailContent.IndexOf(NAMEFIELD) > 0)

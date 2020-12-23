@@ -140,11 +140,14 @@ namespace WebApi.Controllers
             await modService.CreateNewContactEntryAsync(userOfChange, contact.Id);
 
             var uri = $"https://{Request.HttpContext.Connection.RemoteIpAddress}:4200{Request.Path}/{contactDto.Id}";
-            
+
 
             //Send Mail to Approve
+#if DEBUG
             await mailService.ApproveContactCreation($"https://localhost:4200/ApproveContacte/" + contactDto.Id, contactDto.ContactPossibilities.Mail);
-            
+#else
+            await mailService.ApproveContactCreation($"https://ops085010.cs.ohmhs.de/ApproveContacte/" + contactDto.Id, contactDto.ContactPossibilities.Mail);
+#endif
             var ret = Created(uri, contactDto);
             //Anweisung von Markus zu Testzwecken -> Von Admin angelegt ist automatisch Approved
             if (userOfChange.Id == 1)

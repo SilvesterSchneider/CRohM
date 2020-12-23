@@ -146,6 +146,7 @@ namespace ModelLayer.Migrations
                     LastName = table.Column<string>(nullable: true),
                     LastLoginDate = table.Column<DateTime>(nullable: false),
                     hasPasswordChanged = table.Column<bool>(nullable: false),
+                    IsSuperAdmin = table.Column<bool>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -548,7 +549,7 @@ namespace ModelLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1L, "31600bbe-48e3-4325-8a83-dc3d10e34370", "Admin", "ADMIN" });
+                values: new object[] { 1L, "cc72be08-0d70-4f62-9fc2-0bfbdf95cc7b", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
