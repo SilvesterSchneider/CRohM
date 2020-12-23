@@ -34,9 +34,10 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPut]
         [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully send mails")]
-        public async Task<IActionResult> SendInvitationMails([FromBody]List<long> contactIds, [FromHeader]List<long> orgaIds, [FromQuery]string mailContent)
+        public async Task<IActionResult> SendInvitationMails([FromBody]List<long> contactIds, [FromHeader]List<long> orgaIds, [FromQuery]string mailContent, [FromQuery]long eventId)
         {
-            return Ok(await eventService.SendInvitationMailsAsync(contactIds, orgaIds, mailContent));
+            string uri = $"https://{Request.Host}";
+            return Ok(await eventService.SendInvitationMailsAsync(contactIds, orgaIds, mailContent, eventId, uri));
         }
 
         /// <summary>

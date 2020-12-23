@@ -145,7 +145,7 @@ export class EventsListComponent implements OnInit {
         const listOfOrgaIds: number[] = new Array<number>();
         event.contacts.forEach(a => listOfContactIds.push(a.id));
         event.organizations.forEach(a => listOfOrgaIds.push(a.id));
-        this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text).subscribe();
+        this.mailService.sendInvitationMails(listOfContactIds, listOfOrgaIds, x.text, event.id).subscribe();
         event.participated.forEach(p => p.eventStatus = ParticipatedStatus.INVITED);
         this.service.put(event, event.id).subscribe();
       }
