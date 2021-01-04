@@ -19,8 +19,8 @@
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput [matDatepicker]="picker1" placeholder="{{'common.date' | translate}}" formControlName="date">
-                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                    <mat-datepicker #picker1></mat-datepicker>
+                        <mat-datepicker-toggle class="datum" matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker class="datum" #picker1></mat-datepicker>
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -59,7 +59,7 @@
             </mat-chip>
         </mat-chip-list>
         <mat-chip-list id="invitationList" class="list" aria-orientation="vertical" #chipList>
-            <mat-chip *ngFor="let item of selectedItems">
+            <mat-chip class="secondObjects" *ngFor="let item of selectedItems">
                 {{getEventState(item.eventStatus)}}
             </mat-chip>
         </mat-chip-list>
@@ -123,11 +123,6 @@
 </mat-dialog-content>
 <mat-dialog-actions mat-dialog-actions align="end">
     <div class="column">
-        <div mat-dialog-actions align="end" class="marginTop">
-            <button id="invitationButton" [disabled]="disableInvitation()" mat-raised-button color="primary" title="{{'event.invitation' | translate}}" (click)="callInvitation(false, false)">
-                {{'event.invitation' | translate}}
-            </button>
-        </div>
         <div mat-dialog-actions align="end" class="marginTop">
             <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="close()">
                 {{'common.cancel' | translate}}
