@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, Injectable, OnDestroy, ViewChild } from '@angular/core';
-import { HistoryElementType, OrganizationService, UsersService } from '../../shared/api-generated/api-generated';
+import { ContactDto, HistoryElementType, OrganizationService, UsersService } from '../../shared/api-generated/api-generated';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
@@ -107,14 +107,10 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 				'Icon',
 				'Name',
 				'Beschreibung',
-				'Strasse',
-				'Hausnummer',
+				'E-Mail',
+				'Telefonnummer',
 				'PLZ',
 				'Stadt',
-				'Land',
-				'Telefonnummer',
-				'E-Mail',
-				'Faxnummer',
 				'Zugehörige',
 				'Action'
 			];
@@ -243,5 +239,13 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 
 	createEvent() {
 		this.dialog.open(EventsAddComponent, { disableClose: true, data: { list: this.selectedCheckBoxList, useOrgas: true }});
+	}
+
+	getEmployees(empl: ContactDto[]): number {
+		if (empl == null || empl.length == 0) {
+			return 0;
+		} else {
+			return empl.length;
+		}
 	}
 }
