@@ -138,7 +138,7 @@ namespace ServiceLayer
         private List<ModificationEntry> listWithDeletion;
         private IContactPossibilitiesEntryRepository contactPossEntriesRepo;
 
-        public ModificationEntryService(CrmContext context, IContactPossibilitiesEntryRepository contactPossEntriesRepo) : base(context)
+        public ModificationEntryService(CrmContext context, IContactPossibilitiesEntryRepository contactPossEntriesRepo, IContactRepository contactRepo) : base(context, contactRepo)
         {
             this.contactPossEntriesRepo = contactPossEntriesRepo;
         }
