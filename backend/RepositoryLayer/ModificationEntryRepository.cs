@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer.Base;
@@ -42,7 +43,7 @@ namespace RepositoryLayer
         /// </summary>
         /// <param name="dataType">the data type to get it for</param>
         /// <returns>the sorted list</returns>
-        Task<List<ModificationEntry>> GetSortedModificationEntriesByModelDataTypeAsync(MODEL_TYPE dataType);
+        Task<List<ModificationEntry>> GetSortedModificationEntriesByModelDataTypeAsync(MODEL_TYPE dataType, User user);
 
         /// <summary>
         /// get all entries for a specific id and datatype.
@@ -89,9 +90,11 @@ namespace RepositoryLayer
 
     public class ModificationEntryRepository : BaseRepository<ModificationEntry>, IModificationEntryRepository
     {
-        public ModificationEntryRepository(CrmContext context) : base(context)
-        {
+        private IContactRepository contactRepository;
 
+        public ModificationEntryRepository(CrmContext context, IContactRepository contactRepository) : base(context)
+        {
+            this.contactRepository = contactRepository;
         }
 
         public async Task<IdentityResult> CreateNewEntryAsync(
@@ -151,7 +154,7 @@ namespace RepositoryLayer
             }
         }
 
-        public async Task<List<ModificationEntry>> GetSortedModificationEntriesByModelDataTypeAsync(MODEL_TYPE dataType)
+        public async Task<List<ModificationEntry>> GetSortedModificationEntriesByModelDataTypeAsync(MODEL_TYPE dataType, User user)
         {
             List<ModificationEntry> list = await Entities.Include(u => u.User).Where(x => x.DataModelType == dataType).ToListAsync();
             List<ModificationEntry> listToDelete = new List<ModificationEntry>();
@@ -160,6 +163,20 @@ namespace RepositoryLayer
                 if (entry.ModificationType == MODIFICATION.DELETED && entry.DataType == DATA_TYPE.NONE)
                 {
                     listToDelete.AddRange(list.FindAll(a => a.DataModelId == entry.DataModelId));
+                }
+            }
+            if (dataType == MODEL_TYPE.CONTACT)
+            {
+                List<Contact> allContacts = await contactRepository.GetAllUnapprovedContactsWithAllIncludesAsync();
+                if (allContacts != null && allContacts.Any())
+                {
+                    foreach (ModificationEntry entry in list)
+                    {
+                        if (allContacts.Any(b => !user.IsSuperAdmin && b.Id == entry.DataModelId && b.CreatedByUser != user.Id))
+                        {
+                            listToDelete.Add(entry);
+                        }
+                    }
                 }
             }
             listToDelete.ForEach(y => list.Remove(y));
