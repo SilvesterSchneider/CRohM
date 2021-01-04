@@ -18,8 +18,8 @@
         <div class="col-md-3">
             <mat-form-field>
                 <input matInput [matDatepicker]="picker" placeholder="{{'common.date' | translate}}" formControlName="date">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
+                <mat-datepicker-toggle class="datum" matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker class="datum" #picker></mat-datepicker>
             </mat-form-field>
         </div>
         <div class="col-md-3">
