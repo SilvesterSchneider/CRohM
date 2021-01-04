@@ -65,20 +65,20 @@
         <ng-container matColumnDef="Action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
-                <button type="button" mat-icon-button [disabled]="!permissionModify"
-                    (click)="openEditDialog(element.id)" color="primary" class="editOrganization">
-                    <mat-icon title="{{'organization.edit' | translate}}" class="icon">edit</mat-icon>
-                </button>
                 <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)" color="primary">
                     <mat-icon title="{{'organization.showInfo' | translate}}" class="icon">info</mat-icon>
                 </button>
+                <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
+                    color="primary">
+                    <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
+                </button>
                 <button type="button" [matMenuTriggerFor]="menu">
-                    <mat-icon color="primary" class="icon">list</mat-icon>
+                    <mat-icon color="primary" class="icon">more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
-                        color="primary">
-                        <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
+                    <button type="button" mat-icon-button [disabled]="!permissionModify"
+                        (click)="openEditDialog(element.id)" color="primary" class="editOrganization">
+                        <mat-icon title="{{'organization.edit' | translate}}" class="icon">edit</mat-icon>
                     </button>
                     <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteOrganization(element.id)"
                         color="primary">
