@@ -14,9 +14,9 @@ export CROHM_IMAGE_PREP
 CROHM_IMAGE="$(echo "${CROHM_IMAGE_PREP}" | tr "_" -)"
 export CROHM_IMAGE
 
-if [ "${CROHM_BRANCH}" = "master" ]; then
-    export CROHM_IMAGE=latest
-fi
+#if [ "${CROHM_BRANCH}" = "master" ]; then
+#    export CROHM_IMAGE=latest
+#fi
 
 echo
 echo "Current Branch:    ${CROHM_BRANCH}"
