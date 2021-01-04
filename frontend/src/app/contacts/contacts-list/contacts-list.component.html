@@ -87,35 +87,35 @@
         <ng-container matColumnDef="action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
-                <button type="button" mat-icon-button [disabled]="!permissionInformContact"
-                    (click)="openDisclosureDialog(element.id)" color="primary">
-                    <mat-icon title="{{'contact.disclosure.disclosure' | translate}}" class="icon">description
-                    </mat-icon>
+                <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
+                     (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" color="primary">
+                     <mat-icon title="{{'common.call' | translate}}" class="icon">phone</mat-icon>
                 </button>
-                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openEditDialog(element)"
-                    color="primary" class="editButton">
-                    <mat-icon title="{{'contact.edit' | translate}}" class="icon">edit</mat-icon>
+                <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
+                    (click)="addNote(element.id)" color="primary">
+                    <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
                 </button>
                 <button type="button" [matMenuTriggerFor]="menu">
-                    <mat-icon color="primary" class="icon">list</mat-icon>
+                    <mat-icon color="primary" class="icon">more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button type="button" mat-icon-button [disabled]="!permissionModify" class="infoButton"
-                        (click)="openInfo(element.id)" color="primary">
-                        <mat-icon title="{{'contact.showContactInfo' | translate}}" class="icon">info</mat-icon>
-                    </button>
-                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
-                        (click)="addNote(element.id)" color="primary">
-                        <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
-                    </button>
-                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
-                        (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" color="primary">
-                        <mat-icon title="{{'common.call' | translate}}" class="icon">phone</mat-icon>
-                    </button>
                     <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="sendMail(element)"
                         color="primary">
                         <mat-icon title="{{'contact.mail' | translate}}" class="icon">mail</mat-icon>
                     </button>
+                    <button type="button" mat-icon-button [disabled]="!permissionInformContact"
+                        (click)="openDisclosureDialog(element.id)" color="primary">
+                        <mat-icon title="{{'contact.disclosure.disclosure' | translate}}" class="icon">description
+                        </mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button [disabled]="!permissionModify" class="infoButton"
+                        (click)="openInfo(element.id)" color="primary">
+                        <mat-icon title="{{'contact.showContactInfo' | translate}}" class="icon">info</mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openEditDialog(element)"
+                        color="primary" class="editButton">
+                        <mat-icon title="{{'contact.edit' | translate}}" class="icon">edit</mat-icon>
+                     </button>
                     <button type="button" mat-icon-button [disabled]="!permissionDelete"
                         (click)="deleteContact(element)" color="primary">
                         <mat-icon title="{{'contact.delete' | translate}}" class="icon">delete</mat-icon>
