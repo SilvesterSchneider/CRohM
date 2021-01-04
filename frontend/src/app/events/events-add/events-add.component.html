@@ -12,7 +12,7 @@
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <textarea matInput placeholder="{{'common.description' | translate }}'" formControlName="description"></textarea>
+                <textarea matInput placeholder="{{'common.description' | translate }}" formControlName="description"></textarea>
             </mat-form-field>
         </div>
         <div class="col-md-3">
@@ -24,13 +24,13 @@
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input matInput type="time" placeholder="{{ 'common.time' | translate }}" formControlName="time"/>
+                <input matInput type="time" placeholder="{{ 'common.startTime' | translate }}" formControlName="startTime"/>
               </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field>
-                <input type="number" matInput placeholder="{{'common.durationHours' | translate}}" formControlName="duration">
-            </mat-form-field>
+                <input matInput type="time" placeholder="{{ 'common.endTime' | translate }}" formControlName="endTime"/>
+              </mat-form-field>
         </div>
         <div class="col-md-3">
             <mat-form-field>
@@ -66,7 +66,7 @@
     <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="exit()">
         {{'common.cancel' | translate}}
     </button>
-    <button mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!eventsForm.valid" (click)="saveValues()">
+    <button mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!formIsValid()" (click)="saveValues()">
         {{'common.save' | translate}}
     </button>    
 </div>

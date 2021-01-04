@@ -14,8 +14,8 @@ namespace UnitTests.ModelLayer.Helper
         public void CompareEventsWorksCorrectly()
         {
             // Arrange
-            Event oldEvent = new Event() { Id = 1, Date = DateTime.Now, Time = DateTime.Now, Name="testEvent1", Duration = 2.5f };
-            EventDto newEvent = new EventDto() { Id = oldEvent.Id, Date = oldEvent.Date, Time = oldEvent.Time, Name = "testEvent2", Duration = 3f };
+            Event oldEvent = new Event() { Id = 1, Date = DateTime.Now, Starttime = DateTime.Now, Name="testEvent1", Endtime = DateTime.Now.AddHours(1) };
+            EventDto newEvent = new EventDto() { Id = oldEvent.Id, Date = oldEvent.Date, Starttime = oldEvent.Starttime, Name = "testEvent2", Endtime = oldEvent.Starttime.AddHours(1) };
 
             // Act
             ComparerForModificationEntryCreation.CompareEvents(oldEvent, newEvent, null, out List<ModificationEntry> listWithNewEntries, out List<ModificationEntry> listWithDeletion, new List<Contact>(), new List<Organization>());

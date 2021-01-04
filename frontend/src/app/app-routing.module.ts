@@ -6,6 +6,7 @@ import { AuthGuard } from './shared/routing/auth.guard';
 import { OrganizationsListComponent } from './organizations/organizations-list/organizations-list.component';
 import { ApproveContactComponent } from './approve-contact/approve-contact.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { LandingpageEventInvitationComponent } from './landingpage-event-invitation/landingpage-event-invitation.component';
 
 
 const routes: Routes = [
@@ -43,6 +44,10 @@ const routes: Routes = [
   {
     path: 'ApproveContacte/:id',
     component: ApproveContactComponent,
+  },
+  {
+    path: 'EventAnswer/:id/:contactId/:organizationId/:state',
+    component: LandingpageEventInvitationComponent,
   },
   {
     path: 'statistics',

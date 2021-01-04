@@ -37,7 +37,7 @@
         <ng-container matColumnDef="uhrzeit">
             <mat-header-cell *matHeaderCellDef> {{'common.time' | translate}} </mat-header-cell>
             <mat-cell (click)="openInfo(element.id)" [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
-                {{element.time | date:'shortTime'}} </mat-cell>
+                {{element.starttime | date:'shortTime'}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>

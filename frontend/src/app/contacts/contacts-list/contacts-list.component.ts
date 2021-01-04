@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { ContactService, DataProtectionService, GenderTypes } from '../../shared/api-generated/api-generated';
+import { ContactService, DataProtectionService, GenderTypes, OrganizationService, HistoryElementType } from '../../shared/api-generated/api-generated';
 import { ContactDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsInfoComponent } from '../contacts-info/contacts-info.component';
@@ -12,13 +12,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContactsDisclosureDialogComponent } from '../contacts-disclosure-dialog/contacts-disclosure-dialog.component';
 import { EventsAddComponent } from '../../events/events-add/events-add.component';
-import { AddHistoryComponent } from '../../shared/add-history/add-history.component';
+import { AddHistoryComponent, HistoryDialogModel } from '../../shared/add-history/add-history.component';
 import { JwtService } from '../../shared/jwt.service';
 import { TagsFilterComponent } from '../../shared/tags-filter/tags-filter.component';
 import { DataProtectionHelperService } from '../../shared/data-protection/data-protection-service.service';
 import { DpUpdatePopupComponent } from '../../shared/data-protection/dp-update-popup/dp-update-popup.component';
 import { ContactsSendMailDialogComponent } from '../contacts-send-mail-dialog/contacts-send-mail-dialog.component';
 import { Router } from '@angular/router';
+import { OrganizationsInfoComponent } from 'src/app/organizations/organizations-info/organizations-info.component';
 
 @Component({
   selector: 'app-contacts-list',
@@ -51,6 +52,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     private service: ContactService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dialog: MatDialog,
+    private orgaService: OrganizationService,
     private mediaObserver: MediaObserver,
     private readonly dataProtectionService: DataProtectionService,
     private readonly dsgvoService: DataProtectionHelperService,
@@ -64,9 +66,17 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       }
     });
   }
+  public resetFilter(searchInput) {
+    searchInput.value = '';
+    this.applyFilter(null);
+  }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+    let filterValue = '';
+    if (event) {
+      filterValue = (event.target as HTMLInputElement).value;
+    }
+
     this.dataSource.filter = filterValue.trim().toLowerCase();
     this.dataSource.filterPredicate = ((data, filter) => {
       if (data.preName.trim().toLowerCase().includes(filter) || data.name.trim().toLowerCase().includes(filter) ||
@@ -112,7 +122,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       // only display prename and name on larger screens
       this.displayedColumns = ['vorname', 'nachname', 'action'];
     } else {
-      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon','PLZ', 'ort', 'organisation', 'action'];
+      this.displayedColumns = ['icon', 'vorname', 'nachname', 'mail', 'telefon', 'PLZ', 'ort', 'organisation',
+       'action'];
     }
   }
 
@@ -132,8 +143,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     this.service.getById(id).subscribe((x) => {
       const dialogRef = this.dialog.open(ContactsDisclosureDialogComponent, { data: x, disableClose: true, height: '200px' });
       dialogRef.afterClosed().subscribe(result => this.contacts = this.service.getWithUnapproved());
-  });
-}
+    });
+  }
 
   openAddDialog() {
     const dialogRef = this.dialog.open(ContactsAddDialogComponent, {
@@ -205,7 +216,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   addNote(id: number) {
-    const dialogRef = this.dialog.open(AddHistoryComponent);
+    const dataToUse = new HistoryDialogModel('', HistoryElementType.MAIL);
+    const dialogRef = this.dialog.open(AddHistoryComponent, {data: dataToUse});
     dialogRef.afterClosed().subscribe((y) => {
       if (y) {
         this.service.postHistoryElement(y, id).subscribe(x => this.getDataWithUnapproved());
@@ -214,7 +226,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   addNoteToMany() {
-    const dialogRef = this.dialog.open(AddHistoryComponent);
+    const dataToUse = new HistoryDialogModel('', HistoryElementType.MAIL);
+    const dialogRef = this.dialog.open(AddHistoryComponent, {data: dataToUse});
     dialogRef.afterClosed().subscribe(y => {
       if (y) {
         this.addNoteLoop(0, y);
@@ -257,7 +270,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   callPhonenumber(phonenumber: string, id: number) {
     document.location.href = 'tel:' + phonenumber;
-    const dialogRef = this.dialog.open(AddHistoryComponent, { data: phonenumber });
+    const dataToUse = new HistoryDialogModel(phonenumber, HistoryElementType.PHONE_CALL);
+    const dialogRef = this.dialog.open(AddHistoryComponent, { data: dataToUse });
     dialogRef.afterClosed().subscribe((y) => {
       if (y) {
         this.service.postHistoryElement(y, id).subscribe(x => this.getDataWithUnapproved());
@@ -267,6 +281,10 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   mouseOver(id: number) {
     this.selectedRow = id;
+  }
+
+  mouseLeave() {
+    this.selectedRow = -1;
   }
 
   isSelectedRow(id: number): boolean {
@@ -297,7 +315,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   sendMail(contact: ContactDto) {
     if (contact.contactPossibilities.mail != null && contact.contactPossibilities.mail.length > 0) {
-      const dataForDialog = [contact.preName + ' ' + contact.name, contact.contactPossibilities.mail ];
+      const dataForDialog = [contact.preName + ' ' + contact.name, contact.contactPossibilities.mail];
       const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
       dialogRef.afterClosed().subscribe(x => {
         if (x.send) {
@@ -326,21 +344,26 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   createEvent() {
-    this.dialog.open(EventsAddComponent, { disableClose: true, data: { list: this.selectedCheckBoxList, useOrgas: false }});
+    this.dialog.open(EventsAddComponent, { disableClose: true, data: { list: this.selectedCheckBoxList, useOrgas: false } });
   }
 
-  getOrganization(id: number): string {
+  getOrganization(id: number): string[] {
     const contact = this.allContacts.find(a => a.id === id);
+    const orgas = new Array<string>();
     if (contact != null && contact.organizations != null && contact.organizations.length > 0) {
-      let orgas = '';
-      contact.organizations.forEach(b => orgas += b.name + ', ');
-      return orgas.substring(0, orgas.length - 2);
-    } else {
-      return '';
+      contact.organizations.forEach(b => orgas.push(b.name));
     }
+    return orgas;
   }
 
-  changeToOrganizationPage() {
-    this.route.navigate(['/organizations']);
+  openOrganisationInfo(contact: ContactDto, orga: string) {
+    if (contact.organizations != null && contact.organizations.length > 0) {
+      const id = contact.organizations.findIndex(a => a.name === orga);
+      if (id >= 0) {
+        this.orgaService.getById(contact.organizations[id].id).subscribe(x => {
+          this.dialog.open(OrganizationsInfoComponent, {data: x});
+        });
+      }
+    }
   }
 }

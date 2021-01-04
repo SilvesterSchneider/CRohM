@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, Injectable, OnDestroy, ViewChild } from '@angular/core';
-import { OrganizationService, UsersService } from '../../shared/api-generated/api-generated';
+import { HistoryElementType, OrganizationService, UsersService } from '../../shared/api-generated/api-generated';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationDto } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,7 +9,7 @@ import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/o
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { JwtService } from 'src/app/shared/jwt.service';
-import { AddHistoryComponent } from 'src/app/shared/add-history/add-history.component';
+import { AddHistoryComponent, HistoryDialogModel } from 'src/app/shared/add-history/add-history.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
 import { EventsAddComponent } from 'src/app/events/events-add/events-add.component';
@@ -162,7 +162,8 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 	}
 
 	addNote(id: number) {
-		const dialogRef = this.dialog.open(AddHistoryComponent);
+		const dataToUse = new HistoryDialogModel('', HistoryElementType.MAIL);
+		const dialogRef = this.dialog.open(AddHistoryComponent, {data: dataToUse});
 		dialogRef.afterClosed().subscribe((y) => {
 			if (y) {
 				this.service.postHistoryElement(y, id).subscribe(x => this.getData());
@@ -210,6 +211,10 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 
 	mouseOver(id: number) {
 		this.selectedRow = id;
+	}
+
+	mouseLeave() {
+		this.selectedRow = -1;
 	}
 
 	isSelectedRow(id: number): boolean {

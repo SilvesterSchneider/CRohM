@@ -25,8 +25,8 @@ namespace ModelLayer.Helper
             List<ModificationEntry> listEntries = new List<ModificationEntry>();
             ComparePlainFields(listEntries, oldEvent.Name, newEvent.Name, newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.NAME, userOfModification, MODIFICATION.MODIFIED);
             ComparePlainFields(listEntries, oldEvent.Date.ToString(), newEvent.Date.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DATE, userOfModification, MODIFICATION.MODIFIED);
-            ComparePlainFields(listEntries, oldEvent.Time.ToString(), newEvent.Time.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.TIME, userOfModification, MODIFICATION.MODIFIED);
-            ComparePlainFields(listEntries, oldEvent.Duration.ToString(), newEvent.Duration.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DURATION, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(listEntries, oldEvent.Starttime.ToString(), newEvent.Starttime.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.TIME, userOfModification, MODIFICATION.MODIFIED);
+            ComparePlainFields(listEntries, oldEvent.Endtime.ToString(), newEvent.Endtime.ToString(), newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DURATION, userOfModification, MODIFICATION.MODIFIED);
             ComparePlainFields(listEntries, oldEvent.Location, newEvent.Location, newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.LOCATION, userOfModification, MODIFICATION.MODIFIED);
             ComparePlainFields(listEntries, oldEvent.Description, newEvent.Description, newEvent.Id, MODEL_TYPE.EVENT, DATA_TYPE.DESCRIPTION, userOfModification, MODIFICATION.MODIFIED);
             CompareTagFields(listEntries, oldEvent.Tags, newEvent.Tags, newEvent.Id, MODEL_TYPE.EVENT, userOfModification);

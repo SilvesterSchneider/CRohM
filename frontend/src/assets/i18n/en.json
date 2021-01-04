@@ -1,5 +1,7 @@
 {
     "common": {
+        "contactType":"Type",
+        "contactValue":"Entry",
         "cancel": "Cancel",
         "confirmCancel": "Do you really want to cancel?",
         "save": "Save",
@@ -16,6 +18,8 @@
         "newTag": "New Tag",
         "label": "Label",
         "time": "Time",
+        "startTime": "Start time",
+        "endTime": "End time",
         "durationHours": "Duration in Hours",
         "selectAll": "Select all",
         "calendarWeek": "Calendar Week",
@@ -160,6 +164,7 @@
         "numberTags": "Number of tags"
     },
     "settings": {
+        "mailSettings":"Here you can setup the E-Mail Server settings:",
         "setPassword": "Set Password for",
         "displayName": "Display Name",
         "username": "Username",
@@ -219,7 +224,7 @@
         "no": "No, don't send"
     },
     "validation": {
-        "nameRequired": "Name of the contact entry required!",
+        "nameRequired": "Type of the contact entry required!",
         "mailPhoneRequired": "Value required!"
     },
     "calendar": {

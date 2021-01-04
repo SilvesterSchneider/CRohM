@@ -1,5 +1,7 @@
 {
     "common": {
+        "contactType":"Art",
+        "contactValue":"Eintrag",
         "cancel": "Verwerfen",
         "confirmCancel": "Wollen Sie den Vorgang wirklich abbrechen?",
         "save": "Speichern",
@@ -16,6 +18,8 @@
         "newTag": "Neuer Tag",
         "label": "Bezeichnung",
         "time": "Uhrzeit",
+        "startTime": "Startzeit",
+        "endTime": "Endzeit",
         "durationHours": "Dauer in Stunden",
         "selectAll": "Alle selektieren",
         "calendarWeek": "Kalenderwoche",
@@ -160,6 +164,7 @@
         "numberTags": "Anzahl Tags"
     },
     "settings": {
+        "mailSettings":"Hier können Sie die Einstellungen für den E-Mail Server anpassen:",
         "setPassword": "Passwort festlegen für",
         "displayName": "Anzeigename",
         "username": "Benutzername",
@@ -219,7 +224,7 @@
         "no": "Nein, nicht senden"
     },
     "validation": {
-        "nameRequired": "Name des Kontakteintrags erforderlich!",
+        "nameRequired": "Art des Kontakteintrags erforderlich!",
         "mailPhoneRequired": "Wert erforderlich!"
     },
     "calendar": {

@@ -2,7 +2,7 @@ import {
   ElementRef, HostBinding, Component, OnInit, ViewChild, Input, Optional, Self,
   ChangeDetectorRef, OnDestroy, Inject
 } from '@angular/core';
-import { NgControl, FormControl } from '@angular/forms';
+import { NgControl, FormControl, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
@@ -16,6 +16,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 import { OsmAddressComponent } from '../../shared/osm/osm-address/osm-address.component';
+import { getTranslationDeclStmts } from '@angular/compiler/src/render3/view/template';
 
 export class ItemList {
   constructor(public item: string, public selected?: boolean) {
@@ -110,8 +111,8 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
     this.eventsForm = this.fb.group({
       name: ['', Validators.required],
       date: [new FormControl('')],
-      time: ['', Validators.required],
-      duration: ['', Validators.required],
+      startTime: ['', Validators.required],
+      endTime: ['', Validators.required],
       description: ['', Validators.maxLength(300)],
       location: ['']
     });
@@ -158,6 +159,41 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
         }
       });
     });
+  }
+
+  getTheStartTime(): string {
+    if (this.eventsForm != null && this.eventsForm.get('startTime') != null
+      && this.eventsForm.get('startTime').value != null) {
+      return this.eventsForm.get('startTime').value;
+    }
+    return '';
+  }
+
+  getEndTime(): string {
+    if (this.eventsForm != null && this.eventsForm.get('endTime') != null
+      && this.eventsForm.get('endTime').value != null) {
+      return this.eventsForm.get('endTime').value;
+    }
+    return '';
+  }
+
+  formIsValid(): boolean {
+    const startTime = this.getTheStartTime();
+    const endTime = this.getEndTime();
+    return this.eventsForm.valid && startTime.length > 0 && endTime.length > 0 && this.isEndTimeGreaterThanStarttime(startTime, endTime);
+  }
+
+  isEndTimeGreaterThanStarttime(startTime: string, endTime: string): boolean {
+    if (endTime.indexOf(':') > 0 && startTime.indexOf(':') > 0) {
+      const hoursEnd = +endTime.substr(0, endTime.indexOf(':'));
+      const minutesEnd = +endTime.substr(endTime.indexOf(':') + 1);
+      const hoursStart = +startTime.substr(0, endTime.indexOf(':'));
+      const minutesStart = +startTime.substr(endTime.indexOf(':') + 1);
+      if (hoursEnd > hoursStart || hoursEnd === hoursStart && minutesEnd > minutesStart) {
+        return true;
+      }
+    }
+    return false;
   }
 
   setDescribedByIds(ids: string[]) {
