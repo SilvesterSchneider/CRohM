@@ -73,4 +73,8 @@ export class OrganizationsAddDialogComponent extends BaseDialogInput implements 
 	hasChanged(): boolean {
 		return !this.organizationForm.pristine;
 	}
+
+	isValid(): boolean {
+		return this.organizationForm.valid && this.addressGroup.isValid();
+	}
 }

@@ -182,4 +182,9 @@ export class ContactsEditDialogComponent extends BaseDialogInput implements OnIn
 	public hasChanged(): boolean {
 		return !this.contactsForm.pristine;
 	}
+
+	isValid(): boolean {
+		return this.contactsForm.valid && this.addressGroup.isValid() && this.contactsForm.get('contactPossibilities').get('mail')
+			.value.length > 0;
+	}
 }
