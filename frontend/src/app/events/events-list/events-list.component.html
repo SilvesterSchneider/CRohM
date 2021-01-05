@@ -35,9 +35,13 @@
                 {{element.date | date}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="uhrzeit">
-            <mat-header-cell *matHeaderCellDef> {{'common.time' | translate}} </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> {{'common.startTime' | translate}} </mat-header-cell>
             <mat-cell (click)="openInfo(element.id)" [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
                 {{element.starttime | date:'shortTime'}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="ort">
+            <mat-header-cell *matHeaderCellDef> {{'event.location' | translate}} </mat-header-cell>
+            <mat-cell (click)="openInfo(element.id)" *matCellDef="let element">{{element.location}}</mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
