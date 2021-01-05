@@ -90,9 +90,4 @@ export class ContactsDetailComponent implements OnInit {
 		this.contact.contactPossibilities.id = idContactPossibilities;
 		this.service.put(this.contact.id, this.contact ).subscribe();
 	}
-
-	isValid(): boolean {
-		return this.contactsForm.valid && this.addressGroup.isValid() && this.contactsForm.get('contactPossibilities').get('mail')
-			.value.length > 0;
-	}
 }

@@ -103,7 +103,7 @@
     <button mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="onCancel()">
         {{'common.cancel' | translate}}
     </button>
-    <button id="saveButton" mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!isValid()"
+    <button id="saveButton" mat-raised-button color="primary" title="{{'common.save' | translate}}" type="submit" [disabled]="!organizationForm.valid"
         (click)="onApprove()">
         {{'common.save' | translate}}
     </button>

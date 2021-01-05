@@ -71,7 +71,7 @@ export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialo
 			address: this.addressForm,
 			contactPossibilities: this.fb.group({
 				// Validiert auf korrektes E-Mail-Format
-				mail: ['', Validators.email],
+				mail: ['', [Validators.email, Validators.required]],
 				// Laesst beliebige Anzahl an Ziffern, Leerzeichen und Bindestrichen zu, Muss mit 0 beginnen
 				phoneNumber: ['', Validators.pattern('^0[0-9- ]*$')],
 				fax: ['', Validators.pattern('^0[0-9- ]*$')],
@@ -110,9 +110,5 @@ export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialo
 
 	hasChanged(): boolean {
 		return !this.contactsForm.pristine;	// pristine means no data was filled inside dialog
-	}
-
-	isValid(): boolean {
-		return this.contactsForm.valid && this.addressGroup.isValid() && this.contactsForm.get('contactPossibilities').get('mail').value.length > 0;
 	}
 }

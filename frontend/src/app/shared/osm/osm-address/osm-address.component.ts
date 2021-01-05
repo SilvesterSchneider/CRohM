@@ -5,7 +5,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AddressDto } from '../../api-generated/api-generated';
 import {
   FormBuilder, Validators, NG_VALUE_ACCESSOR, NG_VALIDATORS,
-  ControlValueAccessor, Validator, AbstractControl, ValidationErrors, FormGroup
+  ControlValueAccessor, Validator, AbstractControl, ValidationErrors, FormGroup, FormControl
 } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
@@ -43,17 +43,16 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
     name: [''],
     description: [''],
     country: [this.countries[0].value, Validators.required],
-    street: ['', Validators.pattern('[a-zA-Z äüöÄÜÖß.-]{1,}')],
-    streetNumber: ['', Validators.pattern('[a-zA-Z0-9äüöÄÜÖß.-]{1,}')],
-    zipcode: ['', Validators.pattern('^[0-9]{4,5}$')],
-    city: ['', Validators.pattern('^[a-zA-ZäüöÄÜÖß.-]*')],
+    street: ['', [Validators.pattern('^[a-zA-Z äüöÄÜÖß.-]*'), this.noWhitespaceValidator]],
+    streetNumber: ['', [Validators.pattern('^[a-zA-Z0-9äüöÄÜÖß.-]*'), Validators.required]],
+    zipcode: ['', [Validators.pattern('^[0-9]{4,5}$'), Validators.required]],
+    city: ['', [Validators.pattern('^[a-zA-ZäüöÄÜÖß.-]*'), Validators.required]],
   });
 
-  isValid():boolean {
-    return this.addressForm.get('country').value.length > 0 && this.addressForm.get('street').value.length > 0
-      && this.addressForm.get('streetNumber').value.length > 0 && this.addressForm.get('zipcode').value.length > 0
-      && this.addressForm.get('city').value.length > 0 && !this.addressForm.get('street').value.startsWith(' ');
-  }
+  private noWhitespaceValidator(control: FormControl) {
+		const beginsWithWhitespace = (control.value || '').startsWith(' ');
+		return beginsWithWhitespace ? { 'whitespace': true } : null;
+}
 
   constructor(private fb: FormBuilder, private osmService: OsmService) { }
 
