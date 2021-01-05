@@ -25,7 +25,7 @@ export class EventsInvitationComponent implements OnInit {
 
   ngOnInit(): void {
     this.textForm = this.createTextForm();
-    this.mailService.getSendInvitationText(this.data.name, this.getDate(this.data.date), this.getTime(this.data.starttime)).subscribe(x => {
+    this.mailService.getSendInvitationText(this.data.name, this.getDate(this.data.date), this.data.starttime).subscribe(x => {
       this.textForm.get('text').setValue(x);
     });
   }
@@ -34,25 +34,6 @@ export class EventsInvitationComponent implements OnInit {
     return this.fb.group({
       text: ['', Validators.required]
     });
-  }
-
-  private getTime(time: string): string {
-    const date: Date = new Date(time);
-    let result = '';
-    let hours = date.getHours().toString();
-    if (hours.length === 1) {
-      hours = '0' + hours;
-    }
-    let minutes = date.getMinutes().toString();
-    if (minutes.length === 1) {
-      minutes = '0' + minutes;
-    }
-    let seconds = date.getSeconds().toString();
-    if (seconds.length === 1) {
-      seconds = '0' + seconds;
-    }
-    result = hours + ':' + minutes + ':' + seconds;
-    return result;
   }
 
   private getDate(date: string): string {

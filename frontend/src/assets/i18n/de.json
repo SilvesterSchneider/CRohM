@@ -13,7 +13,7 @@
         "comment": "Kommentar",
         "name": "Name",
         "search": "Suche",
-        "action": "Aktion",
+        "action": "Aktionen",
         "filterWithTags": "Filtern mit Tags",
         "newTag": "Neuer Tag",
         "label": "Bezeichnung",
@@ -142,7 +142,8 @@
         "participant": "Teilnehmer",
         "sendInvitation": "Einladung an Teilnehmer versenden",
         "sendMail": "E-Mail an {{text}} versenden",
-        "inviteDescription": "Die Textbausteine <Nachname> und <Vorname> fügen den Nach- bzw. Vornamen des Empfängers ein."
+        "inviteDescription": "Die Textbausteine <Nachname> und <Vorname> fügen den Nach- bzw. Vornamen des Empfängers ein.",
+        "location": "Veranstaltungsort"
     },
     "statistic": {
         "statistics": "Statistiken",

@@ -23,10 +23,12 @@ namespace WebApi.Controllers
     {
         private readonly IMapper mapper;
         private readonly IModificationEntryRepository modificationEntryRepository;
+        private readonly IUserService userService;
 
-        public ModificationEntryController(IMapper mapper, IModificationEntryRepository modificationEntryRepository)
+        public ModificationEntryController(IMapper mapper, IModificationEntryRepository modificationEntryRepository, IUserService userService)
         {
             this.mapper = mapper;
+            this.userService = userService;
             this.modificationEntryRepository = modificationEntryRepository;
         }
 
@@ -36,7 +38,8 @@ namespace WebApi.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
         public async Task<IActionResult> GetSortedListByType(MODEL_TYPE modelDataType)
         {
-            List<ModificationEntry> entries = await modificationEntryRepository.GetSortedModificationEntriesByModelDataTypeAsync(modelDataType);
+            User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
+            List<ModificationEntry> entries = await modificationEntryRepository.GetSortedModificationEntriesByModelDataTypeAsync(modelDataType, userOfChange);
             if (entries != null)
             {
                 return Ok(mapper.Map<List<ModificationEntryDto>>(entries));

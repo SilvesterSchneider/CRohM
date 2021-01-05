@@ -23,6 +23,7 @@ export class EventDtoGroup implements EventDto {
   name?: string;
   tags: TagDto[];
   endtime: string;
+  location: string;
   contacts?: ContactDto[];
   participated?: ParticipatedDto[];
   weekNumber: number;
@@ -42,7 +43,7 @@ export class EventsListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   events: Observable<EventDto[]>;
   allEvents: EventDtoGroup[] = new Array<EventDtoGroup>();
-  displayedColumns = ['bezeichnung', 'datum', 'uhrzeit', 'action'];
+  displayedColumns = ['bezeichnung', 'datum', 'uhrzeit', 'ort', 'action'];
   public dataSource: EventDtoGroup[] = new Array<EventDtoGroup>();
   checkboxSelected = true;
   weekNumber = 0;
@@ -164,7 +165,7 @@ export class EventsListComponent implements OnInit {
 
   callEdit(id: number) {
     this.service.getById(id).subscribe(x => {
-      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, width: '680px', height: '800px' });
+      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, width: '680px', height: '700px' });
       dialogRef.afterClosed().subscribe(y => this.init());
     });
   }
@@ -224,6 +225,7 @@ export class EventsListComponent implements OnInit {
           endtime: x.endtime,
           id: x.id,
           tags: x.tags,
+          location: x.location,
           starttime: x.starttime,
           contacts: x.contacts,
           name: x.name,
@@ -237,6 +239,7 @@ export class EventsListComponent implements OnInit {
           endtime: x.endtime,
           id: x.id,
           tags: x.tags,
+          location: x.location,
           starttime: x.starttime,
           contacts: x.contacts,
           name: x.name,
@@ -253,6 +256,7 @@ export class EventsListComponent implements OnInit {
         id: x.id,
         starttime: x.starttime,
         contacts: x.contacts,
+        location: x.location,
         name: x.name,
         participated: x.participated,
         weekNumber: 0,
@@ -266,6 +270,7 @@ export class EventsListComponent implements OnInit {
         id: x.id,
         starttime: x.starttime,
         contacts: x.contacts,
+        location: x.location,
         name: x.name,
         participated: x.participated,
         weekNumber: 0,

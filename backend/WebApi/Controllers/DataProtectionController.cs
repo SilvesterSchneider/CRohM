@@ -64,18 +64,17 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("officer")]
-        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "at least one data protection officer")]
-        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "no data protection officer found")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "protection officer found or not")]
         public async Task<IActionResult> IsThereAnyDataProtectionOfficerInTheSystem()
         {
             var users = await _userService.GetUsersInRoleAsync("Datenschutzbeauftragter");
 
             if (users.Any())
             {
-                return Ok();
+                return Ok(true);
             }
 
-            return NotFound();
+            return Ok(false);
         }
     }
 

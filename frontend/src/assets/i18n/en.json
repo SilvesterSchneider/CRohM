@@ -13,7 +13,7 @@
         "comment": "Comment",
         "name": "Name",
         "search": "Search",
-        "action": "Action",
+        "action": "Actions",
         "filterWithTags": "Filter with Tags",
         "newTag": "New Tag",
         "label": "Label",
@@ -142,7 +142,8 @@
         "participant": "Participant",
         "sendInvitation": "Send invitation to Participants",
         "sendMail": "Send Mail to {{text}}",
-        "inviteDescription": "The text modules <lastname> and <firstname> insert the last or first name of the recipient."
+        "inviteDescription": "The text modules <lastname> and <firstname> insert the last or first name of the recipient.",
+        "location": "Event location"
     },
     "statistic": {
         "statistics": "Statistics",
