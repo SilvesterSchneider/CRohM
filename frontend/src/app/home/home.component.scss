@@ -17,7 +17,7 @@
 
   .actions {
       background-color: grayscale($color: #cf803f);
-      margin: 10px;
+      height: 50px;
   }
 
   .text {
@@ -25,17 +25,15 @@
   }
 
   .header {
-      background-color: grayscale($color: #000000);
+      background-color: #3F51B5;
       margin-left: -15px;
   }
 
   .button {
       width: 130px;
+      height: 35px;
   }
 
-  .buttonMargin {
-    margin: 5px;
-  }
   .spacer {
       width: 100px;
   }
