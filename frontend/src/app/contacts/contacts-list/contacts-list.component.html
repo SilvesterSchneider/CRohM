@@ -95,7 +95,7 @@
                     (click)="addNote(element.id)" color="primary">
                     <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
                 </button>
-                <button type="button" [matMenuTriggerFor]="menu" data-cy="submit_btn">
+                <button type="button" [matMenuTriggerFor]="menu" data-cy="submit_btn" class="buttonBorder" [ngClass]="{'buttonBorderSelected': isSelectedRow(element.id)}">
                     <mat-icon color="primary" class="icon">more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
