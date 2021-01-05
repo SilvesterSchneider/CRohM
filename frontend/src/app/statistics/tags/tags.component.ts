@@ -9,7 +9,7 @@ import { VerticalGroupedBarChartComponent } from 'src/app/shared/charts/vertical
   styleUrls: ['./tags.component.scss']
 })
 export class TagsComponent implements OnInit {
-  @ViewChild(VerticalGroupedBarChartComponent, { static: true })
+  @ViewChild(VerticalGroupedBarChartComponent, { static: false })
   chart: VerticalGroupedBarChartComponent;
   totalTags: number;
   valueContacts: boolean;

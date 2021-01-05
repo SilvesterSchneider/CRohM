@@ -9,7 +9,7 @@ import { VerticalGroupedBarChartComponent } from 'src/app/shared/charts/vertical
   styleUrls: ['./event-visits.component.scss']
 })
 export class EventVisitsComponent implements OnInit {
-  @ViewChild(VerticalGroupedBarChartComponent, { static: true })
+  @ViewChild(VerticalGroupedBarChartComponent, { static: false })
   chart: VerticalGroupedBarChartComponent;
   totalInvitations = 0;
   totalParticipations = 0;
@@ -34,13 +34,13 @@ export class EventVisitsComponent implements OnInit {
       this.chart.setLabels(this.translate.instant('event.events'),
         this.translate.instant('statistic.numberParticipants'),
         this.translate.instant('event.participant'));
-      this.chart.setData(stats);
       if (stats.length === 0) {
         this.totalInvitations = 0;
         this.totalParticipations = 0;
         this.relation = 0;
+        this.chart.setData(stats);
       } else {
-        this.calculateTheAmounts(stats);
+        this.chart.setDataWithDates(stats, '01-05-2021', stats[stats.length - 1].name.replace('.', '-').replace('.', '-'));
       }
     });
   }

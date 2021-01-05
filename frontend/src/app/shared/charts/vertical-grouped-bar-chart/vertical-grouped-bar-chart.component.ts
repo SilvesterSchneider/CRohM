@@ -40,6 +40,15 @@ export class VerticalGroupedBarChartComponent implements OnInit {
     this.setTheView();
   }
 
+  public setDataWithDates(inData: VerticalGroupedBarDto[], start: string, end: string) {
+    this.startDate = new Date(start);
+    this.endDate = new Date(end);
+    alert(start);
+    alert(this.startDate);
+    this.allData = inData;
+    this.checkForUpdate();
+  }
+
   public setChangeCallback(funct: (visibleData: VerticalGroupedBarDto[]) => void) {
     this.changeFunction = funct;
   }
