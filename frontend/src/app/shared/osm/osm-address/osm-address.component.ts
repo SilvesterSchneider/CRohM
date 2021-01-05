@@ -38,18 +38,22 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
     { value: 'Österreich', viewValue: 'common.austria' }
   ];
 
-
   addressForm = this.fb.group({
     id: [''],
     name: [''],
     description: [''],
-    country: [this.countries[0].viewValue, Validators.required],
-    street: ['', Validators.pattern('^[a-zA-ZäüöÄÜÖß.-]*')],
+    country: [this.countries[0].value, Validators.required],
+    street: ['', Validators.pattern('^[a-zA-Z äüöÄÜÖß.-]*')],
     streetNumber: ['', Validators.pattern('^[a-zA-Z0-9äüöÄÜÖß.-]*')],
     zipcode: ['', Validators.pattern('^[0-9]{4,5}$')],
     city: ['', Validators.pattern('^[a-zA-ZäüöÄÜÖß.-]*')],
   });
 
+  isValid():boolean {
+    return this.addressForm.get('country').value.length > 0 && this.addressForm.get('street').value.length > 0
+      && this.addressForm.get('streetNumber').value.length > 0 && this.addressForm.get('zipcode').value.length > 0
+      && this.addressForm.get('city').value.length > 0 && !this.addressForm.get('street').value.startsWith(' ');
+  }
 
   constructor(private fb: FormBuilder, private osmService: OsmService) { }
 
@@ -126,10 +130,7 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
     return `${selected.street ?? ''} ${selected.streetNumber ?? ''} ` +
       `${selected.zipcode ?? ''} ${selected.city ?? ''} ${selected.country ?? ''}`;
   }
-
-
 }
-
 
 interface Country {
   value: string;

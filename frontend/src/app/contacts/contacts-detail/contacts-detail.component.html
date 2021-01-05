@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <app-osm-address formControlName="address"></app-osm-address>
+    <app-osm-address formGroupName="address"></app-osm-address>
 
     <div class="row" formGroupName="contactPossibilities">
         <div class="col-md-3">
@@ -53,7 +53,7 @@
         <app-contact-possibilities></app-contact-possibilities>
     </div>
     <button mat-raised-button color="primary" type="submit" title="{{'common.save' | translate}}" (click)="updateContact()"
-        routerLink="/contacts" [disabled]="!contactsForm.valid"> {{'common.save' | translate}}</button>
+        routerLink="/contacts" [disabled]="!isValid()"> {{'common.save' | translate}}</button>
 </div>
 
 <hr>

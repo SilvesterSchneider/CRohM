@@ -5,6 +5,7 @@ import { ContactDto, EventService, GenderTypes } from '../../shared/api-generate
 import { ContactService } from '../../shared/api-generated/api-generated';
 import { ContactPossibilitiesComponent } from 'src/app/shared/contactPossibilities/contact-possibilities.component';
 import { JwtService } from 'src/app/shared/jwt.service';
+import { OsmAddressComponent } from 'src/app/shared/osm/osm-address/osm-address.component';
 
 @Component({
 	selector: 'app-contacts-detail',
@@ -15,9 +16,12 @@ export class ContactsDetailComponent implements OnInit {
 	@ViewChild(ContactPossibilitiesComponent, { static: true })
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;
 	public genderTypes: string[] = ['Männlich', 'Weiblich', 'Divers'];
+	@ViewChild(OsmAddressComponent, { static: true })
+	addressGroup: OsmAddressComponent;
 	contactPossibilitiesEntriesFormGroup: FormGroup;
 	contact: ContactDto;
 	contactsForm: FormGroup;
+	addressForm: FormGroup;
 
 	constructor(
 		private fb: FormBuilder,
@@ -31,6 +35,7 @@ export class ContactsDetailComponent implements OnInit {
 		this.contact = this.route.snapshot.data.contact;
 		this.contactPossibilitiesEntriesFormGroup = this.contactPossibilitiesEntries.getFormGroup();
 		this.contactPossibilitiesEntries.patchExistingValuesToForm(this.contact.contactPossibilities.contactEntries);
+		this.addressForm = this.addressGroup.getAddressForm();
 		this.initForm();
 		this.contactsForm.patchValue(this.contact);
 		this.contactsForm.get('gender').setValue(this.getGenderText(this.contact.gender));
@@ -53,7 +58,7 @@ export class ContactsDetailComponent implements OnInit {
 			preName: [ '', Validators.required ],
 			gender: [this.genderTypes[0], Validators.required],
 			contactPartner: [''],
-			address: this.fb.control(''),
+			address: this.addressForm,
 			contactPossibilities: this.fb.group({
 				// Validiert auf korrektes E-Mail-Format
 				mail: [ '', Validators.email ],
@@ -84,5 +89,10 @@ export class ContactsDetailComponent implements OnInit {
 		this.contact.address.id = idAddress;
 		this.contact.contactPossibilities.id = idContactPossibilities;
 		this.service.put(this.contact.id, this.contact ).subscribe();
+	}
+
+	isValid(): boolean {
+		return this.contactsForm.valid && this.addressGroup.isValid() && this.contactsForm.get('contactPossibilities').get('mail')
+			.value.length > 0;
 	}
 }

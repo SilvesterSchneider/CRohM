@@ -111,4 +111,8 @@ export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialo
 	hasChanged(): boolean {
 		return !this.contactsForm.pristine;	// pristine means no data was filled inside dialog
 	}
+
+	isValid(): boolean {
+		return this.contactsForm.valid && this.addressGroup.isValid() && this.contactsForm.get('contactPossibilities').get('mail').value.length > 0;
+	}
 }
