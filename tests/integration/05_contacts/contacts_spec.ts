@@ -57,7 +57,13 @@ describe('Contacts Tests', () => {
         cy.visit('/contacts');
         cy.wait(1000);
         //click on edit button
-        cy.get('.editButton').click();
+        cy.get('[data-cy=submit_btn]')
+            .should('be.enabled')
+            .click();
+        cy.wait(1000);
+        cy.get('[data-cy=submit]')
+            .should('be.visible')
+            .click();
         cy.wait(4000);
         cy.get('#gender')
             .click()
@@ -68,7 +74,13 @@ describe('Contacts Tests', () => {
         cy.get('#contactPartner').type('matis');
         cy.get('#saveEdit').click();
         cy.wait(3000);
-        cy.get('.editButton').click();
+        cy.get('[data-cy=submit_btn]')
+            .should('be.enabled')
+            .click();
+        cy.wait(1000);
+        cy.get('[data-cy=submit]')
+            .should('be.visible')
+            .click();
         cy.wait(4000);
         cy.get('#contactPartner').should("have.value", 'razvanmatis');
     });

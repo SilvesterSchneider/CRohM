@@ -95,7 +95,7 @@
                     (click)="addNote(element.id)" color="primary">
                     <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
                 </button>
-                <button type="button" [matMenuTriggerFor]="menu">
+                <button type="button" [matMenuTriggerFor]="menu" data-cy="submit_btn">
                     <mat-icon color="primary" class="icon">more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
@@ -113,7 +113,7 @@
                         <mat-icon title="{{'contact.showContactInfo' | translate}}" class="icon">info</mat-icon>
                     </button>
                     <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openEditDialog(element)"
-                        color="primary" class="editButton">
+                        color="primary" class="editButton" data-cy="submit">
                         <mat-icon title="{{'contact.edit' | translate}}" class="icon">edit</mat-icon>
                      </button>
                     <button type="button" mat-icon-button [disabled]="!permissionDelete"
