@@ -42,13 +42,13 @@
             <mat-header-cell *matHeaderCellDef> {{'common.description' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.description}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="Strasse">
-            <mat-header-cell *matHeaderCellDef> {{'contact.street' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.street}} </mat-cell>
+        <ng-container matColumnDef="E-Mail">
+            <mat-header-cell *matHeaderCellDef> {{'contact.mail' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contact.mail}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="Hausnummer">
-            <mat-header-cell *matHeaderCellDef> {{'contact.streetNumber' | translate}}  </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.streetNumber}} </mat-cell>
+        <ng-container matColumnDef="Telefonnummer">
+            <mat-header-cell *matHeaderCellDef> {{'contact.phoneNumber' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contact.phoneNumber}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="PLZ">
             <mat-header-cell *matHeaderCellDef> {{'contact.zipcode' | translate}}  </mat-header-cell>
@@ -58,52 +58,27 @@
             <mat-header-cell *matHeaderCellDef> {{'contact.city' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.city}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="Land">
-            <mat-header-cell *matHeaderCellDef> {{'contact.country' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.country}} </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="Telefonnummer">
-            <mat-header-cell *matHeaderCellDef> {{'contact.phoneNumber' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contact.phoneNumber}} </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="E-Mail">
-            <mat-header-cell *matHeaderCellDef> {{'contact.mail' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contact.mail}} </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="Faxnummer">
-            <mat-header-cell *matHeaderCellDef> {{'contact.fax' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contact.fax}} </mat-cell>
-        </ng-container>
         <ng-container matColumnDef="Zugehörige">
             <mat-header-cell *matHeaderCellDef> {{'organization.employees' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)">
-                <mat-form-field>
-                    <mat-label>{{'organization.employees' | translate}}</mat-label>
-                    <mat-select [(ngModel)]="element.employees">
-                        <mat-option disabled *ngFor="let employee of element.employees">
-                            {{employee.preName + ' ' + employee.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{getEmployees(element.employees)}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
-                <button type="button" mat-icon-button [disabled]="!permissionModify"
-                    (click)="openEditDialog(element.id)" color="primary" class="editOrganization">
-                    <mat-icon title="{{'organization.edit' | translate}}" class="icon">edit</mat-icon>
-                </button>
                 <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)" color="primary">
                     <mat-icon title="{{'organization.showInfo' | translate}}" class="icon">info</mat-icon>
                 </button>
-                <button type="button" [matMenuTriggerFor]="menu">
-                    <mat-icon color="primary" class="icon">list</mat-icon>
+                <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
+                    color="primary">
+                    <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
+                </button>
+                <button type="button" [matMenuTriggerFor]="menu" data-cy="submit_btn">
+                    <mat-icon color="primary" class="icon">more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
-                        color="primary">
-                        <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
+                    <button type="button" mat-icon-button [disabled]="!permissionModify" data-cy="submit"
+                        (click)="openEditDialog(element.id)" color="primary" class="editOrganization">
+                        <mat-icon title="{{'organization.edit' | translate}}" class="icon">edit</mat-icon>
                     </button>
                     <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteOrganization(element.id)"
                         color="primary">

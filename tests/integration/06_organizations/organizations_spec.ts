@@ -31,7 +31,13 @@ describe('Organizations Tests', () => {
         cy.get('#tagInput').type('{backspace}');
         cy.wait(1000);
         //click on edit button of organization
-        cy.get('.editOrganization').click();
+        cy.get('[data-cy=submit_btn]')
+            .should('be.enabled')
+            .click();
+        cy.wait(1000);
+        cy.get('[data-cy=submit]')
+            .should('be.visible')
+            .click();
         cy.wait(5000);
         //type in the tag
         cy.get('#tagInputEdit').type('hallo').type('{enter}');
