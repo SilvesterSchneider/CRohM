@@ -96,8 +96,8 @@
                     color="primary" class="editButton">
                     <mat-icon title="{{'contact.edit' | translate}}" class="icon">edit</mat-icon>
                 </button>
-                <button type="button" [matMenuTriggerFor]="menu">
-                    <mat-icon color="primary" class="icon">list</mat-icon>
+                <button type="button" [matMenuTriggerFor]="menu" class="buttonBorder" [ngClass]="{'buttonBorderSelected': isSelectedRow(element.id)}">
+                    <mat-icon color="primary" class="icon">more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
                     <button type="button" mat-icon-button [disabled]="!permissionModify" class="infoButton"
