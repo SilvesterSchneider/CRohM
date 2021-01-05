@@ -36,31 +36,31 @@
         </ng-container>
         <ng-container matColumnDef="Name">
             <mat-header-cell *matHeaderCellDef> {{'common.name' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.name}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)"> {{element.name}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Beschreibung">
             <mat-header-cell *matHeaderCellDef> {{'common.description' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.description}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)"> {{element.description}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="E-Mail">
             <mat-header-cell *matHeaderCellDef> {{'contact.mail' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contact.mail}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)"> {{element.contact.mail}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Telefonnummer">
             <mat-header-cell *matHeaderCellDef> {{'contact.phoneNumber' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.contact.phoneNumber}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)"> {{element.contact.phoneNumber}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="PLZ">
             <mat-header-cell *matHeaderCellDef> {{'contact.zipcode' | translate}}  </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.zipcode}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)"> {{element.address.zipcode}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Stadt">
             <mat-header-cell *matHeaderCellDef> {{'contact.city' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{element.address.city}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)"> {{element.address.city}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Zugehörige">
             <mat-header-cell *matHeaderCellDef> {{'organization.employees' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)"> {{getEmployees(element.employees)}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)"> {{getEmployees(element.employees)}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="Action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
