@@ -188,6 +188,20 @@ namespace RepositoryLayer
                     await RemoveEventOrganizationAsync(part);
                 }
 
+                List<Participated> participationsToDelete = new List<Participated>();
+                foreach (Participated part in eventExistent.Participated)
+                {
+                    if (eventToModify.Participated.FirstOrDefault(a => a.ModelType == part.ModelType && a.ObjectId == part.ObjectId) == null)
+                    {
+                        participationsToDelete.Add(part);
+                    }
+                }
+
+                foreach (Participated part in participationsToDelete)
+                {
+                    eventExistent.Participated.Remove(part);
+                }
+
                 foreach (ParticipatedDto partNew in eventToModify.Participated)
                 {
                     Participated participated = eventExistent.Participated.FirstOrDefault(y => y.Id == partNew.Id && partNew.Id > 0 && y.ModelType == partNew.ModelType);
