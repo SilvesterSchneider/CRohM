@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -39,7 +40,7 @@ namespace WebApi.Controllers
         [Authorize(Roles = "Anlegen eines Benutzers")]
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(UserDto), Description = "successfully created")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "unsuccessfully request")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "unsuccessfully request")]
         public async Task<IActionResult> Post(UserCreateDto userToCreate)
         {
             var user = _mapper.Map<User>(userToCreate);
@@ -52,7 +53,7 @@ namespace WebApi.Controllers
                 return Created(uri, userDto);
             }
 
-            return BadRequest();
+            return BadRequest(result.Errors.ToList()[0].Code + ": " + result.Errors.ToList()[0].Description);
         }
 
         // TODO: Check passt, die Berechtigung hier?
