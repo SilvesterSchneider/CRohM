@@ -32,7 +32,8 @@
     <mat-table id="contactsTable" #table [dataSource]="dataSource" (mouseleave)="mouseLeave()">
         <ng-container matColumnDef="icon">
             <mat-header-cell *matHeaderCellDef>
-                <mat-checkbox class="check" color="primary" [checked]="isAllSelected" (change)="changeSelectionAll()"></mat-checkbox>
+                <mat-checkbox class="check" color="primary" [checked]="isAllSelected" (change)="changeSelectionAll()">
+                </mat-checkbox>
             </mat-header-cell>
             <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)">
                 <div *ngIf="!isSelectedRow(element.id)" class="selection">
@@ -45,12 +46,14 @@
         </ng-container>
         <ng-container matColumnDef="vorname">
             <mat-header-cell *matHeaderCellDef> {{'contact.firstName' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)"> {{element.preName}}
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)">
+                {{element.preName}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="nachname">
             <mat-header-cell *matHeaderCellDef> {{'contact.lastName' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)"> {{element.name}} </mat-cell>
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)">
+                {{element.name}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="mail">
             <mat-header-cell *matHeaderCellDef> {{'contact.mail' | translate}} </mat-header-cell>
@@ -60,25 +63,28 @@
         <ng-container matColumnDef="telefon">
             <mat-header-cell *matHeaderCellDef> {{'contact.phoneNumber' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element">
-                <a (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)">{{element.contactPossibilities.phoneNumber}}</a>
+                <a (mouseover)="mouseOver(element.id)"
+                    (click)="openInfo(element.id)">{{element.contactPossibilities.phoneNumber}}</a>
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="PLZ">
             <mat-header-cell *matHeaderCellDef> {{'contact.zipcode' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)"> {{element.address.zipcode}}
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)">
+                {{element.address.zipcode}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="ort">
             <mat-header-cell *matHeaderCellDef> {{'contact.city' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)"> {{element.address.city}}
+            <mat-cell *matCellDef="let element" (mouseover)="mouseOver(element.id)" (click)="openInfo(element.id)">
+                {{element.address.city}}
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="organisation">
             <mat-header-cell *matHeaderCellDef> {{'organization.organizations' | translate}} </mat-header-cell>
-            <mat-cell class="orgaBlue" *matCellDef="let element"
-                (mouseover)="mouseOver(element.id)"> 
+            <mat-cell class="orgaBlue" *matCellDef="let element" (mouseover)="mouseOver(element.id)">
                 <div layout="column">
-                    <div flex="" *ngFor="let orga of getOrganization(element.id)" (click)="openOrganisationInfo(element, orga)">
+                    <div flex="" *ngFor="let orga of getOrganization(element.id)"
+                        (click)="openOrganisationInfo(element, orga)">
                         {{orga}}
                     </div>
                 </div>
@@ -88,14 +94,15 @@
             <mat-header-cell mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
                 <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
-                     (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" color="primary">
-                     <mat-icon title="{{'common.call' | translate}}" class="icon">phone</mat-icon>
+                    (click)="callPhonenumber(element.contactPossibilities.phoneNumber, element.id)" color="primary">
+                    <mat-icon title="{{'common.call' | translate}}" class="icon">phone</mat-icon>
                 </button>
-                <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
-                    (click)="addNote(element.id)" color="primary">
+                <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
+                    color="primary">
                     <mat-icon title="{{'common.addHistory' | translate}}" class="icon">note_add</mat-icon>
                 </button>
-                <button type="button" [matMenuTriggerFor]="menu" data-cy="submit_btn" class="buttonBorder" [ngClass]="{'buttonBorderSelected': isSelectedRow(element.id)}">
+                <button type="button" [matMenuTriggerFor]="menu" data-cy="submit_btn" mat-icon-button
+                    [ngClass]="{'buttonBorderSelected': isSelectedRow(element.id)}">
                     <mat-icon color="primary" class="icon">more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
@@ -112,10 +119,10 @@
                         (click)="openInfo(element.id)" color="primary">
                         <mat-icon title="{{'contact.showContactInfo' | translate}}" class="icon">info</mat-icon>
                     </button>
-                    <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openEditDialog(element)"
-                        color="primary" class="editButton" data-cy="submit">
+                    <button type="button" mat-icon-button [disabled]="!permissionModify"
+                        (click)="openEditDialog(element)" color="primary" class="editButton" data-cy="submit">
                         <mat-icon title="{{'contact.edit' | translate}}" class="icon">edit</mat-icon>
-                     </button>
+                    </button>
                     <button type="button" mat-icon-button [disabled]="!permissionDelete"
                         (click)="deleteContact(element)" color="primary">
                         <mat-icon title="{{'contact.delete' | translate}}" class="icon">delete</mat-icon>
