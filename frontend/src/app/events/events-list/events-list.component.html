@@ -6,8 +6,8 @@
             <mat-label>{{'common.search' | translate}}</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="{{'event.events' | translate }}...">
         </mat-form-field>
-        <mat-checkbox color="primary" class="button" [checked]="checkboxSelected" title="{{'event.hidePast' | translate}}"
-            (change)="toggleSelection()">
+        <mat-checkbox color="primary" class="button" [checked]="checkboxSelected"
+            title="{{'event.hidePast' | translate}}" (change)="toggleSelection()">
             {{'event.hidePast' | translate}}
         </mat-checkbox>
         <button id="addDummyEventButton" class="button" *ngIf="isAdminUserLoggedIn" [disabled]="!permissionAdd"
@@ -41,18 +41,19 @@
         </ng-container>
         <ng-container matColumnDef="ort">
             <mat-header-cell *matHeaderCellDef> {{'event.location' | translate}} </mat-header-cell>
-            <mat-cell (click)="openInfo(element.id)" [ngClass]="{'today': isToday(element)}" *matCellDef="let element">{{element.location}}</mat-cell>
+            <mat-cell (click)="openInfo(element.id)" [ngClass]="{'today': isToday(element)}" *matCellDef="let element">
+                {{element.location}}</mat-cell>
         </ng-container>
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" [ngClass]="{'today': isToday(element)}">
-                <button type="button" mat-icon-button [disabled]="!permissionModify"
-                    color="primary" class="editButton" (click)="callEdit(element.id)">
-                    <mat-icon class="icon" title="{{'event.edit' | translate}}">edit</mat-icon>
-                </button>
                 <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)"
                     color="primary">
                     <mat-icon class="icon" title="{{'event.show' | translate}}">info</mat-icon>
+                </button>
+                <button type="button" mat-icon-button [disabled]="!permissionModify" color="primary" class="editButton"
+                    (click)="callEdit(element.id)">
+                    <mat-icon class="icon" title="{{'event.edit' | translate}}">edit</mat-icon>
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionDelete" (click)="deleteEvent(element.id)"
                     color="primary">
