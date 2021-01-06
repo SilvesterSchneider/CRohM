@@ -63,7 +63,7 @@ export class CalendarComponent implements OnInit {
 
   CalendarView = CalendarView;
 
-  viewDate: Date = new Date();
+  viewDate: Date = new Date(Date.now());
   permissionAdd = false;
   modalData: {
     action: string;
@@ -81,7 +81,7 @@ export class CalendarComponent implements OnInit {
   ];
 
   refresh: Subject<any> = new Subject();
-
+ 
   events: CalendarEventExtended[] = new Array<CalendarEventExtended>();
 
   constructor(
@@ -220,6 +220,17 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.permissionAdd = this.jwt.hasPermission('Anlegen einer Veranstaltung');
     this.init();
+  }
+
+  changeYear(addYear: boolean) {
+    const date = this.viewDate;
+    if (addYear) {
+      date.setFullYear(date.getFullYear() + 1);
+    } else {
+      date.setFullYear(date.getFullYear() - 1);
+    }
+    this.viewDate = new Date(date);
+    this.refresh.next();
   }
 
   getKw(date: Date): number {

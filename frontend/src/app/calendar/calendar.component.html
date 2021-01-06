@@ -31,6 +31,16 @@
       </div>
     </div>
     <span class="spacer"></span>
+    <div class="row">
+        <div type="button" class="btnYear" (click)="changeYear(false)">
+          <mat-icon>remove</mat-icon>
+        </div>
+        <div class="margin">{{'calendar.year' | translate}}</div>
+        <div type="button" class="btnYear" (click)="changeYear(true)">
+          <mat-icon>add</mat-icon>
+        </div>
+    </div>
+    <span class="spacer"></span>
     <div class="column">
       <h3 *ngIf="isGerman()">{{ viewDate | calendarDate:(view + 'ViewTitle'):'de' }}</h3>
       <h3 *ngIf="!isGerman()">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
