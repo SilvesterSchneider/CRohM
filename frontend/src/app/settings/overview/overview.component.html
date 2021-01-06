@@ -2,7 +2,7 @@
     <mat-tab id="tabUsers" label="{{'settings.users' | translate}}">
       <app-user></app-user>
     </mat-tab>
-    <mat-tab id="tabRoles" label="{{'settings.roles' | translate}}">
+    <mat-tab *ngIf="hasAccessRole()" id="tabRoles" label="{{'settings.roles' | translate}}">
       <app-roles></app-roles>
     </mat-tab>
     <mat-tab *ngIf="isAdmin()" id="tabMail" label="{{'contact.mail' | translate}}">
