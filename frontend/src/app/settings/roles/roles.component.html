@@ -2,19 +2,12 @@
     <mat-toolbar-row>
         <span>{{'settings.roles' | translate}}</span>
         <span class="fill-remaining-space"></span>
-        <div>
-            <form >
-            <mat-form-field>
-              <mat-label>{{'common.search' | translate}}</mat-label>
-              <input matInput (keyup)="applyFilter($event)" placeholder="{{'settings.role' | translate}}..." >
-            </mat-form-field>
-          </form>
-        </div>
-        <div>
-            <button id="createRoleButton" mat-fab color="accent" (click)="openCreateDialog()">
-                <mat-icon>add</mat-icon>
-              </button>
-        </div>
+        <mat-form-field>
+            <input matInput (keyup)="applyFilter($event)" placeholder="{{'common.search' | translate}}">
+        </mat-form-field>
+        <button id="createRoleButton" class="button" mat-mini-fab color="primary"  (click)="openCreateDialog()">
+            <mat-icon>add</mat-icon>
+        </button>
     </mat-toolbar-row>
 </mat-toolbar>
 

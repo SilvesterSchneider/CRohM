@@ -3,9 +3,9 @@
         <span>{{'settings.user' | translate}}</span>
         <span class="spacer"></span>
         <mat-form-field>
-            <input matInput placeholder="{{'common.search' | translate}}">
+            <input matInput (keyup)="applyFilter($event)" placeholder="{{'common.search' | translate}}">
         </mat-form-field>
-        <button button="submit" [disabled]="!permissionAddUser" mat-mini-fab color="primary" (click)="openAddDialog()">
+        <button button="submit" class="button" [disabled]="!permissionAddUser" mat-mini-fab color="primary" (click)="openAddDialog()">
             <mat-icon>add</mat-icon>
         </button>
     </mat-toolbar-row>

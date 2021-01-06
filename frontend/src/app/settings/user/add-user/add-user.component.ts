@@ -63,14 +63,14 @@ export class AddUserDialogComponent extends BaseDialogInput<AddUserDialogCompone
     public addUser() {
         this.usersService.post(this.userForm.value).subscribe(user => {
             this.addPermissionsForUser(user.id);
+            // Schliessen des Dialogs
+            this.dialogRef.close();
         }, error => {
             this.snackBar.open(error, undefined, {
                 duration: 4000,
                 panelClass: ['mat-toolbar', 'mat-warn'],
               });
         });
-        // Schliessen des Dialogs
-        this.dialogRef.close();
     }
 
     addPermissionsForUser(id: number) {

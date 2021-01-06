@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { UserDto, UsersService, AuthService } from '../../shared/api-generated/api-generated';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { AddUserDialogComponent } from './add-user/add-user.component';
 import { EditUserDialogComponent } from './edit-user/edit-user.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
@@ -18,7 +17,7 @@ import { JwtService } from 'src/app/shared/jwt.service';
 
 export class UserComponent implements OnInit {
   @ViewChild(MatTable) table: MatTable<any>;
-  dataSource = new BehaviorSubject<UserDto[]>([]);
+  dataSource = new MatTableDataSource();
   displayedColumns: string[] = ['username', 'mail', 'firstname', 'lastname', 'options'];
   permissionAddUser = false;
   permissionLockUser = false;
@@ -79,7 +78,7 @@ export class UserComponent implements OnInit {
 
   private GetData() {
     this.usersService.get().subscribe(x => {
-      this.dataSource.next(x);
+      this.dataSource.data = x;
       this.table.renderRows();
     });
   }
@@ -107,4 +106,10 @@ export class UserComponent implements OnInit {
   public SetLockoutState(userId: number) {
     this.usersService.updateLockoutState(userId).subscribe(x => this.GetData());
   }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
 }

@@ -16,4 +16,8 @@ export class OverviewComponent implements OnInit {
   isAdmin(): boolean {
     return this.jwt.isAdmin();
   }
+
+  hasAccessRole(): boolean {
+    return this.jwt.hasPermission('Einsehen und Überarbeiten des Rollenkonzepts');
+  }
 }
