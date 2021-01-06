@@ -4,6 +4,7 @@ import { UsersService, RoleDto, RoleService } from '../../../shared/api-generate
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../../shared/form/base-dialog-form/base-dialog.component';
 import { RolesTranslationService } from '../../roles/roles-translation.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 /**
  * Komponente fuer den Modal-Dialog zum Hinzufuegen eines Nutzers
@@ -37,7 +38,8 @@ export class AddUserDialogComponent extends BaseDialogInput<AddUserDialogCompone
         private readonly usersService: UsersService,
         public dialogRef: MatDialogRef<AddUserDialogComponent>,
         public dialog: MatDialog,
-        private permissionService: RoleService
+        private permissionService: RoleService,
+        private snackBar: MatSnackBar
     ) {
         super(dialogRef, dialog);
         this.initPermissions();
@@ -61,6 +63,11 @@ export class AddUserDialogComponent extends BaseDialogInput<AddUserDialogCompone
     public addUser() {
         this.usersService.post(this.userForm.value).subscribe(user => {
             this.addPermissionsForUser(user.id);
+        }, error => {
+            this.snackBar.open(error, undefined, {
+                duration: 4000,
+                panelClass: ['mat-toolbar', 'mat-warn'],
+              });
         });
         // Schliessen des Dialogs
         this.dialogRef.close();
