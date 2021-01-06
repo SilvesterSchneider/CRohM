@@ -5,7 +5,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AddressDto } from '../../api-generated/api-generated';
 import {
   FormBuilder, Validators, NG_VALUE_ACCESSOR, NG_VALIDATORS,
-  ControlValueAccessor, Validator, AbstractControl, ValidationErrors, FormGroup
+  ControlValueAccessor, Validator, AbstractControl, ValidationErrors, FormGroup, FormControl
 } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
@@ -38,18 +38,21 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
     { value: 'Österreich', viewValue: 'common.austria' }
   ];
 
-
   addressForm = this.fb.group({
     id: [''],
     name: [''],
     description: [''],
-    country: [this.countries[0].viewValue, Validators.required],
-    street: ['', Validators.pattern('^[a-zA-ZäüöÄÜÖß.-]*')],
-    streetNumber: ['', Validators.pattern('^[a-zA-Z0-9äüöÄÜÖß.-]*')],
-    zipcode: ['', Validators.pattern('^[0-9]{4,5}$')],
-    city: ['', Validators.pattern('^[a-zA-ZäüöÄÜÖß.-]*')],
+    country: [this.countries[0].value, Validators.required],
+    street: ['', [Validators.pattern('^[a-zA-Z äüöÄÜÖß.-]*'), this.noWhitespaceValidator]],
+    streetNumber: ['', [Validators.pattern('^[a-zA-Z0-9äüöÄÜÖß.-]*'), Validators.required]],
+    zipcode: ['', [Validators.pattern('^[0-9]{4,5}$'), Validators.required]],
+    city: ['', [Validators.pattern('^[a-zA-ZäüöÄÜÖß.-]*'), Validators.required]],
   });
 
+  private noWhitespaceValidator(control: FormControl) {
+		const beginsWithWhitespace = (control.value || '').startsWith(' ');
+		return beginsWithWhitespace ? { 'whitespace': true } : null;
+}
 
   constructor(private fb: FormBuilder, private osmService: OsmService) { }
 
@@ -126,10 +129,7 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
     return `${selected.street ?? ''} ${selected.streetNumber ?? ''} ` +
       `${selected.zipcode ?? ''} ${selected.city ?? ''} ${selected.country ?? ''}`;
   }
-
-
 }
-
 
 interface Country {
   value: string;
