@@ -9,7 +9,7 @@ import { VerticalGroupedBarChartComponent } from 'src/app/shared/charts/vertical
   styleUrls: ['./objects-creation.component.scss']
 })
 export class ObjectsCreationComponent implements OnInit {
-  @ViewChild(VerticalGroupedBarChartComponent, { static: true })
+  @ViewChild(VerticalGroupedBarChartComponent, { static: false })
   chart: VerticalGroupedBarChartComponent;
   totalContacts = 0;
   totalOrganizations = 0;

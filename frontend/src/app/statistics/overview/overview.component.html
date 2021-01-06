@@ -1,11 +1,17 @@
-<mat-tab-group backgroundColor="primary" >
+<mat-tab-group backgroundColor="primary" (selectedIndexChange)="tabChange($event)">
   <mat-tab id="tabObjectCreation" label="{{'statistic.created' | translate}}">
-    <app-objects-creation></app-objects-creation>
+    <div *ngIf="selectedIndex === 0">
+      <app-objects-creation></app-objects-creation>
+    </div>
   </mat-tab>
   <mat-tab id="tabEventParticipants" label="{{'statistic.participants' | translate}}">
-    <app-event-visits></app-event-visits>
+    <div *ngIf="selectedIndex === 1">
+      <app-event-visits></app-event-visits>
+    </div>
   </mat-tab>
   <mat-tab id="tabTags" label="{{'common.tags' | translate}}">
-    <app-tags></app-tags>
+    <div *ngIf="selectedIndex === 2">
+      <app-tags></app-tags>
+    </div>
   </mat-tab>
 </mat-tab-group>
