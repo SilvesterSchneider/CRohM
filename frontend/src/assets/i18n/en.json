@@ -116,7 +116,8 @@
         "new": "New Organization",
         "affiliation": "Organizational affiliations",
         "showInfo": "Display organizational information",
-        "delete": "Delete Organization"
+        "delete": "Delete Organization",
+        "dear": "Dear Sir or Madam,"
     },
     "event": {
         "event": "Event",

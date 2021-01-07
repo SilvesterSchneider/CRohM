@@ -47,6 +47,6 @@ export class MailComponent implements OnInit {
   }
 
   sendMail() {
-    this.mailService.sendMail('1', 'Test-Email', this.sendMailForm.get('address').value, '').subscribe();
+    this.mailService.sendMail('1', 'Test-Email', this.sendMailForm.get('address').value).subscribe();
   }
 }

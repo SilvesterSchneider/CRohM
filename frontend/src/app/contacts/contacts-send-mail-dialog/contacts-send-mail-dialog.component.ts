@@ -11,18 +11,21 @@ import { MailService } from 'src/app/shared/api-generated/api-generated';
 export class ContactsSendMailDialogComponent implements OnInit {
   textForm: FormGroup;
   text: string;
+  showReplaceInfo = false;
 
   constructor(
     private fb: FormBuilder,
     private mailService: MailService,
     public dialogRef: MatDialogRef<ContactsSendMailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: string[],
+    @Inject(MAT_DIALOG_DATA) public data: MailData,
     public dialog: MatDialog) {
-      this.text = data[0];
+      this.text = data.title;
+      this.showReplaceInfo = data.showReplaceInfo;
     }
 
   ngOnInit(): void {
     this.textForm = this.createTextForm();
+    this.textForm.get('text').setValue(this.data.initText);
   }
 
   private createTextForm(): FormGroup {
@@ -35,22 +38,37 @@ export class ContactsSendMailDialogComponent implements OnInit {
     if (!shouldSend) {
       this.dialogRef.close({ send: false });
     } else {
-      if (this.data.length <= 2) {
-        this.mailService.sendMail('1', 'Mail', this.data[1], this.textForm.get('text').value).subscribe(x =>
+      if (this.data.subjects.length <= 1) {
+        this.mailService.sendMail('1', 'Mail', this.data.subjects[0].adress, this.textForm.get('text').value,
+         this.data.subjects[0].preName, this.data.subjects[0].name).subscribe(x =>
           this.dialogRef.close({ send: true }));
       } else {
-        this.sendMailLoop(1);
+        this.sendMailLoop(0);
       }
     }
   }
 
   sendMailLoop(index: number) {
-    if (index < this.data.length) {
-      this.mailService.sendMail('1', 'Mail', this.data[index], this.textForm.get('text').value).subscribe(x => {
+    if (index < this.data.subjects.length) {
+      this.mailService.sendMail('1', 'Mail', this.data.subjects[index].adress, this.textForm.get('text').value,
+      this.data.subjects[index].preName, this.data.subjects[index].name).subscribe(x => {
         this.sendMailLoop(++index);
       });
     } else {
       this.dialogRef.close({ send: true });
     }
   }
+}
+
+export class MailData {
+  showReplaceInfo: boolean;
+  title: string;
+  subjects: Array<MailSubject>;
+  initText: string;
+}
+
+export class MailSubject {
+  adress: string;
+  preName: string;
+  name: string;
 }

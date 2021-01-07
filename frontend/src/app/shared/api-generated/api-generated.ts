@@ -1994,9 +1994,11 @@ export class MailService {
      * @param subject (optional) 
      * @param address (optional) 
      * @param mailContent (optional) 
+     * @param preName (optional) 
+     * @param name (optional) 
      * @return successfully send mail
      */
-    sendMail(id: string, subject?: string | null | undefined, address?: string | null | undefined, mailContent?: string | null | undefined): Observable<boolean> {
+    sendMail(id: string, subject?: string | null | undefined, address?: string | null | undefined, mailContent?: string | null | undefined, preName?: string | null | undefined, name?: string | null | undefined): Observable<boolean> {
         let url_ = this.baseUrl + "/api/Mail/{id}?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -2007,6 +2009,10 @@ export class MailService {
             url_ += "address=" + encodeURIComponent("" + address) + "&";
         if (mailContent !== undefined && mailContent !== null)
             url_ += "mailContent=" + encodeURIComponent("" + mailContent) + "&";
+        if (preName !== undefined && preName !== null)
+            url_ += "preName=" + encodeURIComponent("" + preName) + "&";
+        if (name !== undefined && name !== null)
+            url_ += "name=" + encodeURIComponent("" + name) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
