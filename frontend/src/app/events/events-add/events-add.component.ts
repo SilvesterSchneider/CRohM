@@ -312,6 +312,6 @@ export class EventsAddComponent extends BaseDialogInput<EventsAddComponent>
   }
 
   exit() {
-    super.confirmDialog();
+    this.dialogRef.close({save: false})
   }
 }
