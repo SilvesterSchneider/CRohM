@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using static ModelLayer.DataTransferObjects.StatisticsDto;
 
 namespace ServiceLayer
@@ -72,26 +73,34 @@ namespace ServiceLayer
             List<Event> events = await eventService.GetAllEventsWithAllIncludesAsync();
             foreach (Event ev in events)
             {
-                int count = 0;
-                if (ev.Contacts != null && ev.Contacts.Count > 0)
+                if (ev.Participated != null && ev.Participated.Any())
                 {
-                    count = ev.Contacts.Count;
-                }
-                if (ev.Organizations != null && ev.Organizations.Count > 0)
-                {
-                    count += ev.Organizations.Count;
-                }
-                if (count > 0)
-                { 
-                    VerticalGroupedBarDto dto = new VerticalGroupedBarDto();
-                    dto.Name = ev.Date.ToString("dd.MM.yyyy");
-                    dto.Series = new List<VerticalGroupedBarDataSet>();
-                    dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_INVITED_CONTACTS, Value = count });
-                    dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_PARTICIPATED_CONTACS, Value = ev.Participated.FindAll(a => a.HasParticipated).Count });
-                    list.Add(dto);
+                    int countInvited = ev.Participated.Count(a => a.EventStatus == ParticipatedStatus.INVITED);
+                    int countAgreed = ev.Participated.Count(a => a.EventStatus == ParticipatedStatus.AGREED);
+                    int countParticipated = ev.Participated.Count(a => a.HasParticipated);
+                    VerticalGroupedBarDto dto = GetBarGroupFromList(ev.Date.ToString("dd.MM.yyyy"), list);
+                    dto.Series.FirstOrDefault(a => a.Name.Equals(StatisticsDto.SERIES_INVITED_CONTACTS)).Value += countInvited;
+                    dto.Series.FirstOrDefault(a => a.Name.Equals(StatisticsDto.SERIES_AGREED_CONTACS)).Value += countAgreed;
+                    dto.Series.FirstOrDefault(a => a.Name.Equals(StatisticsDto.SERIES_PARTICIPATED_CONTACS)).Value += countParticipated;
                 }
             }
+
             return list;
+        }
+
+        private VerticalGroupedBarDto GetBarGroupFromList(string date, List<VerticalGroupedBarDto> list)
+        {
+            VerticalGroupedBarDto dto = list.FirstOrDefault(a => a.Name.Equals(date));
+            if (dto == null)
+            {
+                dto = new VerticalGroupedBarDto() { Name = date };
+                dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_INVITED_CONTACTS, Value = 0 });
+                dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_AGREED_CONTACS, Value = 0 });
+                dto.Series.Add(new VerticalGroupedBarDataSet() { Name = StatisticsDto.SERIES_PARTICIPATED_CONTACS, Value = 0 });
+                list.Add(dto);
+            }
+
+            return dto;
         }
 
         public async Task<List<VerticalGroupedBarDto>> GetAllTags()
