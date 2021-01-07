@@ -104,7 +104,8 @@
             "disclosure": "Kontaktauskunft",
             "generate": "Kontaktauskunft generieren",
             "description": "Erzeugt eine PDF-Datei mit allen im CRMS gespeicherten Daten zu gewähltem Kontakt gem. Auskunftspflicht EU-DSGVO Art. 15. Die PDF-Datei wird direkt an die E-Mail-Adresse des Kontakts gesendet."
-        }
+        },
+        "overview": "Kontakt - Übersicht"
     },
     "organization": {
         "organization": "Organisation",
@@ -116,7 +117,8 @@
         "new": "Neue Organisation",
         "affiliation": "Organisationszugehörigkeiten",
         "showInfo": "Organisationsinformationen anzeigen",
-        "delete": "Organisation löschen"
+        "delete": "Organisation löschen",
+        "overview": "Organisation - Übersicht"
     },
     "event": {
         "event": "Veranstaltung",
@@ -143,7 +145,8 @@
         "sendInvitation": "Einladung an Teilnehmer versenden",
         "sendMail": "E-Mail an {{text}} versenden",
         "inviteDescription": "Die Textbausteine <Nachname> und <Vorname> fügen den Nach- bzw. Vornamen des Empfängers ein.",
-        "location": "Veranstaltungsort"
+        "location": "Veranstaltungsort",
+        "overview": "Veranstaltung - Übersicht"
     },
     "statistic": {
         "statistics": "Statistiken",

@@ -104,7 +104,8 @@
             "disclosure": "Disclosure",
             "generate": "Generate Disclosure",
             "description": "Generates a pdf-file with all data stored within the CRMS for the selected contact according to Right of Access Art. 12 GDPR. The pdf-file is  send to the contact's mail adress."
-        }
+        },
+        "overview": "Contact - Overview"
     },
     "organization": {
         "organization": "Organization",
@@ -116,7 +117,8 @@
         "new": "New Organization",
         "affiliation": "Organizational affiliations",
         "showInfo": "Display organizational information",
-        "delete": "Delete Organization"
+        "delete": "Delete Organization",
+        "overview": "Organization - Overview"
     },
     "event": {
         "event": "Event",
@@ -143,7 +145,8 @@
         "sendInvitation": "Send invitation to Participants",
         "sendMail": "Send Mail to {{text}}",
         "inviteDescription": "The text modules <lastname> and <firstname> insert the last or first name of the recipient.",
-        "location": "Event location"
+        "location": "Event location",
+        "overview": "Event - Overview"
     },
     "statistic": {
         "statistics": "Statistics",
