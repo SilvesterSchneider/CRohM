@@ -83,9 +83,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully send mail")]
-        public async Task<IActionResult> SendMail(string subject, string address, string mailContent)
+        public async Task<IActionResult> SendMail(string subject, string address, string mailContent, string preName, string name)
         {
-            return Ok(await mailService.SendMailToAddress(subject, address, mailContent));
+            return Ok(await mailService.SendMailToAddress(subject, address, mailContent == null ? string.Empty : mailContent, preName == null ? string.Empty : preName, name == null ? string.Empty : name));
         }
     }
 }

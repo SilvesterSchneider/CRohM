@@ -2,7 +2,7 @@
     <h4>
         {{'event.sendMail' | translate :{text:text} }}
     </h4>
-    <div>
+    <div *ngIf="showReplaceInfo">
         {{'event.inviteDescription' | translate}}
     </div>
     <div [formGroup]="textForm">

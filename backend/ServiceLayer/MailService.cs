@@ -31,7 +31,7 @@ namespace ServiceLayer
         Task<bool> SendDataProtectionDeleteMessage(string title, string lastName, string emailAddressRecipient, string data);
         Task<bool> CreateAndSendInvitationMail(string mail, string name, string mailContent, long eventid, long contactid, long organisationid, string uri);
 
-        Task<bool> SendMailToAddress(string subject, string address, string mailContent);
+        Task<bool> SendMailToAddress(string subject, string address, string mailContent, string preName, string name);
 
         Task<bool> SendEventDeletedMessage(List<EventContact> contactMails, List<EventOrganization> orgas);
     }
@@ -45,7 +45,7 @@ namespace ServiceLayer
         private static string PRENAMEFIELD = "<Vorname>";
         private static string PRENAMEFIELDEN = "<firstname>";
         private static string NAMEFIELD = "<Nachname>";
-        private static string NAMEFIELDEN = "lastname>";
+        private static string NAMEFIELDEN = "<lastname>";
         private static string ORGASTART = "Sehr geehrte Damen und Herren des Unternehmens";
         private static string ORGASTARTEN = "Dear ladies and gentlemen of the company";
         private static string EVENTNAMEFIELD = "<Veranstaltungsname>";
@@ -89,7 +89,7 @@ namespace ServiceLayer
             string body = "<h3> Bitte bestätigen Sie die Aufnahme Ihrer Kontaktdaten für die TH-Nürnberg </h3> " +
                    "<p> "+benutzer+"</p>";
 
-            return await SendMailAsync("Zugangsdaten", body, email, null, "");
+            return await SendMailAsync("Aufnahmebestätigung ins CRMS System der TH Nürnberg", body, email, null, "");
         }
 
         public static string GetMailForInvitationAsTemplate(string eventName, string date, string time)
@@ -354,11 +354,15 @@ namespace ServiceLayer
             return await SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, address, null, null);
         }
 
-        public async Task<bool> SendMailToAddress(string subject, string address, string mailContent)
+        public async Task<bool> SendMailToAddress(string subject, string address, string mailContent, string preName, string name)
         {
             if (string.IsNullOrEmpty(mailContent) && subject.Equals(TESTMAIL))
             {
                 mailContent = MAILSETUP;
+            }
+            else
+            {
+                mailContent = mailContent.Replace(PRENAMEFIELD, preName).Replace(PRENAMEFIELDEN, preName).Replace(NAMEFIELD, name).Replace(NAMEFIELDEN, name);
             }
             return await SendFormattedMail(subject, mailContent, address, null, null);
         }

@@ -118,7 +118,8 @@
         "affiliation": "Organisationszugehörigkeiten",
         "showInfo": "Organisationsinformationen anzeigen",
         "delete": "Organisation löschen",
-        "overview": "Organisation - Übersicht"
+        "overview": "Organisation - Übersicht",
+        "dear": "Sehr geehrte Damen und Herren,"
     },
     "event": {
         "event": "Veranstaltung",

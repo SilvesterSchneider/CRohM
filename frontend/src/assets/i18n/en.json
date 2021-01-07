@@ -118,7 +118,8 @@
         "affiliation": "Organizational affiliations",
         "showInfo": "Display organizational information",
         "delete": "Delete Organization",
-        "overview": "Organization - Overview"
+        "overview": "Organization - Overview",
+        "dear": "Dear Sir or Madam,"
     },
     "event": {
         "event": "Event",
