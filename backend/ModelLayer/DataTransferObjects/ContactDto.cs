@@ -19,6 +19,7 @@ namespace ModelLayer.DataTransferObjects
         public List<EventDto> Events { get; set; } = new List<EventDto>();
         public List<HistoryElementDto> History { get; set; } = new List<HistoryElementDto>();
         public List<TagDto> Tags { get; set; } = new List<TagDto>();
+        public bool isApproved { get; set; }
     }
 
     public class ContactCreateDto

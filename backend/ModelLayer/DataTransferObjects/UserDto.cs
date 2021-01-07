@@ -20,6 +20,7 @@ namespace ModelLayer.DataTransferObjects
         public bool UserLockEnabled { get; set; }
         public bool hasPasswordChanged { get; set; }
         public DateTime LastLoginDate { get; set; }
+        public bool IsSuperAdmin { get; set; }
         //TODO: implement endpoint for login with refresh token
         //public string RefreshToken { get; set; }
     }
