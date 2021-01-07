@@ -5,6 +5,10 @@
                 <div class="col-md-12">
                     <h5>
                         {{'common.overview' | translate}}
+                        <button type="button" mat-icon-button [disabled]="!permissionModify" color="primary"
+                            (click)="callEdit()">
+                            <mat-icon class="icon" title="{{'event.edit' | translate}}">edit</mat-icon>
+                        </button>
                     </h5>
                 </div>
                 <div class="col-md">

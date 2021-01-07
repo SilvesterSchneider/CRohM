@@ -21,6 +21,7 @@ import { EventsAddComponent } from '../events/events-add/events-add.component';
 import { JwtService } from '../shared/jwt.service';
 import { min } from 'rxjs/operators';
 import { TranslationService } from '../shared/translation/translation.service';
+import { EventsInfoComponent } from '../events/events-info/events-info.component';
 
 const colors: any = {
   cyan: {
@@ -118,7 +119,7 @@ export class CalendarComponent implements OnInit {
   handleEvent(action: string, event: CalendarEventExtended): void {
     this.modalData = { event, action };
     this.eventService.getById(event.id).subscribe(x => {
-      const dialogRef = this.dialog.open(EventsDetailComponent, { data: x, disableClose: true, width: '680px', height: '600px' });
+      const dialogRef = this.dialog.open(EventsInfoComponent, { data: x, disableClose: true });
       dialogRef.afterClosed().subscribe(y => {
         if (y.save) {
           this.eventService.getById(event.id).subscribe(z => {

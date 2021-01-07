@@ -1,129 +1,131 @@
-<mat-dialog-content>
-    <div class="eventsAdd" [formGroup]="eventsForm">
-        <div class="row">
-            <div class="col-md-12">
-                <h3>
-                    {{'event.info' | translate}}
-                </h3>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input readonly="true" matInput placeholder="{{'common.label' | translate}}" formControlName="name">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <textarea readonly="true" matInput placeholder="{{'common.description' | translate}}" formControlName="description"></textarea>
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input type="date" readonly="true" matInput placeholder="{{'common.date' | translate}}" formControlName="date">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input readonly="true" type="time" matInput placeholder="{{'common.startTime' | translate}}" formControlName="startTime">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input readonly="true" type="time" matInput placeholder="{{'common.endTime' | translate }}" formControlName="endTime">
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input readonly="true" matInput placeholder="{{'common.location' | translate }}" formControlName="location">
-                </mat-form-field>
-            </div>
-
+<div class="eventsAdd" [formGroup]="eventsForm">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                {{'event.info' | translate}}
+                <button type="button" mat-icon-button [disabled]="!permissionModify" color="primary"
+                    (click)="callEdit()">
+                    <mat-icon class="icon" title="{{'event.edit' | translate}}">edit</mat-icon>
+                </button>
+            </h3>
         </div>
-    </div>
-    <div class="col-md-12">
-        <h6 *ngIf="contactsOrganizations.length > 0">
-            {{'event.participant' |translate}}
-        </h6>
-    </div>
-    <div class="col-md-12">
-        <mat-table *ngIf="contactsOrganizations.length > 0" #table [dataSource]="contactsOrganizations">
-            <ng-container matColumnDef="wasInvited">
-                <mat-header-cell *matHeaderCellDef> {{'event.state' | translate}} </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{getEventState(element.eventStatus)}}
-                    </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="participated">
-                <mat-header-cell *matHeaderCellDef> {{'event.participated' |translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> 
-                    <mat-icon *ngIf="!element.participated">check_box_outline_blank</mat-icon>
-                    <mat-icon *ngIf="element.participated">check_box</mat-icon>
-                </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="prename">
-                <mat-header-cell *matHeaderCellDef> {{'contact.firstName' |translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.preName}}
-                </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef> {{'contact.lastName' |translate}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.name}}
-                </mat-cell>
-            </ng-container>
-            <mat-header-row *matHeaderRowDef="columnsContacts"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: columnsContacts;"></mat-row>
-        </mat-table>
-    </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input readonly="true" matInput placeholder="{{'common.label' | translate}}" formControlName="name">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input readonly="true" matInput placeholder="{{'common.description' | translate}}" formControlName="description">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input type="date" readonly="true" matInput placeholder="{{'common.date' | translate}}" formControlName="date">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input readonly="true" type="time" matInput placeholder="{{'common.startTime' | translate}}" formControlName="startTime">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input readonly="true" type="time" matInput placeholder="{{'common.endTime' | translate }}" formControlName="endTime">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <mat-form-field>
+                <input readonly="true" matInput placeholder="{{'common.location' | translate }}" formControlName="location">
+            </mat-form-field>
+        </div>
 
-    <mat-expansion-panel *ngIf="dataHistory.length > 0" togglePosition="after" class="extensionPanel">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <h5>{{'common.dataChanges' | translate}}</h5>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-table *ngIf="dataHistory.length > 0" #table [dataSource]="dataHistory">
-            <ng-container matColumnDef="datum">
-                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
-                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.dateTime |date}}
-                </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="bearbeiter">
-                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.editor' | translate}} </mat-header-cell>
-                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.user?.firstName + " " + element.user?.lastName}}
-                </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="feldname">
-                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.attribute' | translate}} </mat-header-cell>
-                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.propertyName}}
-                </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="alterWert">
-                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.oldValue' | translate}} </mat-header-cell>
-                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.oldValue}}
-                </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="neuerWert">
-                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.newValue' | translate}} </mat-header-cell>
-                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.actualValue}}
-                </mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="kommentar">
-                <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.comment' | translate}} </mat-header-cell>
-                <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.comment}}
-                </mat-cell>
-            </ng-container>
-            <mat-header-row *matHeaderRowDef="displayedColumnsDataChangeHistory"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumnsDataChangeHistory;"></mat-row>
-        </mat-table>
-        <mat-paginator (page)="onPaginationChangedModification($event)" [pageSizeOptions]="[5, 10, 20]" [length]="modificationsPaginationLength"></mat-paginator>
-    </mat-expansion-panel>
-	<div *ngIf="event.tags.length > 0" class="col-md-12">
-		<h5>{{'common.tags' | translate}}</h5>
-		<mat-chip-list #chipList>
-			<mat-chip *ngFor="let item of event.tags">
-				{{ item.name }}
-			</mat-chip>
-		</mat-chip-list>
     </div>
-</mat-dialog-content>
+</div>
+<div class="col-md-12">
+    <h6 *ngIf="contactsOrganizations.length > 0">
+        {{'event.participant' |translate}}
+    </h6>
+</div>
+<div class="col-md-12">
+    <mat-table *ngIf="contactsOrganizations.length > 0" #table [dataSource]="contactsOrganizations">
+        <ng-container matColumnDef="wasInvited">
+            <mat-header-cell *matHeaderCellDef> {{'event.state' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{getEventState(element.eventStatus)}}
+                </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="participated">
+            <mat-header-cell *matHeaderCellDef> {{'event.participated' |translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let element"> 
+                <mat-icon *ngIf="!element.participated">check_box_outline_blank</mat-icon>
+                <mat-icon *ngIf="element.participated">check_box</mat-icon>
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="prename">
+            <mat-header-cell *matHeaderCellDef> {{'contact.firstName' |translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.preName}}
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> {{'contact.lastName' |translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.name}}
+            </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="columnsContacts"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: columnsContacts;"></mat-row>
+    </mat-table>
+</div>
+
+<mat-expansion-panel *ngIf="dataHistory.length > 0" togglePosition="after" class="extensionPanel">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+        <h5>{{'common.dataChanges' | translate}}</h5>
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-table *ngIf="dataHistory.length > 0" #table [dataSource]="dataHistory">
+        <ng-container matColumnDef="datum">
+            <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.date' | translate}} </mat-header-cell>
+            <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.dateTime |date}}
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="bearbeiter">
+            <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.editor' | translate}} </mat-header-cell>
+            <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.user?.firstName + " " + element.user?.lastName}}
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="feldname">
+            <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.attribute' | translate}} </mat-header-cell>
+            <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.propertyName}}
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="alterWert">
+            <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.oldValue' | translate}} </mat-header-cell>
+            <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.oldValue}}
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="neuerWert">
+            <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.newValue' | translate}} </mat-header-cell>
+            <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.actualValue}}
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="kommentar">
+            <mat-header-cell fxFlex="20%" *matHeaderCellDef> {{'common.comment' | translate}} </mat-header-cell>
+            <mat-cell fxFlex="20%" *matCellDef="let element"> {{element.comment}}
+            </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumnsDataChangeHistory"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsDataChangeHistory;"></mat-row>
+    </mat-table>
+    <mat-paginator (page)="onPaginationChangedModification($event)" [pageSizeOptions]="[5, 10, 20]" [length]="modificationsPaginationLength"></mat-paginator>
+</mat-expansion-panel>
+<div *ngIf="event.tags.length > 0" class="col-md-12">
+    <h5>{{'common.tags' | translate}}</h5>
+    <mat-chip-list #chipList>
+        <mat-chip *ngFor="let item of event.tags">
+            {{ item.name }}
+        </mat-chip>
+    </mat-chip-list>
+</div>
 <mat-dialog-actions mat-dialog-actions align="end">
     <button class="margin" mat-raised-button color="primary" title="{{'common.cancel' | translate}}" (click)="dialogRef.close()">
         {{'common.cancel' | translate}}
