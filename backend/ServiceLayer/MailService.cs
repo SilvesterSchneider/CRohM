@@ -88,7 +88,7 @@ namespace ServiceLayer
             string body = "<h3> Bitte bestätigen Sie die Aufnahme Ihrer Kontaktdaten für die TH-Nürnberg </h3> " +
                    "<p> "+benutzer+"</p>";
 
-            return await SendMailAsync("Zugangsdaten", body, email, null, "");
+            return await SendMailAsync("Aufnahmebestätigung ins CRMS System der TH Nürnberg", body, email, null, "");
         }
 
         public static string GetMailForInvitationAsTemplate(string eventName, string date, string time)
