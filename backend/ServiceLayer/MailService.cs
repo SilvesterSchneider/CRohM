@@ -51,7 +51,8 @@ namespace ServiceLayer
         private static string EVENTNAMEFIELD = "<Veranstaltungsname>";
         private static string EVENTDATEFIELD = "<Datum>";
         private static string EVENTTIMEFIELD = "<Uhrzeit>";
-        private static string EVENTBUTTONFIELD = "<BUTTONS>";
+        private static string EVENTBUTTONFIELD_DE = "<BUTTON_DE>";
+        private static string EVENTBUTTONFIELD_EN = "<BUTTON_EN>";
         private static string MAILSETUP = "<h5><i> - English version below - </i></h5>" +
             "Sehr geehrter Administrator\r\rDie Einstellungen für den Email-Server wurden erfolgreich " +
             "übernommen\r\rTechnische Hochschule Nürnberg" +
@@ -64,13 +65,13 @@ namespace ServiceLayer
             STARTFIELD + " " + PRENAMEFIELD + " " + NAMEFIELD +
             "\rWir laden Sie herzlich ein zu unserer Veranstaltung \"" + EVENTNAMEFIELD +
             "\" am " + EVENTDATEFIELD + " um " + EVENTTIMEFIELD + " Uhr.\r" +
-            EVENTBUTTONFIELD + "\r" +
+            EVENTBUTTONFIELD_DE + "\r" +
             "Wir freuen uns auf Ihr Erscheinen.\rTechnische Hochschule Nürnberg" +
             "\r\r- English Version -\r" +
             STARTFIELDEN + " " + PRENAMEFIELDEN + " " + NAMEFIELDEN +
             "\rWe cordially invite you to our event \"" + EVENTNAMEFIELD +
-            "\" on " + EVENTDATEFIELD + " at " + EVENTTIMEFIELD + ".\r +" +
-            EVENTBUTTONFIELD + " \r" +
+            "\" on " + EVENTDATEFIELD + " at " + EVENTTIMEFIELD + ".\r" +
+            EVENTBUTTONFIELD_EN + " \r" +
             "We look forward to your appearance.\rNuremberg Institute of Technology";
         private static string EVENT_CANCELATION_CONTENT = "<p>" + STARTFIELD + NAMEFIELD + ", </p>" +
             "<p> leider musste die Veranstaltung '" + EVENTNAMEFIELD + "', </p>" +
@@ -93,7 +94,7 @@ namespace ServiceLayer
 
         public static string GetMailForInvitationAsTemplate(string eventName, string date, string time)
         {
-            return INVITATION_DEF_CONTENT.Replace(EVENTNAMEFIELD, eventName).Replace(EVENTDATEFIELD, date).Replace(EVENTTIMEFIELD, time);
+            return INVITATION_DEF_CONTENT.Replace(EVENTNAMEFIELD, eventName).Replace(EVENTDATEFIELD, DateTime.Parse(date).ToString("dd.MM.yyyy")).Replace(EVENTTIMEFIELD, time);
         }
 
         public async Task<bool> Registration(string benutzer, string passwort, string email)
@@ -333,20 +334,23 @@ namespace ServiceLayer
         {
             string start = GetGenderTitle(gender);
             string genderEn = GetGenderTitleEnglish(gender);
-            string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName);
+            string finishedcontent = mailContent.Replace(NAMEFIELD, name).Replace(NAMEFIELDEN, name).Replace(STARTFIELD, start).Replace(PRENAMEFIELD, preName).Replace(PRENAMEFIELDEN, preName).Replace(STARTFIELDEN, genderEn);
 
             //Send Mail to Approve
 #if DEBUG
-            string buttons = "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Zusagen </button></a></p>" +
+            string buttonDe = "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Zusagen </button></a></p>" +
              "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/3\"><button> Absagen </button></a></p>";
+            string buttonEn = "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Agree </button></a></p>" +
+             "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/3\"><button> Cancel </button></a></p>";
 #else
-            string buttons = "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/"+ eventid+"/"+contactid+"/"+organisationid+ "/2\"><button> Zusagen </button></a></p>" +
+            string buttonDe = "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/"+ eventid+"/"+contactid+"/"+organisationid+ "/2\"><button> Zusagen </button></a></p>" +
                 "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/"+eventid+"/" + contactid+"/"+organisationid+"/3\"><button> Absagen </button></a></p>";
+            string buttonEn = "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/"+ eventid+"/"+contactid+"/"+organisationid+ "/2\"><button> Agree </button></a></p>" +
+                "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/"+eventid+"/" + contactid+"/"+organisationid+"/3\"><button> Cancel </button></a></p>";
 #endif
 
-            finishedcontent = finishedcontent.Replace(EVENTBUTTONFIELD, buttons);
+            finishedcontent = finishedcontent.Replace(EVENTBUTTONFIELD_DE, buttonDe).Replace(EVENTBUTTONFIELD_EN, buttonEn);
 
-            finishedcontent = finishedcontent.Replace(NAMEFIELDEN, name).Replace(STARTFIELDEN, genderEn).Replace(PRENAMEFIELDEN, preName);
             return await SendFormattedMail("Einladung zur Veranstaltung / Invitation to the event", finishedcontent, address, null, null);
         }
 
@@ -379,16 +383,20 @@ namespace ServiceLayer
 
 
 #if DEBUG
-            string buttons = "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Zusagen </button></a></p>" +
+            string buttonDe = "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Zusagen </button></a></p>" +
               "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/3\"><button> Absagen </button></a></p>";
+            string buttonEn = "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Agree </button></a></p>" +
+              "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/3\"><button> Cancel </button></a></p>";
 #else
-            string buttons = "<p><a href = \"https://localhost:4200/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Zusagen </button></a></p>" +
+            string buttonDe = "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Zusagen </button></a></p>" +
               "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/3\"><button> Absagen </button></a></p>";
+            string buttonEn = "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/2\"><button> Agree </button></a></p>" +
+              "<p><a href = \"https://ops085010.cs.ohmhs.de/EventAnswer/" + eventid + "/" + contactid + "/" + organisationid + "/3\"><button> Cancel </button></a></p>";
 #endif
 
 
 
-            finishedcontent = finishedcontent.Replace(EVENTBUTTONFIELD, buttons);
+            finishedcontent = finishedcontent.Replace(EVENTBUTTONFIELD_DE, buttonDe).Replace(EVENTBUTTONFIELD_EN, buttonEn);
 
             if (mailContent.IndexOf(NAMEFIELD) > 0)
             {
@@ -458,7 +466,7 @@ namespace ServiceLayer
                 .Replace(STARTFIELD, beginning)
                 .Replace(NAMEFIELD, name)
                 .Replace(EVENTNAMEFIELD, eventName)
-                .Replace(EVENTDATEFIELD, date.ToString("yyyy-MM-dd"))
+                .Replace(EVENTDATEFIELD, date.ToString("dd.MM.yyyy"))
                 .Replace(EVENTTIMEFIELD, time.ToString("hh:mm"));
             return await SendMailAsync(EVENT_CANCELATION_SUBJECT, content, mail, null, null);
         }
