@@ -50,8 +50,8 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
   });
 
   private noWhitespaceValidator(control: FormControl) {
-		const beginsWithWhitespace = (control.value || '').startsWith(' ');
-		return beginsWithWhitespace ? { 'whitespace': true } : null;
+		const beginsWithWhitespace = (control.value || '').startsWith(' ') || (control.value || '').endsWith(' ') || control.value.indexOf('  ') >= 0;
+    return beginsWithWhitespace ? { 'whitespace': true } : null;
 }
 
   constructor(private fb: FormBuilder, private osmService: OsmService) { }
