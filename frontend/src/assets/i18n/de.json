@@ -116,7 +116,8 @@
         "new": "Neue Organisation",
         "affiliation": "Organisationszugehörigkeiten",
         "showInfo": "Organisationsinformationen anzeigen",
-        "delete": "Organisation löschen"
+        "delete": "Organisation löschen",
+        "dear": "Sehr geehrte Damen und Herren,"
     },
     "event": {
         "event": "Veranstaltung",

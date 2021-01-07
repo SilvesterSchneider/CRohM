@@ -1,6 +1,9 @@
 <mat-toolbar>
     <mat-toolbar-row class="tabrow">
         <span class="spacer"></span>
+        <a *ngIf="selectedCheckBoxList.length > 0" class="iconMargin" (click)="sendMailToMany()" type="button">
+            <mat-icon color="primary" title="{{'common.sendMailToMany' | translate}}" class="icon">mail</mat-icon>
+        </a>
         <a *ngIf="selectedCheckBoxList.length > 0" (click)="createEvent()" type="button">
             <mat-icon color="primary" title="{{'event.create' | translate}}" class="iconMargin">event</mat-icon>
         </a>
@@ -65,8 +68,9 @@
         <ng-container matColumnDef="Action">
             <mat-header-cell mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let element" fxLayoutGap="5px" (mouseover)="mouseOver(element.id)">
-                <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)" color="primary">
-                    <mat-icon title="{{'organization.showInfo' | translate}}" class="icon">info</mat-icon>
+                <button type="button" mat-icon-button [disabled]="!permissionAddHistory"
+                    (click)="callPhonenumber(element.contact.phoneNumber, element.id)" color="primary">
+                    <mat-icon title="{{'common.call' | translate}}" class="icon">phone</mat-icon>
                 </button>
                 <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="addNote(element.id)"
                     color="primary">
@@ -76,6 +80,13 @@
                     <mat-icon color="primary" class="icon">more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
+                    <button type="button" mat-icon-button [disabled]="!permissionAddHistory" (click)="sendMail(element)"
+                        color="primary">
+                        <mat-icon title="{{'contact.mail' | translate}}" class="icon">mail</mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button [disabled]="!permissionModify" (click)="openInfo(element.id)" color="primary">
+                        <mat-icon title="{{'organization.showInfo' | translate}}" class="icon">info</mat-icon>
+                    </button>
                     <button type="button" mat-icon-button [disabled]="!permissionModify" data-cy="submit"
                         (click)="openEditDialog(element.id)" color="primary" class="editOrganization">
                         <mat-icon title="{{'organization.edit' | translate}}" class="icon">edit</mat-icon>

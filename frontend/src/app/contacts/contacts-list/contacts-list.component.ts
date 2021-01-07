@@ -17,9 +17,10 @@ import { JwtService } from '../../shared/jwt.service';
 import { TagsFilterComponent } from '../../shared/tags-filter/tags-filter.component';
 import { DataProtectionHelperService } from '../../shared/data-protection/data-protection-service.service';
 import { DpUpdatePopupComponent } from '../../shared/data-protection/dp-update-popup/dp-update-popup.component';
-import { ContactsSendMailDialogComponent } from '../contacts-send-mail-dialog/contacts-send-mail-dialog.component';
+import { ContactsSendMailDialogComponent, MailData, MailSubject } from '../contacts-send-mail-dialog/contacts-send-mail-dialog.component';
 import { Router } from '@angular/router';
 import { OrganizationsInfoComponent } from 'src/app/organizations/organizations-info/organizations-info.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contacts-list',
@@ -58,7 +59,8 @@ export class ContactsListComponent implements OnInit, OnDestroy {
     private readonly dsgvoService: DataProtectionHelperService,
     private readonly snackBar: MatSnackBar,
     private readonly route: Router,
-    private jwt: JwtService) {
+    private jwt: JwtService,
+		private translate: TranslateService) {
     this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
       if (change[0].mqAlias !== this.currentScreenWidth) {
         this.currentScreenWidth = change[0].mqAlias;
@@ -315,7 +317,15 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
   sendMail(contact: ContactDto) {
     if (contact.contactPossibilities.mail != null && contact.contactPossibilities.mail.length > 0) {
-      const dataForDialog = [contact.preName + ' ' + contact.name, contact.contactPossibilities.mail];
+      const dataForDialog = new MailData();
+      dataForDialog.title = contact.preName + ' ' + contact.name;
+      dataForDialog.showReplaceInfo = true;
+      const subjectData = new MailSubject();
+      subjectData.adress = contact.contactPossibilities.mail;
+      subjectData.preName = contact.preName;
+      subjectData.name = contact.name;
+      dataForDialog.subjects = new Array<MailSubject>();
+      dataForDialog.subjects.push(subjectData);
       const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
       dialogRef.afterClosed().subscribe(x => {
         if (x.send) {
@@ -326,13 +336,20 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   sendMailToMany() {
-    const dataForDialog: string[] = new Array<string>();
-    dataForDialog.push('Kontakte');
+    const dataForDialog = new MailData();
+    dataForDialog.title = this.translate.instant('contact.contacts');
+    dataForDialog.showReplaceInfo = true;
+    const subjectData = new MailSubject();
+    dataForDialog.subjects = new Array<MailSubject>();
     this.selectedCheckBoxList.forEach(a => {
       const cont = this.allContacts.find(b => b.id === a);
       const mail = cont.contactPossibilities.mail;
       if (cont != null && mail != null && mail.length > 0) {
-        dataForDialog.push(mail);
+        dataForDialog.subjects.push({
+          adress: mail,
+          name: cont.name,
+          preName: cont.preName
+        });
       }
     });
     const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });

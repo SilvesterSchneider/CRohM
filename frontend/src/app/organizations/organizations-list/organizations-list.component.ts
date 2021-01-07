@@ -13,6 +13,8 @@ import { AddHistoryComponent, HistoryDialogModel } from 'src/app/shared/add-hist
 import { MatTableDataSource } from '@angular/material/table';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
 import { EventsAddComponent } from 'src/app/events/events-add/events-add.component';
+import { ContactsSendMailDialogComponent, MailData, MailSubject } from 'src/app/contacts/contacts-send-mail-dialog/contacts-send-mail-dialog.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-organizations-list',
@@ -49,7 +51,8 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 		service: OrganizationService,
 		private changeDetectorRefs: ChangeDetectorRef,
 		private mediaObserver: MediaObserver,
-		private jwt: JwtService) {
+		private jwt: JwtService,
+		private translate: TranslateService) {
 		this.service = service;
 		this.flexMediaWatcher = mediaObserver.asObservable().subscribe((change: MediaChange[]) => {
 			if (change[0].mqAlias !== this.currentScreenWidth) {
@@ -248,4 +251,80 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			return empl.length;
 		}
 	}
+
+	callPhonenumber(phonenumber: string, id: number) {
+		document.location.href = 'tel:' + phonenumber;
+		const dataToUse = new HistoryDialogModel(phonenumber, HistoryElementType.PHONE_CALL);
+		const dialogRef = this.dialog.open(AddHistoryComponent, { data: dataToUse });
+		dialogRef.afterClosed().subscribe((y) => {
+		  if (y) {
+			this.service.postHistoryElement(y, id).subscribe(x => this.getData());
+		  }
+		});
+	}
+
+	sendMail(orga: OrganizationDto) {
+		if (orga.contact.mail != null && orga.contact.mail.length > 0) {
+			const dataForDialog = new MailData();
+			dataForDialog.initText = this.translate.instant('organization.dear');
+			dataForDialog.title = orga.name + ' ' + orga.description;
+			dataForDialog.showReplaceInfo = false;
+			dataForDialog.subjects = new Array<MailSubject>();
+			dataForDialog.subjects.push({
+				adress: orga.contact.mail,
+				name: '',
+				preName: ''
+			});
+			const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+			dialogRef.afterClosed().subscribe(x => {
+				if (x.send) {
+					this.addNote(orga.id);
+				}
+			});
+		}
+	}
+
+	sendMailToMany() {
+		const dataForDialog = new MailData();
+		dataForDialog.title = this.translate.instant('organization.organizations');
+		dataForDialog.initText = this.translate.instant('organization.dear');
+		dataForDialog.showReplaceInfo = false;
+		const subjectData = new MailSubject();
+		dataForDialog.subjects = new Array<MailSubject>();
+		this.selectedCheckBoxList.forEach(a => {
+		  const cont = this.allOrganizations.find(b => b.id === a);
+		  const mail = cont.contact.mail;
+		  if (cont != null && mail != null && mail.length > 0) {
+			dataForDialog.subjects.push({
+			  adress: mail,
+			  name: '',
+			  preName: ''
+			});
+		  }
+		});
+		const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+		dialogRef.afterClosed().subscribe(x => {
+		  if (x.send) {
+			this.addNoteToMany();
+		  }
+		});
+	  }
+
+	  addNoteToMany() {
+		const dataToUse = new HistoryDialogModel('', HistoryElementType.MAIL);
+		const dialogRef = this.dialog.open(AddHistoryComponent, {data: dataToUse});
+		dialogRef.afterClosed().subscribe(y => {
+		  if (y) {
+			this.addNoteLoop(0, y);
+		  }
+		});
+	  }
+	
+	  addNoteLoop(index: number, y: any) {
+		if (index < this.selectedCheckBoxList.length) {
+		  this.service.postHistoryElement(y, this.selectedCheckBoxList[index]).subscribe(x => this.addNoteLoop(++index, y));
+		} else {
+		  this.getData();
+		}
+	  }
 }
