@@ -101,15 +101,12 @@ namespace ModelLayer.Helper
         private static List<Claim> calendarClaimsInternally = GetClaimListForStringArray(CALENDAR_CLAIMS);
         private static List<Claim> organizationClaimsInternally = GetClaimListForStringArray(ORGANISATION_CLAIMS);
         private static List<Claim> dsgvoClaims = GetAllDsgvoClaimsInternally();
-        private static List<Claim> adminClaims = GetAllAdminClaimsInternally();
         private static List<Claim> allClaims = GetAllPredefinedClaims();
+        private static List<Claim> adminClaims = GetAllAdminClaimsInternally();
 
         private static List<Claim> GetAllAdminClaimsInternally()
         {
-            List<Claim> list = new List<Claim>();
-            list.Add(contactClaimsInternally[2]);
-            list.AddRange(adminClaimsInternally);
-            return list;
+            return allClaims;
         }
 
         private static List<Claim> GetAllDsgvoClaimsInternally()
