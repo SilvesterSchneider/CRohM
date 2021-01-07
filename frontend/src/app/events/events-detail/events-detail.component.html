@@ -39,9 +39,14 @@
             </div>    
         </div>
     </div>
+    <div class="col-md-12">
+        <h3>
+            {{'event.participant' | translate}} 
+        </h3>
+    </div>
     <div class="row">
         <div class="text">
-            {{'event.participant' | translate}} 
+            {{'common.name' | translate}} 
         </div>
         <div class="text">
             {{'event.state' | translate}} 
@@ -58,7 +63,7 @@
             </mat-chip>
         </mat-chip-list>
         <mat-chip-list id="invitationList" class="list" aria-orientation="vertical" #chipList>
-            <mat-chip class="secondObjects" *ngFor="let item of selectedItems">
+            <mat-chip class="secondObjects" [ngClass]="{'secondObjectsNear': item.eventStatus == 0}" *ngFor="let item of selectedItems">
                 {{getEventState(item.eventStatus)}}
             </mat-chip>
         </mat-chip-list>
