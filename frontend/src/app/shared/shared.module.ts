@@ -13,6 +13,7 @@ import { VerticalGroupedBarChartComponent } from './charts/vertical-grouped-bar-
 import { TranslateModule } from '@ngx-translate/core';
 import { DpDisclaimerDialogComponent } from './data-protection/dp-disclaimer-dialog/dp-disclaimer-dialog.component';
 import { DpUpdatePopupComponent } from './data-protection/dp-update-popup/dp-update-popup.component';
+import { SendMailDialogComponent } from './send-mail-dialog/send-mail-dialog.component';
 
 @NgModule({
   imports: [
@@ -28,10 +29,12 @@ import { DpUpdatePopupComponent } from './data-protection/dp-update-popup/dp-upd
   declarations: [
     OsmAddressComponent,
     ContactPossibilitiesComponent,
-    AddHistoryComponent, TagsFilterComponent,
+    AddHistoryComponent,
+    TagsFilterComponent,
     VerticalGroupedBarChartComponent,
     DpDisclaimerDialogComponent,
-    DpUpdatePopupComponent
+    DpUpdatePopupComponent,
+		SendMailDialogComponent
   ],
   exports: [
     CommonModule,
@@ -48,7 +51,8 @@ import { DpUpdatePopupComponent } from './data-protection/dp-update-popup/dp-upd
     NgxChartsModule,
     TranslateModule,
     DpDisclaimerDialogComponent,
-    DpUpdatePopupComponent
+    DpUpdatePopupComponent,
+    SendMailDialogComponent
   ]
 })
 export class SharedModule { }

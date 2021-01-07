@@ -13,7 +13,7 @@ import { AddHistoryComponent, HistoryDialogModel } from 'src/app/shared/add-hist
 import { MatTableDataSource } from '@angular/material/table';
 import { TagsFilterComponent } from 'src/app/shared/tags-filter/tags-filter.component';
 import { EventsAddComponent } from 'src/app/events/events-add/events-add.component';
-import { ContactsSendMailDialogComponent, MailData, MailSubject } from 'src/app/contacts/contacts-send-mail-dialog/contacts-send-mail-dialog.component';
+import { SendMailDialogComponent, MailData, MailSubject } from 'src/app/shared/send-mail-dialog/send-mail-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -275,7 +275,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 				name: '',
 				preName: ''
 			});
-			const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+			const dialogRef = this.dialog.open(SendMailDialogComponent, { data: dataForDialog });
 			dialogRef.afterClosed().subscribe(x => {
 				if (x.send) {
 					this.addNote(orga.id);
@@ -302,7 +302,7 @@ export class OrganizationsListComponent implements OnInit, OnDestroy {
 			});
 		  }
 		});
-		const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+		const dialogRef = this.dialog.open(SendMailDialogComponent, { data: dataForDialog });
 		dialogRef.afterClosed().subscribe(x => {
 		  if (x.send) {
 			this.addNoteToMany();

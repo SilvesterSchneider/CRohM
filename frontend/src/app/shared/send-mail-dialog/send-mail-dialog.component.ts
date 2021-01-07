@@ -4,11 +4,11 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MailService } from 'src/app/shared/api-generated/api-generated';
 
 @Component({
-  selector: 'app-contacts-send-mail-dialog',
-  templateUrl: './contacts-send-mail-dialog.component.html',
-  styleUrls: ['./contacts-send-mail-dialog.component.scss']
+  selector: 'app-send-mail-dialog',
+  templateUrl: './send-mail-dialog.component.html',
+  styleUrls: ['./send-mail-dialog.component.scss']
 })
-export class ContactsSendMailDialogComponent implements OnInit {
+export class SendMailDialogComponent implements OnInit {
   textForm: FormGroup;
   text: string;
   showReplaceInfo = false;
@@ -16,7 +16,7 @@ export class ContactsSendMailDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private mailService: MailService,
-    public dialogRef: MatDialogRef<ContactsSendMailDialogComponent>,
+    public dialogRef: MatDialogRef<SendMailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: MailData,
     public dialog: MatDialog) {
       this.text = data.title;

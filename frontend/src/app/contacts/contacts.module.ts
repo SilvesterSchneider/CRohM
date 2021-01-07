@@ -11,7 +11,7 @@ import { ContactsDetailComponent } from './contacts-detail/contacts-detail.compo
 import { ContactsInfoComponent } from './contacts-info/contacts-info.component';
 import { ContactsDisclosureDialogComponent } from './contacts-disclosure-dialog/contacts-disclosure-dialog.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import { ContactsSendMailDialogComponent } from './contacts-send-mail-dialog/contacts-send-mail-dialog.component';
+
 
 @NgModule({
 	imports: [
@@ -24,8 +24,7 @@ import { ContactsSendMailDialogComponent } from './contacts-send-mail-dialog/con
 		ContactsEditDialogComponent,
 		ContactsDetailComponent,
 		ContactsInfoComponent,
-		ContactsDisclosureDialogComponent,
-		ContactsSendMailDialogComponent
+		ContactsDisclosureDialogComponent
 	]
 })
 export class ContactsModule {}

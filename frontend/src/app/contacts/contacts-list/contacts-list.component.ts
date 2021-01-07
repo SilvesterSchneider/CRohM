@@ -17,7 +17,7 @@ import { JwtService } from '../../shared/jwt.service';
 import { TagsFilterComponent } from '../../shared/tags-filter/tags-filter.component';
 import { DataProtectionHelperService } from '../../shared/data-protection/data-protection-service.service';
 import { DpUpdatePopupComponent } from '../../shared/data-protection/dp-update-popup/dp-update-popup.component';
-import { ContactsSendMailDialogComponent, MailData, MailSubject } from '../contacts-send-mail-dialog/contacts-send-mail-dialog.component';
+import { SendMailDialogComponent, MailData, MailSubject } from '../../shared/send-mail-dialog/send-mail-dialog.component';
 import { Router } from '@angular/router';
 import { OrganizationsInfoComponent } from 'src/app/organizations/organizations-info/organizations-info.component';
 import { TranslateService } from '@ngx-translate/core';
@@ -326,7 +326,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
       subjectData.name = contact.name;
       dataForDialog.subjects = new Array<MailSubject>();
       dataForDialog.subjects.push(subjectData);
-      const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+      const dialogRef = this.dialog.open(SendMailDialogComponent, { height: '600px', width: '500px', data: dataForDialog });
       dialogRef.afterClosed().subscribe(x => {
         if (x.send) {
           this.addNote(contact.id);
@@ -352,7 +352,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
         });
       }
     });
-    const dialogRef = this.dialog.open(ContactsSendMailDialogComponent, { data: dataForDialog });
+    const dialogRef = this.dialog.open(SendMailDialogComponent, { data: dataForDialog });
     dialogRef.afterClosed().subscribe(x => {
       if (x.send) {
         this.addNoteToMany();
