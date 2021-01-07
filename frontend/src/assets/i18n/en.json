@@ -219,6 +219,7 @@
     "dpDisclaimer": {
         "noDp": "No data protection officer has yet been appointed.",
         "noDp2": "Meet the legal requirements by appointing a data protection officer as administrator now.",
+        "noDp3": "Meet the legal requirements by advising an administrator user to define a data protection officer soon.",
         "ignore": "Ignore",
         "select": "Determine one now",
         "sendMessage": "Send Message",
