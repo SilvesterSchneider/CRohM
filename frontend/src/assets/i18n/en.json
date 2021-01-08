@@ -60,7 +60,8 @@
         "orderBy": "Order by",
         "selectLanguage": "Select Language",
         "usermenu": "User Menu",
-        "location": "City"
+        "location": "City",
+        "timeShort": " o clock"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",
@@ -82,11 +83,11 @@
         "lastName": "Last Name",
         "gender": "Gender",
         "chooseGender": "Choose Gender",
-        "contactPartner": "Contactpartner",
+        "contactPartner": "Contact partner",
         "addressSearch": "Address Search",
         "address": "Address",
         "street": "Street",
-        "streetNumber": "Streetnumber",
+        "streetNumber": "Street number",
         "city": "City",
         "zipcode": "Zipcode",
         "country": "Country",
@@ -95,7 +96,7 @@
         "addContactPossibility": "Add Contact Possibility",
         "deleteContactPossibility": "Delete Contact Possibility",
         "mail": "Mail",
-        "phoneNumber": "Phone Number",
+        "phoneNumber": "Phone number",
         "fax": "Fax",
         "phoneOrEmail": "Phone number or e-mail address",
         "showContactInfo": "Show contact information",
@@ -103,7 +104,7 @@
         "disclosure": {
             "disclosure": "Disclosure",
             "generate": "Generate Disclosure",
-            "description": "Generates a pdf-file with all data stored within the CRMS for the selected contact according to Right of Access Art. 12 GDPR. The pdf-file is  send to the contact's mail adress."
+            "description": "Generates a PDF-file with all data stored within the CRMS for the selected contact according to Right of Access Art. 12 GDPR. The pdf-file is  send to the contact's mail adress."
         },
         "overview": "Contact - Overview"
     },

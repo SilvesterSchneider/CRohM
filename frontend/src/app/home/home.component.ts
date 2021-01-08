@@ -28,6 +28,7 @@ export class ContactExtended implements ContactDto {
   contactPossibilities?: ContactPossibilitiesDto;
   userName: string;
   created: boolean;
+  isApproved: boolean;
 }
 
 export class OrganizationExtended implements OrganizationDto {
@@ -208,7 +209,8 @@ export class HomeComponent implements OnInit {
         history: y.history,
         organizations: y.organizations,
         userName: entry.user?.userName,
-        created: entry.modificationType === MODIFICATION.CREATED
+        created: entry.modificationType === MODIFICATION.CREATED,
+        isApproved: y.isApproved
     }));
   }
 }

@@ -62,7 +62,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetWithUnapproved()
         {
             User userOfChange = await userService.FindByNameAsync(User.Identity.Name);
-            var contacts = await contactService.GetAllUnapprovedContactsWithAllIncludesByUserIdAsync(userOfChange.Id);
+            var contacts = await contactService.GetAllApprovedContactsWithAllIncludesByUserIdAsync(userOfChange.Id, userOfChange.IsSuperAdmin);
             var contactsDto = _mapper.Map<List<ContactDto>>(contacts);
 
             return Ok(contactsDto);

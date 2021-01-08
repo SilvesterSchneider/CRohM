@@ -24,7 +24,7 @@ namespace RepositoryLayer
         /// </summary>
         /// <returns></returns>
         Task<List<Contact>> GetAllContactsWithAllIncludesAsync();
-        Task<List<Contact>> GetAllUnapprovedContactsWithAllIncludesByUserIdAsync(long userid);
+        Task<List<Contact>> GetAllApprovedContactsWithAllIncludesByUserIdAsync(long userid, bool isSuperAdmin);
         Task<List<Contact>> GetAllUnapprovedContactsWithAllIncludesAsync();
         Task<bool> UpdateAsync(Contact contact, long id);
     }
@@ -35,7 +35,7 @@ namespace RepositoryLayer
         {
         }
 
-        public async Task<List<Contact>> GetAllUnapprovedContactsWithAllIncludesByUserIdAsync(long userid)
+        public async Task<List<Contact>> GetAllApprovedContactsWithAllIncludesByUserIdAsync(long userid, bool isSuperÁdmin)
         {
             return await Entities
                 .Include(x => x.Address)
@@ -48,7 +48,7 @@ namespace RepositoryLayer
                 .ThenInclude(d => d.Event)
                 .ThenInclude(e => e.Participated)
                 .Include(x => x.History)
-                .Where(c => c.CreatedByUser == userid || c.isApproved)
+                .Where(c => isSuperÁdmin || c.CreatedByUser == userid || c.isApproved)
                 .ToListAsync();
         }
 

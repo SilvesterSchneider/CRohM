@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthService, CredentialsDto } from '../shared/api-generated/api-generated';
+import { AuthService, CredentialsDto, UserDto, UsersService } from '../shared/api-generated/api-generated';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -9,12 +9,22 @@ import { Router } from '@angular/router';
 export class JwtService {
 
   public static LS_KEY = 'access_token';
+  public static LS_SUPERADMIN = 'superadmin';
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private userService: UsersService) { }
 
   public login(credentials: CredentialsDto) {
     return this.authService.login(credentials).pipe(tap(res => {
       localStorage.setItem(JwtService.LS_KEY, res.accessToken);
+      this.userService.get().subscribe(x => {
+        const userId = this.getUserId();
+        const user = x.find(a => a.id === userId);
+        let isSuperAdmin = 'false';
+        if (user != null && user.isSuperAdmin) {
+          isSuperAdmin = 'true';
+        }
+        localStorage.setItem(JwtService.LS_SUPERADMIN, isSuperAdmin);
+      });
     }));
   }
 
@@ -41,6 +51,11 @@ export class JwtService {
     } else {
       return 0;
     }
+  }
+
+  public isSuperAdmin(): boolean {
+    const value = localStorage.getItem(JwtService.LS_SUPERADMIN);
+    return value !== null && value === 'true';
   }
 
   //

@@ -3684,6 +3684,7 @@ export interface UserDto {
     userLockEnabled: boolean;
     hasPasswordChanged: boolean;
     lastLoginDate: string;
+    isSuperAdmin: boolean;
 }
 
 export interface CredentialsDto {
@@ -3704,6 +3705,7 @@ export interface ContactDto {
     events?: EventDto[] | undefined;
     history?: HistoryElementDto[] | undefined;
     tags?: TagDto[] | undefined;
+    isApproved: boolean;
 }
 
 export enum GenderTypes {

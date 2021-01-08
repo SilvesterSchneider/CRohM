@@ -60,7 +60,8 @@
         "orderBy": "Sortierung nach",
         "selectLanguage": "Sprachauswahl",
         "usermenu": "Benutzermenü",
-        "location": "Stadt"
+        "location": "Stadt",
+        "timeShort": " Uhr"
     },
     "home": {
         "title": "CRohM - Customer Relationship Management System",
