@@ -222,6 +222,7 @@
     "dpDisclaimer": {
         "noDp": "Es wurde noch kein Datenschutzbeauftragter bestimmt.",
         "noDp2": "Erfüllen Sie die gesetzlichen Auflagen indem Sie als Administrator jetzt einen Datenschutzbeauftragten bestimmen.",
+        "noDp3": "Erfüllen Sie die gesetzlichen Auflagen indem Sie einen Administrator dazu auffordern bald einen Datenschutzbeauftragten zu bestimmen.",
         "ignore": "Ignorieren",
         "select": "Jetzt einen bestimmen",
         "sendMessage": "Mitteilung senden",
