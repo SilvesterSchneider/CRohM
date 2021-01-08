@@ -11,6 +11,9 @@ import { ChangePasswordComponent } from './change-password-dialog/change-passwor
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+/// <summary>
+/// RAM: 10%
+/// </summary>
 export class LoginComponent {
   userNameOrEmail = new FormControl('', Validators.required);
   password = new FormControl('', Validators.required);

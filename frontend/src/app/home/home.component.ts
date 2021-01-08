@@ -59,6 +59,9 @@ export class EventExtended implements EventDto {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
+/// <summary>
+/// RAM: 90%
+/// </summary>
 export class HomeComponent implements OnInit {
   public contacts: ContactExtended[] = new Array<ContactExtended>();
   public organizations: OrganizationExtended[] = new Array<OrganizationExtended>();

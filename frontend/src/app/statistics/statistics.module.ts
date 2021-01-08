@@ -8,7 +8,9 @@ import { OverviewComponent } from './overview/overview.component';
 import { ObjectsCreationComponent } from './objects-creation/objects-creation.component';
 import { TagsComponent } from './tags/tags.component';
 
-
+/// <summary>
+/// RAM: 100%
+/// </summary>
 @NgModule({
   imports: [
     SharedModule,

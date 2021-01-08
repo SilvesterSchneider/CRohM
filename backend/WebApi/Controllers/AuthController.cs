@@ -15,6 +15,9 @@ using ServiceLayer;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// RAM: 10%
+    /// </summary>
     [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase

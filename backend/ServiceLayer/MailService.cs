@@ -15,6 +15,9 @@ namespace ServiceLayer
     /// <summary>
     /// This is the interface for later usage of the mail provider.
     /// </summary>
+    /// /// <summary>
+    /// RAM: 25%
+    /// </summary>
     public interface IMailService
     {
         Task<bool> CreateAndSendInvitationMail(string address, string preName, string name, string mailContent, GenderTypes gender, long eventid, long contactid, long organisationid, string uri);
@@ -36,6 +39,9 @@ namespace ServiceLayer
         Task<bool> SendEventDeletedMessage(List<EventContact> contactMails, List<EventOrganization> orgas);
     }
 
+    /// <summary>
+    /// RAM: 30%
+    /// </summary>
     public class MailService : IMailService
     {
         private const bool USE_TESTMODE = false;

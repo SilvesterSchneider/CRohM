@@ -38,6 +38,9 @@ const colors: any = {
   },
 };
 
+/// <summary>
+/// RAM: 100%
+/// </summary>
 class CalendarEventExtended implements CalendarEvent {
   start: Date;
   end?: Date;
@@ -52,6 +55,9 @@ class CalendarEventExtended implements CalendarEvent {
   id: number;
 }
 
+/// <summary>
+/// RAM: 100%
+/// </summary>
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',

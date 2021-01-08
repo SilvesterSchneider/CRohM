@@ -1,5 +1,7 @@
 import { doLogin } from '../../shared/login';
-
+/// <summary>
+/// RAM: 80%
+/// </summary>
 describe('Contacts Tests', () => {
     beforeEach(() => {
         // Delete all cookies

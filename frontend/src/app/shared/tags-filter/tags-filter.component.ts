@@ -11,7 +11,9 @@ import { ContactDto, OrganizationDto, TagDto } from '../api-generated/api-genera
   templateUrl: './tags-filter.component.html',
   styleUrls: ['./tags-filter.component.scss']
 })
-
+/// <summary>
+/// RAM: 100%
+/// </summary>
 export class TagsFilterComponent implements OnInit {
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 	tagsControl = new FormControl();

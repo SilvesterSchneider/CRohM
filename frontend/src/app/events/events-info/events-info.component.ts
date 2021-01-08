@@ -23,7 +23,9 @@ export class ContactOrganizationDtoExtended {
   templateUrl: './events-info.component.html',
   styleUrls: ['./events-info.component.scss']
 })
-
+/// <summary>
+/// RAM: 100%
+/// </summary>
 export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> implements OnInit {
   contactsOrganizations: ContactOrganizationDtoExtended[] = new Array<ContactOrganizationDtoExtended>();
   eventsForm: FormGroup;

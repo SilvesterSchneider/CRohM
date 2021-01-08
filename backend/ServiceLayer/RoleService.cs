@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IRoleService
     {
         /// <summary>
@@ -99,6 +102,9 @@ namespace ServiceLayer
         Task<Role> FindRoleByIdAsync(long id);
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class RoleService : IRoleService
     {
         private RoleManager<Role> manager;

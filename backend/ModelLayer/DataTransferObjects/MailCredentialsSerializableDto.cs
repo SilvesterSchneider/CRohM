@@ -4,6 +4,9 @@ using System.Text;
 
 namespace ModelLayer.DataTransferObjects
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class MailCredentialsSerializableDto
     {
         public string MailAddress { get; set; }

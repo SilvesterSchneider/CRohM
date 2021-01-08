@@ -1,4 +1,4 @@
-﻿using ModelLayer.DataTransferObjects;
+using ModelLayer.DataTransferObjects;
 using ModelLayer.Helper;
 using System;
 using System.Collections.Generic;
@@ -7,6 +7,9 @@ using Xunit;
 
 namespace UnitTests.ModelLayer.Helper
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class NumberValidatorTest
     {
         [Fact]

@@ -11,6 +11,9 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { OsmAddressComponent } from 'src/app/shared/osm/osm-address/osm-address.component';
 
+/// <summary>
+/// RAM: 60%
+/// </summary>
 @Component({
 	selector: 'app-contacts-edit-dialog',
 	templateUrl: './contacts-edit-dialog.component.html',

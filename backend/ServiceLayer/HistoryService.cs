@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IHistoryService : IHistoryRepository
     {
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class HistoryService : HistoryRepository, IHistoryService
     {
 

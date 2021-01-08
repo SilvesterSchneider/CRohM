@@ -37,7 +37,9 @@ export class EventContactConnection {
   templateUrl: './events-detail.component.html',
   styleUrls: ['./events-detail.component.scss']
 })
-
+/// <summary>
+/// RAM: 90%
+/// </summary>
 export class EventsDetailComponent extends BaseDialogInput<EventsDetailComponent>
   implements OnInit, OnDestroy, MatFormFieldControl<EventContactConnection> {
   static nextId = 0;

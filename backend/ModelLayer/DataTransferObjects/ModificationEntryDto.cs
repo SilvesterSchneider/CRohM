@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ModelLayer.DataTransferObjects
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class ModificationEntryDto
     {
         public long Id { get; set; }

@@ -8,6 +8,9 @@ import { MailService } from 'src/app/shared/api-generated/api-generated';
   templateUrl: './contacts-send-mail-dialog.component.html',
   styleUrls: ['./contacts-send-mail-dialog.component.scss']
 })
+/// <summary>
+/// RAM: 100%
+/// </summary>
 export class ContactsSendMailDialogComponent implements OnInit {
   textForm: FormGroup;
   text: string;

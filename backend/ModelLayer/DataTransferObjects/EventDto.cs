@@ -4,6 +4,9 @@ using System.Text;
 
 namespace ModelLayer.DataTransferObjects
 {
+    /// <summary>
+    /// RAM: 90%
+    /// </summary>
     public class EventDto
     {
         public long Id { get; set; }
@@ -20,6 +23,9 @@ namespace ModelLayer.DataTransferObjects
         public List<TagDto> Tags { get; set; } = new List<TagDto>();
     }
 
+    /// <summary>
+    /// RAM: 90%
+    /// </summary>
     public class EventCreateDto
     {
         public DateTime Date { get; set; }

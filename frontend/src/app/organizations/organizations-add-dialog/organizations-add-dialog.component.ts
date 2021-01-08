@@ -11,6 +11,9 @@ import { OsmAddressComponent } from 'src/app/shared/osm/osm-address/osm-address.
 	templateUrl: './organizations-add-dialog.component.html',
 	styleUrls: ['./organizations-add-dialog.component.scss']
 })
+/// <summary>
+/// RAM: 60%
+/// </summary>
 export class OrganizationsAddDialogComponent extends BaseDialogInput implements OnInit {
 	@ViewChild(ContactPossibilitiesComponent, { static: true })
 	contactPossibilitiesEntries: ContactPossibilitiesComponent;

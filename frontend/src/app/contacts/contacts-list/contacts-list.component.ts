@@ -28,6 +28,9 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./contacts-list.component.scss']
 })
 
+/// <summary>
+/// RAM: 70%
+/// </summary>
 export class ContactsListComponent implements OnInit, OnDestroy {
   @ViewChild(TagsFilterComponent, { static: true })
   tagsFilter: TagsFilterComponent;

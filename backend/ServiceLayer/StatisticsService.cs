@@ -12,6 +12,9 @@ using static ModelLayer.DataTransferObjects.StatisticsDto;
 
 namespace ServiceLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IStatisticsService
     {
         Task<List<VerticalGroupedBarDto>> GetInvitedAndParticipatedRelationOfEvents();
@@ -19,6 +22,9 @@ namespace ServiceLayer
         Task<List<VerticalGroupedBarDto>> GetAllTags();
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class StatisticsService : IStatisticsService
     {
         private IEventService eventService;

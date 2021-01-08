@@ -6,6 +6,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './deletion-confirmation-dialog.component.html',
   styleUrls: ['./deletion-confirmation-dialog.component.scss']
 })
+/// <summary>
+/// RAM: 100%
+/// </summary>
 export class DeletionConfirmationDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<DeletionConfirmationDialogComponent>) {

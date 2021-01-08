@@ -25,6 +25,9 @@ using System.Net.Mail;
 
 namespace WebApi
 {
+    /// <summary>
+    /// RAM: 15%
+    /// </summary>
     public class Startup
     {
         public Startup(IConfiguration configuration, IWebHostEnvironment env)

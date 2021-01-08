@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ModelLayer.Models
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class ContactPossibilitiesEntry : BaseEntity
     {
         public string ContactEntryName { get; set; } = "";

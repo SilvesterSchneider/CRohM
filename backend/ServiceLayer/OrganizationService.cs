@@ -6,6 +6,9 @@ using ModelLayer.Models;
 
 namespace ServiceLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IOrganizationService : IOrganizationRepository
     {
         /// <summary>
@@ -33,6 +36,9 @@ namespace ServiceLayer
         Task AddHistoryElement(long id, HistoryElement historyElement);
     }
 
+    /// <summary>
+    /// RAM: 30%
+    /// </summary>
     public class OrganizationService : OrganizationRepository, IOrganizationService
     {
         private readonly IOrganizationContactRepository _organizationContactRepository;

@@ -5,6 +5,9 @@ import { EventsListComponent } from './events-list/events-list.component';
 import { EventsDetailComponent } from './events-detail/events-detail.component';
 import { EventsAddComponent } from './events-add/events-add.component';
 
+/// <summary>
+/// RAM: 100%
+/// </summary>
 const eventsRoutes: Routes = [
     {
         path: '',

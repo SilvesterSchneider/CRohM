@@ -16,6 +16,9 @@ using WebApi.Wrapper;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// RAM: 90%
+    /// </summary>
     [Route("api/organization")]
     [ApiController]
     [Authorize]

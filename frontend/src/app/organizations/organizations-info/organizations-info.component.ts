@@ -18,7 +18,9 @@ import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/o
   templateUrl: './organizations-info.component.html',
   styleUrls: ['./organizations-info.component.scss']
 })
-
+/// <summary>
+/// RAM: 60%
+/// </summary>
 export class OrganizationsInfoComponent implements OnInit {
   organizationsForm: FormGroup;
 

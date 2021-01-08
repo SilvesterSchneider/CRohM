@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ModelLayer.DataTransferObjects
 {
+    /// <summary>
+    /// RAM: 70%
+    /// </summary>
     public class OrganizationDto
     {
         public long Id { get; set; }
@@ -22,6 +25,9 @@ namespace ModelLayer.DataTransferObjects
         public List<HistoryElementDto> History { get; set; } = new List<HistoryElementDto>();
     }
 
+    /// <summary>
+    /// RAM: 70%
+    /// </summary>
     public class OrganizationCreateDto
     {
         [Required(AllowEmptyStrings = false)]

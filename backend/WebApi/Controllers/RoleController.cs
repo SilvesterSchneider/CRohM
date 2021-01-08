@@ -17,6 +17,9 @@ using ServiceLayer;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : ControllerBase

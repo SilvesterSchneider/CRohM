@@ -11,6 +11,9 @@ using static ModelLayer.DataTransferObjects.StatisticsDto;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class StatisticsController : ControllerBase

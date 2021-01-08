@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace ModelLayer.Helper
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class PasswordGenerator
     {
         public int MinimumLengthPassword { get; private set; }

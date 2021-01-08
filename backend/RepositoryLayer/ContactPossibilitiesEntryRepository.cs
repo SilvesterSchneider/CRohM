@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace RepositoryLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IContactPossibilitiesEntryRepository : IBaseRepository<ContactPossibilitiesEntry>
     {
         /// <summary>
@@ -14,6 +17,9 @@ namespace RepositoryLayer
         int GetTotalAmountOfEntities();
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class ContactPossibilitiesEntryRepository : BaseRepository<ContactPossibilitiesEntry>, IContactPossibilitiesEntryRepository
     {
         public ContactPossibilitiesEntryRepository(CrmContext crm) : base(crm)

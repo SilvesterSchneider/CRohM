@@ -11,11 +11,17 @@ using ModelLayer.Helper;
 
 namespace RepositoryLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IUserLoginRepository : IBaseRepository<UserLogin>
     {
         Task<DateTime> GetTheLastLoginDateTimeForUserByIdAsync(long id);
     }
 
+    /// <summary>
+    /// RAM: 50%
+    /// </summary>
     public class UserLoginRepository : BaseRepository<UserLogin>, IUserLoginRepository
     {
         public UserLoginRepository(CrmContext context) : base(context)

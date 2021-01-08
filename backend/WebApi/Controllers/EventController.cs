@@ -14,6 +14,9 @@ using System.Linq;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// RAM: 80%
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class EventController : ControllerBase

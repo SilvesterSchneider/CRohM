@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace RepositoryLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IEventOrganizationRepository :IBaseRepository<EventOrganization>
     {
         /// <summary>
@@ -25,6 +28,9 @@ namespace RepositoryLayer
         Task<List<EventOrganization>> GetAllAsync();
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class EventOrganizationRepository : BaseRepository<EventOrganization>, IEventOrganizationRepository
     {
         public EventOrganizationRepository(CrmContext context) : base(context)

@@ -7,6 +7,9 @@ using System.Text;
 
 namespace ModelLayer.DataTransferObjects
 {
+    /// <summary>
+    /// RAM: 20%
+    /// </summary>
     public class UserDto
     {
         public long Id { get; set; }

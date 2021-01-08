@@ -4,6 +4,9 @@ using Xunit;
 
 namespace UnitTests.ModelLayer.Helper
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class PasswordGeneratorTest
     {
         private const int LENGTH_FIRST = 10;

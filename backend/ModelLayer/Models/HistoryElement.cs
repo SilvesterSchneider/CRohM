@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ModelLayer.Models
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public enum HistoryElementType
     {
         MAIL = 0,
@@ -13,6 +16,9 @@ namespace ModelLayer.Models
         VISIT = 3
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class HistoryElement : BaseEntity
     {
         public DateTime Date { get; set; } = DateTime.Now;

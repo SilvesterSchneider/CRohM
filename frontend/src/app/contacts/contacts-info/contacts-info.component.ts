@@ -15,7 +15,9 @@ import { JwtService } from 'src/app/shared/jwt.service';
   templateUrl: './contacts-info.component.html',
   styleUrls: ['./contacts-info.component.scss']
 })
-
+/// <summary>
+/// RAM: 80%
+/// </summary>
 export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   genderTypes: string[] = ['Männlich', 'Weiblich', 'Divers'];
   contactsForm: FormGroup;

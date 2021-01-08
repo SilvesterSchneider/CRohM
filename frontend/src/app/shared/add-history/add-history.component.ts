@@ -9,7 +9,9 @@ import { BaseDialogInput } from '../form/base-dialog-form/base-dialog.component'
     templateUrl: './add-history.component.html',
     styleUrls: ['./add-history.component.scss']
 })
-
+/// <summary>
+/// RAM: 90%
+/// </summary>
 export class AddHistoryComponent extends BaseDialogInput<AddHistoryComponent> implements OnInit {
     public types = [
         {

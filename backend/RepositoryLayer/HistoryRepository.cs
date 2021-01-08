@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace RepositoryLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IHistoryRepository : IBaseRepository<HistoryElement>
     {
         /// <summary>
@@ -35,6 +38,9 @@ namespace RepositoryLayer
 
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class HistoryRepository : BaseRepository<HistoryElement>, IHistoryRepository
     {
         public HistoryRepository(CrmContext context) : base(context)

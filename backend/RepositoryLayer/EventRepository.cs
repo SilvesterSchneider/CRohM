@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace RepositoryLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IEventRepository : IBaseRepository<Event>
     {
         /// <summary>
@@ -60,6 +63,9 @@ namespace RepositoryLayer
         Task<EventOrganization> AddEventOrganizationAsync(EventOrganization eventOrganization);
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class EventRepository : BaseRepository<Event>, IEventRepository
     {
         private IContactRepository contactRepo;

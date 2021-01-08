@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace ModelLayer.Helper
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public class NumberValidator : ValidationAttribute
     {

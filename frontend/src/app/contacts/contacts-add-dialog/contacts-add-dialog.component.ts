@@ -12,6 +12,9 @@ import { BaseDialogInput } from 'src/app/shared/form/base-dialog-form/base-dialo
 import { JwtService } from 'src/app/shared/jwt.service';
 import { OsmAddressComponent } from 'src/app/shared/osm/osm-address/osm-address.component';
 
+/// <summary>
+/// RAM: 60%
+/// </summary>
 @Component({
 	selector: 'app-contacts-add-dialog',
 	templateUrl: './contacts-add-dialog.component.html',

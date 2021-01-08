@@ -1,4 +1,4 @@
-﻿using ModelLayer.Helper;
+using ModelLayer.Helper;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,6 +6,9 @@ using Xunit;
 
 namespace UnitTests.ModelLayer.Helper
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class MailValidatorTest
     {
         [Fact]

@@ -6,6 +6,9 @@ using System.Text;
 
 namespace ModelLayer.DataTransferObjects
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class ContactPossibilitiesEntryDto
     {
         public long Id { get; set; }
@@ -13,6 +16,9 @@ namespace ModelLayer.DataTransferObjects
         public string ContactEntryValue { get; set; }
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class ContactPossibilitiesEntryCreateDto
     {
         [Required(AllowEmptyStrings = false)]

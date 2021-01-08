@@ -13,6 +13,9 @@ using RepositoryLayer;
 
 namespace ServiceLayer
 {
+    /// <summary>
+    /// RAM: 15%
+    /// </summary>
     public interface IUserService
     {
         Task<User> FindByNameAsync(string credentialsName);
@@ -80,6 +83,9 @@ namespace ServiceLayer
         Task<List<User>> GetUsersInRoleAsync(string roleName);
     }
 
+    /// <summary>
+    /// RAM: 15%
+    /// </summary>
     public class UserService : IUserService
     {
         private readonly IUserManager _userManager;

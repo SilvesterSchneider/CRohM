@@ -9,7 +9,9 @@ import { ContactPossibilitiesEntryDto } from '../api-generated/api-generated';
     templateUrl: './contact-possibilities.component.html',
     styleUrls: ['./contact-possibilities.component.scss']
 })
-
+/// <summary>
+/// RAM: 100%
+/// </summary>
 export class ContactPossibilitiesComponent implements OnInit {
   public myForm: FormGroup = this.fb.group(
     {

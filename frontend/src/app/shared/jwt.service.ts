@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
+/// <summary>
+/// RAM: 20%
+/// </summary>
 export class JwtService {
 
   public static LS_KEY = 'access_token';

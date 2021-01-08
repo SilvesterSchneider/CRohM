@@ -26,6 +26,9 @@ namespace ServiceLayer
         Task<SignInResult> CheckPasswordSignInAsync(User user, string password);
     }
 
+    /// <summary>
+    /// RAM: 10%
+    /// </summary>
     public class SignInService : ISignInService
     {
         private readonly AppSettings _appSettings;

@@ -8,6 +8,9 @@ import { VerticalGroupedBarChartComponent } from 'src/app/shared/charts/vertical
   templateUrl: './tags.component.html',
   styleUrls: ['./tags.component.scss']
 })
+/// <summary>
+/// RAM: 80%
+/// </summary>
 export class TagsComponent implements OnInit {
   @ViewChild(VerticalGroupedBarChartComponent, { static: false })
   chart: VerticalGroupedBarChartComponent;

@@ -8,6 +8,9 @@ import { EventDto, MailService } from 'src/app/shared/api-generated/api-generate
   templateUrl: './events-invitation.component.html',
   styleUrls: ['./events-invitation.component.scss']
 })
+/// <summary>
+/// RAM: 100%
+/// </summary>
 export class EventsInvitationComponent implements OnInit {
   textForm: FormGroup;
 

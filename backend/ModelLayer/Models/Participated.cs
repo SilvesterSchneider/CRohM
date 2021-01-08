@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ModelLayer.Models
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public enum ParticipatedStatus
     {
         NOT_INVITED,
@@ -13,6 +16,9 @@ namespace ModelLayer.Models
         CANCELLED
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class Participated : BaseEntity
     {
         public MODEL_TYPE ModelType { get; set; }

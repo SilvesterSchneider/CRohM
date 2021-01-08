@@ -10,6 +10,9 @@ using ModelLayer.DataTransferObjects;
 
 namespace ServiceLayer
 {
+    /// <summary>
+    /// RAM: 25%
+    /// </summary>
     public interface IContactService : IContactRepository
     {
         Task AddHistoryElement(long id, HistoryElement historyElement);
@@ -26,6 +29,9 @@ namespace ServiceLayer
         Task<ApprovedStatus> ApproveContact(long id);
     }
 
+    /// <summary>
+    /// RAM: 25%
+    /// </summary>
     public class ContactService : ContactRepository, IContactService
     {
         private readonly IMailService mailProvider;

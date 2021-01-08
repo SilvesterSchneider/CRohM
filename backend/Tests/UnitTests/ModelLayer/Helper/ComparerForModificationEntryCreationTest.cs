@@ -8,6 +8,9 @@ using Xunit;
 
 namespace UnitTests.ModelLayer.Helper
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class ComparerForModificationEntryCreationTest
     {
         [Fact]

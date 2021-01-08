@@ -48,6 +48,9 @@ export class OrganizationContactConnection {
 	styleUrls: ['./organizations-edit-dialog.component.scss'],
 	providers: [{ provide: MatFormFieldControl, useExisting: OrganizationsEditDialogComponent }]
 })
+/// <summary>
+/// RAM: 80%
+/// </summary>
 export class OrganizationsEditDialogComponent extends BaseDialogInput implements OnInit, OnDestroy {
 	static nextId = 0;
 	@ViewChild('inputTrigger', { read: MatAutocompleteTrigger })

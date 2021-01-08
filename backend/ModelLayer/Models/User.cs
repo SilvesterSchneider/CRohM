@@ -7,6 +7,9 @@ using ModelLayer.Models.Base;
 
 namespace ModelLayer.Models
 {
+    /// <summary>
+    /// RAM: 20%
+    /// </summary>
     public class User : IdentityUser<long>
     {
         public string FirstName { get; set; }

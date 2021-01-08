@@ -5,6 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss']
 })
+/// <summary>
+/// RAM: 100%
+/// </summary>
 export class OverviewComponent implements OnInit {
   selectedIndex = 0;
 

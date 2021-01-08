@@ -13,6 +13,9 @@ using ServiceLayer;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// RAM: 40%
+    /// </summary>
     //TODO: add role access control
     [Route("api/[controller]")]
     [ApiController]

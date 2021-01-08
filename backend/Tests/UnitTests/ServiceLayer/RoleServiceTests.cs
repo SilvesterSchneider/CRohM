@@ -16,6 +16,9 @@ using ModelLayer.Helper;
 
 namespace UnitTests.ServiceLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class RoleServiceTests
     {
         private const string TEST_ROLE_1 = "testRolle1";

@@ -3,7 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { OrganizationsListComponent } from './organizations-list/organizations-list.component';
 import { OrganizationsDetailComponent } from './organizations-detail/organizations-detail.component';
 import { OrganizationsDetailResolverService } from './organizations-detail-resolver.service';
-
+/// <summary>
+/// RAM: 50%
+/// </summary>
 const organizationsRoutes: Routes = [
 	{
 		path: '',

@@ -5,6 +5,9 @@ using System.Runtime.Serialization;
 namespace ModelLayer.Models
 {
     /// <summary>
+    /// RAM: 100%
+    /// </summary>
+    /// <summary>
     /// Alle feldtypen, welche grundsätzlich verändert werden können.
     /// </summary>
     public enum DATA_TYPE
@@ -37,6 +40,9 @@ namespace ModelLayer.Models
     }
 
     /// <summary>
+    /// RAM: 100%
+    /// </summary>
+    /// <summary>
     /// Alle modelltypen für die es felder geben kann
     /// </summary>
     public enum MODEL_TYPE
@@ -52,6 +58,9 @@ namespace ModelLayer.Models
     }
 
     /// <summary>
+    /// RAM: 100%
+    /// </summary>
+    /// <summary>
     /// die art der veränderung.
     /// </summary>
     public enum MODIFICATION
@@ -62,6 +71,9 @@ namespace ModelLayer.Models
         ADDED
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class ModificationEntry : BaseEntity
     {
         public DATA_TYPE DataType { get; set; }

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer
 {
+    /// <summary>
+    /// RAM: 30%
+    /// </summary>
     public interface IEventService : IEventRepository
     {
         Task<bool> SendInvitationMailsAsync(List<long> contacts, List<long> orgaIds, string mailContent, long eventId, string uri);
@@ -15,6 +18,9 @@ namespace ServiceLayer
         Task<bool> HandleInvitationResponseForOrganizationAsync(long id, long organizationId, ParticipatedStatus state);
     }
 
+    /// <summary>
+    /// RAM: 70%
+    /// </summary>
     public class EventService : EventRepository, IEventService
     {
         private IMailService mailService;

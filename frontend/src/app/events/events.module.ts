@@ -10,7 +10,9 @@ import { EventsInfoComponent } from './events-info/events-info.component';
 import { EventsInvitationComponent } from './events-invitation/events-invitation.component';
 import { DeletionConfirmationDialogComponent } from './deletion-confirmation-dialog/deletion-confirmation-dialog.component';
 import { ConfirmationInvitationDialogComponent } from './confirmation-invitation-dialog/confirmation-invitation-dialog.component';
-
+/// <summary>
+/// RAM: 100%
+/// </summary>
 @NgModule({
   imports: [
     SharedModule,

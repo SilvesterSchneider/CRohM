@@ -16,6 +16,9 @@ import { DeletionConfirmationDialogComponent } from '../deletion-confirmation-di
 import { ConfirmDialogComponent, ConfirmDialogModel } from 'src/app/shared/form/confirmdialog/confirmdialog.component';
 import { EventsInvitationComponent } from '../events-invitation/events-invitation.component';
 
+/// <summary>
+/// RAM: 100%
+/// </summary>
 export class EventDtoGroup implements EventDto {
   id: number;
   date: string;
@@ -36,7 +39,9 @@ export class EventDtoGroup implements EventDto {
   templateUrl: './events-list.component.html',
   styleUrls: ['./events-list.component.scss']
 })
-
+/// <summary>
+/// RAM: 100%
+/// </summary>
 export class EventsListComponent implements OnInit {
   @ViewChild(TagsFilterComponent, { static: true })
   tagsFilter: TagsFilterComponent;

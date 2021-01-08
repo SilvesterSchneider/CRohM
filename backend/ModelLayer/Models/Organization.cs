@@ -7,6 +7,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ModelLayer.Models
 {
+    /// <summary>
+    /// RAM: 90%
+    /// </summary>
     public class Organization : BaseEntity
     {
         public Address Address { get; set; } = new Address();

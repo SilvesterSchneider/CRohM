@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ModelLayer;
 using ModelLayer.Models;
 using RepositoryLayer.Base;
@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace RepositoryLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IEventContactRepository : IBaseRepository<EventContact>
     {
         /// <summary>
@@ -26,6 +29,9 @@ namespace RepositoryLayer
         Task<List<EventContact>> GetAllAsync();
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class EventContactRepository : BaseRepository<EventContact>, IEventContactRepository
     {
         public EventContactRepository(CrmContext context) : base(context) 

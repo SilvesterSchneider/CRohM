@@ -9,11 +9,17 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IUserCheckDateService : IUserCheckDateRepository
     {
         Task CheckAllUsersAsync();
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class UserCheckDateService : UserCheckDateRepository, IUserCheckDateService
     {
         private const string DELETED_USER = "Gelöschter User: ";

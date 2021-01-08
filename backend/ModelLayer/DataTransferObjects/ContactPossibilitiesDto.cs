@@ -1,4 +1,4 @@
-﻿using ModelLayer.Helper;
+using ModelLayer.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +7,9 @@ using System.Text;
 
 namespace ModelLayer.DataTransferObjects
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class ContactPossibilitiesDto
     {
         public long Id { get; set; }
@@ -20,6 +23,9 @@ namespace ModelLayer.DataTransferObjects
         public List<ContactPossibilitiesEntryDto> ContactEntries { get; set; }
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class ContactPossibilitiesCreateDto
     {
 

@@ -9,12 +9,18 @@ using System.Threading.Tasks;
 
 namespace RepositoryLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IUserCheckDateRepository : IBaseRepository<UserDeletionCheckDate>
     {
         DateTime GetTheDateTime();
         Task UpdateAsync(DateTime dateTime);
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class UserCheckDateRepository : BaseRepository<UserDeletionCheckDate>, IUserCheckDateRepository
     {
         public UserCheckDateRepository(CrmContext context) : base(context)

@@ -7,6 +7,9 @@ using System.Text;
 
 namespace ModelLayer.Helper
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class MailCredentialsHelper
     {
         private const string FILENAME = "\\mailCredentials.info";
@@ -105,6 +108,9 @@ namespace ModelLayer.Helper
     /// <summary>
     /// The serializable variant of the class containing all necessary information about the mail settings
     /// </summary>
+    /// /// <summary>
+    /// RAM: 100%
+    /// </summary>
     [Serializable]
     public class MailCredentialsSerializable
     {
@@ -142,6 +148,9 @@ namespace ModelLayer.Helper
 
     /// <summary>
     /// The class containing all necessary information about the mail settings.
+    /// </summary>
+    /// /// <summary>
+    /// RAM: 100%
     /// </summary>
     public class MailCredentials
     {

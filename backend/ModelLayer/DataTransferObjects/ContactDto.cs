@@ -5,6 +5,9 @@ using static ModelLayer.Models.Contact;
 
 namespace ModelLayer.DataTransferObjects
 {
+    /// <summary>
+    /// RAM: 50%
+    /// </summary>
     public class ContactDto
     {
         public long Id { get; set; }
@@ -22,6 +25,9 @@ namespace ModelLayer.DataTransferObjects
         public bool isApproved { get; set; }
     }
 
+    /// <summary>
+    /// RAM: 30%
+    /// </summary>
     public class ContactCreateDto
     {
         [Required]

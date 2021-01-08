@@ -38,7 +38,9 @@ export class OrganizationContactConnection {
   styleUrls: ['./organizations-detail.component.scss'],
   providers: [{ provide: MatFormFieldControl, useExisting: OrganizationsDetailComponent }]
 })
-
+/// <summary>
+/// RAM: 70%
+/// </summary>
 export class OrganizationsDetailComponent implements OnInit, OnDestroy {
   static nextId = 0;
   @ViewChild('inputTrigger', { read: MatAutocompleteTrigger }) inputTrigger: MatAutocompleteTrigger;

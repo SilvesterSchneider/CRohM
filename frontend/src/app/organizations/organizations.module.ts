@@ -9,7 +9,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { OrganizationsInfoComponent } from './organizations-info/organizations-info.component';
 import { OrganizationsEditDialogComponent } from './organizations-edit-dialog/organizations-edit-dialog.component';
-
+/// <summary>
+/// RAM: 60%
+/// </summary>
 @NgModule({
   declarations: [
     OrganizationsAddDialogComponent,

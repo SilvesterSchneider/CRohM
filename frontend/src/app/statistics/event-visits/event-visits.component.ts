@@ -8,6 +8,9 @@ import { VerticalGroupedBarChartComponent } from 'src/app/shared/charts/vertical
   templateUrl: './event-visits.component.html',
   styleUrls: ['./event-visits.component.scss']
 })
+/// <summary>
+/// RAM: 70%
+/// </summary>
 export class EventVisitsComponent implements OnInit {
   @ViewChild(VerticalGroupedBarChartComponent, { static: false })
   chart: VerticalGroupedBarChartComponent;

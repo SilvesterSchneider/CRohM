@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryLayer
 {
+    /// <summary>
+    /// RAM: 20%
+    /// </summary>
     public interface IContactRepository : IBaseRepository<Contact>
     {
         /// <summary>
@@ -29,6 +32,9 @@ namespace RepositoryLayer
         Task<bool> UpdateAsync(Contact contact, long id);
     }
 
+    /// <summary>
+    /// RAM: 50%
+    /// </summary>
     public class ContactRepository : BaseRepository<Contact>, IContactRepository
     {
         public ContactRepository(CrmContext context) : base(context)

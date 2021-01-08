@@ -24,7 +24,9 @@ import { TranslateService } from '@ngx-translate/core';
 @Injectable({
 	providedIn: 'root'
 })
-
+/// <summary>
+/// RAM: 90%
+/// </summary>
 export class OrganizationsListComponent implements OnInit, OnDestroy {
 	@ViewChild(TagsFilterComponent, { static: true })
 	tagsFilter: TagsFilterComponent;

@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryLayer
 {
+    /// <summary>
+    /// RAM: 70%
+    /// </summary>
     public interface IOrganizationRepository : IBaseRepository<Organization>
     {
         Task<List<Organization>> GetAllOrganizationsWithIncludesAsync();
@@ -19,6 +22,9 @@ namespace RepositoryLayer
         Task<bool> UpdateAsyncWithAlleDependencies(Organization newOrganization);
     }
 
+    /// <summary>
+    /// RAM: 70%
+    /// </summary>
     public class OrganizationRepository : BaseRepository<Organization>, IOrganizationRepository
     {
         public OrganizationRepository(CrmContext context) : base(context)

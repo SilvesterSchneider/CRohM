@@ -11,6 +11,9 @@ using ServiceLayer;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// RAM: 90%
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class MailController : ControllerBase

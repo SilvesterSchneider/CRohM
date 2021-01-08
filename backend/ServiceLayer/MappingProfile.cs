@@ -8,6 +8,9 @@ using ModelLayer.Models;
 
 namespace ServiceLayer
 {
+    /// <summary>
+    /// RAM: 60%
+    /// </summary>
     public class MappingProfile : Profile
     {
         public MappingProfile()

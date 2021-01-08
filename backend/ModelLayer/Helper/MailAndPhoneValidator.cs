@@ -1,4 +1,4 @@
-﻿using ModelLayer.DataTransferObjects;
+using ModelLayer.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace ModelLayer.Helper
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public class MailAndPhoneValidator : ValidationAttribute
     {

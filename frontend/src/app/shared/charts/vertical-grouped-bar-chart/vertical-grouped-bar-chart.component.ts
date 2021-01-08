@@ -8,6 +8,9 @@ import * as moment from 'moment';
   templateUrl: './vertical-grouped-bar-chart.component.html',
   styleUrls: ['./vertical-grouped-bar-chart.component.scss']
 })
+/// <summary>
+/// RAM: 100%
+/// </summary>
 export class VerticalGroupedBarChartComponent implements OnInit {
   xLabel: string;
   yLabel: string;

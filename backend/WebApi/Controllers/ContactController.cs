@@ -21,6 +21,9 @@ using System.Diagnostics;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// RAM: 25%
+    /// </summary>
     [Route("api/contact")]
     [ApiController]
     public class ContactController : ControllerBase

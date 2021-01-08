@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 namespace WebApi.Helper
 {
     /// <summary>
+    /// RAM: 80%
+    /// </summary>
+    /// <summary>
     /// Der Check-Service der User-Login Zeitpunkte
     /// </summary>
     public class UserCheckThread 

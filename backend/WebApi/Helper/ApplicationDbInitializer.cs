@@ -7,6 +7,9 @@ using System.Security.Claims;
 
 namespace WebApi.Helper
 {
+    /// <summary>
+    /// RAM: 80%
+    /// </summary>
     public static class ApplicationDbInitializer
     {
         /// <summary>

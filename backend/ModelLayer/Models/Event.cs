@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ModelLayer.Models
 {
+    /// <summary>
+    /// RAM: 90%
+    /// </summary>
     public class Event : BaseEntity
     {
         //der tag des events

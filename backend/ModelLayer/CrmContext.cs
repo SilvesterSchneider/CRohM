@@ -6,6 +6,9 @@ using ModelLayer.Models;
 
 namespace ModelLayer
 {
+    /// <summary>
+    /// RAM: 30%
+    /// </summary>
     public class CrmContext : IdentityDbContext<User, Role, long>
     {
         public CrmContext(DbContextOptions<CrmContext> options) : base(options)

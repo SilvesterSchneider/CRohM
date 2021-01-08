@@ -8,6 +8,9 @@ import { VerticalGroupedBarChartComponent } from 'src/app/shared/charts/vertical
   templateUrl: './objects-creation.component.html',
   styleUrls: ['./objects-creation.component.scss']
 })
+/// <summary>
+/// RAM: 70%
+/// </summary>
 export class ObjectsCreationComponent implements OnInit {
   @ViewChild(VerticalGroupedBarChartComponent, { static: false })
   chart: VerticalGroupedBarChartComponent;

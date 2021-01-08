@@ -11,6 +11,9 @@ import { RolesTranslationService } from '../roles-translation.service';
   templateUrl: './update-role.component.html',
   styleUrls: ['./update-role.component.scss']
 })
+/// <summary>
+/// RAM: 10%
+/// </summary>
 export class UpdateRoleDialogComponent extends BaseDialogInput<UpdateRoleDialogComponent> implements OnInit {
   permissionGroup: RoleDto;
   permissions: {value: string, label: string}[] = [];

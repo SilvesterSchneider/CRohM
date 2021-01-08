@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ModelLayer.Helper
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public static class RoleClaims
     {
         /// <summary>

@@ -7,6 +7,9 @@ import { MailCredentialsSerializableDto, MailService } from 'src/app/shared/api-
   templateUrl: './mail.component.html',
   styleUrls: ['./mail.component.scss']
 })
+/// <summary>
+/// RAM: 100%
+/// </summary>
 export class MailComponent implements OnInit {
   mailsForm: FormGroup;
   sendMailForm: FormGroup;

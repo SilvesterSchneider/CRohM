@@ -6,6 +6,9 @@ using System.Text;
 
 namespace ModelLayer.Models
 {
+    /// <summary>
+    /// RAM: 60%
+    /// </summary>
     public class Contact : BaseEntity
     {
         public enum GenderTypes

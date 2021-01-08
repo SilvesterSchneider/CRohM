@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IModificationEntryService : IModificationEntryRepository
     {
         /// <summary>
@@ -132,6 +135,9 @@ namespace ServiceLayer
         Task ChangeContactsOfEvent(long id, string contactName, bool wasDeleted, User userNameOfChange);
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class ModificationEntryService : ModificationEntryRepository, IModificationEntryService
     {
         private List<ModificationEntry> listWithCreation;

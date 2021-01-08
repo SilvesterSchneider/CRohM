@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ModelLayer;
@@ -7,6 +7,9 @@ using RepositoryLayer.Base;
 
 namespace RepositoryLayer
 {
+    /// <summary>
+    /// RAM: 50%
+    /// </summary>
     public interface IOrganizationContactRepository : IBaseRepository<OrganizationContact>
     {
         /// <summary>
@@ -20,6 +23,9 @@ namespace RepositoryLayer
         Task<OrganizationContact> GetOrganizationContactByIdsAsync(long contactId, long organizationId);
     }
 
+    /// <summary>
+    /// RAM: 50%
+    /// </summary>
     public class OrganizationContactRepository : BaseRepository<OrganizationContact>, IOrganizationContactRepository
     {
         public OrganizationContactRepository(CrmContext context) : base(context)

@@ -1,4 +1,4 @@
-﻿using ModelLayer.Models;
+using ModelLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,6 +6,9 @@ using System.Text;
 
 namespace ModelLayer.DataTransferObjects
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class HistoryElementDto
     {
         public long Id { get; set; }
@@ -15,6 +18,9 @@ namespace ModelLayer.DataTransferObjects
         public string Comment { get; set; }
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class HistoryElementCreateDto
     {
         [Required(AllowEmptyStrings = false)]

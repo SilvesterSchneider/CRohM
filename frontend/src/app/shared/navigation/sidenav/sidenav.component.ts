@@ -7,6 +7,9 @@ import { JwtService } from '../../jwt.service';
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss']
 })
+/// <summary>
+/// RAM: 20%
+/// </summary>
 export class SidenavComponent implements OnInit {
   navLinks: any[];
   constructor(private jwtService: JwtService, private router: Router) {

@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace RepositoryLayer
 {
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public interface IModificationEntryRepository : IBaseRepository<ModificationEntry>
     {
         /// <summary>
@@ -88,6 +91,9 @@ namespace RepositoryLayer
         Task<List<ModificationEntry>> RemoveUserForeignKeys(User user);
     }
 
+    /// <summary>
+    /// RAM: 100%
+    /// </summary>
     public class ModificationEntryRepository : BaseRepository<ModificationEntry>, IModificationEntryRepository
     {
         private IContactRepository contactRepository;
