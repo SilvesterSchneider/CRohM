@@ -7,6 +7,8 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
 import { PageEvent } from '@angular/material/paginator';
+import { ContactsEditDialogComponent } from '../contacts-edit-dialog/contacts-edit-dialog.component';
+import { JwtService } from 'src/app/shared/jwt.service';
 
 @Component({
   selector: 'app-contacts-info',
@@ -23,7 +25,7 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
 
   modifications: ModificationEntryDto[] = new Array<ModificationEntryDto>();
   modificationsPaginationLength: number;
-
+  permissionModify = false;
   displayedColumns = ['icon', 'datum', 'name', 'kommentar'];
   displayedColumnsOrganizations = ['name'];
   displayedColumnsContactPossibilities = ['name', 'kontakt'];
@@ -34,7 +36,8 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
               @Inject(MAT_DIALOG_DATA) public contact: ContactDto,
               private fb: FormBuilder,
               private modService: ModificationEntryService,
-              private contactService: ContactService) {
+              private contactService: ContactService,
+              private jwt: JwtService) {
     super(dialogRef, dialog);
   }
 
@@ -51,6 +54,7 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   }
 
   ngOnInit(): void {
+    this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten aller Kontakte');
     // Load initial modification entries
     this.loadModifications(0, 5);
     // Load initial history
@@ -143,6 +147,11 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
         this.modificationsPaginationLength = result.totalRecords;
       });
 
+  }
+
+  callEdit() {
+    this.dialogRef.close();
+    this.dialog.open(ContactsEditDialogComponent, { data: this.contact, disableClose: true });
   }
 }
 

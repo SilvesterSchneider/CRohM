@@ -105,7 +105,8 @@
             "disclosure": "Disclosure",
             "generate": "Generate Disclosure",
             "description": "Generates a PDF-file with all data stored within the CRMS for the selected contact according to Right of Access Art. 12 GDPR. The pdf-file is  send to the contact's mail adress."
-        }
+        },
+        "overview": "Contact - Overview"
     },
     "organization": {
         "organization": "Organization",
@@ -118,6 +119,7 @@
         "affiliation": "Organizational affiliations",
         "showInfo": "Display organizational information",
         "delete": "Delete Organization",
+        "overview": "Organization - Overview",
         "dear": "Dear Sir or Madam,"
     },
     "event": {
@@ -145,7 +147,8 @@
         "sendInvitation": "Send invitation to Participants",
         "sendMail": "Send Mail to {{text}}",
         "inviteDescription": "The text modules <lastname> and <firstname> insert the last or first name of the recipient.",
-        "location": "Event location"
+        "location": "Event location",
+        "overview": "Event - Overview"
     },
     "statistic": {
         "statistics": "Statistics",
@@ -220,6 +223,7 @@
     "dpDisclaimer": {
         "noDp": "No data protection officer has yet been appointed.",
         "noDp2": "Meet the legal requirements by appointing a data protection officer as administrator now.",
+        "noDp3": "Meet the legal requirements by advising an administrator user to define a data protection officer soon.",
         "ignore": "Ignore",
         "select": "Determine one now",
         "sendMessage": "Send Message",

@@ -66,6 +66,7 @@ export class HomeComponent implements OnInit {
   AMOUNT_OF_DATASETS = 2;
   public lastLogin: Date;
   loggedInUser: string;
+  permissionToAddRoles = false;
 
   private weekDays: string[] = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
@@ -82,12 +83,13 @@ export class HomeComponent implements OnInit {
     private readonly userService: UsersService) { }
 
   public ngOnInit(): void {
+    this.permissionToAddRoles = this.jwt.hasPermission('Zuweisung einer neuen Rolle zu einem Benutzer');
     this.checkIfComingFromLogin().then(isLogin => {
       if (isLogin){
         this.dataProtectionService.isThereAnyDataProtectionOfficerInTheSystem()
           .subscribe(x => {
             if (!x) {
-              this.dialog.open(DpDisclaimerDialogComponent);
+              this.dialog.open(DpDisclaimerDialogComponent, { data: this.permissionToAddRoles });
             }
           })
        }

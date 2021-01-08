@@ -6,6 +6,8 @@ import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.
 import { map } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
+import { JwtService } from 'src/app/shared/jwt.service';
+import { EventsDetailComponent } from '../events-detail/events-detail.component';
 
 export class ContactOrganizationDtoExtended {
   id: number;
@@ -29,13 +31,15 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   modificationsPaginationLength: number;
   columnsContacts = ['wasInvited', 'participated', 'prename', 'name'];
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
+  permissionModify = false;
 
   constructor(public dialogRef: MatDialogRef<EventsInfoComponent>,
               public dialog: MatDialog,
               @Inject(MAT_DIALOG_DATA) public event: EventDto,
               private fb: FormBuilder,
               private modService: ModificationEntryService,
-              private translate: TranslateService
+              private translate: TranslateService,
+              private jwt: JwtService
   ) {
     super(dialogRef, dialog);
     this.dialogRef.backdropClick().subscribe(() => {
@@ -53,6 +57,7 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   }
 
   ngOnInit() {
+    this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten einer Veranstaltung');
     this.eventsForm = this.createEventsForm();
     if (this.event.contacts != null) {
       this.event.contacts.forEach(x => {
@@ -161,5 +166,10 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
     } else {
       return this.translate.instant('event.cancelled');
     }
+  }
+
+  callEdit() {
+    this.dialogRef.close();
+    this.dialog.open(EventsDetailComponent, { data: this.event, disableClose: true, width: '680px', height: '700px' });
   }
 }

@@ -6,10 +6,12 @@ import {
   HistoryElementDto,
   HistoryElementType, OrganizationService, EventDto, ParticipatedStatus
 } from '../../shared/api-generated/api-generated';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { sortDatesDesc } from '../../shared/util/sort';
 import { PageEvent } from '@angular/material/paginator';
+import { JwtService } from 'src/app/shared/jwt.service';
+import { OrganizationsEditDialogComponent } from '../organizations-edit-dialog/organizations-edit-dialog.component';
 
 @Component({
   selector: 'app-organizations-info',
@@ -22,7 +24,7 @@ export class OrganizationsInfoComponent implements OnInit {
 
   modifications: ModificationEntryDto[] = [];
   modificationsPaginationLength: number;
-
+  permissionModify = false;
   history: (EventDto | HistoryElementDto)[] = [];
   historyPaginationLength: number;
 
@@ -32,15 +34,19 @@ export class OrganizationsInfoComponent implements OnInit {
   displayedColumnsHistory = ['icon', 'datum', 'name', 'kommentar'];
   displayedColumnsDataChangeHistory = ['datum', 'bearbeiter', 'feldname', 'alterWert', 'neuerWert'];
 
-  constructor(public dialogRef: MatDialogRef<OrganizationsInfoComponent>,
+  constructor(
+              public dialogRef: MatDialogRef<OrganizationsInfoComponent>,
+              public dialog: MatDialog,
               @Inject(MAT_DIALOG_DATA) public organization: OrganizationDto,
               private fb: FormBuilder,
               private modService: ModificationEntryService,
-              private organisationService: OrganizationService) {
+              private organisationService: OrganizationService,
+              private jwt: JwtService) {
     this.tags = this.organization.tags;
   }
 
   ngOnInit(): void {
+    this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten aller Organisationen');
     this.initForm();
     // Initialize modifications
     this.loadModifications(0, 5);
@@ -120,6 +126,11 @@ export class OrganizationsInfoComponent implements OnInit {
       });
   }
 
-
-
+  callEdit() {
+    this.dialogRef.close();
+    this.dialog.open(OrganizationsEditDialogComponent, {
+      data: this.organization,
+      disableClose: true
+    });
+  }
 }
