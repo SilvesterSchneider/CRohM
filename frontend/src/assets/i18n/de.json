@@ -104,7 +104,8 @@
             "disclosure": "Kontaktauskunft",
             "generate": "Kontaktauskunft generieren",
             "description": "Erzeugt eine PDF-Datei mit allen im CRMS gespeicherten Daten zu gewähltem Kontakt gem. Auskunftspflicht EU-DSGVO Art. 15. Die PDF-Datei wird direkt an die E-Mail-Adresse des Kontakts gesendet."
-        }
+        },
+        "overview": "Kontakt - Übersicht"
     },
     "organization": {
         "organization": "Organisation",
@@ -117,6 +118,7 @@
         "affiliation": "Organisationszugehörigkeiten",
         "showInfo": "Organisationsinformationen anzeigen",
         "delete": "Organisation löschen",
+        "overview": "Organisation - Übersicht",
         "dear": "Sehr geehrte Damen und Herren,"
     },
     "event": {
@@ -144,7 +146,8 @@
         "sendInvitation": "Einladung an Teilnehmer versenden",
         "sendMail": "E-Mail an {{text}} versenden",
         "inviteDescription": "Die Textbausteine <Nachname> und <Vorname> fügen den Nach- bzw. Vornamen des Empfängers ein.",
-        "location": "Veranstaltungsort"
+        "location": "Veranstaltungsort",
+        "overview": "Veranstaltung - Übersicht"
     },
     "statistic": {
         "statistics": "Statistiken",
@@ -219,6 +222,7 @@
     "dpDisclaimer": {
         "noDp": "Es wurde noch kein Datenschutzbeauftragter bestimmt.",
         "noDp2": "Erfüllen Sie die gesetzlichen Auflagen indem Sie als Administrator jetzt einen Datenschutzbeauftragten bestimmen.",
+        "noDp3": "Erfüllen Sie die gesetzlichen Auflagen indem Sie einen Administrator dazu auffordern bald einen Datenschutzbeauftragten zu bestimmen.",
         "ignore": "Ignorieren",
         "select": "Jetzt einen bestimmen",
         "sendMessage": "Mitteilung senden",

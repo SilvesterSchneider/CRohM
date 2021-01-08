@@ -3,14 +3,20 @@
   <div mat-dialog-title id="dataProtectionOfficeDisclaimer">
     <span id="title">{{'common.warning' | translate}}</span>
   </div>
-  <div mat-dialog-content>
+  <div *ngIf="permissionToAddRoles" mat-dialog-content>
     {{'dpDisclaimer.noDp' | translate}}
     <br>
     {{'dpDisclaimer.noDp2' | translate}}
-    </div>
+  </div>
+  <div *ngIf="!permissionToAddRoles" mat-dialog-content>
+    {{'dpDisclaimer.noDp' | translate}}
+    <br>
+    {{'dpDisclaimer.noDp3' | translate}}
+  </div>
   <div mat-dialog-actions>   
     
   <span class="fill-remaining-space"></span>
-    <button id="ignoreButton" mat-raised-button [matDialogClose]="false" id="ignoreButton" >{{'dpDisclaimer.ignore' | translate}}</button>
-    <button mat-raised-button (click)="onResolve()" color="primary" id="resolveButton">{{'dpDisclaimer.select' | translate}}</button>
+    <button *ngIf="permissionToAddRoles" mat-raised-button [matDialogClose]="false" id="ignoreButton" >{{'dpDisclaimer.ignore' | translate}}</button>
+    <button *ngIf="permissionToAddRoles" mat-raised-button (click)="onResolve()" color="primary" id="resolveButton">{{'dpDisclaimer.select' | translate}}</button>
+    <button *ngIf="!permissionToAddRoles" mat-raised-button [matDialogClose]="false" id="okButton" >{{'OK'}}</button>
   </div>

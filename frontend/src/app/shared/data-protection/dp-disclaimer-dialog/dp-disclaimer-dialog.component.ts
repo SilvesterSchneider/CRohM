@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dp-disclaimer-dialog',
@@ -12,6 +12,7 @@ export class DpDisclaimerDialogComponent implements OnInit {
   constructor(
     private readonly dialogRef: MatDialogRef<DpDisclaimerDialogComponent>,
     private readonly router: Router,
+    @Inject(MAT_DIALOG_DATA) public permissionToAddRoles: boolean,
     private readonly route: ActivatedRoute) { }
 
   public ngOnInit(): void {
@@ -22,5 +23,4 @@ export class DpDisclaimerDialogComponent implements OnInit {
     this.router.navigate(['settings'], {relativeTo: this.route});
     this.dialogRef.close();
   }
-
 }
