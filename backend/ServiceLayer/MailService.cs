@@ -86,10 +86,24 @@ namespace ServiceLayer
 
         public async Task<bool> ApproveContactCreation(string benutzer, string email)
         {
-            string body = "<h3> Bitte bestätigen Sie die Aufnahme Ihrer Kontaktdaten für die TH-Nürnberg </h3> " +
-                   "<p> "+benutzer+"</p>";
+            string body =
+            "<h5><i> - English version below - </i></h5>" +
+            "<p> Herzlich Willkommen bei CRohM </p>" +
+            "<p> Sie wurden als neuer Kontakt im CRM System der technischen Hochschule Nürnberg angelegt. </p>" +
+            "<p> Bitte bestätigen sie die Aufnahme der Kontaktdaten durch den folgenden Link: </p>" +
+            "<p> " + benutzer + "</p>" +
+            "<p> Mit freundlichen Grüßen, </p>" +
+            "<p> Ihr CRohM Team. </p>" +
+            "<br>" +
+            "<h5><i>- English version -</i></h5>" +
+            "<p> Welcome to CRohM </p>" +
+            "<p> You have been created as a new contact in the CRM system of Nuremberg University of Technology. </p>" +
+            "<p> Please confirm the addition of the contact details by clicking the following link: </p>" +
+            "<p> " +benutzer+"</p>" +
+            "<p> With kind regards, </p>" +
+            "<p> Your CRohM Team </p>";
 
-            return await SendMailAsync("Aufnahmebestätigung ins CRMS System der TH Nürnberg / Please confirm the inclusion of your contact details for TH Nuremberg", body, email, null, "");
+            return await SendMailAsync("Aufnahme in das CRM System der TH Nürnberg / Inclusion to the CRM system of the TH Nuremberg", body, email, null, "");
         }
 
         public static string GetMailForInvitationAsTemplate(string eventName, string date, string time)
@@ -100,24 +114,24 @@ namespace ServiceLayer
         public async Task<bool> Registration(string benutzer, string passwort, string email)
         {
             string body = "<h5><i> - English version below - </i></h5>" +
-                   "<h3> Herzlich Willkommen bei CRohm </h3> " +
+                   "<h3> Herzlich Willkommen bei CRohM </h3> " +
                    "<p> Sie wurden als neuer Benutzer im System angelegt.Ihnen wurden folgenden Zugangsdaten zugewiesen:</p> " +
                    "<p style = \"padding-left: 50px\" > Benutzername: <font size = \"3\" color = \"#0000FF\"><b> " + benutzer + " </b></font></p> " +
                    "<p style = \"padding-left: 50px\" > Passwort: <font size = \"3\" color = \"#0000FF\" ><b> " + passwort + " </b></font></p> " +
                    "<p> Bitte ändern Sie aus Sicherheitsgründen ihr Passwort nach Ihrem ersten Login.</p> " +
                    "<br> " +
                    "<p> Mit freundlichen Grüßen,</p> " +
-                   "<p> Ihr CRohm Team.</p>" +
-                   "<br" +
+                   "<p> Ihr CRohM Team.</p>" +
+                   "<br>" +
                    "<h5><i>- English version -</i></h5>" +
-                   "<h3> Welcome to CRohm </h3> " +
+                   "<h3> Welcome to CRohM </h3> " +
                    "<p> You were created as a new user in the system and assigned the following access data:</p> " +
                    "<p style = \"padding-left: 50px\" > Username: <font size = \"3\" color = \"#0000FF\"><b> " + benutzer + " </b></font></p> " +
                    "<p style = \"padding-left: 50px\" > Password: <font size = \"3\" color = \"#0000FF\" ><b> " + passwort + " </b></font></p> " +
                    "<p> For security reasons please change your password after your first login.</p> " +
                    "<br> " +
                    "<p> With kind regards,</p> " +
-                   "<p> Your CRohm Team.</p>";
+                   "<p> Your CRohM Team.</p>";
 
 
             return await SendMailAsync("Zugangsdaten / Access Data", body, email, null, "");
