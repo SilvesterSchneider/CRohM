@@ -6,6 +6,7 @@ import { AddUserDialogComponent } from './add-user/add-user.component';
 import { EditUserDialogComponent } from './edit-user/edit-user.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { JwtService } from 'src/app/shared/jwt.service';
+import { ConfirmDialogComponent } from 'src/app/shared/form/confirmdialog/confirmdialog.component';
 
 
 
@@ -112,4 +113,14 @@ export class UserComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  public deleteUser(userId: number){
+    const deleteDialogRef = this.dialog.open(DeleteEntryDialogComponent, {
+      disableClose: true
+    });
+    deleteDialogRef.afterClosed().subscribe(x => {
+      if (x.delete) {
+        this.usersService.delete(userId).subscribe(x => this.GetData());
+      }
+    });
+  }
 }

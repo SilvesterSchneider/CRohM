@@ -49,6 +49,9 @@
                 </mat-icon>
                 <mat-icon *ngIf=element.userLockEnabled title="{{'settings.unlockUser' | translate}}">clear</mat-icon>
             </button>
+            <button [disabled]="!permissionEditUser" mat-icon-button (click)="deleteUser(element.id)">
+                <mat-icon title="{{'settings.deleteUser' | translate}}">delete</mat-icon>
+            </button>
         </mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

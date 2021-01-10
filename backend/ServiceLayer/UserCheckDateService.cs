@@ -44,10 +44,8 @@ namespace ServiceLayer
             {
                 if (user.Id != 1 && !user.IsDeleted && user.LastLoginDate.AddDays(inactiveSince.TotalDays) < DateTime.Now)
                 {
-
                     await modificationEntryService.RemoveUserForeignKeys(user);
                     await userService.DeleteUserAsync(user);
-
                 }
             }
         }
