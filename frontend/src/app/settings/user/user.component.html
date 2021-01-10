@@ -44,12 +44,12 @@
                 title="{{'settings.resetPassword' | translate}}">
                 <mat-icon>lock</mat-icon>
             </button>
-            <button mat-icon-button [disabled]="!permissionLockUser" (click)="SetLockoutState(element.id)">
+            <button mat-icon-button [disabled]="!permissionLockUser || element.isSuperAdmin" (click)="SetLockoutState(element.id)">
                 <mat-icon *ngIf=!element.userLockEnabled title="{{'settings.lockUser' | translate}}">done
                 </mat-icon>
                 <mat-icon *ngIf=element.userLockEnabled title="{{'settings.unlockUser' | translate}}">clear</mat-icon>
             </button>
-            <button [disabled]="!permissionEditUser" mat-icon-button (click)="deleteUser(element.id)">
+            <button [disabled]="!permissionEditUser || element.isSuperAdmin" mat-icon-button (click)="deleteUser(element.id)">
                 <mat-icon title="{{'settings.deleteUser' | translate}}">delete</mat-icon>
             </button>
         </mat-cell>

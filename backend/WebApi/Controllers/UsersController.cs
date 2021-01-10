@@ -121,12 +121,17 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "User not found")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "unsuccessfully request")]
         public async Task<IActionResult> Delete(long id)
         {
             User user = await _userService.GetByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
+            }
+            if (user.IsSuperAdmin)
+            {
+                return BadRequest("Super admin darf nicht gelöscht werden!");
             }
             await modService.RemoveUserForeignKeys(user);
             await _userService.DeleteUserAsync(user);

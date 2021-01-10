@@ -3698,6 +3698,12 @@ export class UsersService {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("User not found", status, _responseText, _headers);
             }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            result400 = _responseText === "" ? null : <string>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("unsuccessfully request", status, _responseText, _headers, result400);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);

@@ -7,6 +7,7 @@ import { EditUserDialogComponent } from './edit-user/edit-user.component';
 import { DeleteEntryDialogComponent } from '../../shared/form/delete-entry-dialog/delete-entry-dialog.component';
 import { JwtService } from 'src/app/shared/jwt.service';
 import { ConfirmDialogComponent } from 'src/app/shared/form/confirmdialog/confirmdialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
@@ -30,7 +31,8 @@ export class UserComponent implements OnInit {
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
     public dialog: MatDialog,
-    private jwt: JwtService) { }
+    private jwt: JwtService,
+    private snackBar: MatSnackBar) { }
 
   public ngOnInit(): void {
     this.GetData();
