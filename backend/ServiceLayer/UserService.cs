@@ -46,7 +46,7 @@ namespace ServiceLayer
 
         Task<IdentityResult> RemoveClaimAsync(User user, Claim claim);
 
-        Task DeleteUserAsync(User user);
+        Task<IdentityResult> DeleteUserAsync(User user);
 
         Task<IdentityResult> SetUserLockedAsync(long id);
 
@@ -268,9 +268,9 @@ namespace ServiceLayer
             return await _userManager.Users.ToListAsync();
         }
 
-        public async Task DeleteUserAsync(User user)
+        public async Task<IdentityResult> DeleteUserAsync(User user)
         {
-            await _userManager.DeleteUserAsync(user);
+            return await _userManager.DeleteUserAsync(user);
         }
 
         public async Task<IdentityResult> UpdateAsync(User user)
@@ -425,7 +425,7 @@ namespace ServiceLayer
 
         IQueryable<User> Users { get; }
 
-        Task DeleteUserAsync(User user);
+        Task<IdentityResult> DeleteUserAsync(User user);
 
         Task<IdentityResult> UpdateUserAsync(User user);
 
@@ -450,9 +450,9 @@ namespace ServiceLayer
             return await _manager.CreateAsync(user);
         }
 
-        public async Task DeleteUserAsync(User user)
+        public async Task<IdentityResult> DeleteUserAsync(User user)
         {
-            await _manager.DeleteAsync(user);
+            return await _manager.DeleteAsync(user);
         }
 
         public async Task<IdentityResult> CreateAsync(User user, string password)

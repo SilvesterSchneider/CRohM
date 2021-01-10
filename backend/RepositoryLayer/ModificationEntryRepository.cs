@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace RepositoryLayer
 {
     /// <summary>
-    /// RAM: 100%
+    /// RAM: 90%
     /// </summary>
     public interface IModificationEntryRepository : IBaseRepository<ModificationEntry>
     {
@@ -88,11 +88,11 @@ namespace RepositoryLayer
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        Task<List<ModificationEntry>> RemoveUserForeignKeys(User user);
+        Task RemoveUserForeignKeys(User user);
     }
 
     /// <summary>
-    /// RAM: 100%
+    /// RAM: 90%
     /// </summary>
     public class ModificationEntryRepository : BaseRepository<ModificationEntry>, IModificationEntryRepository
     {
@@ -217,18 +217,15 @@ namespace RepositoryLayer
                 .CountAsync();
         }
 
-        public async Task<List<ModificationEntry>> RemoveUserForeignKeys(User user)
+        public async Task RemoveUserForeignKeys(User user)
         {
             List<ModificationEntry> entities = await Entities.Where(entry => entry.User == user).ToListAsync();
             entities.ForEach(entry => entry.User = null);
 
             if (entities.Count > 0)
             {
-                return await this.UpdateRangeAsync(entities);
-
+                await this.UpdateRangeAsync(entities);
             }
-
-            return new List<ModificationEntry>();
         }
 
         public async Task<List<ModificationEntry>> GetModificationEntriesForCreationByModelType(MODEL_TYPE modelType)

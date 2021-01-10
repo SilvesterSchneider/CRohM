@@ -193,6 +193,7 @@
         "resetPassword": "Passwort zurücksetzen",
         "lockUser": "Benutzer sperren",
         "unlockUser": "Sperre aufheben",
+        "deleteUser": "Benutzer löschen", 
         "permission": {
             "permission": "Berechtigung",
             "deleteContact": "Löschen eines Kontakts",
