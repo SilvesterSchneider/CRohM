@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.DataTransferObjects;
 using ModelLayer.Helper;
@@ -21,10 +22,12 @@ namespace WebApi.Controllers
     {
         private static IUserService _userService;
         private readonly IMapper _mapper;
+        private IModificationEntryService modService;
 
-        public UsersController(IUserService userService, IMapper mapper)
+        public UsersController(IUserService userService, IMapper mapper, IModificationEntryService modService)
         {
             _userService = userService;
+            this.modService = modService;
             _mapper = mapper;
         }
 
@@ -33,6 +36,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Get()
         {
             List<User> users = await _userService.GetAsync();
+            users.RemoveAll(x => x.IsDeleted);
 
             return Ok(_mapper.Map<List<UserDto>>(users));
         }
@@ -112,5 +116,27 @@ namespace WebApi.Controllers
             }
             return Ok(roles);
         }
+
+        [Authorize(Roles = "Löschen / Deaktivieren eines Benutzers")]
+        [HttpDelete("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
+        [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "User not found")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, typeof(string), Description = "unsuccessfully request")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            User user = await _userService.GetByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            if (user.IsSuperAdmin)
+            {
+                return BadRequest("Super admin darf nicht gelöscht werden!");
+            }
+            await modService.RemoveUserForeignKeys(user);
+            await _userService.DeleteUserAsync(user);
+            return Ok();
+        }
+
     }
 }

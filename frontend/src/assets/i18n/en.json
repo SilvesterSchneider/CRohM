@@ -193,6 +193,7 @@
         "resetPassword": "Reset Password",
         "lockUser": "Lock User",
         "unlockUser": "Unlock User",
+        "deleteUser": "Delete user", 
         "permission": {
             "permission": "Permission",
             "deleteContact": "Delete Contact",
