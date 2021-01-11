@@ -2,6 +2,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ContactDto, OrganizationDto, TagDto } from '../api-generated/api-generated';
@@ -14,69 +15,76 @@ import { ContactDto, OrganizationDto, TagDto } from '../api-generated/api-genera
 
 export class TagsFilterComponent implements OnInit {
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
-	tagsControl = new FormControl();
-	selectedTags: TagDto[] = new Array<TagDto>();
-	separatorKeysCodes: number[] = [ENTER, COMMA];
+  tagsControl = new FormControl();
+  selectedTags: TagDto[] = new Array<TagDto>();
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredTagsObservable: Observable<string[]>;
-  allPredefinedTags: string[] = [ 'Lehrbeauftragter', 'Kunde', 'Politiker', 'Unternehmen', 'Behörde', 'Bildungseinrichtung', 'Institute', 'Ministerium',
-  'Emeriti', 'Alumni'];
-	allTags: string[] = this.allPredefinedTags;
-	removable = true;
+  allPredefinedTags: string[] = ['Lehrbeauftragter', 'Kunde', 'Politiker', 'Unternehmen', 'Behörde', 'Bildungseinrichtung', 'Institute', 'Ministerium',
+    'Emeriti', 'Alumni'];
+  allTags: string[] = this.allPredefinedTags;
+  removable = true;
   selectable = true;
   refreshFunction: () => void;
 
   constructor() {
     this.filteredTagsObservable = this.tagsControl.valueChanges.pipe(startWith(''),
-			map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
+      map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
   }
 
   ngOnInit(): void {
   }
 
   private _filter(value: string): string[] {
-		const tagValue = value.toLowerCase();
+    const tagValue = value.toLowerCase();
 
-		return this.allTags.filter(tag => tag.toLowerCase().indexOf(tagValue) === 0);
-	  }
+    return this.allTags.filter(tag => tag.toLowerCase().indexOf(tagValue) === 0);
+  }
 
-	addTag(event: Event) {
-		const value = (event.target as HTMLInputElement).value;
-		if (value.length > 0 && this.selectedTags.find(a => a.name === value) == null) {
+  addTag(event: MatChipInputEvent) {
+    const input = event.input;
+    const value = event.value;
+
+    if (value.length > 0 && this.selectedTags.find(a => a.name === value) == null) {
       this.selectedTags.push({
-				id: 0,
-				name: value
+        id: 0,
+        name: value
       });
       if (this.refreshFunction != null) {
         this.refreshFunction();
       }
-		}
-		this.tagsControl.setValue('');
-	}
+    }
 
-	removeTag() {
-		if (this.selectedTags.length > 0) {
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+    this.tagsControl.setValue(null);
+  }
+
+  removeTag() {
+    if (this.selectedTags.length > 0) {
       this.selectedTags.splice(this.selectedTags.length - 1, 1);
       if (this.refreshFunction != null) {
         this.refreshFunction();
       }
-		}
-	}
+    }
+  }
 
-	remove(tag: TagDto) {
-		const index = this.selectedTags.indexOf(tag);
-		if (index >= 0) {
+  remove(tag: TagDto) {
+    const index = this.selectedTags.indexOf(tag);
+    if (index >= 0) {
       this.selectedTags.splice(index, 1);
       if (this.refreshFunction != null) {
         this.refreshFunction();
       }
-		}
-	}
+    }
+  }
 
-	selected(event: MatAutocompleteSelectedEvent): void {
-		if (this.selectedTags.find(a => a.name === event.option.viewValue) == null) {
+  selected(event: MatAutocompleteSelectedEvent): void {
+    if (this.selectedTags.find(a => a.name === event.option.viewValue) == null) {
       this.selectedTags.push({
-			  id: 0,
-			  name: event.option.viewValue
+        id: 0,
+        name: event.option.viewValue
       });
       this.tagInput.nativeElement.value = '';
       this.tagsControl.setValue(null);

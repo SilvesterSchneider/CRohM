@@ -8,8 +8,8 @@
     </mat-chip>
 
     <input id="tagInput" #tagInput [matAutocomplete]="auto" #inputTrigger [matChipInputFor]="chipList"
-      [formControl]="tagsControl" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup.enter)="addTag($event)"
-      maxlength=32>
+      [formControl]="tagsControl" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="addTag($event)" maxlength=32>
   </mat-chip-list>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
     <mat-option *ngFor="let item of filteredTagsObservable | async" [value]="item">
