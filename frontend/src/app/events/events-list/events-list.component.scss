@@ -5,14 +5,15 @@
     margin: 10px;
 }
 .spacer {
-    /* This fills the remaining space, by using flexbox. 
+  /* This fills the remaining space, by using flexbox.
        Every toolbar row uses a flexbox row layout. */
-    flex: 1 1 auto;
-  }
+  flex: 1 1 auto;
+}
 .tabrow {
-    margin-top: 10px;
+  margin-top: 10px;
+  height: 80px;
 }
 
 .today {
-    background-color: rgb(178, 185,225);
+  background-color: rgb(178, 185, 225);
 }
