@@ -55,6 +55,10 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
 
   ngOnInit(): void {
     this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten aller Kontakte');
+    this.initLoad();
+  }
+
+  initLoad() {
     // Load initial modification entries
     this.loadModifications(0, 5);
     // Load initial history
@@ -150,8 +154,13 @@ export class ContactsInfoComponent extends BaseDialogInput implements OnInit {
   }
 
   callEdit() {
-    this.dialogRef.close();
-    this.dialog.open(ContactsEditDialogComponent, { data: this.contact, disableClose: true });
+    const dialogRef = this.dialog.open(ContactsEditDialogComponent, { data: this.contact, disableClose: true });
+    dialogRef.afterClosed().subscribe(x => {
+      this.contactService.getById(this.contact.id).subscribe(y => {
+        this.contact = y;
+        this.initLoad();
+      });
+    });
   }
 }
 
