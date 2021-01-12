@@ -36,7 +36,7 @@
     <ng-container matColumnDef="options">
         <mat-header-cell *matHeaderCellDef> {{'common.action' | translate}} </mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <button mat-icon-button [disabled]="!permissionResetPasswort" (click)="OnPasswordReset(element.id)"
+            <button mat-icon-button [disabled]="!isLockingAllowed(element)" (click)="OnPasswordReset(element.id)"
                 title="{{'settings.resetPassword' | translate}}">
                 <mat-icon>settings_backup_restore</mat-icon>
             </button>
@@ -45,7 +45,7 @@
                 </mat-icon>
                 <mat-icon *ngIf=element.userLockEnabled title="{{'settings.unlockUser' | translate}}">clear</mat-icon>
             </button>
-            <button class="editUserButton" [disabled]="!permissionEditUser" mat-icon-button
+            <button class="editUserButton" [disabled]="!isEditionAllowed(element)" mat-icon-button
                 (click)="openEditDialog(element.id)" title="{{'common.edit' | translate}}">
                 <mat-icon>edit</mat-icon>
             </button>
