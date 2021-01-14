@@ -125,4 +125,12 @@ export class UserComponent implements OnInit {
       }
     });
   }
+
+  isLockingAllowed(user: UserDto): boolean {
+    return this.jwt.isSuperAdmin() || !user.isSuperAdmin && this.permissionResetPasswort;
+  }
+
+  isEditionAllowed(user: UserDto): boolean {
+    return this.jwt.isSuperAdmin() || !user.isSuperAdmin && this.permissionEditUser;
+  }
 }
