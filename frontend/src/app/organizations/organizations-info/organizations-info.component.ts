@@ -47,6 +47,10 @@ export class OrganizationsInfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten aller Organisationen');
+    this.initLoad();
+  }
+
+  initLoad() {
     this.initForm();
     // Initialize modifications
     this.loadModifications(0, 5);
@@ -127,10 +131,15 @@ export class OrganizationsInfoComponent implements OnInit {
   }
 
   callEdit() {
-    this.dialogRef.close();
-    this.dialog.open(OrganizationsEditDialogComponent, {
+    const dialogRef = this.dialog.open(OrganizationsEditDialogComponent, {
       data: this.organization,
       disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(x => {
+      this.organisationService.getById(this.organization.id).subscribe(y => {
+        this.organization = y;
+        this.initLoad();
+      });
     });
   }
 }
