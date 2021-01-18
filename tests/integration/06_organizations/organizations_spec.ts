@@ -20,7 +20,7 @@ describe('Organizations Tests', () => {
         cy.visit('/organizations');
         cy.wait(2000);
         //click on add dummy organization
-        cy.get('#addDummy').click();
+        cy.get('#addDummyButton').click();
         cy.wait(4000);
         //type in the tag
         cy.get('#tagInput').type('hallo').type('{enter}');

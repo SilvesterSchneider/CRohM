@@ -20,7 +20,7 @@ describe('Contacts Tests', () => {
         // go to contacts page
         cy.visit('/events');
         cy.wait(10000);
-        cy.get('#addDummyEventButton').click();
+        cy.get('#addDummyButton').click();
         cy.wait(4000);
         cy.get('.editButton').click();
         cy.wait(8000);

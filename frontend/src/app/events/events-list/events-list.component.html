@@ -10,7 +10,7 @@
             title="{{'event.hidePast' | translate}}" (change)="toggleSelection()">
             {{'event.hidePast' | translate}}
         </mat-checkbox>
-        <button id="addDummyEventButton" class="button" *ngIf="isAdminUserLoggedIn" [disabled]="!permissionAdd"
+        <button id="addDummyButton" class="button" *ngIf="isAdminUserLoggedIn" [disabled]="!permissionAdd"
             mat-raised-button color="primary" title="{{'event.addDummy' | translate}}" (click)="addDummyEvent()">
             <mat-icon>add</mat-icon> {{'event.addDummy' | translate}}
         </button>

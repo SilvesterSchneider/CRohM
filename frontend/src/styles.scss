@@ -17,3 +17,17 @@ app-tags-filter {
   width: 100%;
   padding-right: 16px;
 }
+
+#addDummyButton {
+  width: 430px;
+}
+
+.chips {
+  color: white !important;
+  background-color: #3f51b5 !important;
+
+}
+.removeChipIcon {
+  z-index: -1;
+  color: white !important;
+}

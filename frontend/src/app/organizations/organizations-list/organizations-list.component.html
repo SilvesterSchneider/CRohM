@@ -12,7 +12,7 @@
             <mat-label>{{'common.search' | translate}}</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="{{'organization.organizations' | translate}}...">
         </mat-form-field>
-        <button id="addDummy" class="button" *ngIf="isAdminUserLoggedIn" [disabled]="!permissionAdd" mat-raised-button color="primary"
+        <button id="addDummyButton" class="button" *ngIf="isAdminUserLoggedIn" [disabled]="!permissionAdd" mat-raised-button color="primary"
             title="{{'organization.addDummy' | translate}}" (click)="addDummyOrganization()">
             <mat-icon>add</mat-icon> {{'organization.addDummy' | translate}}
         </button>
