@@ -7,6 +7,7 @@ import { RoleDto, RoleService } from 'src/app/shared/api-generated/api-generated
 import { MatTableDataSource } from '@angular/material/table';
 import { RolesTranslationService } from './roles-translation.service';
 import { TranslateService } from '@ngx-translate/core';
+import { combineLatest, Subject } from 'rxjs';
 
 interface LooseTableObject {
   [key: string]: any;
@@ -24,6 +25,7 @@ export class RolesComponent implements OnInit {
   permissions: string[] = new Array<string>();
   public displayedColumns: string[] = ['permission'];
   public dataSource = new MatTableDataSource();
+  private initialized$ = new Subject();
 
   constructor(public dialog: MatDialog, private permissionService: RoleService, private translate: TranslateService) { }
 
@@ -32,17 +34,21 @@ export class RolesComponent implements OnInit {
   }
 
   fillFieldsWithData() {
-    this.permissionService.get().subscribe(x => {
-        this.permissionGroups = x;
-        this.permissionService.getAllClaims(1).subscribe(y => {
-          this.permissions = y;
-          this.createDynamicColums();
-          this.createTableData();
-        });
-      });
+    combineLatest([
+      this.permissionService.get(),
+      this.permissionService.getAllClaims(1)
+    ]).subscribe(([groups, permissions]) => {
+      this.permissionGroups = groups;
+      this.permissions = permissions;
+      this.createDynamicColums();
+      this.createTableData();
+      this.initialized$.next();
+    });
   }
 
-  public openCreateDialog(): void {
+  public async openCreateDialog() {
+    await this.initialized$;
+
     const dialogRef = this.dialog.open(CreateRoleDialogComponent, {
       data: this.permissions,
       disableClose: true
@@ -67,7 +73,9 @@ export class RolesComponent implements OnInit {
     });
   }
 
-  public openUpdateDialog(columnName: string) {
+  public async openUpdateDialog(columnName: string) {
+    await this.initialized$;
+
     const dialogRef = this.dialog.open(UpdateRoleDialogComponent, {
       data: {
         role: this.permissionGroups.find(x => x.name === columnName),

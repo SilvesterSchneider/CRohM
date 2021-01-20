@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { EventDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, DATA_TYPE, ParticipatedStatus } from '../../shared/api-generated/api-generated';
+import { EventDto, ModificationEntryDto, ModificationEntryService, MODEL_TYPE, DATA_TYPE, ParticipatedStatus, EventService } from '../../shared/api-generated/api-generated';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { BaseDialogInput } from '../../shared/form/base-dialog-form/base-dialog.component';
@@ -39,7 +39,8 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
               private fb: FormBuilder,
               private modService: ModificationEntryService,
               private translate: TranslateService,
-              private jwt: JwtService
+              private jwt: JwtService,
+              private eventService: EventService
   ) {
     super(dialogRef, dialog);
     this.dialogRef.backdropClick().subscribe(() => {
@@ -58,6 +59,10 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
 
   ngOnInit() {
     this.permissionModify = this.jwt.hasPermission('Einsehen und Bearbeiten einer Veranstaltung');
+    this.initLoad();
+  }
+
+  initLoad() {
     this.eventsForm = this.createEventsForm();
     if (this.event.contacts != null) {
       this.event.contacts.forEach(x => {
@@ -169,7 +174,12 @@ export class EventsInfoComponent extends BaseDialogInput<EventsInfoComponent> im
   }
 
   callEdit() {
-    this.dialogRef.close();
-    this.dialog.open(EventsDetailComponent, { data: this.event, disableClose: true, width: '680px', height: '700px' });
+    const dialogRef = this.dialog.open(EventsDetailComponent, { data: this.event, disableClose: true, width: '680px', height: '700px' });
+    dialogRef.afterClosed().subscribe(x => {
+      this.eventService.getById(this.event.id).subscribe(y => {
+        this.event = y;
+        this.initLoad();
+      });
+    });
   }
 }
