@@ -30,7 +30,7 @@
     "@swimlane/ngx-charts": "^17.0.0",
     "angular-calendar": "^0.28.22",
     "angularx-flatpickr": "^6.5.1",
-    "bootstrap": "^4.5.3",
+    "bootstrap": "^4.6.0",
     "date-fns": "^2.16.1",
     "flatpickr": "^4.6.9",
     "jquery": "^3.5.1",
