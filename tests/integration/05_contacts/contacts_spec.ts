@@ -45,6 +45,8 @@ describe('Contacts Tests', () => {
 
         // Wait for contact request
         cy.wait('@contact');
+        cy.wait('@contact');
+
 
         // Check that contact shows up in table
         cy.get('#contactsTable').should("contain.text", 'testName');
