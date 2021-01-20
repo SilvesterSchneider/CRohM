@@ -13,41 +13,39 @@ describe('Organizations Tests', () => {
     });
 
     it('should correctly filter by tags', () => {
+        cy.intercept('organization').as('organization');
+
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
-        cy.wait(5000);
+        
         // go to organizations page
         cy.visit('/organizations');
-        cy.wait(2000);
+        cy.wait('@organization');
+
         //click on add dummy organization
         cy.get('#addDummyButton').click();
-        cy.wait(4000);
+        cy.wait('@organization');
+
         //type in the tag
         cy.get('#tagInput').type('hallo').type('{enter}');
-        cy.wait(1000);
         //verify no element is available
         cy.get('#tableOrganization').should("not.contain", 'Organisation');
         //remove the tag
         cy.get('#tagInput').type('{backspace}');
-        cy.wait(1000);
+
         //click on edit button of organization
-        cy.get('[data-cy=submit_btn]')
-            .should('be.enabled')
-            .click();
-        cy.wait(1000);
-        cy.get('[data-cy=submit]')
-            .should('be.visible')
-            .click();
-        cy.wait(5000);
+        cy.get('[data-cy=submit_btn]').should('be.enabled').click();
+        cy.get('[data-cy=submit]').should('be.visible').click();
+
         //type in the tag
         cy.get('#tagInputEdit').type('hallo').type('{enter}');
-        cy.wait(1000);
+
         //save the changes
         cy.get('#saveButton').click({ force: true });
-        cy.wait(2000);
+        cy.wait('@organization');
+
         //type again the tag within the main page
         cy.get('#tagInput').type('hallo').type('{enter}');
-        cy.wait(5000);
         //verify that one element is available
         cy.get('#tableOrganization').should("have.length", '1');
     });

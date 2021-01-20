@@ -12,76 +12,64 @@ describe('Contacts Tests', () => {
         cy.getCookie('.AspNetCore.Identity.Application').should('not.exist');
     });
 
-    it('should correctly create a new user', () => {
+    it('should correctly create a new contact', () => {
+        cy.intercept('contact').as('contact');
+
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
-        cy.wait(1000);
+
         // go to contacts page
         cy.visit('/contacts');
-        cy.wait(1000);
+        cy.wait('@contact');
+
+
         //click on add button
         cy.get('#addButton').click();
-        cy.wait(2000);
+        //wait for dialog to open
+        cy.wait(1000);
+
         //type in all values
-        cy.get('#name').type('testName');
+        cy.get('#name', {timeout: 5000}).type('testName');
         cy.get('#preName').type('testVorname');
         cy.get('#contactPartner').type('razvan');
-        cy.get('#gender')
-            .click()
-            .get('mat-option')
-            //get the female gender
-            .contains('Weiblich')
-            .click()
+        cy.get('#gender').click().get('mat-option').contains('Weiblich').click();  //select female as gender
         cy.get('#street').type('testStrasse');
         cy.get('#streetNumber').type('33');
         cy.get('#zipcode').type('90478');
         cy.get('#city').type('testStadt');
-        cy.get('#country')
-            .click()
-            .get('mat-option')
-            //get the germany as country
-            .contains('Deutschland')
-            .click()
+        cy.get('#country').click().get('mat-option').contains('Deutschland').click();  //select germany as country
         cy.get('#mail').type('info@test.de');
         cy.get('#fax').type('0123-123');
         cy.get('#phoneNumber').type('014-234234');
         cy.get('#save').click({ force: true });
-        cy.wait(10000);
+
+        // Wait for contact request
+        cy.wait('@contact');
+
+        // Check that contact shows up in table
         cy.get('#contactsTable').should("contain.text", 'testName');
     });
-    it('should correctly edit the fields gender and contactPerson of an existing user', () => {
+    it('should correctly edit the fields gender and contactPerson of an existing contact', () => {
+        cy.intercept('contact').as('contact');
+
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
-        cy.wait(1000);
+
         // go to contacts page
         cy.visit('/contacts');
-        cy.wait(1000);
+        cy.wait('@contact');
+
         //click on edit button
-        cy.get('[data-cy=submit_btn]')
-            .should('be.enabled')
-            .click();
-        cy.wait(1000);
-        cy.get('[data-cy=submit]')
-            .should('be.visible')
-            .click();
-        cy.wait(4000);
-        cy.get('#gender')
-            .click()
-            .get('mat-option')
-            //get the male gender
-            .contains('Männlich')
-            .click()
+        cy.get('[data-cy=submit_btn]').should('be.enabled').click();
+        cy.get('[data-cy=submit]').should('be.visible').click();
+        cy.get('#gender').click().get('mat-option').contains('Männlich').click();  //get the male gender
         cy.get('#contactPartner').type('matis');
         cy.get('#saveEdit').click();
-        cy.wait(3000);
-        cy.get('[data-cy=submit_btn]')
-            .should('be.enabled')
-            .click();
-        cy.wait(1000);
-        cy.get('[data-cy=submit]')
-            .should('be.visible')
-            .click();
-        cy.wait(4000);
+
+        cy.wait('@contact');
+
+        cy.get('[data-cy=submit_btn]').should('be.enabled').click();
+        cy.get('[data-cy=submit]').should('be.visible').click({force: true});
         cy.get('#contactPartner').should("have.value", 'razvanmatis');
     });
 });
