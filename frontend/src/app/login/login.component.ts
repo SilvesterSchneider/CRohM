@@ -47,7 +47,8 @@ export class LoginComponent {
     }
   }
 
-  toggleFieldTextType() {
+  toggleFieldTextType(event: MouseEvent) {
+    event.stopPropagation();
     this.fieldTextType = !this.fieldTextType;
   }
 }

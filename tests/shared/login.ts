@@ -3,6 +3,8 @@ export function loginAsAdmin() {
 }
 
 export function doLogin(username: string, password: string) {
+    cy.intercept('auth').as('login');
+
     // Navigate to login page (baseUrl from cypress.json is used as base)
     cy.visit('/login');
 
@@ -18,6 +20,7 @@ export function doLogin(username: string, password: string) {
     // Click login button
     cy.get('#login-button').click();
 
-    // Wait for cookie storage
+    // Wait for login request & cookie storage
+    cy.wait('@login');
     cy.wait(1000);
 }
