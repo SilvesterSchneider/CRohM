@@ -2,15 +2,14 @@
 /// RAM: 70%
 /// </summary>
 <mat-toolbar>
-    <mat-toolbar-row class="tabrow">
-        <span class="spacer"></span>
+    <mat-toolbar-row class="tabrow" fxFlex>
         <a *ngIf="selectedCheckBoxList.length > 0" class="iconMargin" (click)="sendMailToMany()" type="button">
             <mat-icon color="primary" title="{{'common.sendMailToMany' | translate}}" class="icon">mail</mat-icon>
         </a>
         <a *ngIf="selectedCheckBoxList.length > 0" (click)="createEvent()" type="button">
             <mat-icon color="primary" title="{{'event.create' | translate}}" class="iconMargin">event</mat-icon>
         </a>
-        <app-tags-filter></app-tags-filter>
+        <app-tags-filter fxFlex="auto"></app-tags-filter>
         <mat-form-field>
             <mat-label>{{'common.search' | translate}}</mat-label>
             <input class="input" matInput (keyup)="applyFilter($event)"
@@ -20,7 +19,7 @@
                 <mat-icon>close</mat-icon>
             </button>
         </mat-form-field>
-        <button id="addDummyButton" class="button" *ngIf=isAdminUserLoggedIn [disabled]="!permissionAdd"
+        <button fxFlex="none" id="addDummyButton" class="button" *ngIf=isAdminUserLoggedIn [disabled]="!permissionAdd"
             mat-raised-button color="primary" title="{{'contact.addDummy' | translate}}" (click)="addDummyContact()">
             <mat-icon>add</mat-icon> {{'contact.addDummy' | translate}}
         </button>

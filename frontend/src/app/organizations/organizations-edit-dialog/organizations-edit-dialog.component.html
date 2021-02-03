@@ -83,14 +83,14 @@
     </div>
     <div class="leftMargin">
         <mat-chip-list class="organizationDetails" #chipList>
-            <mat-chip class="my-chip"
+            <mat-chip class="chips"
                     (keyup.backspace)="removeTag()" 
                     *ngFor="let item of selectedTags" 
                     [selectable]="selectableTag"
                     [removable]="removable"
                     (removed)="remove(item)">
                     {{ item.name }}
-                    <mat-icon class="removeIcon" matChipRemove *ngIf="removable">cancel</mat-icon>
+                    <mat-icon class="removeChipIcon" matChipRemove *ngIf="removable">cancel</mat-icon>
             </mat-chip>
             <input id="tagInputEdit"
                 placeholder="{{'common.newTag' | translate}}..." 

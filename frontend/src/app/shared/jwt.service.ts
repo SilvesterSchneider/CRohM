@@ -17,17 +17,9 @@ export class JwtService {
   constructor(private authService: AuthService, private router: Router, private userService: UsersService) { }
 
   public login(credentials: CredentialsDto) {
-    return this.authService.login(credentials).pipe(tap(res => {
-      localStorage.setItem(JwtService.LS_KEY, res.accessToken);
-      this.userService.get().subscribe(x => {
-        const userId = this.getUserId();
-        const user = x.find(a => a.id === userId);
-        let isSuperAdmin = 'false';
-        if (user != null && user.isSuperAdmin) {
-          isSuperAdmin = 'true';
-        }
-        localStorage.setItem(JwtService.LS_SUPERADMIN, isSuperAdmin);
-      });
+    return this.authService.login(credentials).pipe(tap(user => {
+      localStorage.setItem(JwtService.LS_KEY, user.accessToken);
+      localStorage.setItem(JwtService.LS_SUPERADMIN, `${user.isSuperAdmin}`);
     }));
   }
 

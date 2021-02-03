@@ -4,10 +4,10 @@
 <mat-form-field>
   <mat-label>{{'common.filterWithTags' | translate}}</mat-label>
   <mat-chip-list #chipList>
-    <mat-chip class="tagsDetails" (keyup.backspace)="removeTag()" *ngFor="let item of selectedTags"
+    <mat-chip class="tagsDetails chips" (keyup.backspace)="removeTag()" *ngFor="let item of selectedTags"
       [selectable]="selectable" [removable]="removable" (removed)="remove(item)">
       {{ item.name }}
-      <mat-icon matChipRemove *ngIf="removable" id=cancelButton>cancel</mat-icon>
+      <mat-icon matChipRemove *ngIf="removable" class="removeChipIcon">cancel</mat-icon>
     </mat-chip>
 
     <input id="tagInput" #tagInput [matAutocomplete]="auto" #inputTrigger [matChipInputFor]="chipList"
