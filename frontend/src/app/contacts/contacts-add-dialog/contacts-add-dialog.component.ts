@@ -66,7 +66,7 @@ export class ContactsAddDialogComponent extends BaseDialogInput<ContactsAddDialo
 		this.contactsForm = this.fb.group({
 			name: ['', Validators.required],
 			preName: ['', Validators.required],
-			gender: [this.genderTypes[0], Validators.required],
+			gender: [this.genderTypes[0].type, Validators.required],
 			contactPartner: [''],
 			address: this.addressForm,
 			contactPossibilities: this.fb.group({
