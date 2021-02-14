@@ -71,6 +71,7 @@ namespace WebApi.Controllers
             return Ok(contactsDto);
         }
 
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")]
         [HttpGet("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(ContactDto), Description = "successfully found")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "contact not found")]
@@ -211,7 +212,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = "Einsehen und Bearbeiten einer Veranstaltung")]
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Kontakte")]
         [HttpGet("{id}/history")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(PagedResponse<List<object>>), Description = "successfully found")]
         public async Task<IActionResult> GetHistory(long id, [FromQuery] PaginationFilter filter)
