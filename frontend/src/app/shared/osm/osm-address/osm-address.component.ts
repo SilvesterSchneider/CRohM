@@ -106,8 +106,6 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
   onSelection(selected: MatAutocompleteSelectedEvent) {
     const address: AddressDto = selected.option.value;
 
-    this.addressForm.reset();
-
     if (address.street) {
       this.addressForm.get('street').patchValue(address.street);
     }
