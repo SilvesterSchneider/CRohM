@@ -81,13 +81,15 @@ export class ContactsListComponent implements OnInit, OnDestroy {
 
     this.dataSource.filter = filterValue.trim().toLowerCase();
     this.dataSource.filterPredicate = ((data, filter) => {
-      if (data.preName.trim().toLowerCase().includes(filter) || data.name.trim().toLowerCase().includes(filter) ||
+      if (data.preName.trim().toLowerCase().includes(filter) || 
+        data.name.trim().toLowerCase().includes(filter) ||
         data.address.street.trim().toLowerCase().includes(filter) ||
         data.address.streetNumber.trim().toLowerCase().includes(filter) || data.address.zipcode.trim().toLowerCase().includes(filter) ||
         data.address.city.trim().toLowerCase().includes(filter) || data.address.country.trim().toLowerCase().includes(filter) ||
         data.contactPossibilities.phoneNumber.trim().toLowerCase().includes(filter) ||
         data.contactPossibilities.fax.trim().toLowerCase().includes(filter) ||
-        data.contactPossibilities.mail.trim().toLowerCase().includes(filter)) {
+        data.contactPossibilities.mail.trim().toLowerCase().includes(filter) ||
+        data.contactPartner.trim().toLowerCase().includes(filter)) {
         return true;
       } else {
         return false;
