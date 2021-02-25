@@ -13,7 +13,7 @@ describe('Contacts Tests', () => {
     });
 
     it('should correctly create a new contact', () => {
-        cy.intercept('contact').as('contact');
+       // cy.intercept('contact').as('contact');
 
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
@@ -52,7 +52,7 @@ describe('Contacts Tests', () => {
         cy.get('#contactsTable').should("contain.text", 'testName');
     });
     it('should correctly edit the fields gender and contactPerson of an existing contact', () => {
-        cy.intercept('contact').as('contact');
+       // cy.intercept('contact').as('contact');
 
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
