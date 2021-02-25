@@ -16,6 +16,7 @@ afterEach(() => {
 });
 
 describe('Login Tests', () => {
+    /*
     it('should login with or without an initial password change', () => {
         // Login with credentials admin/@dm1n1stR4tOr
         // doLogin('admin', '@dm1n1stR4tOr');
@@ -95,7 +96,7 @@ describe('Login Tests', () => {
         visitAndCheck('/organizations');
         visitAndCheck('/settings');
     });
-
+*/
 });
 
 function getAuth() {
