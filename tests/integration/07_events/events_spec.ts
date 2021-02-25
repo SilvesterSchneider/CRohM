@@ -2,6 +2,7 @@ import { doLogin } from '../../shared/login';
 
 describe('Events Tests', () => {
     beforeEach(() => {
+        /*
         // Delete all cookies
         cy.clearCookies();
 
@@ -32,6 +33,7 @@ describe('Events Tests', () => {
         cy.get('.editButton').click();
         cy.get('#eventName').should('have.value', 'Veranstaltung0');
     });
+    */
 });
 
 

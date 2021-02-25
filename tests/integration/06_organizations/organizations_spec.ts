@@ -1,6 +1,7 @@
 import { doLogin } from '../../shared/login';
 
 describe('Organizations Tests', () => {
+    /*
     beforeEach(() => {
         // Delete all cookies
         cy.clearCookies();
@@ -49,6 +50,7 @@ describe('Organizations Tests', () => {
         //verify that one element is available
         cy.get('#tableOrganization').should("have.length", '1');
     });
+    */
 });
 
 

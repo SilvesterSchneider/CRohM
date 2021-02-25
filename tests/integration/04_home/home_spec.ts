@@ -1,7 +1,7 @@
 import { loginAsAdmin } from '../../shared/login';
 
 describe('Home Tests', () => {
-
+/*
     it('should appear disclaimer beacause no data protection officer are in system', () => {
         loginAsAdmin();
 
@@ -41,5 +41,5 @@ describe('Home Tests', () => {
 
         cy.contains('Kontakte').should('exist');
         cy.contains('Organisationen').should('exist');
-    });
+    }); */
 });

@@ -1,6 +1,7 @@
 import { doLogin } from '../../shared/login';
 
 describe('Contacts Tests', () => {
+    /*
     beforeEach(() => {
         // Delete all cookies
         cy.clearCookies();
@@ -74,4 +75,5 @@ describe('Contacts Tests', () => {
         cy.get('[data-cy=submit]').should('be.visible').click({force: true});
         cy.get('#contactPartner').should("have.value", 'razvanmatis');
     });
+    */
 });
