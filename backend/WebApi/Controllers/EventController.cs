@@ -234,7 +234,7 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    return BadRequest("No valid object id transferred");
+                    return BadRequest("Keine gültige Objekt ID erhalten");
                 }
             }
             catch (KeyNotFoundException nfe)
