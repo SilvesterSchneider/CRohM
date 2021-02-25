@@ -1,8 +1,8 @@
 import { doLogin } from '../../shared/login';
 
 describe('Events Tests', () => {
+    /*
     beforeEach(() => {
-        /*
         // Delete all cookies
         cy.clearCookies();
 
