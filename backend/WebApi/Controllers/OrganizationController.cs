@@ -150,8 +150,8 @@ namespace WebApi.Controllers
         /// <param name="contactId">The id of the contact which will be removed</param>
 
         //[Authorize(Roles = "Zuordnen eines Kontakts zu einer Organisation")]
-        [Authorize(Roles = "Löschen eines Kontakts")]
         //[Authorize(Roles = "Einsehen und Bearbeiten aller Organisationen")]
+        [Authorize(Roles = "Zuordnen eines Kontakts zu einer Organisation")]
         [HttpPut("{id}/removeContact")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully updated")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "bad request")]
@@ -225,7 +225,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = "Einsehen und Bearbeiten einer Veranstaltung")]
+        [Authorize(Roles = "Einsehen und Bearbeiten aller Organisationen")]
         [HttpGet("{id}/history")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(PagedResponse<List<object>>), Description = "successfully found")]
         public async Task<IActionResult> GetHistory(long id, [FromQuery] PaginationFilter filter)

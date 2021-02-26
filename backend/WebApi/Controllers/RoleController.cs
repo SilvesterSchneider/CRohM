@@ -52,7 +52,7 @@ namespace WebApi.Controllers
             return Ok(list);
         }
 
-        [Authorize(Roles = "Anlegen eines Benutzers")]
+        [Authorize(Roles = "Einsehen und Überarbeiten des Rollenkonzepts")]
         [HttpPost]
         [SwaggerResponse(HttpStatusCode.Created, typeof(RoleDto), Description = "successfully created")]
         [SwaggerResponse(HttpStatusCode.BadRequest, typeof(void), Description = "unsuccessfully request")]
@@ -102,8 +102,8 @@ namespace WebApi.Controllers
                 return Conflict();
             }
         }
-    
-        [Authorize(Roles = "Löschen / Deaktivieren eines Benutzers")]
+
+        [Authorize(Roles = "Einsehen und Überarbeiten des Rollenkonzepts")]
         [HttpDelete("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(void), Description = "successfully deleted")]
         [SwaggerResponse(HttpStatusCode.NotFound, typeof(void), Description = "address not found")]

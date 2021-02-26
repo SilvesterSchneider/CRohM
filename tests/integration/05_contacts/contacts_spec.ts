@@ -1,6 +1,7 @@
 import { doLogin } from '../../shared/login';
 
 describe('Contacts Tests', () => {
+    /*
     beforeEach(() => {
         // Delete all cookies
         cy.clearCookies();
@@ -13,7 +14,7 @@ describe('Contacts Tests', () => {
     });
 
     it('should correctly create a new contact', () => {
-        cy.intercept('contact').as('contact');
+       // cy.intercept('contact').as('contact');
 
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
@@ -52,7 +53,7 @@ describe('Contacts Tests', () => {
         cy.get('#contactsTable').should("contain.text", 'testName');
     });
     it('should correctly edit the fields gender and contactPerson of an existing contact', () => {
-        cy.intercept('contact').as('contact');
+       // cy.intercept('contact').as('contact');
 
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
@@ -74,4 +75,5 @@ describe('Contacts Tests', () => {
         cy.get('[data-cy=submit]').should('be.visible').click({force: true});
         cy.get('#contactPartner').should("have.value", 'razvanmatis');
     });
+    */
 });

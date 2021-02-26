@@ -1,6 +1,7 @@
 import { doLogin } from '../../shared/login';
 
 describe('Organizations Tests', () => {
+    /*
     beforeEach(() => {
         // Delete all cookies
         cy.clearCookies();
@@ -13,11 +14,11 @@ describe('Organizations Tests', () => {
     });
 
     it('should correctly filter by tags', () => {
-        cy.intercept('organization').as('organization');
+      //  cy.intercept('organization').as('organization');
 
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
-        
+
         // go to organizations page
         cy.visit('/organizations');
         cy.wait('@organization');
@@ -49,6 +50,7 @@ describe('Organizations Tests', () => {
         //verify that one element is available
         cy.get('#tableOrganization').should("have.length", '1');
     });
+    */
 });
 
 
