@@ -14,9 +14,9 @@ describe('Login Tests', () => {
     });
 
     it('should correctly create a new role and assign it to a user', () => {
-        cy.intercept('Users').as('users');
-        cy.intercept('Role').as('role');
-        cy.intercept('**/Users/1').as('adminUser');
+        // cy.intercept('Users').as('users');
+        //  cy.intercept('Role').as('role');
+        // cy.intercept('**/Users/1').as('adminUser');
 
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
@@ -35,7 +35,7 @@ describe('Login Tests', () => {
         cy.get('#roleNameInputField').type('Alles');
 
         //click on the selection field of permissions
-        cy.get('#permissionSelection', {timeout: 5000})
+        cy.get('#permissionSelection', { timeout: 5000 })
             .click()
             .get('mat-option')
             //get the first permission
@@ -106,12 +106,12 @@ describe('Login Tests', () => {
 
         //click on the edit user button of admin user
         cy.get('.editUserButton').click();
-        cy.wait('@adminUser');       
-        cy.wait('@role');    
-   
+        cy.wait('@adminUser');
+        cy.wait('@role');
+
         //click on the selection field for all roles
         cy.wait(500);
-        cy.get('#permissionSelectionForUser').click().get('mat-option').contains('Alles').click(); //select the testRole 
+        cy.get('#permissionSelectionForUser').click().get('mat-option').contains('Alles').click(); //select the testRole
 
         //save the user by clicking the button
         cy.get('#saveUserChangesButton').click({ force: true });
@@ -120,12 +120,10 @@ describe('Login Tests', () => {
         //click on the edit user button of admin user
         cy.wait(500);
         cy.get('.editUserButton').click();
-        cy.wait('@adminUser');       
+        cy.wait('@adminUser');
         cy.wait('@role');
 
         //check whether the field contains all roles
         cy.get('#permissionSelectionForUser').should("contain.text", 'Alles');
     });
 });
-
-

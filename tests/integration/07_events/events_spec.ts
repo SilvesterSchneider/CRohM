@@ -13,7 +13,7 @@ describe('Events Tests', () => {
     });
 
     it('should correctly preselect invitations after a invitation was send', () => {
-        cy.intercept('Event').as('event');
+        //  cy.intercept('Event').as('event');
 
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
@@ -31,7 +31,5 @@ describe('Events Tests', () => {
         // validate event name
         cy.get('.editButton').click();
         cy.get('#eventName').should('have.value', 'Veranstaltung0');
-    }); 
+    });
 });
-
-

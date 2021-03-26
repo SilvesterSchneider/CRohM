@@ -210,7 +210,7 @@ namespace WebApi.Controllers
 
             try
             {
-                if (contactId != null)
+                if (contactId != null && contactId > 0)
                 {
                     if (await eventService.HandleInvitationResponseForContactAsync(id, (long)contactId, state))
                     {
@@ -221,7 +221,7 @@ namespace WebApi.Controllers
                         return NotFound("Kontakt nicht gefunden!");
                     }
                 }
-                else
+                else if (organizationId != null && organizationId > 0)
                 {
                     if (await eventService.HandleInvitationResponseForOrganizationAsync(id, (long)organizationId, state))
                     {
@@ -231,6 +231,10 @@ namespace WebApi.Controllers
                     {
                         return NotFound("Organisation nicht gefunden!");
                     }
+                }
+                else
+                {
+                    return BadRequest("Keine gültige Objekt ID erhalten");
                 }
             }
             catch (KeyNotFoundException nfe)

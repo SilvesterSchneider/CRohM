@@ -1,7 +1,6 @@
 import { loginAsAdmin } from '../../shared/login';
 
 describe('Home Tests', () => {
-
     it('should appear disclaimer beacause no data protection officer are in system', () => {
         loginAsAdmin();
 

@@ -204,7 +204,7 @@ namespace RepositoryLayer
 
                 foreach (ParticipatedDto partNew in eventToModify.Participated)
                 {
-                    Participated participated = eventExistent.Participated.FirstOrDefault(y => y.Id == partNew.Id && partNew.Id > 0 && y.ModelType == partNew.ModelType);
+                    Participated participated = eventExistent.Participated.FirstOrDefault(y => y.ObjectId == partNew.ObjectId && partNew.ObjectId > 0 && y.ModelType == partNew.ModelType);
                     if (participated != null)
                     {
                         participated.EventStatus = partNew.EventStatus;

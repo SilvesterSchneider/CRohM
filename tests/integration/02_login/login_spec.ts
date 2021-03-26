@@ -95,7 +95,6 @@ describe('Login Tests', () => {
         visitAndCheck('/organizations');
         visitAndCheck('/settings');
     });
-
 });
 
 function getAuth() {

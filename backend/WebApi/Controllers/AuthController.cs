@@ -127,6 +127,7 @@ namespace WebApi.Controllers
         /// <param name="id">the primary key of the user to be changed</param>
         /// <param name="newPassword">the new password to be changed</param>
         /// <returns></returns>
+        [Authorize(Roles = "Rücksetzen eines Passworts eines Benutzers")]
         [Route("updatePassword")]
         [HttpPut("{id}")]
         [SwaggerResponse(HttpStatusCode.OK, typeof(bool), Description = "successfully updated")]

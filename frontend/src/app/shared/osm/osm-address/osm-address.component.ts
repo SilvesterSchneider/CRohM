@@ -46,11 +46,12 @@ export class OsmAddressComponent implements OnInit, ControlValueAccessor, Valida
     street: ['', [Validators.pattern('^[a-zA-Z äüöÄÜÖß.-]*'), this.noWhitespaceValidator]],
     streetNumber: ['', [Validators.pattern('^[a-zA-Z0-9äüöÄÜÖß.-]*'), Validators.required]],
     zipcode: ['', [Validators.pattern('^[0-9]{4,5}$'), Validators.required]],
-    city: ['', [Validators.pattern('^[a-zA-ZäüöÄÜÖß.-]*'), Validators.required]],
+    city: ['', [Validators.pattern('^[a-zA-Z äüöÄÜÖß.-]*'), this.noWhitespaceValidator]],
   });
 
   private noWhitespaceValidator(control: FormControl) {
-		const beginsWithWhitespace = (control.value || '').startsWith(' ') || (control.value || '').endsWith(' ') || control.value.indexOf('  ') >= 0;
+		const beginsWithWhitespace = (control.value || '').startsWith(' ') || (control.value || '').endsWith(' ') ||
+     control.value.indexOf('  ') >= 0 || control.value === '';
     return beginsWithWhitespace ? { 'whitespace': true } : null;
 }
 

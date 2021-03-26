@@ -13,7 +13,7 @@ describe('Contacts Tests', () => {
     });
 
     it('should correctly create a new contact', () => {
-        cy.intercept('contact').as('contact');
+        // cy.intercept('contact').as('contact');
 
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
@@ -29,7 +29,7 @@ describe('Contacts Tests', () => {
         cy.wait(1000);
 
         //type in all values
-        cy.get('#name', {timeout: 5000}).type('testName');
+        cy.get('#name', { timeout: 5000 }).type('testName');
         cy.get('#preName').type('testVorname');
         cy.get('#contactPartner').type('razvan');
         cy.get('#gender').click().get('mat-option').contains('Weiblich').click();  //select female as gender
@@ -52,7 +52,7 @@ describe('Contacts Tests', () => {
         cy.get('#contactsTable').should("contain.text", 'testName');
     });
     it('should correctly edit the fields gender and contactPerson of an existing contact', () => {
-        cy.intercept('contact').as('contact');
+        // cy.intercept('contact').as('contact');
 
         // Login with credentials admin/@dm1n1stR4tOr
         doLogin('admin', '@dm1n1stR4tOr');
@@ -71,7 +71,7 @@ describe('Contacts Tests', () => {
         cy.wait('@contact');
 
         cy.get('[data-cy=submit_btn]').should('be.enabled').click();
-        cy.get('[data-cy=submit]').should('be.visible').click({force: true});
+        cy.get('[data-cy=submit]').should('be.visible').click({ force: true });
         cy.get('#contactPartner').should("have.value", 'razvanmatis');
     });
 });
